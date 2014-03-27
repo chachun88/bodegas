@@ -1,0 +1,35 @@
+{% extends "../base.html" %}
+
+{% block title %}Lista de bodegas {% end %}
+{% block caption %}muestra las bodegas que existen{% end %}
+
+{% block body %}
+<div class="col-md-12">
+	<section class="widget">
+		<div class="body">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Nombre</th>
+						<th>Descripción</th>
+						<th>Total entradas</th>
+						<th>Total salidas</th>
+						<th>Saldo (unidades)</th>
+						<th>Saldo ($)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>ejemplo</td>
+						<td>este es un ejemplo</td>
+						<td>600</td>
+						<td>600</td>
+						<td>10</td>
+						<td>100</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+</div>
+{% end %}

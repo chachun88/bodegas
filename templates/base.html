@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}{% end %}</title>
+		<link href="/static/css/application.min.css" rel="stylesheet">
+		<link rel="shortcut icon" href="img/favicon.png">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<meta charset="utf-8">
+	</head>
+	<body class="background-dark" >
+		<div class="logo">
+			<h4><a href="/">Light <strong>Blue</strong></a></h4>
+		</div>
+		<nav id="sidebar" class="sidebar nav-collapse collapse">
+			<ul id="side-nav" class="side-nav">
+				{% set cnt = 0 %}
+				{% for m in side_menu %}
+					<li class="{{ m['class'] }}">
+						{% if "sub_menu" in m %}
+						<a class="accordion-toggle" data-toggle="collapse" data-parent="#side-nav" href="#forms-collapse_{{ cnt }}"><i class="fa fa-{{ m['icon'] }}"></i> <span class="name">{{ m['name'] }}</span></a>
+						{% else %}
+						<a href="{{ m['link'] }}" ><i class="fa fa-{{ m['icon'] }}"></i> <span class="name">{{ m['name'] }}</span></a>
+						{% end %}
+						{% if "sub_menu" in m %}
+							{% if "active" in m['class'] %}
+							<ul id="forms-collapse_{{ cnt }}" class="panel-collapse open in" style="height: auto;">
+							{% else %}
+							<ul id="forms-collapse_{{ cnt }}" class="panel-collapse collapse" style="height: 0px;">
+							{% end %}
+						{% for sm in m["sub_menu"] %}
+							<li class="{{ sm['class'] }}"><a href="{{ sm['link'] }}">{{ sm['name'] }}</a></li>
+						{% end %}
+						</ul>
+						{% end %}
+					</li>
+					{% set cnt = cnt + 1 %}
+				{% end %}
+			</ul>
+		</nav>
+		<div class="wrap">
+			<header class="page-header">
+				<div class="navbar">
+					<ul class="nav navbar-nav navbar-right pull-right">
+						<li class="hidden-xs"><a href="/auth/login"><i class="fa fa-sign-out"></i></a></li>
+					</ul>
+					<form id="search-form" class="navbar-form pull-right" role="search">
+						<input type="search" class="search-query" placeholder="Search...">
+					</form>
+				</div>
+			</header>
+			<div class="content container">
+				<div class="row">
+					<div class="col-md-12">
+						<h2 class="page-title">{% block title %}{% end %}<small>{% block caption %}{% end %}</small></h2>
+					</div>
+				</div>
+				<div class="row">
+					{% block body %}
+					{% end %}
+				</div>
+			</div>
+		</div>
+<!-- jquery and friends -->
+<script src="/static/lib/jquery/jquery-2.0.3.min.js"></script>
+
+
+<!-- jquery plugins -->
+<script src="/static/lib/icheck.js/jquery.icheck.js"></script>
+<script src="/static/lib/sparkline/jquery.sparkline.js"></script>
+<script src="/static/lib/jquery-ui-1.10.3.custom.js"></script>
+<script src="/static/lib/jquery.slimscroll.js"></script>
+
+<!-- d3, nvd3-->
+<script src="/static/lib/nvd3/lib/d3.v2.js"></script>
+<script src="/static/lib/nvd3/nv.d3.custom.js"></script>
+
+<!-- nvd3 models -->
+<script src="/static/lib/nvd3/src/models/scatter.js"></script>
+<script src="/static/lib/nvd3/src/models/axis.js"></script>
+<script src="/static/lib/nvd3/src/models/legend.js"></script>
+<script src="/static/lib/nvd3/src/models/multiBar.js"></script>
+<script src="/static/lib/nvd3/src/models/multiBarChart.js"></script>
+<script src="/static/lib/nvd3/src/models/line.js"></script>
+<script src="/static/lib/nvd3/src/models/lineChart.js"></script>
+<script src="/static/lib/nvd3/stream_layers.js"></script>
+
+<!--backbone and friends -->
+<script src="/static/lib/backbone/underscore-min.js"></script>
+<script src="/static/lib/backbone/backbone-min.js"></script>
+<script src="/static/lib/backbone/backbone.localStorage-min.js"></script>
+
+<!-- bootstrap default plugins -->
+<script src="/static/lib/bootstrap/transition.js"></script>
+<script src="/static/lib/bootstrap/collapse.js"></script>
+<script src="/static/lib/bootstrap/alert.js"></script>
+<script src="/static/lib/bootstrap/tooltip.js"></script>
+<script src="/static/lib/bootstrap/popover.js"></script>
+<script src="/static/lib/bootstrap/button.js"></script>
+<script src="/static/lib/bootstrap/tab.js"> </script>
+<script src="/static/lib/bootstrap/dropdown.js"></script>
+
+<!-- basic application js-->
+<script src="/static/js/app.js"></script>
+<script src="/static/js/settings.js"></script>
+
+<!-- page specific -->
+<!-- <script src="/static/js/index.js"></script> -->
+<!-- <script src="/static/js/chat.js"></script> -->
+	</body>
+</html>
