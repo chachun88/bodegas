@@ -4,6 +4,7 @@
 import os.path
 
 import pymongo
+import urllib
 
 import tornado.auth
 import tornado.httpserver
@@ -13,7 +14,7 @@ import tornado.web
 from tornado.options import define, options
 
 from basehandler import BaseHandler
-from globals import port, debugMode, domainName, carpeta_img, userMode, Menu
+from globals import port, debugMode, domainName, carpeta_img, userMode, Menu, token, webservice_url
 
 from home_handler import HomeHandler
 from login_handler import LoginHandler
@@ -92,6 +93,13 @@ class Application(tornado.web.Application):
                                         {"class":"", "name":Menu.INFORMES_POR_BODEGA, "link":"/report/cellar"}
                                         ]},
                         {"class":"panel", "name":Menu.SALIR, "icon":"sign-out", "link":"/auth/login"},]
+
+
+        ## initializing token
+        url = webservice_url + "/access_token?appid=100"
+        token = urllib.urlopen(url).read()
+        print token
+
 
 
 def main():
