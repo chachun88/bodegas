@@ -83,7 +83,9 @@ class User(BaseModel):
 			nm = name.split(" ")
 
 			self.name = nm[0]
-			self.surname = nm[1]
+
+			if len(nm) > 1:
+				self.surname = nm[1]
 		except Exception, e:
 			raise
 
@@ -96,7 +98,7 @@ class User(BaseModel):
 
 		try:
 			data = json_util.loads(json_string)
-			self.SplitName(data["nombre"]) ## name and surname
+			self.SplitName(data["nombre"]) ##name and surname
 			self.identifier = str(data["_id"])
 			self.password = data["password"]
 			self.permissions = data["permisos"]
