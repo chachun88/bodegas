@@ -1,32 +1,61 @@
 {% extends "../base.html" %}
 
-{% block title %}Lista de bodegas {% end %}
-{% block caption %}muestra las bodegas que existen{% end %}
+{% block title %}Lista de usuarios {% end %}
+{% block caption %}muestra la lista de vendedores{% end %}
 
 {% block body %}
+{% if dn == "t" %}
+<div class="alert alert-success">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> usuario creado correctamente.
+</div>
+{% end %}
+{% if dn == "t2" %}
+<div class="alert alert-warning">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Usuario borrado!</strong> se ha borrado correctamente al usuario.
+</div>
+{% end %}
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
+			<div class="well">
+				<div class="row">
+					<div class="col-xs-2">
+						<a class="btn btn-success" href="/user/add" >
+							+ Agregar usuario
+						</a>
+					</div>
+					<div class="col-xs-10"></div>
+				</div>
+			</div>
 			<table class="table table-striped">
 				<thead>
 					<tr>
 						<th>Nombre</th>
-						<th>Descripción</th>
-						<th>Total entradas</th>
-						<th>Total salidas</th>
-						<th>Saldo (unidades)</th>
-						<th>Saldo ($)</th>
+						<th>Email</th>
+						<th>Permisos</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
+					{% for u in user_list %}
 					<tr>
-						<td>ejemplo</td>
-						<td>este es un ejemplo</td>
-						<td>600</td>
-						<td>600</td>
-						<td>10</td>
-						<td>100</td>
+						<td>{{ u["nombre"] }}</td>
+						<td>{{ u["email"] }}</td>
+						<td>{{ u["permisos"] }}</td>
+						<td>
+						{% if current_user_email != u["email"] %}
+							<a class="btn btn-success" href="/user/edit?id={{ u["_id"] }}">
+								Editar
+							</a>
+							<a class="btn btn-danger" href="/user/remove?id={{ u["_id"] }}" >
+								Eliminar
+							</a>
+						{% end %}
+						</td>
 					</tr>
+					{% end %}
 				</tbody>
 			</table>
 		</div>

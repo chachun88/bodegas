@@ -17,6 +17,7 @@ class AddSellerHandler(BaseHandler):
 		salesman.identifier = self.TryGetParam("id", "")
 		salesman.nombre 	= self.TryGetParam("nombre", "")
 		salesman.password 	= self.TryGetParam("password", "")
+		salesman.email		= self.TryGetParam("email", "")
 
 		# saving current seller
 		oid = salesman.Save(self.db.salesman)
@@ -44,8 +45,15 @@ class GetSalesmanHandler(BaseHandler):
 		if not self.ValidateToken():
 			return
 
-		salesman = Salesman()
-		self.write(salesman.FindById(self.TryGetParam("id", ""), self.db.salesman))
+		idd = self.TryGetParam("id", "")
+		email = self.TryGetParam("email", "")
+
+		if idd == "":
+			salesman = Salesman()
+			self.write(salesman.FindByEmail(email, self.db.salesman))
+		else:
+			salesman = Salesman()
+			self.write(salesman.FindById(idd, self.db.salesman))
 
 
 class ListSalesmanHandler(BaseHandler):

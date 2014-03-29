@@ -10,19 +10,23 @@ class Salesman(BaseModel):
 		self._identifier	= ""
 		self._nombre		= ""
 		self._password		= ""
+		self._email			= ""
+		self._permisos		= ""
 
 	def Save(self, collection):
 
 		# validate identifier
-		data = collection.find({"identifier" : self.identifier})
+
+		data = collection.find({"email" : self.email})
 		if data.count() >= 1:
 
 			collection.update(
 				{"_id" : data[0]["_id"]},
 				{"$set" : {
-					"identifier" : self.identifier,
 					"nombre" : self.nombre,
-					"password"  : self.password
+					"password"  : self.password,
+					"email" : self.email,
+					"permisos" : self.permisos
 				}})
 
 			return str(data[0]["_id"])
@@ -30,12 +34,18 @@ class Salesman(BaseModel):
 		#save the object and return the id
 		object_id = collection.insert(
 			{
-			"identifier" : self.identifier,
 			"nombre" : self.nombre,
-			"password"  : self.password
+			"password"  : self.password,
+			"email"  : self.email,
+			"permisos" : self.permisos
 			})
 
 		return str(object_id)
+
+	def FindByEmail(self, email, collection):
+		data = collection.find({"email":email})
+
+		return str(json_util.dumps(data[0]))
 
 	@property
 	def identifier(self):
@@ -57,3 +67,17 @@ class Salesman(BaseModel):
 	@password.setter
 	def password(self, value):
 	    self._password = value
+
+	@property
+	def email(self):
+	    return self._email
+	@email.setter
+	def email(self, value):
+	    self._email = value
+	@property
+	def permisos(self):
+	    return self._permisos
+	@permisos.setter
+	def permisos(self, value):
+	    self._permisos = value
+	

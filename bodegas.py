@@ -23,8 +23,8 @@ from product_list_handler import ProductListHandler
 from cellar_handler import CellarHandler
 from cellar_add_handler import CellarAddHandler
 
-from user_handler import UserHandler
-from user_add_handler import UserAddHandler
+from user_handler import UserHandler, UserRemoveHandler
+from user_add_handler import UserAddHandler, UserEditHandler
 
 from report_handler import ReportHandler
 
@@ -60,6 +60,8 @@ class Application(tornado.web.Application):
             # user
             (r"/user", UserHandler),
             (r"/user/add", UserAddHandler),
+            (r"/user/remove", UserRemoveHandler),
+            (r"/user/edit", UserEditHandler),
 
             #report
             (r"/report/cellar", ReportHandler)
@@ -67,8 +69,6 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, **settings)
 
         # Have one global connection to the blog DB across all handlers
-        connection = pymongo.Connection("localhost", 27017)
-        self.db = connection.dev_tellme
 
         self.side_menu = [
                         {"class":"panel", "name":Menu.PRODUCTOS, "icon":"home", "link":"/", 
@@ -92,8 +92,7 @@ class Application(tornado.web.Application):
                                         {"class":"", "name":Menu.INFORMES_POR_BODEGA, "link":"/report/cellar"}
                                         ]},
                         {"class":"panel", "name":Menu.SALIR, "icon":"sign-out", "link":"/auth/login"},]
-        #self.db = connection.sherlock
-        
+
 
 def main():
     tornado.options.parse_command_line()
