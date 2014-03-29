@@ -26,7 +26,7 @@ webservice_url = "http://localhost:8888"
 
 facebookimage="http://tellmecuando.com/static/img/logo_slogan2.png"
 debugMode = True
-port = 9999
+port = 9003
 if (debugMode):
     userMode="test"
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
@@ -40,9 +40,9 @@ pp_secret = "HoXTD8Ds4EiaBOce87wylKZyGiyXPKoyOP57O8uV"
 pp_key = "dTtvpp4D3uTy8AuC2gMR"
 
 if (debugMode):
-    port = 9999
+    port = 9003
 else:
-    port = 9999
+    port = 9003
     
 if (debugMode):
     domainName = "tellmecuando.loadingplay.com";
