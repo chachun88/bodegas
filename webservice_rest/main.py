@@ -15,6 +15,7 @@ import seller_handler
 import brand_handler
 import order_handler
 import order_detail_handler
+import cellar_handler
 
 from tornado.options import define, options
 
@@ -25,6 +26,16 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/",                      access_token.AccessTokenHandler),
             (r"/access_token",          access_token.AccessTokenHandler),
+
+            (r"/cellar/add",            cellar_handler.CellarAddHandler),
+            (r"/cellar/edit",           cellar_handler.CellarAddHandler),
+            (r"/cellar/list",           cellar_handler.CellarListHandler),
+            (r"/cellar/find",           cellar_handler.CellarFindHandler),
+            (r"/cellar/remove",         cellar_handler.CellarRemoveHandler),
+
+            (r"/cellar/products/list",  cellar_handler.CellarProductsListHandler),
+            (r"/cellar/products/add",   cellar_handler.CellarProductsAddHandler),
+            (r"/cellar/products/remove",cellar_handler.CellarProductsRemoveHandler),
 
             (r"/product/add",           product_handler.AddProductHandler),
             (r"/product/edit",          product_handler.AddProductHandler),
