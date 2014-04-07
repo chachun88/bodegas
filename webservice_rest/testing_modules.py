@@ -112,6 +112,12 @@ def removeTesting(edit_results, remove_data):
 
 	print "testing results : " + remove_results
 
+def productsAddTesting(add_results, products_add_data):
+	# products sample 1231233asidoad:10,qoiewiqoej1:1
+	print "this testing must be builded"
+
+
+
 if module == "cellar":
 
 	##data
@@ -120,6 +126,7 @@ if module == "cellar":
 	edit_data 	= {"name":"testing_changed","description":"description changed","id":"", "token":token}
 	find_data 	= {"id": "", "token":token}
 	remove_data = {"id":"", "token":token}
+	products_add_data = {"id":"", "token" : token, "products":""}
 
 	if test == "":
 		add_results = addTesting(add_data)
@@ -127,6 +134,11 @@ if module == "cellar":
 		listTesting(list_data)
 		findTesting(edit_results, find_data)
 		removeTesting(edit_results, remove_data)
+
 	elif test == "add":
 		addTesting(add_data)
-	
+
+	elif test == "products":
+		add_results = addTesting(add_data)
+		productsAddTesting(add_results, products_add_data)
+
