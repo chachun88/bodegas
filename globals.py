@@ -22,7 +22,8 @@ def roundfloat(x):
     return price.strip() 
 
 token = "5334d6c29ec9a710f56d9ab5"
-webservice_url = "http://giani.loadingplay.com:8888"
+#webservice_url = "http://giani.loadingplay.com:8888"
+webservice_url = "http://localhost:8888"
 
 facebookimage="http://tellmecuando.com/static/img/logo_slogan2.png"
 debugMode = True
