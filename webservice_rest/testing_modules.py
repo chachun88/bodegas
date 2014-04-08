@@ -118,7 +118,7 @@ def productsAddTesting(add_results, products_add_data):
 
 
 
-if module == "cellar":
+if module == "cellar" or module == "":
 
 	##data
 	add_data 	= {"name":"testing_cellar", "description": "this is a testing cellar", "token":token}
