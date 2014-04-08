@@ -16,20 +16,59 @@
 						<th>Total salidas</th>
 						<th>Saldo (unidades)</th>
 						<th>Saldo ($)</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
+					{% for p in data %}
 					<tr>
-						<td>ejemplo</td>
-						<td>este es un ejemplo</td>
+						<td>{{ p["name"] }}</td>
+						<td>{{ p["description"] }}</td>
 						<td>600</td>
 						<td>600</td>
 						<td>10</td>
 						<td>100</td>
+						<td>
+							<button type="button" cellar-id="{{ str(p['_id']) }}" class="btn btn-danger btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-danger .btn-sm">
+								Eliminar
+							</button>
+						</td>
 					</tr>
+					{% end %}
 				</tbody>
 			</table>
 		</div>
 	</section>
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".btn-delete").click(function(){
+
+		var cell = $(this);
+		var cellar_id = $(this).attr("cellar-id");
+		var message = "Realmente desea eliminar esta bodega \n"+
+					"los productos serán dejados sin bodegas";
+
+		if (cell.hasClass("btn-danger") && confirm(message)) 
+		{
+			cell.removeClass("btn-danger");
+			cell.addClass("btn-success");
+			cell.html("Eliminado");
+
+			cell.parent().parent().animate({
+				opacity: 0.0,
+				height:"toggle"
+			}, 3000, function() {
+				$.ajax({
+					url: "/cellar/remove?id=" + cellar_id
+				}).done(function(data) {
+					console.log(data);
+				});
+
+				cell.parent().parent().css("display", "none");
+			});
+		}
+	});
+});
+</script>
 {% end %}

@@ -7,14 +7,16 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from globals import Menu
-
 from basehandler import BaseHandler
 from model.cellar import Cellar
 
-class CellarHandler(BaseHandler):
+class CellarRemoveHandler(BaseHandler):
 	def get(self):
-		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
-		data = Cellar().List(1, 10)
-		self.render("cellar/home.html", side_menu=self.side_menu, data=data)
+		idd = self.get_argument("id", "")
+
+		cellar = Cellar()
+		cellar.InitWithId(idd)
+
+		cellar.Remove()
+		self.write("Bodega eliminada correctamente.")
