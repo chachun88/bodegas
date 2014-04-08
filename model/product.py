@@ -119,6 +119,7 @@ class Product(BaseModel):
 	def get_product_list(self):
 			
 		url = self.wsurl()+"salesman/list?token=" + self.token() + "&items=100"
+
 		content = urllib2.urlopen(url).read()
 
 		# parse content to array data
