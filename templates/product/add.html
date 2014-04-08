@@ -3,12 +3,13 @@
 {% block title %}Agregar Producto {% end %}
 {% block caption %}permite agregar un producto{% end %}
 
+
 {% block body %}
 
 <div class="col-md-7">
 	<section class="widget">
 		<div class="body">
-			<form action="" class="form-horizontal label-left" method="post" enctype="multipart/form-data">
+			<form action="/product/add" class="form-horizontal label-left" method="post" enctype="multipart/form-data">
 				<fieldset>
 					<legend class="section">Agregar Producto</legend>
 					<div class="control-group">
@@ -58,6 +59,7 @@
 					<button type="submit" class="btn btn-primary">Validar y agregar</button>
 					<button type="button" class="btn btn-default">Cancelar</button>
 				</div>
+				{% raw xsrf_form_html() %}
 			</form>
 		</div>
 	</section>

@@ -13,6 +13,7 @@ import tornado.web
 from tornado.options import define, options
 
 from basehandler import BaseHandler
+from model.product import Product
 from globals import port, debugMode, domainName, carpeta_img, userMode, Menu
 
 class HomeHandler(BaseHandler):
