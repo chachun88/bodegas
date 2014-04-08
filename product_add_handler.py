@@ -20,7 +20,7 @@ from basehandler import BaseHandler
 
 class ProductAddHandler(BaseHandler):
 
-#	@tornado.web.authenticated
+	#@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.PRODUCTOS_CARGA) #change menu active item
 
@@ -30,13 +30,13 @@ class ProductAddHandler(BaseHandler):
 	def post(self):
 		prod = Product()
 
-		prod.name=	self.get_argument("name", "")
-		prod.price=	self.get_argument("price", "")
-		prod.description=self.get_argument("description", "")
-		prod.quantity=self.get_argument("quantity", "")
-		prod.brand=	self.get_argument("brand", "")
-		prod.sku=self.get_argument("sku", "")
-		prod.category=self.get_argument("category", "")
+		prod.name		= self.get_argument("name", "")
+		prod.price 		= self.get_argument("price", "")
+		prod.description= self.get_argument("description", "")
+		prod.quantity 	= self.get_argument("quantity", "")
+		prod.brand 		= self.get_argument("brand", "")
+		prod.sku 		= self.get_argument("sku", "")
+		prod.category 	= self.get_argument("category", "")
 
 		prod.Save()
 		self.redirect("/product?dn=t")

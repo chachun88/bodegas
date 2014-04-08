@@ -96,14 +96,14 @@ class Product(BaseModel):
 
 	def Remove(self):
 		if self.identifier!="":
-			url=self.wsurl() + "salesman/delete"
+			url=self.wsurl() + "product/delete"
 			url+="?token" + self.token()
 			url+="&id" + self.identifier
 
 			urllib.urlopen(url)
 
 	def Save(self):
-		url = self.wsurl()+"salesman/add?token=" + self.token()
+		url = self.wsurl()+"/product/add?token=" + self.token()
 
 		url += "&nombre=" + self.name
 		url += "&precio=" + self.price
@@ -118,8 +118,7 @@ class Product(BaseModel):
 
 	def get_product_list(self):
 			
-		url = self.wsurl()+"salesman/list?token=" + self.token() + "&items=100"
-
+		url = self.wsurl()+"/product/list?token=" + self.token() + "&items=100"
 		content = urllib2.urlopen(url).read()
 
 		# parse content to array data

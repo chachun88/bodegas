@@ -52,6 +52,7 @@ class Application(tornado.web.Application):
 
             # products
             (r"/", HomeHandler),
+            (r"/product", HomeHandler),
             (r"/product/add", ProductAddHandler),
             (r"/product/list", ProductListHandler),
 
