@@ -17,8 +17,10 @@ from basehandler import BaseHandler
 from globals import port, debugMode, domainName, carpeta_img, userMode, Menu, token, webservice_url
 
 from home_handler import HomeHandler
+from home_handler import ProductRemoveHandler
 from login_handler import LoginHandler
 from product_add_handler import ProductAddHandler
+from product_add_handler import ProductEditHandler
 from product_list_handler import ProductListHandler
 
 from cellar_handler import CellarHandler
@@ -55,6 +57,8 @@ class Application(tornado.web.Application):
             (r"/product", HomeHandler),
             (r"/product/add", ProductAddHandler),
             (r"/product/list", ProductListHandler),
+            (r"/product/edit", ProductEditHandler),
+            (r"/product/remove", ProductRemoveHandler),
 
             # cellar
             (r"/cellar", CellarHandler),

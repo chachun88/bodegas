@@ -22,4 +22,15 @@ class HomeHandler(BaseHandler):
 	def get(self):
 		self.set_active(Menu.PRODUCTOS_CARGA_MASIVA) #change menu active item
 
-		self.render("product/home.html", side_menu=self.side_menu)
+		dn = self.get_argument("dn", "f")
+		self.render("product/home.html", side_menu=self.side_menu, dn=dn)
+
+class ProductRemoveHandler(BaseHandler):
+	
+	def get(self):
+
+		prod = Product()
+		prod.InitWithId(self.get_argument("id", ""))
+		prod.Remove()
+
+		self.redirect("/product/list")

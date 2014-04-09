@@ -94,10 +94,32 @@ class Product(BaseModel):
 	#### Methods ####
 	#################
 
+	def InitWithId(self, idd):
+		url = self.wsurl() + "/product/find"
+
+		url += "?token=" + self.token()
+		url += "&id=" + idd
+
+		json_string = urllib.urlopen(url).read()
+		data = json_util.loads(json_string)
+
+		self.name = data["nombre"] ## name and surname
+		self.identifier = str(data["_id"])
+		self.price = data["precio"]
+		self.description = data["descripcion"]
+		self.quantity = data["stock"]
+		self.brand = data["marca"]
+		self.sku = data["codigo_interno"]
+		self.category = data["familia"]
+
+
 	def Remove(self):
+
+
 		if self.identifier!="":
-			url=self.wsurl() + "product/delete"
-			url+="?token" + self.token()
+			print self.identifier
+			url=self.wsurl() + "/product/delete"
+			url+="?token=" + self.token()
 			url+="&id" + self.identifier
 
 			urllib.urlopen(url)
@@ -108,10 +130,10 @@ class Product(BaseModel):
 		url += "&nombre=" + self.name
 		url += "&precio=" + self.price
 		url += "&descripcion=" + self.description
-		url += "&cantidad=" + self.quantity
+		url += "&stock=" + self.quantity
 		url += "&marca=" + self.brand
-		url += "&sku=" + self.sku
-		url += "&categoria=" + self.category
+		url += "&codigo_interno=" + self.sku
+		url += "&familia=" + self.category
 		url += "&id=" + self.identifier
 
 		return urllib.urlopen(url).read()

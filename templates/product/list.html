@@ -4,7 +4,6 @@
 {% block caption %}blah blah{% end %}
 
 {% block body %}
-
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
@@ -17,7 +16,7 @@
 						<th class="hidden-xs-portrait ">Precio</th>
 						<th class="hidden-xs " >sku</th>
 						<th class="hidden-xs " >Cantidad</th>
-						<th class="hidden-xs " >Proveedor</th>
+						<th class="hidden-xs " >Categoria</th>
 						<th class="hidden-xs " >Marca</th>
 						<th></th>
 					</tr>
@@ -33,18 +32,21 @@
 						</td>
 						<td>{{ p["precio"] }}
 						</td>
-						<td class="hidden-xs-portrait">
+						<td class="hidden-xs-portrait">{{ p["codigo_interno"] }}
 						</td>
 						<td class="hidden-xs">{{ p["stock"] }}
 						</td>
-						<td class="hidden-xs">
+						<td class="hidden-xs">{{ p["familia"] }}
 						</td>
 						<td>{{ p["marca"] }}
 						</td>
 						<td>
-							<button class="btn btn-sm btn-primary">
+							<a class="btn btn-sm btn-primary" href="/product/edit?id={{ p["_id"] }}">
 								Editar
-							</button>
+							</a>
+							<a class="btn btn-sm btn-danger" href="/product/remove?id={{ p["_id"] }}" >
+								Eliminar
+							</a>
 						</td>
 					</tr>
 					{% end %}
