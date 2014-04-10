@@ -11,13 +11,23 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th class="" >Nombre</th>
-						<th class="" >Description</th>
-						<th class="hidden-xs-portrait ">Precio</th>
 						<th class="hidden-xs " >sku</th>
+						<th class="" >Nombre</th>
+						<th class="" >UPC/EAN</th>
+						<th class="" >Description</th>
+						<th class="hidden-xs " >Marca</th>
+						<th class="hidden-xs">Fabricante</th>
+						<th class="hidden-xs">Talla</th>
+						<th class="hidden-xs">Color</th>
+						<th class="hidden-xs">Material</th>
+						<th class="hidden-xs">Viñeta 1</th>
+						<th class="hidden-xs">Viñeta 2</th>
+						<th class="hidden-xs">Viñeta 3</th>
+						<th class="hidden-xs-portrait ">Precio</th>
+						
 						<th class="hidden-xs " >Cantidad</th>
 						<th class="hidden-xs " >Categoria</th>
-						<th class="hidden-xs " >Marca</th>
+						
 						<th></th>
 					</tr>
 				</thead>
@@ -27,19 +37,21 @@
 						<td>
 							<input type="checkbox" />
 						</td>
+						<td class="hidden-xs-portrait">{{ p["codigo_interno"] }}</td>
 						<td class="hidden-xs-portrait">{{ p["nombre"] }}</td> 
-						<td class="hidden-xs-portrait">{{ p["descripcion"] }}
-						</td>
-						<td>{{ p["precio"] }}
-						</td>
-						<td class="hidden-xs-portrait">{{ p["codigo_interno"] }}
-						</td>
-						<td class="hidden-xs">{{ p["stock"] }}
-						</td>
-						<td class="hidden-xs">{{ p["familia"] }}
-						</td>
-						<td>{{ p["marca"] }}
-						</td>
+						<td></td>
+						<td class="hidden-xs-portrait">{{ p["descripcion"] }}</td>
+						<td>{{ p["marca"] }}</td>
+						<td></td>
+						<td></td>	
+						<td></td>	
+						<td></td>
+						<td></td>	
+						<td></td>	
+						<td></td>		
+						<td>{{ p["precio"] }}</td>
+						<td class="hidden-xs">{{ p["stock"] }}</td>
+						<td class="hidden-xs">{{ p["familia"] }}</td>
 						<td>
 							<a class="btn btn-sm btn-primary" href="/product/edit?id={{ p["_id"] }}">
 								Editar

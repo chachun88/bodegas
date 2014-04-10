@@ -43,3 +43,5 @@ class UserEditHandler(BaseHandler):
 		usr.InitWithId(self.get_argument("id", ""))
 
 		self.render("user/add.html", side_menu=self.side_menu, user=usr)
+
+		

@@ -10,6 +10,18 @@ function triggerChartsResize(){
 }
 
 $(function(){
+
+    $("a.forgot").click(function(){
+        var email= $("#user").val();
+        //alert(email);
+        $.ajax({
+            url: "/auth/recover?email=" + email,
+            type: "get",
+            success: function(response){
+                //alert("envia");
+            }
+        });
+    });
     //settings
     var $settings = $("#settings"),
         $sidebarSettings = $("#sidebar-settings"),
