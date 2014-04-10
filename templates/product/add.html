@@ -13,15 +13,20 @@
 				<fieldset>
 					<legend class="section">Agregar Producto</legend>
 					<div class="control-group">
+						<label class="control-label" for="prefix">SKU</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}"></div>
+						</div>
+					<div class="control-group">
 						<label class="control-label" for="prefix">Nombre</label>
 						<div class="controls form-group">
 							<div class="col-sm-8"><input placeholder="Nombre" name="name" required="required" type="text" class="form-control" value="{{ product.name }}"></div>
 						</div>
 					</div>
 					<div class="control-group">
-						<label class="control-label" for="prefix">Precio</label>
+						<label class="control-label" for="prefix">UPC/EAN</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Precio" name="price" required="required" type="text" class="form-control" value="{{ product.price }}"></div>
+							<div class="col-sm-8"><input placeholder="UPC" name="upc" required="required" type="text" class="form-control" value=""></div>
 						</div>
 					</div>
 					<div class="control-group">
@@ -31,22 +36,89 @@
 						</div>
 					</div>
 					<div class="control-group">
-						<label class="control-label" for="prefix">Cantidad</label>
-						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Cantidad" name="quantity" required="required" type="text" class="form-control" value="{{ product.quantity }}"></div>
-						</div>
-					</div>
-					<div class="control-group">
 						<label class="control-label" for="prefix">Marca</label>
 						<div class="controls form-group">
 							<div class="col-sm-8"><input placeholder="Marca" name="brand" required="required" type="text" class="form-control" value="{{ product.brand }}"></div>
 						</div>
 					</div>
 					<div class="control-group">
-						<label class="control-label" for="prefix">SKU</label>
+						<label class="control-label" for="prefix">Fabricante</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}"></div>
+							<div class="col-sm-8"><input placeholder="Fabricante" name="manufacturer" required="required" type="text" class="form-control" value=""></div>
 						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Talla</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Talla" name="size" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Color</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Color" name="color" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Material</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Material" name="material" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Viñeta 1</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Viñeta 1" name="bullet_point_1" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Viñeta 2</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Viñeta 2" name="bullet_point_2" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Viñeta 3</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Viñeta 3" name="bullet_point_3" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Precio</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Precio" name="price" required="required" type="text" class="form-control" value="{{ product.price }}"></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Moneda</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Moneda" name="currency" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Imagen</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Imagen" name="image" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Imagen 2</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Imagen 2" name="image_2" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Imagen 3</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Imagen 3" name="image_3" required="required" type="text" class="form-control" value=""></div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="prefix">Cantidad</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Cantidad" name="quantity" required="required" type="text" class="form-control" value="{{ product.quantity }}"></div>
+						</div>
+					</div>
 					</div>
 					<div class="control-group">
 						<label class="control-label" for="prefix">Categoría</label>

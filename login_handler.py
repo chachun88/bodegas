@@ -8,6 +8,8 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
+from lp_email_tool import lpEmailTool
+
 from model.user import User
 
 class LoginHandler(BaseHandler):
@@ -39,3 +41,35 @@ class LoginHandler(BaseHandler):
 		else:
 			error_msg = tornado.escape.url_escape("t")
 			self.redirect(u"/auth/login?e=" + error_msg)
+
+class LoginPassHandler(BaseHandler):
+
+	def get(self):
+
+		email = self.get_argument("email", "")
+		print email
+		auth = False
+
+		## validate user and password
+		usr = User()
+		usr.InitWithEmail(email)
+
+		self.write(usr.password)
+
+		## send email
+		theEmail = lpEmailTool()
+
+		theEmail.ffrom = "estefany@loadingplay.com"
+		theEmail.password = "nunununu"
+		theEmail.tto = email
+		theEmail.subject = "un correo de prueba"
+		theEmail.content = "Su contrasena es: "  + usr.password
+		theEmail.content_type = lpEmailTool.PLAIN_TEXT
+
+		theEmail.SendEmail()
+
+
+
+
+
+

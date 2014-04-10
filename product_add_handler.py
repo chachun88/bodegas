@@ -39,7 +39,7 @@ class ProductAddHandler(BaseHandler):
 		prod.category 	= self.get_argument("category", "")
 
 		prod.Save()
-		self.redirect("/product?dn=t")
+		self.redirect("/product/list")
 
 class ProductEditHandler(BaseHandler):
  	"""docstring for ClassName"""
