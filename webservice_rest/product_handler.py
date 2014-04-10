@@ -4,6 +4,7 @@ from model.product import Product
 
 from base_handler import BaseHandler
 
+
 class AddProductHandler(BaseHandler):
 	def get(self):
 		
@@ -14,16 +15,23 @@ class AddProductHandler(BaseHandler):
 		# isntantitate product
 		product = Product()
 
-		product.codigo_proveedor = self.TryGetParam("codigo_proveedor", "")
-		product.codigo_interno = self.TryGetParam("codigo_interno", "")
-		product.nombre = self.TryGetParam("nombre", "")
-		product.precio = self.TryGetParam("precio", "")
-		product.stock = self.TryGetParam("stock", "")
-		product.descuento = self.TryGetParam("descuento", "")
-		product.estado = self.TryGetParam("estado", "")
-		product.marca = self.TryGetParam("marca", "")
-		product.familia = self.TryGetParam("familia", "")
-		product.descripcion = self.TryGetParam("descripcion", "")
+		product.sku 			= self.get_argument("sku", "")
+		product.name 			= self.get_argument("name", "")
+		product.upc 			= self.get_argument("upc", "")
+		product.description 	= self.get_argument("description", "")
+		product.brand 			= self.get_argument("brand", "")
+		product.manufacturer 	= self.get_argument("manufacturer", "")
+		product.size 			= self.get_argument("size", "")
+		product.color 			= self.get_argument("color", "")
+		product.material 		= self.get_argument("material", "")
+		product.bullet_point_1 	= self.get_argument("bullet_1", "")
+		product.bullet_point_2 	= self.get_argument("bullet_2", "")
+		product.bullet_point_3 	= self.get_argument("bullet_3", "")
+		product.price			= self.get_argument("price", "")
+		product.currency 		= self.get_argument("currency", "")
+		product.image 			= self.get_argument("image", "")
+		product.image_2			= self.get_argument("image_2", "")
+		product.image_3 		= self.get_argument("image_3", "")
 
 		# saving current product
 		oid = product.Save(self.db.products)

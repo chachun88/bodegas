@@ -14,7 +14,7 @@ class AddBrandHandler(BaseHandler):
 		brand = Brand()
 
 		brand.identifier 	= self.TryGetParam("id", "")
-		brand.nombre 		= self.TryGetParam("nombre", "")
+		brand.name 			= self.TryGetParam("name", "")
 		
 		# saving current brand
 		oid = brand.Save(self.db.brands)

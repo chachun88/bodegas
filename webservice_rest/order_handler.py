@@ -6,6 +6,8 @@ from base_handler import BaseHandler
 
 
 class AddOrderHandler(BaseHandler):
+	
+
 	def get(self):
 		# validate access token
 		if not self.ValidateToken():
@@ -14,16 +16,16 @@ class AddOrderHandler(BaseHandler):
 		# instantiate order
 		order = Order()
 
-		order.identifier	= self.TryGetParam("id", "")
-		order.vendedor		= self.TryGetParam("id_vendedor")
-		order.cliente 		= self.TryGetParam("id_cliente")
-		order.subtotal 		= self.TryGetParam("subtotal")
-		order.descuento 	= self.TryGetParam("descuento")
-		order.iva 			= self.TryGetParam("iva")
-		order.total 		= self.TryGetParam("total")
-		order.direccion 	= self.TryGetParam("direccion")
-		order.comuna 		= self.TryGetParam("comuna")
-		order.ciudad 		= self.TryGetParam("ciudad")
+		order.identifier		= self.get_argument("id", "") #optional
+		order.salesman 			= self.get_argument("salesman_id", "")
+		order.customer			= self.get_argument("customer", "")
+		order.subtotal 			= self.get_argument("subtotal", "")
+		order.discount 			= self.get_argument("discount", "")
+		order.iva 				= self.get_argument("iva", "")
+		order.total 			= self.get_argument("total", "")
+		order.address 			= self.get_argument("address", "")
+		order.town				= self.get_argument("town", "")
+		order.city 				= self.get_argument("city", "")
 
 		#saving the current order
 		oid = order.Save(self.db.orders)
@@ -40,16 +42,16 @@ class EditOrderHandler(BaseHandler):
 		# instantiate order
 		order = Order()
 
-		order.identifier	= self.TryGetParam("id", "")
-		order.vendedor		= self.TryGetParam("id_vendedor")
-		order.cliente 		= self.TryGetParam("id_cliente")
-		order.subtotal 		= self.TryGetParam("subtotal")
-		order.descuento 	= self.TryGetParam("descuento")
-		order.iva 			= self.TryGetParam("iva")
-		order.total 		= self.TryGetParam("total")
-		order.direccion 	= self.TryGetParam("direccion")
-		order.comuna 		= self.TryGetParam("comuna")
-		order.ciudad 		= self.TryGetParam("ciudad")
+		order.identifier		= self.get_argument("id", "")
+		order.salesman 			= self.get_argument("salesman_id", "")
+		order.customer			= self.get_argument("customer", "")
+		order.subtotal 			= self.get_argument("subtotal", "")
+		order.discount 			= self.get_argument("discount", "")
+		order.iva 				= self.get_argument("iva", "")
+		order.total 			= self.get_argument("total", "")
+		order.address 			= self.get_argument("address", "")
+		order.town				= self.get_argument("town", "")
+		order.city 				= self.get_argument("city", "")
 
 		#saving the current order
 		oid = order.Edit(self.db.orders)

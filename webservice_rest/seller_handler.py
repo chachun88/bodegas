@@ -15,7 +15,7 @@ class AddSellerHandler(BaseHandler):
 		salesman = Salesman()
 
 		salesman.identifier = self.TryGetParam("id", "")
-		salesman.nombre 	= self.TryGetParam("nombre", "")
+		salesman.name 		= self.TryGetParam("name", "")
 		salesman.password 	= self.TryGetParam("password", "")
 		salesman.email		= self.TryGetParam("email", "")
 

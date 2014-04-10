@@ -8,65 +8,69 @@ from basemodel import BaseModel
 class Order(BaseModel):
 
 	def __init__():
-		self._vendedor		= ""
-		self._cliente		= ""
+		self._salesman		= ""
+		self._customer		= ""
 		self._subtotal		= ""
-		self._descuento		= ""
+		self._discount		= ""
 		self._iva			= ""
 		self._total 		= ""
-		self._direccion		= ""
-		self._comuna		= ""
-		self._ciudad		= ""
+		self._address		= ""
+		self._town			= ""
+		self._city			= ""
 
 	def Save(self, collection):
 		
 		# validate contrains
 		object_id = collection.insert({
-			"vendedor" : self.vendedor,
-			"cliente" : self.cliente,
+			"salesman" : self.salesman,
+			"customer" : self.customer,
 			"subtotal" : self.subtotal,
-			"descuento" : self.descuento,
+			"discount" : self.discount,
 			"iva" : self.iva,
 			"total" : self.total,
-			"direccion" : self.direccion,
-			"comuna" : self.comuna,
-			"ciudad" : self.ciudad 
+			"address" : self.address,
+			"town" : self.town,
+			"city" : self.city 
 			})
 
 		return str(object_id)
 
 	def Edit():
 		# validate contrains
-		collection.update(
-				{"_id" : self.identifier},
-				{"$set" : {
-					"codigo_proveedor" : self.codigo_proveedor,
-					"codigo_interno" : self.codigo_interno,
-					"nombre"  : self.nombre,
-					"precio" : self.precio,
-					"stock" : self.stock,
-					"descuento" : self.descuento,
-					"estado" : self.estado,
-					"marca" : self.marca,
-					"familia" : self.familia,
-					"descripcion" : self.descripcion	
-				}})
 
-		return str(object_id)
+		# collection.update(
+		# 		{"_id" : self.identifier},
+		# 		{"$set" : {
+		# 			"codigo_proveedor" : self.codigo_proveedor,
+		# 			"codigo_interno" : self.codigo_interno,
+		# 			"nombre"  : self.nombre,
+		# 			"precio" : self.precio,
+		# 			"stock" : self.stock,
+		# 			"discount" : self.discount,
+		# 			"estado" : self.estado,
+		# 			"marca" : self.marca,
+		# 			"familia" : self.familia,
+		# 			"descripcion" : self.descripcion	
+		# 		}})
+
+
+		# return str(object_id)
+
+		return self.identifier
 
 	@property
-	def vendedor(self):
-	    return self._vendedor
-	@vendedor.setter
-	def vendedor(self, value):
-	    self._vendedor = value
+	def salesman(self):
+	    return self._salesman
+	@salesman.setter
+	def salesman(self, value):
+	    self._salesman = value
 		
 	@property
-	def cliente(self):
-	    return self._cliente
-	@cliente.setter
-	def cliente(self, value):
-	    self._cliente = value
+	def customer(self):
+	    return self._customer
+	@customer.setter
+	def customer(self, value):
+	    self._customer = value
 	
 	@property
 	def subtotal(self):
@@ -74,14 +78,13 @@ class Order(BaseModel):
 	@subtotal.setter
 	def subtotal(self, value):
 	    self._subtotal = value
-	
 
 	@property
-	def descuento(self):
-	    return self._descuento
-	@descuento.setter
-	def descuento(self, value):
-	    self._descuento = value
+	def discount(self):
+	    return self._discount
+	@discount.setter
+	def discount(self, value):
+	    self._discount = value
 	
 	@property
 	def iva(self):
@@ -98,25 +101,25 @@ class Order(BaseModel):
 	    self._total = value
 	
 	@property
-	def direccion(self):
-	    return self._direccion
-	@direccion.setter
-	def direccion(self, value):
-	    self._direccion = value
+	def address(self):
+	    return self._address
+	@address.setter
+	def address(self, value):
+	    self._address = value
 	
 	@property
-	def comuna(self):
-	    return self._comuna
-	@comuna.setter
-	def comuna(self, value):
-	    self._comuna = value
+	def town(self):
+	    return self._town
+	@town.setter
+	def town(self, value):
+	    self._town = value
 	
 	@property
-	def ciudad(self):
-	    return self._ciudad
-	@ciudad.setter
-	def ciudad(self, value):
-	    self._ciudad = value
+	def city(self):
+	    return self._city
+	@city.setter
+	def city(self, value):
+	    self._city = value
 
 
 	

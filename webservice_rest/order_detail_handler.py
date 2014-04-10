@@ -3,7 +3,6 @@
 from model.order_detail import OrderDetail
 from base_handler import BaseHandler
 
-
 class OrderDetailHandler(BaseHandler):
 	def get(self):
 		
@@ -14,11 +13,11 @@ class OrderDetailHandler(BaseHandler):
 		#instantiate order detail
 		order_detail = OrderDetail()
 
-		order_detail.cabecera	= self.TryGetParam("cabecera", "")
-		order_detail.producto	= self.TryGetParam("producto", "")
-		order_detail.cantidad 	= self.TryGetParam("cantidad", "")
-		order_detail.descuento 	= self.TryGetParam("descuento","")
-		order_detail.neto 		= self.TryGetParam("neto", "")
+		order_detail.header		= self.TryGetParam("header", "")
+		order_detail.product	= self.TryGetParam("product", "")
+		order_detail.quantity 	= self.TryGetParam("quantity", "")
+		order_detail.discount 	= self.TryGetParam("discount","")
+		order_detail.net 		= self.TryGetParam("net", "")
 		order_detail.total 		= self.TryGetParam("total", "")
 
 		oid = order_detail.Save(self.db.order_details)

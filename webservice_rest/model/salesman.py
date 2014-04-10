@@ -8,10 +8,10 @@ class Salesman(BaseModel):
 
 	def __init__(self):
 		self._identifier	= ""
-		self._nombre		= ""
+		self._name			= ""
 		self._password		= ""
 		self._email			= ""
-		self._permisos		= ""
+		self._permissions	= ""
 
 	def Save(self, collection):
 
@@ -23,10 +23,10 @@ class Salesman(BaseModel):
 			collection.update(
 				{"_id" : data[0]["_id"]},
 				{"$set" : {
-					"nombre" : self.nombre,
+					"name" 		: self.name,
 					"password"  : self.password,
-					"email" : self.email,
-					"permisos" : self.permisos
+					"email" 	: self.email,
+					"permissions": self.permissions
 				}})
 
 			return str(data[0]["_id"])
@@ -34,10 +34,10 @@ class Salesman(BaseModel):
 		#save the object and return the id
 		object_id = collection.insert(
 			{
-			"nombre" : self.nombre,
+			"name" 		: self.name,
 			"password"  : self.password,
-			"email"  : self.email,
-			"permisos" : self.permisos
+			"email"  	: self.email,
+			"permissions": self.permissions
 			})
 
 		return str(object_id)
@@ -55,11 +55,11 @@ class Salesman(BaseModel):
 	    self._identifier = value
 	
 	@property
-	def nombre(self):
-	    return self._nombre
-	@nombre.setter
-	def nombre(self, value):
-	    self._nombre = value
+	def name(self):
+	    return self._name
+	@name.setter
+	def name(self, value):
+	    self._name = value
 	
 	@property
 	def password(self):
@@ -74,10 +74,11 @@ class Salesman(BaseModel):
 	@email.setter
 	def email(self, value):
 	    self._email = value
+
 	@property
-	def permisos(self):
-	    return self._permisos
-	@permisos.setter
-	def permisos(self, value):
-	    self._permisos = value
+	def permissions(self):
+	    return self._permissions
+	@permissions.setter
+	def permissions(self, value):
+	    self._permissions = value
 	

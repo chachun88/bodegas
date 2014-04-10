@@ -6,7 +6,7 @@ class Brand(BaseModel):
 
 	def __init__(self):
 		self._identifier	= ""
-		self._nombre		= ""
+		self._name			= ""
 
 	def Save(self, collection):
 
@@ -18,7 +18,7 @@ class Brand(BaseModel):
 				{"_id" : data[0]["_id"]},
 				{"$set" : {
 					"identifier" : self.identifier,
-					"nombre" : self.nombre
+					"name" : self.name
 				}})
 
 			return str(data[0]["_id"])
@@ -27,7 +27,7 @@ class Brand(BaseModel):
 		object_id = collection.insert(
 			{
 			"identifier" : self.identifier,
-			"nombre" : self.nombre
+			"name" : self.name
 			})
 
 		return str(object_id)
@@ -40,8 +40,8 @@ class Brand(BaseModel):
 	    self._identifier = value
 
 	@property
-	def nombre(self):
-	    return self._nombre
-	@nombre.setter
-	def nombre(self, value):
-	    self._nombre = value	
+	def name(self):
+	    return self._name
+	@name.setter
+	def name(self, value):
+	    self._name = value	
