@@ -26,7 +26,7 @@ class Salesman(BaseModel):
 					"name" 		: self.name,
 					"password"  : self.password,
 					"email" 	: self.email,
-					"permissions": self.permissions
+					"permissions":self.permissions
 				}})
 
 			return str(data[0]["_id"])
