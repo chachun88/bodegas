@@ -70,7 +70,7 @@ class Cellar(BaseModel):
 			return "ok"
 
 		except Exception, e:
-			return "error ocurred"
+			return "error ocurred" 
 
 	def RemoveProducts(self, product_list, collection):
 		try:

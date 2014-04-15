@@ -6,6 +6,7 @@ import os
 
 f = open ('bodegas.uml', 'r')
 file_data = f.read().replace("uml:", "uml_").replace("xmi:", "xmi_") ## translate uml to common xml
+file_data = file_data.strip()
 
 root = ET.fromstring(file_data)
 
@@ -74,9 +75,9 @@ for cls in root.findall('packagedElement'):
 		class_string += "\n"
 
 	## class init 
-	class_string += "Class " + class_name + "(" + parent_class + "):\n"
+	class_string += "class " + class_name + "(" + parent_class + "):\n"
 	class_string += "	def __init__(self):\n"
-	class_string += "		super("+ parent_class +", self).__init__()\n"
+	class_string += "		"+parent_class+".__init__(self)\n"
 
 	## init attributes all are strigs for now
 	for attr in attributes:
@@ -94,11 +95,21 @@ for cls in root.findall('packagedElement'):
 
 	## adding operations to class
 	for op in operations:
+		
 		class_string += "\n"
-		class_string += "	def " + op["name"] + "(self"
+		if op["is_static"]:
+			class_string += "	@staticmethod\n"
+			class_string += "	def " + op["name"] + "("
+		else:
+			class_string += "	def " + op["name"] + "(self"
+
 		# adding parameters
+		first_iteration = True
 		for param in op["parameters"]:
-			class_string += ", " + param["name"]
+			if op["is_static"] and first_iteration:
+				class_string += param["name"]
+			else:
+				class_string += ", " + param["name"]
 
 		class_string += "):\n"
 		class_string += "		return ''\n"

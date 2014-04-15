@@ -3,10 +3,9 @@
 
 from basemodel import BaseModel
 
-Class Kardex(BaseModel):
-	def __init__(self):
-		super(BaseModel, self).__init__()
-		self._identifier = ''
+class Kardex(BaseModel):
+	def __init__(self,db):
+		super(BaseModel, self).__init__(db)
 		self._product_identifier = ''
 		self._cellar_identifier = ''
 		self._operation_type = ''
@@ -16,13 +15,7 @@ Class Kardex(BaseModel):
 		self._balance_units = ''
 		self._balance_price = ''
 		self._balance_total = ''
-
-	@property
-	def identifier(self):
-		return self._identifier
-	@identifier.setter
-	def identifier(self, value):
-		self._identifier = value
+		self._data = ''
 
 	@property
 	def product_identifier(self):
@@ -87,5 +80,18 @@ Class Kardex(BaseModel):
 	def balance_total(self, value):
 		self._balance_total = value
 
+	@property
+	def data(self):
+		return self._data
+	@data.setter
+	def data(self, value):
+		self._data = value
+
 	def Save(self):
+		return ''
+
+	def InitById(self, idd):
+		return ''
+
+	def GetPrevKardex(self):
 		return ''
