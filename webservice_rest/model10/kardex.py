@@ -15,7 +15,7 @@ class Kardex(BaseModel):
 		self._balance_units = 0
 		self._balance_price = 0.0
 		self._balance_total = 0.0
-		self._date = 0000000
+		self._date = 0000000 
 
 		self.collection = db.kardex
 

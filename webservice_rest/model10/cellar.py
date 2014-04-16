@@ -13,7 +13,7 @@ class Cellar(BaseModel):
 
 	@property
 	def name(self):
-		return self._name
+		return self._name 
 	@name.setter
 	def name(self, value):
 		self._name = value
@@ -33,11 +33,14 @@ class Cellar(BaseModel):
 
 	#@return json
 	def Print(self):
-		me = {"_id":ObjectId(self.identifier),
-			"name" : self.name,
-			"description": self.description}
+		try:
+			me = {"_id":ObjectId(self.identifier),
+				"name" : self.name,
+				"description": self.description}
 
-		return me
+			return me
+		except:
+			return self.ShowError("failed to print cellar")
 
 	## validates and save cellar, it could be validated by name
 	def Save(self):
@@ -92,17 +95,23 @@ class Cellar(BaseModel):
 		return data
 
 	def InitById(self, idd):
-		datas = self.collection.find({"_id": ObjectId(idd)})
+		try:
+			datas = self.collection.find({"_id": ObjectId(idd)})
 
-		if datas >= 1:
-			data = datas[0]
-			self.identifier = str(data["_id"])
-			self.name = data["name"]
-			self.description = data["description"]
+			if datas >= 1:
+				data = datas[0]
+				self.identifier = str(data["_id"])
+				self.name = data["name"]
+				self.description = data["description"]
 
-			return self.ShowSuccessMessage("cellar initialized")
-		else:
+				return self.ShowSuccessMessage("cellar initialized")
+			else:
+				raise
+		except:
 			return self.ShowError("item not found")
+
+	def ListProducts(self, page, items):
+		pass
 
 	def Rename(self, new_name):
 		try:

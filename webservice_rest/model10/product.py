@@ -3,6 +3,8 @@
 
 from basemodel import BaseModel, db
 from bson.objectid import ObjectId
+from brand import Brand
+from category import Category
 
 class Product(BaseModel):
 	def __init__(self):
@@ -18,7 +20,7 @@ class Product(BaseModel):
 		self._bullet_point_1 = ''
 		self._bullet_point_2 = ''
 		self._bullet_point_3 = ''
-		self._currency = ''
+		self._currency = '' 
 		self._image = ''
 		self._image_2 = ''
 		self._image_3 = ''
@@ -141,7 +143,6 @@ class Product(BaseModel):
 	def GetCellars(self):
 		return ''
 
-	
 	def Print(self):
 		try:
 			rtn_data = {
@@ -170,6 +171,8 @@ class Product(BaseModel):
 	def Save(self):
 
 		try:
+			if Category().Exist(self.category) == False and Brand().Exist(self.brand) == False:
+				raise
 			
 			sku_count = self.collection.find({"sku":self.sku}).count()
 
@@ -289,3 +292,8 @@ class Product(BaseModel):
 
 			return self.ShowSuccessMessage("product initialized")
 		return self.ShowError("product can not be initialized")
+
+	def Exist(self, name):
+		if self.collection.find({"name":name}).count() >= 1:
+			return True
+		return False

@@ -16,7 +16,7 @@ class SalesmanPermission(BaseModel):
 		return self._salesman_identifier
 	@salesman_identifier.setter
 	def salesman_identifier(self, value):
-		self._salesman_identifier = value
+		self._salesman_identifier = value 
 
 	@property
 	def permission_identifier(self):

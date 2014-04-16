@@ -3,6 +3,7 @@
 
 from basemodel import BaseModel, db
 from salesmanpermission import SalesmanPermission
+from bson.objectid import ObjectId
 
 
 class Salesman(BaseModel):
@@ -10,10 +11,10 @@ class Salesman(BaseModel):
 		BaseModel.__init__(self)
 		self.collection = db.salesman
 		self._name = ''
-		self._password = ''
+		self._password = '' 
 		self._email = ''
 
-		self._permissions = SalesmanPermission() #private
+		self._permissions = SalesmanPermission() #private 
 
 	@property
 	def name(self):
@@ -35,6 +36,14 @@ class Salesman(BaseModel):
 	@email.setter
 	def email(self, value):
 		self._email = value
+
+	def Print(self):
+		return {
+			"_id":ObjectId(self.identifier),
+			"name":self.name,
+			"email":self.email,
+			"password":self.password
+		}
 
 	def Remove(self):
 		try:
@@ -69,6 +78,22 @@ class Salesman(BaseModel):
 				raise
 		except Exception, e:
 			return self.ShowError("user : " + email + " not found")
+
+	def InitById(self, idd):
+
+		try:
+			data = self.collection.find({"_id":ObjectId(idd)})
+			if data.count() >= 1:
+				self.name 		= data[0]["name"]
+				self.password 	= data[0]["password"]
+				self.email 		= data[0]["email"]
+				self.identifier = str(data[0]["_id"])
+
+				return self.ShowSuccessMessage("user initialized")
+			else:
+				raise
+		except Exception, e:
+			return self.ShowError("user : " + idd + " not found")
 
 	def GetPermissions(self):
 		return self._permissions.FindPermissions(self.identifier)

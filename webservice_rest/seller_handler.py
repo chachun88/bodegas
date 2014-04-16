@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from model.salesman import Salesman
+from model10.salesman import Salesman
 
 from base_handler import BaseHandler
+from bson import json_util
 
 class AddSellerHandler(BaseHandler):
 	def get(self):
@@ -20,9 +21,9 @@ class AddSellerHandler(BaseHandler):
 		salesman.email		= self.TryGetParam("email", "")
 
 		# saving current seller
-		oid = salesman.Save(self.db.salesman)
+		oid = salesman.Save()
 
-		self.write(oid)
+		self.write(json_util.dumps(oid))
 
 
 class RemoveSellerHandler(BaseHandler):
@@ -31,11 +32,19 @@ class RemoveSellerHandler(BaseHandler):
 		# validate access token
 		if not self.ValidateToken():
 			return
-		
+
+		idd = self.get_argument("id", "")
+		email = self.get_argument("email", "")
+
 		# instantiate Salesman
 		salesman = Salesman()
 
-		salesman.RemoveById(self.TryGetParam("id", ""), self.db.salesman)
+		if idd != "":
+			salesman.InitById(idd)
+		else:
+			salesman.InitByEmail(email)
+
+		self.write(json_util.dumps(salesman.Remove()))
 
 
 class GetSalesmanHandler(BaseHandler):
@@ -48,12 +57,14 @@ class GetSalesmanHandler(BaseHandler):
 		idd = self.TryGetParam("id", "")
 		email = self.TryGetParam("email", "")
 
+		salesman = Salesman()
+
 		if idd == "":
-			salesman = Salesman()
-			self.write(salesman.FindByEmail(email, self.db.salesman))
+			salesman.InitByEmail(email)
 		else:
-			salesman = Salesman()
-			self.write(salesman.FindById(idd, self.db.salesman))
+			salesman.InitById(idd)
+
+		self.write(json_util.dumps(salesman.Print()))
 
 
 class ListSalesmanHandler(BaseHandler):
@@ -73,4 +84,4 @@ class ListSalesmanHandler(BaseHandler):
 		except Exception, e:
 			print str(e)
 		
-		self.write(salesman.GetList(current_page, items_per_page, self.db.salesman))
+		self.write(json_util.dumps(salesman.GetList(current_page, items_per_page)))

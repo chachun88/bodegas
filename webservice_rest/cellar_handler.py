@@ -7,9 +7,10 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from base_handler import BaseHandler
+from bson import json_util
 
-from model.cellar import Cellar
+from base_handler import BaseHandler
+from model10.cellar import Cellar
 
 class CellarAddHandler(BaseHandler):
 	def get(self):
@@ -23,7 +24,7 @@ class CellarAddHandler(BaseHandler):
 		cellar.description = self.get_argument("description", "")
 		cellar.identifier = self.get_argument("id", "")
 
-		self.write(cellar.Save(self.db.cellar))
+		self.write(json_util.dumps((cellar.Save())))
 
 
 class CellarListHandler(BaseHandler):
@@ -36,7 +37,7 @@ class CellarListHandler(BaseHandler):
 		page = self.get_argument("page", 1)
 		items = self.get_argument("items", 10)
 
-		self.write(Cellar.List(int(page), int(items), self.db.cellar))
+		self.write(json_util.dumps(Cellar().GetList(int(page), int(items))))
 		pass
 
 class CellarRemoveHandler(BaseHandler):
@@ -50,10 +51,9 @@ class CellarRemoveHandler(BaseHandler):
 		idd = self.get_argument("id", "")
 		
 		cellar = Cellar()
-		cellar.InitWithId(idd, self.db.cellar)
-		cellar.Remove(self.db.cellar)
+		cellar.InitById(idd)
 
-		self.write("ok")
+		self.write(json_util.dumps(cellar.Remove()))
 		pass
 		
 
@@ -67,9 +67,9 @@ class CellarFindHandler(BaseHandler):
 		idd = self.get_argument("id", "")
 		
 		cellar = Cellar()
-		cellar.InitWithId(idd, self.db.cellar)
+		cellar.InitById(idd)
 		
-		self.write(cellar.Print())
+		self.write(json_util.dumps(cellar.Print()))
 		pass
 
 
@@ -86,8 +86,8 @@ class CellarProductsListHandler(BaseHandler):
 		items = self.get_argument("items", 10)
 
 		cellar = Cellar()
-		cellar.InitWithId(idd, self.db.cellar)
-		self.write(cellar.ListProducts(page, items, self.db.cellar_products))
+		cellar.InitWithId(idd)
+		self.write(cellar.ListProducts(page, items))
 		pass
 
 class CellarProductsAddHandler(BaseHandler):
@@ -101,13 +101,13 @@ class CellarProductsAddHandler(BaseHandler):
 		product_list = self.get_argument("products", "")
 
 		cellar = Cellar()
-		cellar.InitWithId(idd, self.db.cellar)
+		cellar.InitWithId(idd)
 		
 		'''
 		product list sample
 		1231233asidoad:10,qoiewiqoej1:1
 		'''
-		self.write(cellar.AddProducts(product_list, self.db.cellar_products, self.db.products))
+		#self.write(cellar.AddProducts(product_list, self.db.cellar_products, self.db.products))
 		pass
 		
 class CellarProductsRemoveHandler(BaseHandler):
@@ -121,7 +121,7 @@ class CellarProductsRemoveHandler(BaseHandler):
 		product_list = self.get_argument("products", "")
 
 		cellar = Cellar()
-		cellar.InitWithId(idd, self.db.cellar)
-		
-		self.write(cellar.RemoveProducts(product_list))
+		cellar.InitWithId(idd)
+
+		#self.write(cellar.RemoveProducts(product_list))
 		pass

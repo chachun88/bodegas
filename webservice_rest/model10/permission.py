@@ -13,4 +13,4 @@ class Permission(BaseModel):
 		return self._name
 	@name.setter
 	def name(self, value):
-		self._name = value
+		self._name = value 

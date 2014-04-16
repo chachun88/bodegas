@@ -6,6 +6,8 @@ from salesman import Salesman
 from cellar import Cellar
 from product import Product
 from kardex import Kardex
+from brand import Brand
+from category import Category
 
 ####################################
 ########## basemodel.py ############
@@ -92,6 +94,35 @@ print "list : {}".format(json_util.dumps(Cellar.GetAllCellars()))
 print "\n\n"
 
 ####################################
+########### brand.py ###############
+####################################
+
+print "testing brands"
+
+brand = Brand()
+brand.name = "giani"
+
+print "save : {}".format(brand.Save())
+print "list : {}".format(brand.GetAllBrands())
+
+print "\n\n"
+
+####################################
+########### category.py ############
+####################################
+
+print "testing category"
+
+category = Category()
+category.parent = ""
+category.name = "zapatos"
+
+print "save : {}".format(category.Save())
+print "list : {}".format(category.GetAllCategories())
+
+print "\n\n"
+
+####################################
 ########### product.py #############
 ####################################
 
@@ -105,6 +136,8 @@ product.color = "red"
 product.size = "10"
 product.image = "an image"
 product.manufacturer = "giani"
+product.category = "zapatos"
+product.brand = "giani"
 
 print "product.py"
 print "print : {}".format(product.Print())
@@ -120,8 +153,11 @@ print "\n\n"
 ########### kardex.py ##############
 ####################################
 
+print "kardex"
+
 kardex = Kardex()
 
+## used sample https://www.youtube.com/watch?v=E03gTmKIEa0
 kardex.product_identifier = product.identifier
 kardex.cellar_identifier = cellar.identifier
 kardex.date = 20140416
@@ -166,8 +202,15 @@ kardex.units = 65.0
 
 kardex.Insert()
 
+#kardex.Debug(product.identifier, cellar.identifier)
 
-kardex.Debug(product.identifier, cellar.identifier)
+print "\n\n"
+
+
+
+
+
+
 
 
 

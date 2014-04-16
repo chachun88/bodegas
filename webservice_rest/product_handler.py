@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from model.product import Product
+from model10.product import Product
 
 from base_handler import BaseHandler
+from bson import json_util
 
 
 class AddProductHandler(BaseHandler):
@@ -34,7 +35,7 @@ class AddProductHandler(BaseHandler):
 		product.image_3 		= self.get_argument("image_3", "")
 
 		# saving current product
-		oid = product.Save(self.db.products)
+		oid = json_util.dumps(product.Save())
 		
 
 		self.write(oid)
@@ -46,8 +47,17 @@ class RemoveProductHandler(BaseHandler):
 		if not self.ValidateToken():
 			return
 
+		idd = self.get_argument("id", "")
+		sku = self.get_argument("sku", "")
+
 		product = Product()
-		product.RemoveById(self.TryGetParam("id", ""), self.db.products)
+
+		if idd != "":
+			product.InitById(idd)
+		else:
+			product.InitBySku(sku)
+
+		self.write(json_util.dumps(product.Remove()))
 
 class GetProductHandler(BaseHandler):
 	def get(self):
@@ -56,8 +66,19 @@ class GetProductHandler(BaseHandler):
 		if not self.ValidateToken():
 			return
 
+
+		idd = self.get_argument("id", "")
+		sku = self.get_argument("sku", "")
+
 		product = Product()
-		self.write(product.FindById(self.TryGetParam("id", ""), self.db.products))
+
+		if idd != "":
+			product.InitById(idd)
+			self.write(json_util.dumps(product.Print()))
+		else:
+			product.InitBySku(sku)
+			self.write(json_util.dumps(product.Print()))
+
 
 class ListProductsHandler(BaseHandler):
 	def get(self):
@@ -75,9 +96,8 @@ class ListProductsHandler(BaseHandler):
 			items_per_page 	= int(self.TryGetParam("items", "10"))
 		except Exception, e:
 			print str(e)
-		
-		self.write(product.GetList(current_page, items_per_page, self.db.products))
-		
+
+		self.write(json_util.dumps(product.GetList(current_page, items_per_page)))
 
 class UploadPictureSampleHandler(BaseHandler):
 	def get(self):
