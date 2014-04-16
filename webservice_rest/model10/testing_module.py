@@ -5,6 +5,7 @@ from basemodel import BaseModel, db
 from salesman import Salesman
 from cellar import Cellar
 from product import Product
+from kardex import Kardex
 
 ####################################
 ########## basemodel.py ############
@@ -80,12 +81,13 @@ cellar = Cellar()
 
 cellar.name = "primera bodega"
 cellar.description = "esta es la primera bodega"
+cellar.identifier = "534db54f9ec9a77e7440f03c"
 
 print "cellar testing"
 print "save : {}".format(cellar.Save())
 print "rename : {}".format(cellar.Rename("otro nombre"))
 print "list : {}".format(json_util.dumps(Cellar.GetAllCellars()))
-print "remove : {}".format(cellar.Remove())
+#print "remove : {}".format(cellar.Remove())
 
 print "\n\n"
 
@@ -98,6 +100,11 @@ product = Product()
 product.name = "nuevo producto"
 product.description = "a product description"
 product.sku = "123"
+product.brand = "a brand"
+product.color = "red"
+product.size = "10"
+product.image = "an image"
+product.manufacturer = "giani"
 
 print "product.py"
 print "print : {}".format(product.Print())
@@ -105,7 +112,77 @@ print "save: {}".format(product.Save())
 print "print : {}".format(product.Print())
 print "init : {}".format(product.InitBySku("123"))
 print "list : {}".format(product.GetList(0,10))
-print "remove : {}".format(product.Remove())
+#print "remove : {}".format(product.Remove())
 
 print "\n\n"
+
+####################################
+########### kardex.py ##############
+####################################
+
+kardex = Kardex()
+
+kardex.product_identifier = product.identifier
+kardex.cellar_identifier = cellar.identifier
+kardex.date = 20140416
+
+##clean kardex
+db.kardex.remove({
+	"product_identifier":kardex.product_identifier,
+	"cellar_identifier":kardex.cellar_identifier
+	})
+
+kardex.operation_type = Kardex.OPERATION_BUY
+kardex.units = 40
+kardex.price = 50000
+
+print "Insert : {}".format(kardex.Insert())
+
+kardex.operation_type = Kardex.OPERATION_SELL
+kardex.units = 4
+
+kardex.Insert()
+
+kardex.operation_type = Kardex.OPERATION_SELL
+kardex.units = 30
+
+kardex.Insert()
+
+kardex.operation_type = Kardex.OPERATION_BUY
+kardex.units = 15
+kardex.price = 50000
+
+kardex.Insert()
+
+kardex.operation_type = Kardex.OPERATION_BUY
+kardex.units = 60
+kardex.price = 52000
+
+kardex.Insert()
+
+
+kardex.operation_type = Kardex.OPERATION_SELL
+kardex.units = 65.0
+
+kardex.Insert()
+
+
+kardex.Debug(product.identifier, cellar.identifier)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
