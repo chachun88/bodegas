@@ -16,6 +16,7 @@ import brand_handler
 import order_handler
 import order_detail_handler
 import cellar_handler
+import category_handler
 
 from tornado.options import define, options
 
@@ -39,31 +40,37 @@ class Application(tornado.web.Application):
 
             (r"/product/add",           product_handler.AddProductHandler),
             (r"/product/edit",          product_handler.AddProductHandler),
-            (r"/product/delete",        product_handler.RemoveProductHandler),
+            (r"/product/remove",        product_handler.RemoveProductHandler),
             (r"/product/find",          product_handler.GetProductHandler),
             (r"/product/list",          product_handler.ListProductsHandler),
 
             (r"/salesman/add",          seller_handler.AddSellerHandler),
             (r"/salesman/edit",         seller_handler.AddSellerHandler),
-            (r"/salesman/delete",       seller_handler.RemoveSellerHandler),
+            (r"/salesman/remove",       seller_handler.RemoveSellerHandler),
             (r"/salesman/find",         seller_handler.GetSalesmanHandler),
             (r"/salesman/list",         seller_handler.ListSalesmanHandler),
 
             (r"/brand/add",             brand_handler.AddBrandHandler),
             (r"/brand/edit",            brand_handler.AddBrandHandler),
-            (r"/brand/delete",          brand_handler.RemoveBrandHandler),
+            (r"/brand/remove",          brand_handler.RemoveBrandHandler),
             (r"/brand/find",            brand_handler.GetBrandHandler),
             (r"/brand/list",            brand_handler.LisBrandHandler),
 
+            (r"/category/add",             category_handler.AddCategoryHandler),
+            (r"/category/edit",            category_handler.AddCategoryHandler),
+            (r"/category/remove",          category_handler.RemoveCategoryHandler),
+            (r"/category/find",            category_handler.GetCategoryHandler),
+            (r"/category/list",            category_handler.LisCategoryHandler),
+
             (r"/order/add",             order_handler.AddOrderHandler),
             (r"/order/edit",            order_handler.EditOrderHandler),
-            (r"/order/delete",          order_handler.RemoveOrderHandler),
+            (r"/order/remove",          order_handler.RemoveOrderHandler),
             (r"/order/find",            order_handler.GetOrderHandler),
             (r"/order/list",            order_handler.ListOrderHandler),
 
             (r"/order-detail/add",      order_detail_handler.OrderDetailHandler),
             (r"/order-detail/edit",     order_detail_handler.OrderDetailHandler),
-            (r"/order-detail/delete",   order_detail_handler.RemoveOrderDetailHandler),
+            (r"/order-detail/remove",   order_detail_handler.RemoveOrderDetailHandler),
             (r"/order-detail/find",     order_detail_handler.GetOrderDetailHandler),
             (r"/order-detail/list",     order_detail_handler.ListOrderDetailHandler),
 

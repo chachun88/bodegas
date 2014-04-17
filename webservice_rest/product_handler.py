@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-from model.product import Product
+from model10.product import Product
 
 from base_handler import BaseHandler
+from bson import json_util
+
 
 class AddProductHandler(BaseHandler):
 	def get(self):
@@ -14,19 +16,26 @@ class AddProductHandler(BaseHandler):
 		# isntantitate product
 		product = Product()
 
-		product.codigo_proveedor = self.TryGetParam("codigo_proveedor", "")
-		product.codigo_interno = self.TryGetParam("codigo_interno", "")
-		product.nombre = self.TryGetParam("nombre", "")
-		product.precio = self.TryGetParam("precio", "")
-		product.stock = self.TryGetParam("stock", "")
-		product.descuento = self.TryGetParam("descuento", "")
-		product.estado = self.TryGetParam("estado", "")
-		product.marca = self.TryGetParam("marca", "")
-		product.familia = self.TryGetParam("familia", "")
-		product.descripcion = self.TryGetParam("descripcion", "")
+		product.sku 			= self.get_argument("sku", "")
+		product.name 			= self.get_argument("name", "")
+		product.upc 			= self.get_argument("upc", "")
+		product.description 	= self.get_argument("description", "")
+		product.brand 			= self.get_argument("brand", "")
+		product.manufacturer 	= self.get_argument("manufacturer", "")
+		product.size 			= self.get_argument("size", "")
+		product.color 			= self.get_argument("color", "")
+		product.material 		= self.get_argument("material", "")
+		product.bullet_point_1 	= self.get_argument("bullet_1", "")
+		product.bullet_point_2 	= self.get_argument("bullet_2", "")
+		product.bullet_point_3 	= self.get_argument("bullet_3", "")
+		product.price			= self.get_argument("price", "")
+		product.currency 		= self.get_argument("currency", "")
+		product.image 			= self.get_argument("image", "")
+		product.image_2			= self.get_argument("image_2", "")
+		product.image_3 		= self.get_argument("image_3", "")
 
 		# saving current product
-		oid = product.Save(self.db.products)
+		oid = json_util.dumps(product.Save())
 		
 
 		self.write(oid)
@@ -38,8 +47,17 @@ class RemoveProductHandler(BaseHandler):
 		if not self.ValidateToken():
 			return
 
+		idd = self.get_argument("id", "")
+		sku = self.get_argument("sku", "")
+
 		product = Product()
-		product.RemoveById(self.TryGetParam("id", ""), self.db.products)
+
+		if idd != "":
+			product.InitById(idd)
+		else:
+			product.InitBySku(sku)
+
+		self.write(json_util.dumps(product.Remove()))
 
 class GetProductHandler(BaseHandler):
 	def get(self):
@@ -48,8 +66,19 @@ class GetProductHandler(BaseHandler):
 		if not self.ValidateToken():
 			return
 
+
+		idd = self.get_argument("id", "")
+		sku = self.get_argument("sku", "")
+
 		product = Product()
-		self.write(product.FindById(self.TryGetParam("id", ""), self.db.products))
+
+		if idd != "":
+			product.InitById(idd)
+			self.write(json_util.dumps(product.Print()))
+		else:
+			product.InitBySku(sku)
+			self.write(json_util.dumps(product.Print()))
+
 
 class ListProductsHandler(BaseHandler):
 	def get(self):
@@ -67,9 +96,8 @@ class ListProductsHandler(BaseHandler):
 			items_per_page 	= int(self.TryGetParam("items", "10"))
 		except Exception, e:
 			print str(e)
-		
-		self.write(product.GetList(current_page, items_per_page, self.db.products))
-		
+
+		self.write(json_util.dumps(product.GetList(current_page, items_per_page)))
 
 class UploadPictureSampleHandler(BaseHandler):
 	def get(self):

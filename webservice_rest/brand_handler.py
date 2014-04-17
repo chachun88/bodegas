@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from model.brand import Brand
+from model10.brand import Brand
 
 from base_handler import BaseHandler
+from bson import json_util
 
 class AddBrandHandler(BaseHandler):
 	def get(self):
@@ -14,10 +15,10 @@ class AddBrandHandler(BaseHandler):
 		brand = Brand()
 
 		brand.identifier 	= self.TryGetParam("id", "")
-		brand.nombre 		= self.TryGetParam("nombre", "")
+		brand.name 			= self.TryGetParam("name", "")
 		
 		# saving current brand
-		oid = brand.Save(self.db.brands)
+		oid = json_util.dumps(brand.Save())
 
 		self.write(oid)
 
@@ -29,8 +30,18 @@ class RemoveBrandHandler(BaseHandler):
 		if not self.ValidateToken():
 			return
 
+		idd = self.get_argument("id", "")
+		name = self.get_argument("name", "")
+
 		brand = Brand()
-		brand.RemoveById(self.TryGetParam("id", ""), self.db.brands)
+
+		if idd != "":
+			brand.InitById(idd)
+		else:
+			brand.InitByName(name)
+
+		self.write(json_util.dumps(brand.Remove()))
+
 
 class GetBrandHandler(BaseHandler):
 	def get(self):
@@ -39,8 +50,17 @@ class GetBrandHandler(BaseHandler):
 		if not self.ValidateToken():
 			return
 
+		idd = self.get_argument("id", "")
+		name = self.get_argument("name", "")
+
 		brand = Brand()
-		self.write(brand.FindById(self.TryGetParam("id", ""), self.db.brands))
+
+		if idd != "":
+			brand.InitById(idd)
+		else:
+			brand.InitByName(name)
+
+		self.write(json_util.dumps(brand.Print()))
 
 class LisBrandHandler(BaseHandler):
 	def get(self):
@@ -59,4 +79,4 @@ class LisBrandHandler(BaseHandler):
 		except Exception, e:
 			print str(e)
 		
-		self.write(brand.GetList(current_page, items_per_page, self.db.brands))
+		self.write(json_util.dumps(brand.GetList(current_page, items_per_page)))

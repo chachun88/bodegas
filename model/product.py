@@ -117,10 +117,9 @@ class Product(BaseModel):
 
 
 		if self.identifier!="":
-			print self.identifier
 			url=self.wsurl() + "/product/delete"
 			url+="?token=" + self.token()
-			url+="&id" + self.identifier
+			url+="&id=" + self.identifier
 
 			urllib.urlopen(url)
 
