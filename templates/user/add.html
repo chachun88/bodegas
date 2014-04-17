@@ -3,6 +3,7 @@
 {% block title %}Agregar {% end %}
 {% block caption %}agrega una nueva bodega{% end %}
 
+
 {% block body %}
 <div class="col-md-7">
 	<section class="widget">
@@ -39,11 +40,25 @@
 						<div class="col-sm-8"><input placeholder="contraseña" name="re_password" required="required" type="password" class="form-control" value="{{ user.password }}"></div>
 					</div>
 				</div>
+				<style type="text/css">
+  					.objMovible { position:absolute; cursor:pointer }
+				</style>
 				<div class="control-group">
 					<label for="" class="control-label">Permisos</label>
 					<div class="controls form-group">
-						<div class="col-sm-8"><input name="permissions" type="text" class="form-control" value="{{ user.permissions }}"></div>
-					</div>
+						<div class="col-sm-8"><div id="perm" name="permissions" type="" class="form-control" value="{{ user.permissions }}">
+						{% set permiso = ["acceso a api","cargar productos nuevos","vender","modificar bodegas","adminsitrar usuarios","ver informes"] %}
+							{% for i in range(0,len(permiso)) %} 
+									<a id="perm_top{{ i }}" class="btn-sm btn-primary btn-perm" onclick="addElementBot({{ i }})">{{ permiso[i] }}</a>
+							{% end %}
+						</div>
+							<div id="perm_bot">
+								{% for i in range(0,len(permiso)) %} 
+									<a id="perm_{{ i }}" class="btn-sm btn-primary btn-perm-bot" onclick="addElement({{ i }})">{{ permiso[i] }}</a>
+								{% end %}
+							</div>
+						</div>
+					</div>									
 				</div>
 			</fieldset>
 			<input type="hidden" name="id" value="{{ user.identifier }}">

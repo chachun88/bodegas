@@ -27,31 +27,25 @@
 			<table class="table table-striped table-images">
 				<thead>
 					<tr>
-						<th class="sorting" >Nombre</th>
-						<th class="sorting" >Description</th>
+					{% for j in range(ncols) %} 
+						<th class="sorting" >{{matriz[3][j]}}</th>
+					{% end %}	
+<!-- 						<th class="sorting" >Description</th>
 						<th class="hidden-xs-portrait sorting">Precio</th>
 						<th class="hidden-xs sorting" >sku</th>
 						<th class="hidden-xs sorting" >Cantidad</th>
 						<th class="hidden-xs sorting" >Proveedor</th>
-						<th class="hidden-xs sorting" >Marca</th>
+						<th class="hidden-xs sorting" >Marca</th> -->
 					</tr>
 				</thead>
 				<tbody>
+				{% for i in range(4, nrows) %}
 					<tr>
-						<td class="hidden-xs-portrait"></td>
-						<td>
-						</td>
-						<td>
-						</td>
-						<td class="hidden-xs-portrait">
-						</td>
-						<td class="hidden-xs">
-						</td>
-						<td class="hidden-xs">
-						</td>
-						<td>
-						</td>
+					{% for j in range(ncols) %}
+						<td class="hidden-xs-portrait">{{matriz[i][j]}}</td>
+					{% end %}	
 					</tr>
+				{% end %}	
 				</tbody>
 			</table>
 		</div>

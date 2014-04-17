@@ -1,0 +1,9 @@
+#perm.form-control{
+  overflow:visible; 
+  height: auto;
+  min-height: 30px;
+}
+
+.btn-perm{
+  display:none;
+}
