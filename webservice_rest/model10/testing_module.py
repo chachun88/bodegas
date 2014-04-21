@@ -202,7 +202,7 @@ kardex.units = 65.0
 
 kardex.Insert()
 
-#kardex.Debug(product.identifier, cellar.identifier)
+kardex.Debug(product.identifier, cellar.identifier)
 
 print "\n\n"
 
