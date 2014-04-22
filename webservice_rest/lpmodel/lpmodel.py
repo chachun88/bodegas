@@ -85,7 +85,7 @@ for cls in root.findall('packagedElement'):
 
 	## adding attributes with getter and setter
 	for attr in attributes:
-		class_string += "\n"
+		class_string += "\n" 
 		class_string += "	@property\n"
 		class_string += "	def " + attr["name"] + "(self):\n"
 		class_string += "		return self._" + attr["name"] + "\n"

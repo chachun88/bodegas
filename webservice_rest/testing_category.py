@@ -24,7 +24,7 @@ else:
 print "\n\n"
 
 #######################
-######## list ########
+######## list #########
 #######################
 
 list_category = urllib.urlopen("http://localhost:8888/category/list?token="+token+"&page=1&items=10").read()

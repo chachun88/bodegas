@@ -6,11 +6,13 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
+import datetime
 
 from bson import json_util
 
 from base_handler import BaseHandler
 from model10.cellar import Cellar
+from model10.kardex import Kardex
 
 class CellarAddHandler(BaseHandler):
 	def get(self):
@@ -97,11 +99,24 @@ class CellarProductsAddHandler(BaseHandler):
 		if not self.ValidateToken():
 			return
 		
-		idd = self.get_argument("id", "")
-		product_list = self.get_argument("products", "")
 
-		cellar = Cellar()
-		cellar.InitWithId(idd)
+		cellar_id = self.get_argument("cellar_id", "")
+		product_id = self.get_argument("product_id", "")
+		quantity = self.get_argument("quantity", "0")
+		operation = self.get_argument("operation", Kardex.OPERATION_BUY)
+		price = self.get_argument("price", "0")
+
+		kardex = Kardex()
+
+		kardex.product_id = product_id
+		kardex.cellar_id = cellar_id
+		kardex.date = str(datetime.datetime.now().time().isoformat())
+
+		kardex.operation_type = operation
+		kardex.units = float(quantity)
+		kardex.price = float(price)
+
+		self.write(json_util.dumps(kardex.Insert()))
 		
 		'''
 		product list sample

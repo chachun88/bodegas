@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Index - API Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- styles -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-doc.css" rel="stylesheet">
+    <link href="/static/css/google-code-prettify/prettify.css" rel="stylesheet">
+
+
+    <!-- favicon -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/static/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="/static/ico/favicon.png">
+
+
+        <!--[if lt IE 9]>
+          <script src="js/html5shiv.js"></script>
+          <![endif]-->
+
+          <ul>
+              <li></li>
+          </ul>
+
+      </head>
+
+      <body>
+        <header>
+            <!--navbar -->
+            <div class="navbar navbar-inverse navbar-fixed-top">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="index.html">Documentation</a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right">
+                                <li class="active"><a href="index.html">Index</a></li>
+                                <li><a href="tree.html">Tree</a></li>
+                                <li><a href="help.html">Help</a></li>
+                            </ul>
+                        </div><!--/.nav-collapse -->
+                    </div>
+                </div>
+            </div><!--/.navbar -->
+        </header>
+        
+        
+        <article class="container">
+            <div class="row-fluid">
+                <div class="span3">
+                    {% include "menu.html" %}
+                </div><!--/.span3 -->
+
+                <div class="span9">
+                    <div class="doc-content-box">
+
+                        <div class="page-header">
+                            <h2>API de Producto</h2>
+                        </div>
+                        <p>provee acceso a los productos, se pueden crear editar y agregar</p>
+
+                        <table class="table table-bordered ">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Changelog</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="class-summary">
+                                    <td>
+                                        <p>21-04-2014</p>
+                                    </td>
+                                    <td>
+                                        <p class="class-desc">Primera versión</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="detail-box">
+                            <div class="page-header">
+                                <a title="jump to class summary" href="#class-summary" class="scroll pull-right">
+                                    <span class="label label-info"><i class="icon-white icon-arrow-up"></i></span> 
+                                </a>
+                                <h3 id="class-desc">/product/add</h3>
+                                <p>Para editar un producto se debe utilizar /product/edit, incluyendo sólo los parámetros que se deseen editar.</p>
+                            </div>
+
+                            <table class="table table-bordered ">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Parámetros</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">sku</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">Código único del producto</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">name</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">Nombre del producto</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">upc</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc"></p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">description</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">Descripción larga del producto.</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">brand</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">Marca del producto, si esta no existe, será creada automáticamente</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">manufacturer</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">Nombre del fabricante, si no existe, este se crea automáticamente</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">color</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">Color, o listado de colores separados por coma. Si no existe, se crea automáticamente</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">material</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">Material o lista de materiales separados por coma, si no existe, este se crea automáticamente</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">bullet_1</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc"></p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">bullet_2</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc"></p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">bullet_3</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc"></p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">price</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">Float</a> 
+                                            <p class="class-desc">Pecio de compra del producto al momento de crearlo</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">image</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">URL para imagen principal del producto</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">image_2</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">URL para la segunda del producto</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">image_3</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">URL para la tercera imagen del producto</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p class="lead class-name">Ejemplo de salida</p>
+                            <pre class="prettyprint linenums">
+                                {"success": "product correctly saved"}
+                            </pre>
+                        </div>
+
+                        <div class="detail-box">
+                            <div class="page-header">
+                                <a title="jump to class summary" href="#class-summary" class="scroll pull-right">
+                                    <span class="label label-info"><i class="icon-white icon-arrow-up"></i></span> 
+                                </a>
+                                <h3 id="class-desc">/product/find</h3>
+                            </div>
+                        
+                            <table class="table table-bordered ">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Parámetros</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">sku</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">Encuentra un producto según el identificador indicado</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p class="lead class-name">Ejemplo de salida</p>
+                            <pre class="prettyprint linenums">
+                                {
+    "sku": "1",
+    "category": "",
+    "image_3": "",
+    "image_2": "",
+    "name": "testing_product",
+    "color": "",
+    "brand": "giani",
+    "material": "",
+    "_id": {
+        "$oid": "53557aa19ec9a724d812b587"
+    },
+    "manufacturer": "",
+    "bullet_point_1": "",
+    "description": "alguna",
+    "bullet_point_3": "",
+    "image": "",
+    "bullet_point_2": "",
+    "size": ""
+}
+                            </pre>
+                        </div>
+
+                        <div class="detail-box">
+                            <div class="page-header">
+                                <a title="jump to class summary" href="#class-summary" class="scroll pull-right">
+                                    <span class="label label-info"><i class="icon-white icon-arrow-up"></i></span> 
+                                </a>
+                                <h3 id="class-desc">/product/remove</h3>
+                            </div>
+                        
+                            <table class="table table-bordered ">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Parámetros</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">sku</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">String</a> 
+                                            <p class="class-desc">Se borrarán todos los registros de productos con este sku.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p class="lead class-name">Ejemplo de salida</p>
+                            <pre class="prettyprint linenums">
+                                {"success": "object: 53557aa19ec9a724d812b587 has been deleted"}
+                            </pre>
+                        </div>
+
+                        <div class="detail-box">
+                            <div class="page-header">
+                                <a title="jump to class summary" href="#class-summary" class="scroll pull-right">
+                                    <span class="label label-info"><i class="icon-white icon-arrow-up"></i></span> 
+                                </a>
+                                <h3 id="class-desc">/product/list</h3>
+                            </div>  
+                        
+                            <table class="table table-bordered ">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Parámetros</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">page</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">Int</a> 
+                                            <p class="class-desc">Número de página</p>
+                                        </td>
+                                    </tr>
+                                    <tr id="class-summary">
+                                        <td>
+                                            <p class="class-scope">items</p>
+                                        </td>
+                                        <td>
+                                            <a href="#class-desc" class="scroll class-name">Int</a> 
+                                            <p class="class-desc">Número de elementos que se mostrarán por página.</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p class="lead class-name">Ejemplo de salida</p>
+                            <pre class="prettyprint linenums">
+[
+    {
+        "category": "zapatos",
+        "sku": "123",
+        "image_3": "",
+        "image_2": "",
+        "description": "a product description",
+        "color": "red",
+        "brand": "giani",
+        "material": "",
+        "_id": {
+            "$oid": "534fdfa99ec9a710fb165910"
+        },
+        "manufacturer": "giani",
+        "size": "10",
+        "image": "an image",
+        "bullet_point_3": "",
+        "bullet_point_1": "",
+        "bullet_point_2": "",
+        "name": "nuevo producto"
+    },
+    {
+        "category": "",
+        "sku": "1",
+        "image_3": "",
+        "image_2": "",
+        "description": "alguna",
+        "color": "",
+        "brand": "giani",
+        "material": "",
+        "_id": {
+            "$oid": "53557aa19ec9a724d812b587"
+        },
+        "manufacturer": "",
+        "size": "",
+        "image": "",
+        "bullet_point_3": "",
+        "bullet_point_1": "",
+        "bullet_point_2": "",
+        "name": "testing_product"
+    }
+]
+                            </pre>
+                        </div>
+
+                        <div class="shadow-right"> </div><!-- shadow doc-content-box -->
+                    </div><!--/.doc-content-box -->
+                </div><!--/.span9 -->
+            </div><!--/.row-fluid -->
+        </article><!-- /container -->
+        
+
+        <!-- footer -->
+        <footer>
+            <div class="footer">
+                <div class="container">
+                    <p>Copyright &copy; 2013. All rights reserved.</p>
+                </div>
+            </div>
+        </footer><!--/.footer -->
+
+        
+        <!-- javascript
+        ================================================== -->
+        <script src="/static/js/jquery.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/google-code-prettify/prettify.js"></script>
+        
+        <script type="text/javascript">
+            jQuery(document).ready(function($){
+                
+                // make code pretty demo
+                window.prettyPrint && prettyPrint();
+
+                
+                $(".scroll").click(function(event){
+                    event.preventDefault();
+                    $("html,body").animate({scrollTop: $(this.hash).offset().top-50}, 'slow');
+                });
+                
+            });
+
+        </script>
+    </body>
+    </html>

@@ -18,6 +18,8 @@ import order_detail_handler
 import cellar_handler
 import category_handler
 
+import doc_handler
+
 from tornado.options import define, options
 
 define("port", default=8888, help="run on the given port", type=int)
@@ -75,7 +77,13 @@ class Application(tornado.web.Application):
             (r"/order-detail/list",     order_detail_handler.ListOrderDetailHandler),
 
             (r"/product/file-upload-sample",    product_handler.UploadPictureSampleHandler),
-            (r"/product/file-upload",           product_handler.UploadPictureHandler)
+            (r"/product/file-upload",           product_handler.UploadPictureHandler),
+
+            (r"/doc/product",                   doc_handler.DocHandler),
+            (r"/doc/cellar",                    doc_handler.DocCellarHandler),
+            (r"/doc/brand",                     doc_handler.DocBrandHandler),
+            (r"/doc/category",                  doc_handler.DocCategoryHandler),
+            (r"/doc/salesman",                  doc_handler.DocSalesmanHandler)
             ]
 
         settings = dict(
