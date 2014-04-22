@@ -27,10 +27,6 @@
           <script src="js/html5shiv.js"></script>
           <![endif]-->
 
-          <ul>
-              <li></li>
-          </ul>
-
       </head>
 
       <body>
@@ -68,9 +64,9 @@
                     <div class="doc-content-box">
 
                         <div class="page-header">
-                            <h2>API de Producto</h2>
+                            <h2>API de Vendedores</h2>
                         </div>
-                        <p>provee acceso a los productos, se pueden crear editar y agregar</p>
+                        <p>provee acceso a los vendedores, se pueden crear editar y agregar</p>
 
                         <table class="table table-bordered ">
                             <thead>
@@ -95,8 +91,8 @@
                                 <a title="jump to class summary" href="#class-summary" class="scroll pull-right">
                                     <span class="label label-info"><i class="icon-white icon-arrow-up"></i></span> 
                                 </a>
-                                <h3 id="class-desc">/product/add</h3>
-                                <p>Para editar un producto se debe utilizar /product/edit, incluyendo sólo los parámetros que se deseen editar.</p>
+                                <h3 id="class-desc">/salesman/add</h3>
+                                <p>Para editar un vendedor se debe utilizar /salesman/edit, incluyendo sólo los parámetros que se deseen editar.</p>
                             </div>
 
                             <table class="table table-bordered ">
@@ -108,137 +104,38 @@
                                 <tbody>
                                     <tr id="class-summary">
                                         <td>
-                                            <p class="class-scope">sku</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">Código único del producto</p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
                                             <p class="class-scope">name</p>
                                         </td>
                                         <td>
                                             <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">Nombre del producto</p>
+                                            <p class="class-desc">Nombre del vendedor</p>
                                         </td>
                                     </tr>
                                     <tr id="class-summary">
                                         <td>
-                                            <p class="class-scope">upc</p>
+                                            <p class="class-scope">password</p>
                                         </td>
                                         <td>
                                             <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc"></p>
+                                            <p class="class-desc">Contraseña con la que se logeará el usuario</p>
                                         </td>
                                     </tr>
                                     <tr id="class-summary">
                                         <td>
-                                            <p class="class-scope">description</p>
+                                            <p class="class-scope">email</p>
                                         </td>
                                         <td>
                                             <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">Descripción larga del producto.</p>
+                                            <p class="class-desc">Email del usuario, será usado para login</p>
                                         </td>
                                     </tr>
                                     <tr id="class-summary">
                                         <td>
-                                            <p class="class-scope">brand</p>
+                                            <p class="class-scope">id</p>
                                         </td>
                                         <td>
                                             <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">Marca del producto, si esta no existe, será creada automáticamente</p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">manufacturer</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">Nombre del fabricante, si no existe, este se crea automáticamente</p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">color</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">Color, o listado de colores separados por coma. Si no existe, se crea automáticamente</p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">material</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">Material o lista de materiales separados por coma, si no existe, este se crea automáticamente</p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">bullet_1</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc"></p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">bullet_2</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc"></p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">bullet_3</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc"></p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">price</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">Float</a> 
-                                            <p class="class-desc">Pecio de compra del producto al momento de crearlo</p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">image</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">URL para imagen principal del producto</p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">image_2</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">URL para la segunda del producto</p>
-                                        </td>
-                                    </tr>
-                                    <tr id="class-summary">
-                                        <td>
-                                            <p class="class-scope">image_3</p>
-                                        </td>
-                                        <td>
-                                            <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">URL para la tercera imagen del producto</p>
+                                            <p class="class-desc">Usar sólo en caso de querer editar</p>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -246,7 +143,7 @@
 
                             <p class="lead class-name">Ejemplo de salida</p>
                             <pre class="prettyprint linenums">
-                                {"success": "product correctly saved"}
+                                {"success": "53558dda4d682d24d8255618"}
                             </pre>
                         </div>
 
@@ -255,7 +152,7 @@
                                 <a title="jump to class summary" href="#class-summary" class="scroll pull-right">
                                     <span class="label label-info"><i class="icon-white icon-arrow-up"></i></span> 
                                 </a>
-                                <h3 id="class-desc">/product/find</h3>
+                                <h3 id="class-desc">/salesman/find</h3>
                             </div>
                         
                             <table class="table table-bordered ">
@@ -267,11 +164,11 @@
                                 <tbody>
                                     <tr id="class-summary">
                                         <td>
-                                            <p class="class-scope">sku</p>
+                                            <p class="class-scope">email</p>
                                         </td>
                                         <td>
                                             <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">Encuentra un producto según el identificador indicado</p>
+                                            <p class="class-desc">Email del usuario a buscar</p>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -279,25 +176,13 @@
 
                             <p class="lead class-name">Ejemplo de salida</p>
                             <pre class="prettyprint linenums">
-                                {
-    "sku": "1",
-    "category": "",
-    "image_3": "",
-    "image_2": "",
-    "name": "testing_product",
-    "color": "",
-    "brand": "giani",
-    "material": "",
+                            {
+    "email": "a@a.com",
+    "password": "test",
+    "name": "test",
     "_id": {
-        "$oid": "53557aa19ec9a724d812b587"
-    },
-    "manufacturer": "",
-    "bullet_point_1": "",
-    "description": "alguna",
-    "bullet_point_3": "",
-    "image": "",
-    "bullet_point_2": "",
-    "size": ""
+        "$oid": "53558dda4d682d24d8255618"
+    }
 }
                             </pre>
                         </div>
@@ -307,7 +192,7 @@
                                 <a title="jump to class summary" href="#class-summary" class="scroll pull-right">
                                     <span class="label label-info"><i class="icon-white icon-arrow-up"></i></span> 
                                 </a>
-                                <h3 id="class-desc">/product/remove</h3>
+                                <h3 id="class-desc">/category/remove</h3>
                             </div>
                         
                             <table class="table table-bordered ">
@@ -319,11 +204,11 @@
                                 <tbody>
                                     <tr id="class-summary">
                                         <td>
-                                            <p class="class-scope">sku</p>
+                                            <p class="class-scope">email</p>
                                         </td>
                                         <td>
                                             <a href="#class-desc" class="scroll class-name">String</a> 
-                                            <p class="class-desc">Se borrarán todos los registros de productos con este sku.</p>
+                                            <p class="class-desc">email del usuario que se eliminará</p>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -331,7 +216,7 @@
 
                             <p class="lead class-name">Ejemplo de salida</p>
                             <pre class="prettyprint linenums">
-                                {"success": "object: 53557aa19ec9a724d812b587 has been deleted"}
+                                {"success": "object: 53558dda4d682d24d8255618 has been deleted"}
                             </pre>
                         </div>
 
@@ -340,7 +225,7 @@
                                 <a title="jump to class summary" href="#class-summary" class="scroll pull-right">
                                     <span class="label label-info"><i class="icon-white icon-arrow-up"></i></span> 
                                 </a>
-                                <h3 id="class-desc">/product/list</h3>
+                                <h3 id="class-desc">/salesman/list</h3>
                             </div>  
                         
                             <table class="table table-bordered ">
@@ -373,46 +258,14 @@
 
                             <p class="lead class-name">Ejemplo de salida</p>
                             <pre class="prettyprint linenums">
-[
+                            [
     {
-        "category": "zapatos",
-        "sku": "123",
-        "image_3": "",
-        "image_2": "",
-        "description": "a product description",
-        "color": "red",
-        "brand": "giani",
-        "material": "",
+        "email": "a@a.com",
+        "password": "test",
+        "name": "test",
         "_id": {
-            "$oid": "534fdfa99ec9a710fb165910"
-        },
-        "manufacturer": "giani",
-        "size": "10",
-        "image": "an image",
-        "bullet_point_3": "",
-        "bullet_point_1": "",
-        "bullet_point_2": "",
-        "name": "nuevo producto"
-    },
-    {
-        "category": "",
-        "sku": "1",
-        "image_3": "",
-        "image_2": "",
-        "description": "alguna",
-        "color": "",
-        "brand": "giani",
-        "material": "",
-        "_id": {
-            "$oid": "53557aa19ec9a724d812b587"
-        },
-        "manufacturer": "",
-        "size": "",
-        "image": "",
-        "bullet_point_3": "",
-        "bullet_point_1": "",
-        "bullet_point_2": "",
-        "name": "testing_product"
+            "$oid": "53558dda4d682d24d8255618"
+        }
     }
 ]
                             </pre>

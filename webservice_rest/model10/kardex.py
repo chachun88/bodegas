@@ -98,6 +98,25 @@ class Kardex(BaseModel):
 	def InitById(self, idd):
 		return ''
 
+	def FindKardex(self, product_identifier, cellar_identifier):
+		try:
+			data = self.collection.find({
+								"product_identifier":product_identifier,
+								"cellar_identifier":cellar_identifier
+								}).sort("_id",-1)
+
+			self.identifier = str(data[0]["_id"])
+			self.operation_type = data[0]["operation_type"]
+			self.units = data[0]["units"]
+			self.price = data[0]["price"]
+			self.total = data[0]["total"]
+			self.balance_units = data[0]["balance_units"]
+			self.balance_price = data[0]["balance_price"]
+			self.balance_total = data[0]["balance_total"]
+			self.date = data[0]["date"]
+		except:
+			return self.ShowError("kardex not found")
+
 	#take care of an infinite loop
 	# return last kardex in the database
 	def GetPrevKardex(self):
@@ -149,15 +168,24 @@ class Kardex(BaseModel):
 		else:
 			self.balance_units = prev_kardex.balance_units - self.units
 			self.balance_total = prev_kardex.balance_total - self.total
-
-		self.balance_price = self.balance_total / self.balance_units
-
+ 
+		if self.balance_units != 0: ## prevent division by zero 
+			self.balance_price = self.balance_total / self.balance_units
 
 		## truncate
 		self.price = float(int(self.price * 100)) / 100.0
 		self.total = round(float(int(self.total * 100)) / 100.0)
 		self.balance_price = float(int(self.balance_price * 100)) / 100.0
 		self.balance_total = round(float(int(self.balance_total * 100)) / 100.0)
+
+		## detect if product exists
+		product_data = db.products.find({"product_identifier":self.product_identifier}).count()
+		if product_data == 0:
+			return self.ShowError("the product does not exist")
+		## detect if cellar exists
+		cellar_data = db.cellar.find({"cellar_identifier":self.cellar_identifier}).count()
+		if cellar_data == 0:
+			return self.ShowError("the cellar does not exist")
 
 		self.collection.save({
 				"product_identifier":self.product_identifier,
