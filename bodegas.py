@@ -18,6 +18,7 @@ from globals import port, debugMode, domainName, carpeta_img, userMode, Menu, to
 
 from home_handler import HomeHandler
 from home_handler import ProductRemoveHandler
+from home_handler import ProductLoadHandler
 from login_handler import LoginHandler
 from login_handler import LoginPassHandler
 from product_add_handler import ProductAddHandler
@@ -57,6 +58,7 @@ class Application(tornado.web.Application):
             # products
             (r"/", HomeHandler),
             (r"/product", HomeHandler),
+            (r"/product/load", ProductLoadHandler),
             (r"/product/add", ProductAddHandler),
             (r"/product/list", ProductListHandler),
             (r"/product/edit", ProductEditHandler),
