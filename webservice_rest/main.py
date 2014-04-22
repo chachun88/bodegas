@@ -79,6 +79,7 @@ class Application(tornado.web.Application):
             (r"/product/file-upload-sample",    product_handler.UploadPictureSampleHandler),
             (r"/product/file-upload",           product_handler.UploadPictureHandler),
 
+            (r"/doc",                           doc_handler.DocHandler),
             (r"/doc/product",                   doc_handler.DocHandler),
             (r"/doc/cellar",                    doc_handler.DocCellarHandler),
             (r"/doc/brand",                     doc_handler.DocBrandHandler),
