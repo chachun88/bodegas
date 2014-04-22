@@ -12,6 +12,12 @@ import tornado.options
 import tornado.web
 
 import xlrd #lib excel
+import os
+import commands
+import cgi, cgitb
+import cgi, os
+import cgitb; cgitb.enable()
+import sys
 
 from tornado.options import define, options
 
@@ -21,27 +27,28 @@ from globals import port, debugMode, domainName, carpeta_img, userMode, Menu
 
 class HomeHandler(BaseHandler):
 
-	@tornado.web.authenticated
+	fn =''
+
+	#@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.PRODUCTOS_CARGA_MASIVA) #change menu active item
 
 		dn = self.get_argument("dn", "f")
-		
 
-		doc = xlrd.open_workbook(r'C:\\Users\\Estefi\\Desktop\\git\\bodegas\\static\\Planilla Tipo Inventario.xlsx')
-		sheet = doc.sheet_by_index(0)
+		# doc = xlrd.open_workbook('uploads\\entradas_masivas\\Planilla Tipo Inventario.xlsx')
+		# sheet = doc.sheet_by_index(0)
 
-		nrows = sheet.nrows
-		ncols = sheet.ncols
+		# nrows = sheet.nrows
+		# ncols = sheet.ncols
 
 
-		matriz=[]
+		# matriz=[]
 
-		for i in range(nrows):
-			matriz.append([])
-			for j in range(ncols):
-				matriz[i].append(sheet.cell_value(i,j).encode('ascii', 'ignore'))
-		#self.write("{}".format(matriz[3][4].encode('ascii', 'ignore')))			
+		# for i in range(nrows):
+		# 	matriz.append([])
+		# 	for j in range(ncols):
+		# 		matriz[i].append(sheet.cell_value(i,j))
+		# #self.write("{}".format(matriz[3][4].encode('ascii', 'ignore')))			
 
 		# for i in range(nrows):
 		# 	string = ''
@@ -49,8 +56,64 @@ class HomeHandler(BaseHandler):
 		# 		string += '%st'%sheet.cell_value(i,j)
 			#self.write("{}".format(string.encode('ascii', 'ignore')))
 			#print(string)
+		#self.render("product/home.html", side_menu=self.side_menu, dn=dn, matriz=matriz, nrows=nrows, ncols=ncols)	
+		self.render("product/home.html", side_menu=self.side_menu, dn=dn)
 
-		self.render("product/home.html", side_menu=self.side_menu, dn=dn, matriz=matriz, nrows=nrows, ncols=ncols)
+	def post(self):
+		
+		#upload file 
+		try: # Windows needs stdio set for binary mode.
+		    import msvcrt
+		    msvcrt.setmode (0, os.O_BINARY) # stdin  = 0
+		    msvcrt.setmode (1, os.O_BINARY) # stdout = 1
+		except ImportError:
+		    pass
+
+		form = cgi.FieldStorage()
+
+		# A nested FieldStorage instance holds the file
+		fileitem = self.request.files['file'][0]
+	   
+		# strip leading path from file name to avoid directory traversal attacks
+		fn = fileitem['filename']
+
+		#print fn 
+		open('uploads/entradas_masivas/' + fn, 'wb').write(fileitem["body"])
+		#message = 'The file "' + fn + '" was uploaded successfully'
+
+		# self.set_active(Menu.PRODUCTOS_CARGA_MASIVA) #change menu active item
+
+		try:
+			dn = self.get_argument("dn", "f")
+
+		
+			doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
+
+			sheet = doc.sheet_by_index(0)
+
+			nrows = sheet.nrows
+			ncols = sheet.ncols
+			#print ncols
+			#self.write("{}".format(ncols))
+
+			matriz=[]
+
+			for i in range(nrows):
+				matriz.append([])
+				for j in range(ncols):
+					matriz[i].append(sheet.cell_value(i,j))
+
+			self.render("product/home.html", side_menu=self.side_menu, dn=dn, matriz=matriz, nrows=nrows, ncols=ncols)
+
+		except ImportError:
+			pass
+
+class ProductLoadHandler(BaseHandler):
+	def get(self):
+		pass
+
+	def post(self):	
+		print "llega load"		
 
 class ProductRemoveHandler(BaseHandler):
 	
@@ -58,6 +121,6 @@ class ProductRemoveHandler(BaseHandler):
 
 		prod = Product()
 		prod.InitWithId(self.get_argument("id", ""))
-		prod.Remove()
+		prod.Remove()		
 
 		self.redirect("/product/list")
