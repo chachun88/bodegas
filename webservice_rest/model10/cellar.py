@@ -4,6 +4,8 @@
 from basemodel import BaseModel, db
 from bson.objectid import ObjectId
 
+from kardex import Kardex
+
 class Cellar(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
@@ -26,10 +28,51 @@ class Cellar(BaseModel):
 		self._description = value
 
 	def GetTotalUnits(self):
-		return 0
+
+		data = db.kardex.find({"cellar_identifier":self.identifier})
+
+		data = db.kardex.aggregate([
+			{"$match":
+				{"cellar_identifier":self.identifier}
+			},{
+			"$group":
+			{"_id":{ "product_identifier":"$product_identifier"}}
+			}])
+
+		kardex = Kardex()
+
+		total_units = 0
+
+		for x in data["result"]:
+			product = x["_id"]["product_identifier"]
+			kardex.FindKardex(product, self.identifier)
+
+			total_units = kardex.balance_units
+		
+		return int(total_units)
 
 	def GetTotalPrice(self):
-		return 0
+		data = db.kardex.find({"cellar_identifier":self.identifier})
+
+		data = db.kardex.aggregate([
+			{"$match":
+				{"cellar_identifier":self.identifier}
+			},{
+			"$group":
+			{"_id":{ "product_identifier":"$product_identifier"}}
+			}])
+
+		kardex = Kardex()
+
+		total_price = 0
+
+		for x in data["result"]:
+			product = x["_id"]["product_identifier"]
+			kardex.FindKardex(product, self.identifier)
+
+			total_price = kardex.balance_total
+		
+		return int(total_price)
 
 	#@return json
 	def Print(self):

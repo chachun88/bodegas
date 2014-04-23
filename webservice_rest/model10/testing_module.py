@@ -83,7 +83,7 @@ cellar = Cellar()
 
 cellar.name = "primera bodega"
 cellar.description = "esta es la primera bodega"
-cellar.identifier = "534db54f9ec9a77e7440f03c"
+#cellar.identifier = "534db54f9ec9a77e7440f03c"
 
 print "cellar testing"
 print "save : {}".format(cellar.Save())
