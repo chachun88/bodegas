@@ -41,9 +41,9 @@
 				<tbody>
 					{% for u in user_list %}
 					<tr>
-						<td>{{ u["nombre"] }}</td>
+						<td>{{ u["name"] }}</td>
 						<td>{{ u["email"] }}</td>
-						<td>{{ u["permisos"] }}</td>
+						<td>permissions</td>
 						<td>
 						{% if current_user_email != u["email"] %}
 							<a class="btn btn-success" href="/user/edit?id={{ u["_id"] }}">

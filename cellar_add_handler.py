@@ -31,4 +31,4 @@ class CellarAddHandler(BaseHandler):
 
 		#self.write("llega")
 
-		self.redirect("/cellar/add")
+		self.redirect("/cellar?dn=t")

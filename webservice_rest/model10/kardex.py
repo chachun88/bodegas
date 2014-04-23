@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from basemodel import BaseModel, db
+from bson.objectid import ObjectId
 
 class Kardex(BaseModel):
 	def __init__(self):
@@ -178,14 +179,17 @@ class Kardex(BaseModel):
 		self.balance_price = float(int(self.balance_price * 100)) / 100.0
 		self.balance_total = round(float(int(self.balance_total * 100)) / 100.0)
 
+		'''
 		## detect if product exists
-		product_data = db.products.find({"product_identifier":self.product_identifier}).count()
-		if product_data == 0:
-			return self.ShowError("the product does not exist")
+		product_data = db.products.find({"_id":ObjectId(self.product_identifier)}).count()
 		## detect if cellar exists
-		cellar_data = db.cellar.find({"cellar_identifier":self.cellar_identifier}).count()
-		if cellar_data == 0:
+		cellar_data = db.cellar.find({"_id":ObjectId(self.cellar_identifier)}).count()
+
+		print "product_data:" + product_data
+		
+		if cellar_data == 0 or product_data == 0:
 			return self.ShowError("the cellar does not exist")
+		'''
 
 		self.collection.save({
 				"product_identifier":self.product_identifier,

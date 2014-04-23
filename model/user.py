@@ -98,10 +98,10 @@ class User(BaseModel):
 
 		try:
 			data = json_util.loads(json_string)
-			self.SplitName(data["nombre"]) ##name and surname
+			self.SplitName(data["name"]) ##name and surname
 			self.identifier = str(data["_id"])
 			self.password = data["password"]
-			self.permissions = data["permisos"]
+			#self.permissions = data["permissions"]
 			self.email = data["email"]
 		except:
 			pass
@@ -116,10 +116,10 @@ class User(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.SplitName(data["nombre"]) ## name and surname
+		self.SplitName(data["name"]) ## name and surname
 		self.identifier = str(data["_id"])
 		self.password = data["password"]
-		self.permissions = data["permisos"]
+		#self.permissions = data["permisos"]
 		self.email = data["email"]
 
 	def Remove(self):
@@ -133,10 +133,10 @@ class User(BaseModel):
 	def Save(self):
 		url = self.wsurl() + "/salesman/add?token=" + self.token()
 
-		url += "&nombre=" + self.name + "%20" + self.surname
+		url += "&name=" + self.name + "%20" + self.surname
 		url += "&password=" + self.password
 		url += "&email=" + self.email
-		url += "&permisos=" + self.permissions
+		url += "&permissions=" + self.permissions
 		url += "&id=" + self.identifier
 
 		#url = urllib.urlencode(url)

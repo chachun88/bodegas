@@ -4,6 +4,12 @@
 {% block caption %}muestra las bodegas que existen{% end %}
 
 {% block body %}
+{% if dn == "t" %}
+<div class="alert alert-success">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> bodega creado correctamente.
+</div>
+{% end %}
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
@@ -24,10 +30,10 @@
 					<tr>
 						<td>{{ p["name"] }}</td>
 						<td>{{ p["description"] }}</td>
-						<td>600</td>
-						<td>600</td>
-						<td>10</td>
-						<td>100</td>
+						<td>-</td>
+						<td>-</td>
+						<td>{{ p["total_units"] }}</td>
+						<td>{{ p["total_price"] }}</td>
 						<td>
 							<button type="button" cellar-id="{{ str(p['_id']) }}" class="btn btn-danger btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-danger .btn-sm">
 								Eliminar

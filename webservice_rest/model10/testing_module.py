@@ -87,6 +87,9 @@ cellar.identifier = "534db54f9ec9a77e7440f03c"
 
 print "cellar testing"
 print "save : {}".format(cellar.Save())
+
+cellar.InitById(str(cellar.Print()["_id"]))
+
 print "rename : {}".format(cellar.Rename("otro nombre"))
 print "list : {}".format(json_util.dumps(Cellar.GetAllCellars()))
 #print "remove : {}".format(cellar.Remove())
@@ -158,6 +161,9 @@ print "kardex"
 kardex = Kardex()
 
 ## used sample https://www.youtube.com/watch?v=E03gTmKIEa0
+
+print "product : " + product.identifier
+print "cellar : " + cellar.identifier
 kardex.product_identifier = product.identifier
 kardex.cellar_identifier = cellar.identifier
 kardex.date = 20140416

@@ -26,17 +26,19 @@ class Cellar(BaseModel):
 		self._description = value
 
 	def GetTotalUnits(self):
-		return ''
+		return 0
 
 	def GetTotalPrice(self):
-		return ''
+		return 0
 
 	#@return json
 	def Print(self):
 		try:
 			me = {"_id":ObjectId(self.identifier),
 				"name" : self.name,
-				"description": self.description}
+				"description": self.description,
+				"total_price": self.GetTotalPrice(),
+				"total_units": self.GetTotalUnits()}
 
 			return me
 		except:
@@ -87,12 +89,41 @@ class Cellar(BaseModel):
 			print str(e)
 			return self.ShowError("failed to save cellar " + self.name)
 
+	def GetList(self, page, items):
+		#validate inputs
+		page = int(page)
+		items = int(items)
+		data = self.collection.find().skip((page-1)*items).limit(items)
+
+		data_rtn = [] ## return this data
+
+		for d in data:
+
+			cellar = Cellar()
+			cellar.identifier = str(d["_id"])
+			cellar.name = d["name"]
+			cellar.description = d["description"]
+
+			data_rtn.append(cellar.Print())
+		return data_rtn
+
 	### WARNING: this method is not opmitimized
 	#@return direct database collection
 	@staticmethod
 	def GetAllCellars():
 		data = db.cellar.find()
-		return data
+
+		data_rtn = [] ## return this data
+
+		for d in data:
+
+			cellar = Cellar()
+			cellar.identifier = str(d["_id"])
+			cellar.name = d["name"]
+			cellar.description = d["description"]
+
+			data_rtn.append(cellar.Print())
+		return data_rtn
 
 	def InitById(self, idd):
 		try:
