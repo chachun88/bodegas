@@ -171,8 +171,8 @@ class Product(BaseModel):
 	def Save(self):
 
 		try:
-			if Category().Exist(self.category) == False and Brand().Exist(self.brand) == False:
-				raise
+			#if Category().Exist(self.category) == False and Brand().Exist(self.brand) == False:
+			#	raise
 			
 			sku_count = self.collection.find({"sku":self.sku}).count()
 

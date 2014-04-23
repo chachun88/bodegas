@@ -20,18 +20,51 @@ class Product(BaseModel):
 #		return [{"name":"p1"},{"name":"p2"},{"name":"p3"}]
 
 	def __init__(self):
-		self._name=""
-		self._price=""
-		self._description=""
-		self._quantity=""
-		self._brand=""
-		self._sku=""
-		self._category=""
 		self._identifier=""
+		self._category=""
+		self._sku=""
+		self._name=""
+		self._upc=""		
+		self._description=""
+		self._brand=""
+		self._manufacturer=""
+		self._size=""
+		self._color=""
+		self._material=""
+		self._bullet_1=""
+		self._bullet_2=""
+		self._bullet_3=""
+		self._currency=""
+		self._price=""
+		self._image=""
+		self._image_2=""
+		self._image_3=""		
+		
 
 	####################
 	### Class fields ###
-	####################		
+	####################	
+
+	@property
+	def identifier(self):
+	    return self._identifier
+	@identifier.setter
+	def identifier(self, value):
+	    self._identifier = value	
+
+	@property
+	def category(self):
+	    return self._category
+	@category.setter
+	def category(self, value):
+	    self._category = value	    
+	
+	@property
+	def sku(self):
+	    return self._sku
+	@sku.setter
+	def sku(self, value):
+	    self._sku = value
 
 	@property
 	def name(self):
@@ -41,11 +74,11 @@ class Product(BaseModel):
 	    self._name = value
 
 	@property
-	def price(self):
-	    return self._price
-	@price.setter
-	def price(self, value):
-	    self._price = value
+	def upc(self):
+		return self._upc
+	@upc.setter
+	def upc(self, value):
+		self._upc = value
 
 	@property
 	def description(self):
@@ -53,13 +86,6 @@ class Product(BaseModel):
 	@description.setter
 	def description(self, value):
 	    self._description = value
-
-	@property
-	def quantity(self):
-	    return self._quantity
-	@quantity.setter
-	def quantity(self, value):
-	    self._quantity = value
 	
 	@property
 	def brand(self):
@@ -69,26 +95,89 @@ class Product(BaseModel):
 	    self._brand = value
 
 	@property
-	def sku(self):
-	    return self._sku
-	@sku.setter
-	def sku(self, value):
-	    self._sku = value
+	def manufacturer(self):
+	    return self._manufacturer
+	@manufacturer.setter
+	def manufacturer(self, value):
+	    self._manufacturer = value
 
 	@property
-	def category(self):
-	    return self._category
-	@category.setter
-	def category(self, value):
-	    self._category = value
-
-	@property
-	def identifier(self):
-	    return self._identifier
-	@identifier.setter
-	def identifier(self, value):
-	    self._identifier = value
+	def size(self):
+	    return self._size
+	@size.setter
+	def size(self, value):
+	    self._size = value
 	
+	@property
+	def color(self):
+	    return self._color
+	@color.setter
+	def color(self, value):
+	    self._color = value
+
+	@property
+	def material(self):
+	    return self._material
+	@material.setter
+	def material(self, value):
+	    self._material = value
+	
+	@property
+	def bullet_1(self):
+	    return self._bullet_1
+	@bullet_1.setter
+	def bullet_1(self, value):
+	    self._bullet_1 = value
+	
+	@property
+	def bullet_2(self):
+	    return self._bullet_2
+	@bullet_2.setter
+	def bullet_2(self, value):
+	    self._bullet_2 = value
+	
+	@property
+	def bullet_3(self):
+	    return self._bullet_3
+	@bullet_3.setter
+	def bullet_3(self, value):
+	    self._bullet_3 = value    
+
+	@property
+	def currency(self):
+	    return self._currency
+	@currency.setter
+	def currency(self, value):
+	    self._currency = value
+	
+   	@property
+	def price(self):
+	    return self._price
+	@price.setter
+	def price(self, value):
+	    self._price = value
+
+	@property
+	def image(self):
+	    return self._image
+	@image.setter
+	def image(self, value):
+	    self._image = value
+	
+	@property
+	def image_2(self):
+	    return self._image_2
+	@image_2.setter
+	def image_2(self, value):
+	    self._image_2 = value
+	
+	@property
+	def image_3(self):
+	    return self._image_3
+	@image_3.setter
+	def image_3(self, value):
+	    self._image_3 = value
+
 	
 	#################
 	#### Methods ####
@@ -103,19 +192,29 @@ class Product(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.name = data["nombre"] ## name and surname
 		self.identifier = str(data["_id"])
-		self.price = data["precio"]
-		self.description = data["descripcion"]
-		self.quantity = data["stock"]
-		self.brand = data["marca"]
-		self.sku = data["codigo_interno"]
-		self.category = data["familia"]
+		self.category = data["category"]
+		self.sku = data["sku"]
+		self.name = data["name"] 
+		self.upc= data ["upc"]
+		self.description = data["description"]
+		self.brand = data["brand"]
+		self.manufacturer= data["manufacturer"]
+		self.size=data ["size"]
+		self.color= data ["color"]
+		self.material = data ["material"]
+		self.bullet_1=data ["bullet_1"]
+		self.bullet_2=data ["bullet_2"]
+		self.bullet_3=data ["bullet_3"]
+		self.currency=data ["currency"]
+		self.price = data["price"]
+		self.image = data ["image"]
+		self.image_2 = data ["image_2"]
+		self.image_3 = data ["image_3"]
 
 
 	def Remove(self):
-
-
+		
 		if self.identifier!="":
 			url=self.wsurl() + "/product/delete"
 			url+="?token=" + self.token()
@@ -125,14 +224,26 @@ class Product(BaseModel):
 
 	def Save(self):
 		url = self.wsurl()+"/product/add?token=" + self.token()
-
-		url += "&nombre=" + self.name
-		url += "&precio=" + self.price
-		url += "&descripcion=" + self.description
-		url += "&stock=" + self.quantity
-		url += "&marca=" + self.brand
-		url += "&codigo_interno=" + self.sku
-		url += "&familia=" + self.category
+		
+		url += "&category=" + self.category
+		url += "&sku=" + self.sku
+		url += "&name=" + self.name		
+		url += "&upc=" + self.upc
+		url += "&description=" + self.description
+		url += "&brand=" + self.brand
+		url += "&manufacturer=" + self.manufacturer
+		url += "&size=" + self.size
+		url += "&color=" + self.color
+		url += "&material=" + self.material
+		url += "&bullet_1=" + self.bullet_1
+		url += "&bullet_2=" + self.bullet_2
+		url += "&bullet_3=" + self.bullet_3	
+		url += "&currency=" + self.currency	
+		#url += "&price=" + self.price
+		url += "&image=" + self.image
+		url += "&image_2=" + self.image_2
+		url += "&image_3=" + self.image_3
+		
 		url += "&id=" + self.identifier
 
 		return urllib.urlopen(url).read()

@@ -37,11 +37,11 @@
 						<td>
 							<input type="checkbox" />
 						</td>
-						<td class="hidden-xs-portrait">{{ p["codigo_interno"] }}</td>
-						<td class="hidden-xs-portrait">{{ p["nombre"] }}</td> 
+						<td class="hidden-xs-portrait">{{ p["sku"] }}</td>
+						<td class="hidden-xs-portrait">{{ p["name"] }}</td> 
 						<td><!--UPC/EAN --></td>
-						<td class="hidden-xs-portrait">{{ p["descripcion"] }}</td>
-						<td>{{ p["marca"] }}</td>
+						<td class="hidden-xs-portrait">{{ p["description"] }}</td>
+						<td>{{ p["brand"] }}</td>
 						<td><!--Fabricante --></td>
 						<td><!--Talla --></td>	
 						<td><!--Color --></td>	
@@ -50,8 +50,8 @@
 						<td><!--Viñeta 2 --></td>	
 						<td><!--Viñeta 3 --></td>
 						<td class="hidden-xs"></td>		
-						<td>{{ p["precio"] }}</td>
-						<td class="hidden-xs">{{ p["stock"] }}</td>						
+						<td></td>
+						<td class="hidden-xs"></td>						
 						<td>
 							<a class="btn btn-sm btn-primary" href="/product/edit?id={{ p["_id"] }}">
 								Editar

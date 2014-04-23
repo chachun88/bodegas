@@ -8,7 +8,7 @@ from bson.objectid import ObjectId
 
 # database_connection
 connection 	= pymongo.Connection("localhost", 27017)
-db 			= connection.dev_market_tab
+db 			= connection.market_tab
 
 class BaseModel(object):
 	def __init__(self):

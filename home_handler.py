@@ -29,7 +29,7 @@ class HomeHandler(BaseHandler):
 
 	fn =''
 
-	#@tornado.web.authenticated
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.PRODUCTOS_CARGA_MASIVA) #change menu active item
 
@@ -90,8 +90,6 @@ class ProductLoadHandler(BaseHandler):
 		pass
 
 	def post(self):	
-		print "llega load"
-		print fn 
 
 		doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
 
@@ -111,7 +109,6 @@ class ProductLoadHandler(BaseHandler):
 			for j in range(ncols):				
 				matriz[i].append(sheet.cell_value(i,j))
 				if i > 3:
-					print matriz[i][j]
 					if j == 0:
 						prod.category = matriz[i][j]
 					elif j == 1:
@@ -122,8 +119,6 @@ class ProductLoadHandler(BaseHandler):
 						prod.description = matriz[i][j]
 					elif j == 5:
 						prod.price = str(int(matriz[i][j]))
-					elif j == 6:
-						prod.quantity = str(int(matriz[i][j]))
 					elif j == 9:
 						prod.brand = matriz[i][j]
 			prod.Save()	
@@ -147,7 +142,7 @@ class ProductLoadHandler(BaseHandler):
 		#prod.Save()
 
 
-		#self.redirect("/")	
+		self.redirect("/")	
 
 class ProductRemoveHandler(BaseHandler):
 	
