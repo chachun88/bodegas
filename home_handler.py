@@ -35,28 +35,6 @@ class HomeHandler(BaseHandler):
 
 		dn = self.get_argument("dn", "f")
 
-		# doc = xlrd.open_workbook('uploads\\entradas_masivas\\Planilla Tipo Inventario.xlsx')
-		# sheet = doc.sheet_by_index(0)
-
-		# nrows = sheet.nrows
-		# ncols = sheet.ncols
-
-
-		# matriz=[]
-
-		# for i in range(nrows):
-		# 	matriz.append([])
-		# 	for j in range(ncols):
-		# 		matriz[i].append(sheet.cell_value(i,j))
-		# #self.write("{}".format(matriz[3][4].encode('ascii', 'ignore')))			
-
-		# for i in range(nrows):
-		# 	string = ''
-		# 	for j in range(ncols):
-		# 		string += '%st'%sheet.cell_value(i,j)
-			#self.write("{}".format(string.encode('ascii', 'ignore')))
-			#print(string)
-		#self.render("product/home.html", side_menu=self.side_menu, dn=dn, matriz=matriz, nrows=nrows, ncols=ncols)	
 		self.render("product/home.html", side_menu=self.side_menu, dn=dn)
 
 	def post(self):
@@ -69,23 +47,22 @@ class HomeHandler(BaseHandler):
 		except ImportError:
 		    pass
 
+		  
 		form = cgi.FieldStorage()
-
+		
 		# A nested FieldStorage instance holds the file
 		fileitem = self.request.files['file'][0]
-	   
+	
 		# strip leading path from file name to avoid directory traversal attacks
+		global fn 
 		fn = fileitem['filename']
-
+		
 		#print fn 
 		open('uploads/entradas_masivas/' + fn, 'wb').write(fileitem["body"])
 		#message = 'The file "' + fn + '" was uploaded successfully'
 
-		# self.set_active(Menu.PRODUCTOS_CARGA_MASIVA) #change menu active item
-
 		try:
 			dn = self.get_argument("dn", "f")
-
 		
 			doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
 
@@ -113,7 +90,64 @@ class ProductLoadHandler(BaseHandler):
 		pass
 
 	def post(self):	
-		print "llega load"		
+		print "llega load"
+		print fn 
+
+		doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
+
+		sheet = doc.sheet_by_index(0)
+
+		nrows = sheet.nrows
+		ncols = sheet.ncols
+		#print ncols
+		#self.write("{}".format(ncols))
+
+		matriz=[]
+
+		prod = Product()
+
+		for i in range(nrows):
+			matriz.append([])
+			for j in range(ncols):				
+				matriz[i].append(sheet.cell_value(i,j))
+				if i > 3:
+					print matriz[i][j]
+					if j == 0:
+						prod.category = matriz[i][j]
+					elif j == 1:
+						prod.sku = str(int(matriz[i][j]))
+					elif j == 2:
+						prod.name = matriz[i][j]
+					elif j == 3:
+						prod.description = matriz[i][j]
+					elif j == 5:
+						prod.price = str(int(matriz[i][j]))
+					elif j == 6:
+						prod.quantity = str(int(matriz[i][j]))
+					elif j == 9:
+						prod.brand = matriz[i][j]
+			prod.Save()	
+
+		self.write("{}".format(prod.category))		
+
+		#self.redirect("/product/list")				
+				
+		#self.write("{}".format(matriz[4][0]))
+
+		#prod = Product()
+
+		#prod.name		= self.get_argument("name", "")
+		#prod.price 		= self.get_argument("price", "")
+		#prod.description= self.get_argument("description", "")
+		#prod.quantity 	= self.get_argument("quantity", "")
+		#prod.brand 		= self.get_argument("brand", "")
+		#prod.sku 		= self.get_argument("sku", "")
+		#prod.category 	= self.get_argument("category", "")
+
+		#prod.Save()
+
+
+		#self.redirect("/")	
 
 class ProductRemoveHandler(BaseHandler):
 	
