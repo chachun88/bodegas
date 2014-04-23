@@ -25,8 +25,16 @@ class Product(BaseModel):
 		self._image_2 = ''
 		self._image_3 = ''
 		self._category = ''
+		self._upc = ''
 
 		self.collection = db.product
+
+	@property
+	def upc(self):
+	    return self._upc
+	@upc.setter
+	def upc(self, value):
+	    self._upc = value
 
 	@property
 	def name(self):
@@ -161,7 +169,8 @@ class Product(BaseModel):
 				"image":self.image,
 				"image_2":self.image_2,
 				"image_3":self.image_3,
-				"category":self.category
+				"category":self.category,
+				"upc":self.upc
 			}
 
 			return rtn_data

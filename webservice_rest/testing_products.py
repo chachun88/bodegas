@@ -19,10 +19,10 @@ add_data = urllib.urlopen("http://localhost:8888/product/add?token="+token+"&sku
 
 print "add : {}".format(add_data)
 
-if product_name == db.product.find({"sku":product_sku})[0]["name"]:
-	print "test ok"
-else:
-	print "test failed"
+#if product_name == db.product.find({"sku":product_sku})[0]["name"]:
+#	print "test ok"
+#else:
+#	print "test failed"
 
 find_data = urllib.urlopen("http://localhost:8888/product/find?token="+token+"&sku=" + product_sku).read()
 
