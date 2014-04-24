@@ -1,7 +1,5 @@
 {% extends "../base.html" %}
 
-{% from lputils import MoneyFormat %}
-
 {% block title %}Lista de bodegas {% end %}
 {% block caption %}muestra las bodegas que existen{% end %}
 
@@ -10,6 +8,16 @@
 <div class="alert alert-success">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<strong><i class="fa fa-check"></i> Bien hecho!</strong> bodega creado correctamente.
+</div>
+{% elif dn == "bpt" %}
+<div class="alert alert-success">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se han agregado productos.
+</div>
+{% elif dn == "bpf" %}
+<div class="alert alert-warning">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Usuario borrado!</strong> ha fallado al agregar productos.
 </div>
 {% end %}
 <div class="col-md-12">
@@ -20,11 +28,15 @@
 					<tr>
 						<th>Nombre</th>
 						<th>Descripción</th>
+						<!--
 						<th>Total entradas</th>
 						<th>Total salidas</th>
+						-->
 						<th>Saldo (unidades)</th>
 						<th>Saldo ($)</th>
-						<th></th>
+						<th>Eliminar</th>
+						<th>Entradas</th>
+						<th>Salidas</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -32,14 +44,26 @@
 					<tr>
 						<td>{{ p["name"] }}</td>
 						<td>{{ p["description"] }}</td>
+						<!--
 						<td>-</td>
 						<td>-</td>
+						-->
 						<td>{{ p["total_units"] }}</td>
-						<td>{{ p["total_price"] }}</td>
+						<td>{{ MoneyFormat(p["total_price"]) }}</td>
 						<td>
 							<button type="button" cellar-id="{{ str(p['_id']) }}" class="btn btn-danger btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-danger .btn-sm">
 								Eliminar
 							</button>
+						</td>
+						<td>
+							<a type="button" href="/cellar/input?id={{ str(p['_id']) }}" cellar-id="{{ str(p['_id']) }}" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+								Entrada
+							</a>
+						</td>
+						<td>
+							<a type="button" href="/cellar/output?id={{ str(p['_id']) }}" cellar-id="{{ str(p['_id']) }}" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+								Salida
+							</a>
 						</td>
 					</tr>
 					{% end %}

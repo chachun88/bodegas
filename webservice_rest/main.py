@@ -38,13 +38,14 @@ class Application(tornado.web.Application):
 
             (r"/cellar/products/list",  cellar_handler.CellarProductsListHandler),
             (r"/cellar/products/add",   cellar_handler.CellarProductsAddHandler),
-            (r"/cellar/products/remove",cellar_handler.CellarProductsRemoveHandler),
+            (r"/cellar/products/remove",cellar_handler.CellarProductsAddHandler),
 
             (r"/product/add",           product_handler.AddProductHandler),
             (r"/product/edit",          product_handler.AddProductHandler),
             (r"/product/remove",        product_handler.RemoveProductHandler),
             (r"/product/find",          product_handler.GetProductHandler),
             (r"/product/list",          product_handler.ListProductsHandler),
+            (r"/product/search",        product_handler.SearchHandler),
 
             (r"/salesman/add",          seller_handler.AddSellerHandler),
             (r"/salesman/edit",         seller_handler.AddSellerHandler),

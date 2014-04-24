@@ -24,8 +24,9 @@ from login_handler import LoginPassHandler
 from product_add_handler import ProductAddHandler
 from product_add_handler import ProductEditHandler
 from product_list_handler import ProductListHandler
+from product_search_handler import ProductSearchHandler
 
-from cellar_handler import CellarHandler
+from cellar_handler import CellarHandler, CellarInputHandler, CellarOutputHandler
 from cellar_add_handler import CellarAddHandler
 from cellar_remove_handler import CellarRemoveHandler
 
@@ -63,11 +64,14 @@ class Application(tornado.web.Application):
             (r"/product/list", ProductListHandler),
             (r"/product/edit", ProductEditHandler),
             (r"/product/remove", ProductRemoveHandler),
+            (r"/product/search", ProductSearchHandler),
 
             # cellar
             (r"/cellar", CellarHandler),
             (r"/cellar/add", CellarAddHandler),
             (r"/cellar/remove", CellarRemoveHandler),
+            (r"/cellar/input", CellarInputHandler),
+            (r"/cellar/output", CellarOutputHandler),
 
             # user
             (r"/user", UserHandler),

@@ -17,7 +17,7 @@ from model10.kardex import Kardex
 class CellarAddHandler(BaseHandler):
 	def get(self):
 		# validate access token
-		if not self.ValidateToken():
+		if not self.ValidateToken(): 
 			return
 
 		cellar = Cellar()
@@ -98,7 +98,6 @@ class CellarProductsAddHandler(BaseHandler):
 		# validate access token
 		if not self.ValidateToken():
 			return
-		
 
 		cellar_id = self.get_argument("cellar_id", "")
 		product_id = self.get_argument("product_id", "")
@@ -108,8 +107,8 @@ class CellarProductsAddHandler(BaseHandler):
 
 		kardex = Kardex()
 
-		kardex.product_id = product_id
-		kardex.cellar_id = cellar_id
+		kardex.product_identifier = product_id
+		kardex.cellar_identifier = cellar_id
 		kardex.date = str(datetime.datetime.now().time().isoformat())
 
 		kardex.operation_type = operation
@@ -123,7 +122,6 @@ class CellarProductsAddHandler(BaseHandler):
 		1231233asidoad:10,qoiewiqoej1:1
 		'''
 		#self.write(cellar.AddProducts(product_list, self.db.cellar_products, self.db.products))
-		pass
 		
 class CellarProductsRemoveHandler(BaseHandler):
 	"""docstring for CellarProductsRemoveHandler"""

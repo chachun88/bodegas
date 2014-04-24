@@ -128,4 +128,10 @@ class UploadPictureHandler(BaseHandler):
 			self.write(str(e))
 			self.finish('se ha producido un error al subir la imagen')
 		
-		
+
+class SearchHandler(BaseHandler):
+	def get(self):
+		query = self.get_argument("q", "")
+
+		product = Product()
+		self.write(json_util.dumps(product.Search(query)))
