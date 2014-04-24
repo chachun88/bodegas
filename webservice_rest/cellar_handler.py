@@ -88,8 +88,8 @@ class CellarProductsListHandler(BaseHandler):
 		items = self.get_argument("items", 10)
 
 		cellar = Cellar()
-		cellar.InitWithId(idd)
-		self.write(cellar.ListProducts(page, items))
+		cellar.InitById(idd)
+		self.write(json_util.dumps(cellar.ListProducts(page, items)))
 		pass
 
 class CellarProductsAddHandler(BaseHandler):
