@@ -61,3 +61,6 @@ class BaseHandler(tornado.web.RequestHandler):
             self.set_secure_cookie("user", tornado.escape.json_encode(user))
         else:
             self.clear_cookie("user")
+
+    def write_error(status_code=500, **kwargs):
+        self.write("llega")
