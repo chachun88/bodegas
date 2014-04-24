@@ -72,7 +72,7 @@ class ProductAddHandler(BaseHandler):
 		prod.bullet_2 	= self.get_argument("bullet_2", "")
 		prod.bullet_3 	= self.get_argument("bullet_3", "")
 		prod.currency 	= self.get_argument("currency", "")
-		prod.image 		= fn
+		prod.image 		= self.get_argument("sku", "")+'.png'
 		prod.image2 	= self.get_argument("image2", "")
 		prod.image3 	= self.get_argument("image3", "")
 
