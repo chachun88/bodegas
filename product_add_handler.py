@@ -43,18 +43,24 @@ class ProductAddHandler(BaseHandler):
 		except ImportError:
 		    pass
 
-		  
-		form = cgi.FieldStorage()
+		fn =""    
+		try:   
+			form = cgi.FieldStorage()
+			
+			# A nested FieldStorage instance holds the file
+			fileitem = self.request.files['image'][0]
 		
-		# A nested FieldStorage instance holds the file
-		fileitem = self.request.files['image'][0]
-	
-		# strip leading path from file name to avoid directory traversal attacks
-		fn = fileitem['filename']
-		
-		#print fn 
-		open('uploads/images/' + self.get_argument("sku", "")+'.png', 'wb').write(fileitem["body"])
+			# strip leading path from file name to avoid directory traversal attacks
+			fn = fileitem['filename']
+		except:
+			pass
 
+		if fn != "":
+			#print fn 
+			open('uploads/images/' + self.get_argument("sku", "")+'.png', 'wb').write(fileitem["body"])
+			image_name=self.get_argument("sku", "")+'.png'
+		else:
+			image_name=''
 
 		prod = Product()
 
@@ -72,7 +78,7 @@ class ProductAddHandler(BaseHandler):
 		prod.bullet_2 	= self.get_argument("bullet_2", "")
 		prod.bullet_3 	= self.get_argument("bullet_3", "")
 		prod.currency 	= self.get_argument("currency", "")
-		prod.image 		= self.get_argument("sku", "")+'.png'
+		prod.image 		= image_name
 		prod.image2 	= self.get_argument("image2", "")
 		prod.image3 	= self.get_argument("image3", "")
 
