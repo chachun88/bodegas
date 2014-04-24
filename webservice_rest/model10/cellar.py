@@ -196,19 +196,20 @@ class Cellar(BaseModel):
 					{"_id":{ "product_identifier":"$product_identifier"}}
 			}])
 
-		product = Product()
 		rtn_data = []
 
 		kardex = Kardex()
 
 		for x in data["result"]:
+			product = Product()
 			product.InitById(str(x["_id"]["product_identifier"]))
 			prod_print = product.Print()
 
 			if "error" not in prod_print:
-				kardex.FindKardex(str(prod_print["_id"]), self.cellar_identifier)
+				kardex.FindKardex(str(prod_print["_id"]), self.identifier)
 				prod_print["balance_units"] = kardex.balance_units
 				prod_print["balance_price"] = kardex.balance_price
+				prod_print["balance_total"] = kardex.balance_total
 
 				rtn_data.append(prod_print)
 		
