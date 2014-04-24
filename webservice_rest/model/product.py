@@ -78,6 +78,9 @@ class Product(BaseModel):
 
 		return str(object_id)
 
+	def Search(self, query):
+		return self.collection.find({"name":"/"+query+"/i"})
+
 	@property
 	def sku(self):
 	    return self._sku

@@ -260,6 +260,11 @@ class Product(BaseModel):
 
 		return data
 
+	def Search(self, query):
+		url = self.wsurl() + "/product/search?token=" + self.token()
+		url += "&q=" + query
+		return urllib.urlopen(url).read()
+
 
 
 	

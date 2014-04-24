@@ -6,6 +6,8 @@ from bson.objectid import ObjectId
 from brand import Brand
 from category import Category
 
+import re
+
 class Product(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
@@ -312,3 +314,19 @@ class Product(BaseModel):
 		if self.collection.find({"name":name}).count() >= 1:
 			return True
 		return False
+
+	def Search(self, query):
+
+		if query == "":
+			return []
+
+		regx = re.compile("^" + query, re.IGNORECASE)
+
+		data = self.collection.find({"name":regx}).limit(5)
+
+		rtn_data = []
+		for d in data:
+			obj = {"key":str(d["_id"]), "value":d["name"]}
+			rtn_data.append(obj)
+
+		return rtn_data
