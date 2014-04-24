@@ -40,12 +40,8 @@ class Cellar(BaseModel):
 		url += "&page=1"
 		url += "&items=100"
 
-		#json_string = urllib.urlopen(url).read()
-
-		print "url: " + url
-
-		pass
-		#return json_util.loads(json_string)
+		json_string = urllib.urlopen(url).read()
+		return json_util.loads(json_string)
 
 	def InitWithId(self, idd):
 		url = self.wsurl() + "/cellar/find"

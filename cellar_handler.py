@@ -12,6 +12,7 @@ from lputils import MoneyFormat
 
 from basehandler import BaseHandler
 from model.cellar import Cellar
+from model.product import Product
 
 from bson import json_util
 
@@ -61,7 +62,7 @@ class CellarEasyInputHandler(BaseHandler):
 		cellar = Cellar()
 		cellar.InitWithId(self.get_argument("id", ""))
 
-		self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar)
+		self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar, products=Product().get_product_list())
 		
 
 class CellarInputHandler(BaseHandler):

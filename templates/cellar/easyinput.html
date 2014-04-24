@@ -15,10 +15,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for p in cellar.ListProducts() %}
+					{% for p in products %}
 					<tr>
-						<td></td>
-						<td></td>
+						<td>{{ p["sku"] }}</td>
+						<td>{{ p["name"] }}</td>
 					</tr>
 					{% end %}
 				</tbody>
