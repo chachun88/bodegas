@@ -62,5 +62,8 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             self.clear_cookie("user")
 
+
+    '''
     def write_error(status_code=500, **kwargs):
         self.write("llega")
+    '''

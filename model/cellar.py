@@ -33,7 +33,19 @@ class Cellar(BaseModel):
 		return urllib.urlopen(url).read()
 
 	def ListProducts(self):
+		url = self.wsurl() + "/cellar/products/list"
+
+		url += "?token=" + self.token()
+		url += "&id=" + self.identifier
+		url += "&page=1"
+		url += "&items=100"
+
+		#json_string = urllib.urlopen(url).read()
+
+		print "url: " + url
+
 		pass
+		#return json_util.loads(json_string)
 
 	def InitWithId(self, idd):
 		url = self.wsurl() + "/cellar/find"

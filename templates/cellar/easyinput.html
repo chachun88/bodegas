@@ -1,0 +1,29 @@
+{% extends "../base.html" %}
+
+{% block title %}{{ operation }} bodega "{{ cellar.name }}" {% end %}
+{% block caption %}permite hacer ingreso de productos a una bodega{% end %}
+
+{% block body %}
+<div class="col-md-7">
+	<section class="widget">
+		<div class="body">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>SKU</th>
+						<th>Nombre</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for p in cellar.ListProducts() %}
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
+					{% end %}
+				</tbody>
+			</table>
+		</div>
+	</section>
+</div>
+{% end %}

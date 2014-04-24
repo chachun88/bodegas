@@ -5,6 +5,7 @@ from basemodel import BaseModel, db
 from bson.objectid import ObjectId
 
 from kardex import Kardex
+from product import Product
 
 class Cellar(BaseModel):
 	def __init__(self):
@@ -185,7 +186,27 @@ class Cellar(BaseModel):
 			return self.ShowError("item not found")
 
 	def ListProducts(self, page, items):
-		pass
+		data = db.kardex.find({"cellar_identifier":self.identifier})
+
+		data = db.kardex.aggregate([
+			{"$match":
+				{"cellar_identifier":self.identifier}
+			},{
+				"$group":
+					{"_id":{ "product_identifier":"$product_identifier"}}
+			}])
+
+		product = Product()
+		rtn_data = []
+
+		for x in data["result"]:
+			product.InitById(str(x["_id"]["product_identifier"]))
+
+			if "error" not in product.Print():
+				rtn_data.append(product.Print())
+		
+		return rtn_data
+
 
 	def Rename(self, new_name):
 		try:

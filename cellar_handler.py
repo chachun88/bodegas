@@ -53,6 +53,17 @@ class CellarOutputHandler(BaseHandler):
 
 		self.redirect("/cellar?dn=" + redirect)
 
+
+class CellarEasyInputHandler(BaseHandler):
+	def get(self):
+		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
+
+		cellar = Cellar()
+		cellar.InitWithId(self.get_argument("id", ""))
+
+		self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar)
+		
+
 class CellarInputHandler(BaseHandler):
 	def get(self):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
