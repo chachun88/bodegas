@@ -97,16 +97,16 @@ class CellarInputHandler(BaseHandler):
 class CellarDetailHandler(BaseHandler):
 	def get(self):
 
-		cellar_id = self.get_argument("cellar_id", "")
+		idd = self.get_argument("id", "")
 
-		print "entro a detalle "+cellar_id
+		print "entro a detalle "+idd
 
-		self.write("{}".format(cellar_id))
+		cellar = Cellar()
+		cellar.InitWithId(idd)
+		cellar.ListProducts()
 
-		# cellar = Cellar()
-		# cellar.InitWithId(cellar_id)
-		self.render("cellar/detail.html", side_menu=self.side_menu)
+		self.render("cellar/detail.html", side_menu=self.side_menu, cellar=cellar)
 
 	def post(self):
 
-		self.redirect("cellar/detail")	
+		pass

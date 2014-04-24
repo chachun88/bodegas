@@ -1,12 +1,13 @@
 {% extends "../base.html" %}
 
-{% block title %}Lista de productos{% end %}
+{% block title %}Lista de productos {% end %}
 {% block caption %}muestra los productos por bodegas que existen{% end %}
 
 {% block body %}
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
+			<button type="button" cellar-id="" class="btn btn-sm btn-back" data-placement="top" data-original-title=".btn .btn-danger .btn-sm">Volver</button>
 			<table class="table table-striped">
 				<thead>
 					<tr>
@@ -19,17 +20,16 @@
 					</tr>
 				</thead>
 				<tbody>
-					
+					{% for p in cellar.ListProducts() %}
 					<tr>
-						<td><!-- sku --></td>
-						<td><!-- nombre --></td>
-						<td><!-- talla --></td>
-						<td><!-- color --></td>
-						<td><!-- saldo u --></td>
-						<td><!-- saldo $ --></td>
-
+						<td>{{ p["sku"] }}</td>
+						<td>{{ p["name"] }}</td>
+						<td>{{ p["size"] }}</td>
+						<td>{{ p["color"] }}</td>
+						<td>{{ p }}<!-- saldo en unidades -->></td>
+						<td><!-- saldo $ --></td>	
 					</tr>
-					
+					{% end %}
 				</tbody>
 			</table>
 		</div>
