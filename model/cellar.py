@@ -33,6 +33,7 @@ class Cellar(BaseModel):
 		return urllib.urlopen(url).read()
 
 	def ListProducts(self):
+		print "entra a ListProducts "+self.identifier
 		url = self.wsurl() + "/cellar/products/list"
 
 		url += "?token=" + self.token()
