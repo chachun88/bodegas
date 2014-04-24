@@ -42,7 +42,7 @@
 				<tbody>
 					{% for p in data %}
 					<tr>
-						<td>{{ p["name"] }}</td>
+						<td  class="cellar" cellar-id="{{ str(p['_id']) }}">{{ p["name"] }}</td>
 						<td>{{ p["description"] }}</td>
 						<!--
 						<td>-</td>

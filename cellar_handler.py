@@ -82,3 +82,20 @@ class CellarInputHandler(BaseHandler):
 			redirect = "bpf"
 
 		self.redirect("/cellar?dn=" + redirect)
+
+class CellarDetailHandler(BaseHandler):
+	def get(self):
+
+		cellar_id = self.get_argument("cellar_id", "")
+
+		print "entro a detalle "+cellar_id
+
+		self.write("{}".format(cellar_id))
+
+		# cellar = Cellar()
+		# cellar.InitWithId(cellar_id)
+		self.render("cellar/detail.html", side_menu=self.side_menu)
+
+	def post(self):
+
+		self.redirect("cellar/detail")	
