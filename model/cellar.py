@@ -42,7 +42,6 @@ class Cellar(BaseModel):
 		url += "&items=100"
 
 		json_string = urllib.urlopen(url).read()
-
 		return json_util.loads(json_string)
 
 	def InitWithId(self, idd):

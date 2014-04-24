@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 
 {% block title %}{{ operation }} bodega "{{ cellar.name }}" {% end %}
-{% block caption %}permite hacer ingreso de productos a una bodega{% end %}
+{% block caption %}permite hacer ingresos de productos a una bodega{% end %}
 
 {% block body %}
 <div class="col-md-7">
@@ -12,13 +12,31 @@
 					<tr>
 						<th>SKU</th>
 						<th>Nombre</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					{% for p in cellar.ListProducts() %}
+					{% for p in products %}
 					<tr>
-						<td></td>
-						<td></td>
+						<td>{{ p["sku"] }}</td>
+						<td>{{ p["name"] }}</td>
+						<td>
+							<a type="button" href="#!" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+								Agregar a esta bodega
+							</a>
+							<div class="lptooltip col-sm-6" >
+								<form action="">
+									<fieldset>
+										<div class="control-group">
+											<label for="" class="control-label">Descripción</label>
+											<div class="controls form-group">
+												<div class="col-sm-2"><input type="text" name="description" placeholder="descripción de la bodega" class="form-control"></div>
+											</div>
+										</div>
+									</fieldset>
+								</form>
+							</div>
+						</td>
 					</tr>
 					{% end %}
 				</tbody>

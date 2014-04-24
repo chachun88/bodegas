@@ -199,11 +199,18 @@ class Cellar(BaseModel):
 		product = Product()
 		rtn_data = []
 
+		kardex = Kardex()
+
 		for x in data["result"]:
 			product.InitById(str(x["_id"]["product_identifier"]))
+			prod_print = product.Print()
 
-			if "error" not in product.Print():
-				rtn_data.append(product.Print())
+			if "error" not in prod_print:
+				kardex.FindKardex(str(prod_print["_id"]), self.cellar_identifier)
+				prod_print["balance_units"] = kardex.balance_units
+				prod_print["balance_price"] = kardex.balance_price
+
+				rtn_data.append(prod_print)
 		
 		return rtn_data
 
