@@ -117,13 +117,20 @@ class ProductLoadHandler(BaseHandler):
 						prod.name = matriz[i][j]
 					elif j == 3:
 						prod.description = matriz[i][j]
-					elif j == 5:
-						prod.price = str(int(matriz[i][j]))
+					elif j == 4:						
+						if matriz[i][j]=="":
+							prod.size = '0'
+						else:
+							prod.size = str(int(matriz[i][j]))
+
+					# elif j == 5:
+					# 	prod.price = str(int(matriz[i][j]))
+					elif j == 7:
+						prod.manufacturer = matriz[i][j]
 					elif j == 9:
 						prod.brand = matriz[i][j]
-			prod.Save()	
-
-		self.write("{}".format(prod.category))		
+			
+			prod.Save()		
 
 		#self.redirect("/product/list")				
 				
@@ -131,13 +138,23 @@ class ProductLoadHandler(BaseHandler):
 
 		#prod = Product()
 
-		#prod.name		= self.get_argument("name", "")
-		#prod.price 		= self.get_argument("price", "")
-		#prod.description= self.get_argument("description", "")
-		#prod.quantity 	= self.get_argument("quantity", "")
-		#prod.brand 		= self.get_argument("brand", "")
-		#prod.sku 		= self.get_argument("sku", "")
-		#prod.category 	= self.get_argument("category", "")
+		# prod.category 	= self.get_argument("category", "")
+		# prod.sku 		= self.get_argument("sku", "")
+		# prod.name		= self.get_argument("name", "")
+		# prod.upc		= self.get_argument("upc", "")
+		# prod.description= self.get_argument("description", "")
+		# prod.brand 		= self.get_argument("brand", "")
+		# prod.manufacturer 		= self.get_argument("manufacturer", "")
+		# prod.size 		= self.get_argument("size", "")
+		# prod.color 		= self.get_argument("color", "")
+		# prod.material 	= self.get_argument("material", "")
+		# prod.bullet_1 	= self.get_argument("bullet_1", "")
+		# prod.bullet_2 	= self.get_argument("bullet_2", "")
+		# prod.bullet_3 	= self.get_argument("bullet_3", "")
+		# prod.currency 	= self.get_argument("currency", "")
+		# prod.image 		= self.get_argument("image", "")
+		# prod.image2 	= self.get_argument("image2", "")
+		# prod.image3 	= self.get_argument("image3", "")
 
 		#prod.Save()
 

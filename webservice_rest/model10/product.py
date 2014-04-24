@@ -169,6 +169,7 @@ class Product(BaseModel):
 				"image":self.image,
 				"image_2":self.image_2,
 				"image_3":self.image_3,
+				"currency":self.currency,
 				"category":self.category,
 				"upc":self.upc
 			}
@@ -204,6 +205,7 @@ class Product(BaseModel):
 							"image":self.image,
 							"image_2":self.image_2,
 							"image_3":self.image_3,
+							"currency":self.currency,
 							"category":self.category
 							}
 						})
@@ -228,6 +230,7 @@ class Product(BaseModel):
 						"image":self.image,
 						"image_2":self.image_2,
 						"image_3":self.image_3,
+						"currency":self.currency,
 						"category":self.category
 					}})
 			##solve when the product does not exists
@@ -247,6 +250,7 @@ class Product(BaseModel):
 						"image":self.image,
 						"image_2":self.image_2,
 						"image_3":self.image_3,
+						"currency":self.currency,
 						"category":self.category
 					}))
 
@@ -272,6 +276,7 @@ class Product(BaseModel):
 			self.image = data[0]["image"]
 			self.image_2 = data[0]["image_2"]
 			self.image_3 = data[0]["image_3"]
+			self.currency=data[0]["currency"]
 			self.category = data[0]["category"]
 			self.sku = data[0]["sku"]
 
@@ -296,6 +301,7 @@ class Product(BaseModel):
 			self.image = data[0]["image"]
 			self.image_2 = data[0]["image_2"]
 			self.image_3 = data[0]["image_3"]
+			self.currency=data[0]["currency"]
 			self.category = data[0]["category"]
 			self.sku = data[0]["sku"]
 

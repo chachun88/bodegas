@@ -202,21 +202,19 @@ class Product(BaseModel):
 		self.manufacturer= data["manufacturer"]
 		self.size=data ["size"]
 		self.color= data ["color"]
-		self.material = data ["material"]
+		self.material = data ["material"] 
 		self.bullet_1=data ["bullet_1"]
 		self.bullet_2=data ["bullet_2"]
 		self.bullet_3=data ["bullet_3"]
 		self.currency=data ["currency"]
-		self.price = data["price"]
 		self.image = data ["image"]
 		self.image_2 = data ["image_2"]
 		self.image_3 = data ["image_3"]
 
 
 	def Remove(self):
-		
 		if self.identifier!="":
-			url=self.wsurl() + "/product/delete"
+			url=self.wsurl() + "/product/remove"
 			url+="?token=" + self.token()
 			url+="&id=" + self.identifier
 
@@ -224,6 +222,7 @@ class Product(BaseModel):
 
 	def Save(self):
 		url = self.wsurl()+"/product/add?token=" + self.token()
+
 		
 		url += "&category=" + self.category
 		url += "&sku=" + self.sku
@@ -257,6 +256,7 @@ class Product(BaseModel):
 		data = json_util.loads(content)
 
 		self.identifier = data
+
 
 		return data
 
