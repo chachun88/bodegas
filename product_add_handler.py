@@ -23,6 +23,8 @@ import sys
 from basehandler import BaseHandler
 from globals import port, debugMode, domainName, carpeta_img, userMode, Menu
 from model.product import Product
+from model.category import Category
+from model.brand import Brand
 
 from basehandler import BaseHandler
 
@@ -62,6 +64,24 @@ class ProductAddHandler(BaseHandler):
 		else:
 			image_name=''
 
+		##if the category does not exist is created
+		category = Category()
+
+		try:
+			category.InitWithName(self.get_argument("category", ""))
+		except:		
+			category.name = self.get_argument("category", "")
+			category.Save()
+		
+		##if the brand does not exist is created
+		brand=Brand()	
+
+		try:
+			brand.InitWithName(self.get_argument("brand", ""))
+		except:		
+			brand.name = self.get_argument("brand", "")
+			brand.Save()	
+
 		prod = Product()
 
 		prod.category 	= self.get_argument("category", "")
@@ -70,7 +90,7 @@ class ProductAddHandler(BaseHandler):
 		prod.upc		= self.get_argument("upc", "")
 		prod.description= self.get_argument("description", "")
 		prod.brand 		= self.get_argument("brand", "")
-		prod.manufacturer 		= self.get_argument("manufacturer", "")
+		prod.manufacturer= self.get_argument("manufacturer", "")
 		prod.size 		= self.get_argument("size", "")
 		prod.color 		= self.get_argument("color", "")
 		prod.material 	= self.get_argument("material", "")
