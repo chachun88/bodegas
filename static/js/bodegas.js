@@ -48,6 +48,8 @@ $(document).ready(function(){
 	$(".btn-add").click(function(event)
 	{
 		var tooltip = $(".lptooltip", $(this).parent());
+
+		$(".lptooltip").hide(animation_duration); // hide others opened tooltips
 		tooltip.show(animation_duration);
 		$("input[name=quantity]", tooltip).focus();
 
