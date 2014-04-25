@@ -26,7 +26,12 @@ from product_add_handler import ProductEditHandler
 from product_list_handler import ProductListHandler
 from product_search_handler import ProductSearchHandler
 
-from cellar_handler import CellarHandler, CellarInputHandler, CellarOutputHandler, CellarDetailHandler, CellarEasyInputHandler
+from cellar_handler import CellarHandler
+from cellar_handler import CellarInputHandler
+from cellar_handler import CellarOutputHandler
+from cellar_handler import CellarDetailHandler
+from cellar_handler import CellarEasyInputHandler
+from cellar_handler import CellarEasyOutputHandler
 
 from cellar_add_handler import CellarAddHandler
 from cellar_remove_handler import CellarRemoveHandler
@@ -73,6 +78,7 @@ class Application(tornado.web.Application):
             (r"/cellar/remove", CellarRemoveHandler),
             (r"/cellar/input", CellarInputHandler),
             (r"/cellar/easyinput", CellarEasyInputHandler),
+            (r"/cellar/easyoutput", CellarEasyOutputHandler),
             (r"/cellar/output", CellarOutputHandler),
             (r"/cellar/detail", CellarDetailHandler),
 

@@ -8,7 +8,6 @@ import tornado.options
 import tornado.web
 
 from globals import Menu
-from lputils import MoneyFormat
 
 from basehandler import BaseHandler
 from model.cellar import Cellar
@@ -21,7 +20,7 @@ class CellarHandler(BaseHandler):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
 		data = Cellar().List(1, 10)
-		self.render("cellar/home.html", MoneyFormat=MoneyFormat,side_menu=self.side_menu, data=data, dn=self.get_argument("dn", ""))
+		self.render("cellar/home.html",side_menu=self.side_menu, data=data, dn=self.get_argument("dn", ""))
 
 
 class CellarOutputHandler(BaseHandler):
@@ -82,6 +81,39 @@ class CellarEasyInputHandler(BaseHandler):
 	def check_xsrf_cookie(self):
 		pass
 
+######################
+#### easy output #####
+######################
+class CellarEasyOutputHandler(BaseHandler):
+	def get(self):
+		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
+
+		cellar = Cellar()
+		cellar.InitWithId(self.get_argument("id", ""))
+		self.render("cellar/easyoutput.html", cellar=cellar, products=cellar.ListProducts())
+
+	def post(self):
+		cellar_id = self.get_argument("cellar_id", "")
+		product_id = self.get_argument("product_id", "")
+		quantity = self.get_argument("quantity", "")
+
+		cellar = Cellar()
+		cellar.InitWithId(cellar_id)
+
+		if "success" in cellar.RemoveProducts(product_id, quantity):
+			self.write("ok")
+		else:
+			self.write("no")
+
+	## invalidate xsfr cookie for ajax use
+	def check_xsrf_cookie(self):
+		pass
+
+
+
+######################
+#### cellar input ####
+######################
 class CellarInputHandler(BaseHandler):
 	def get(self):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
@@ -89,7 +121,7 @@ class CellarInputHandler(BaseHandler):
 		cellar = Cellar()
 		cellar.InitWithId(self.get_argument("id", ""))
 
-		self.render("cellar/input.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar)
+		self.render("cellar/input.html",operation="Entradas ", opp="in", cellar=cellar)
 
 	def post(self):
 		name = self.get_argument("name", "")

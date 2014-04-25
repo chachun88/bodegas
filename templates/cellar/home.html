@@ -36,6 +36,7 @@
 						<th>Saldo ($)</th>
 						<th>Eliminar</th>
 						<th>Entradas Fáciles</th>
+						<th>Salidas Fáciles</th>
 						<th>Entradas</th>
 						<th>Salidas</th>
 					</tr>
@@ -58,7 +59,12 @@
 						</td>
 						<td>
 							<a type="button" href="/cellar/easyinput?id={{ str(p['_id']) }}" cellar-id="{{ str(p['_id']) }}" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
-								Entrada Facil
+								Entrada Fácil
+							</a>
+						</td>
+						<td>
+							<a type="button" href="/cellar/easyoutput?id={{ str(p['_id']) }}" cellar-id="{{ str(p['_id']) }}" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+								Salida Fácil
 							</a>
 						</td>
 						<td>
