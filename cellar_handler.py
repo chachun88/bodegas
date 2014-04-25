@@ -63,7 +63,24 @@ class CellarEasyInputHandler(BaseHandler):
 		cellar.InitWithId(self.get_argument("id", ""))
 
 		self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar, products=Product().get_product_list())
-		
+	
+	def post(self):
+		cellar_id = self.get_argument("cellar_id", "")
+		product_id = self.get_argument("product_id", "")
+		quantity = self.get_argument("quantity", "")
+		price = self.get_argument("price", "")
+
+		cellar = Cellar()
+		cellar.InitWithId(cellar_id)
+
+		if "success" in cellar.AddProducts(product_id, quantity, price):
+			self.write("ok")
+		else:
+			self.write("no")
+
+	## invalidate xsfr cookie for ajax use
+	def check_xsrf_cookie(self):
+		pass
 
 class CellarInputHandler(BaseHandler):
 	def get(self):

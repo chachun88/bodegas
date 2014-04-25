@@ -48,7 +48,7 @@ class Cellar(BaseModel):
 			product = x["_id"]["product_identifier"]
 			kardex.FindKardex(product, self.identifier)
 
-			total_units = kardex.balance_units
+			total_units += kardex.balance_units
 		
 		return int(total_units)
 
@@ -71,7 +71,7 @@ class Cellar(BaseModel):
 			product = x["_id"]["product_identifier"]
 			kardex.FindKardex(product, self.identifier)
 
-			total_price = kardex.balance_total
+			total_price += kardex.balance_total
 		
 		return int(total_price)
 

@@ -9,7 +9,7 @@ def MoneyFormat(number):
 	counter = 0
 	for x in str(number):
 		if counter % 3 == 0 and counter != 0:
-			str_number += "."
+			str_number += ""
 		str_number += x
 		counter += 1
 
