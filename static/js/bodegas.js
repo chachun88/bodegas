@@ -82,7 +82,7 @@ $(document).ready(function(){
 		$(".lptooltip").hide(animation_duration);
 
 		$.ajax({
-			url: "/cellar/easyinput",
+			url: $(".form-add").attr("action"),
 			type: "post",
 			data: post_data,
 			success: function(response)

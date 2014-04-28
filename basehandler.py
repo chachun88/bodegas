@@ -4,6 +4,7 @@ Created on 13/12/2012
 @author: ricardo
 '''
 import tornado.web
+from lputils import MoneyFormat
 #from loadingplay.multilang.lang import lpautoSelectCurrentLang
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -62,8 +63,17 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             self.clear_cookie("user")
 
+    def render(self, template_name ,**kwargs):
+
+        # global vars
+        kwargs["MoneyFormat"] = MoneyFormat
+        kwargs["side_menu"] = self.side_menu
+
+        ## overrided method
+        tornado.web.RequestHandler.render(self, template_name, **kwargs)
 
     '''
     def write_error(status_code=500, **kwargs):
         self.write("llega")
     '''
+

@@ -1,6 +1,6 @@
 {% extends "../base.html" %}
 
-{% block title %}{{ operation }} bodega "{{ cellar.name }}" {% end %}
+{% block title %}Salidas para bodega "{{ cellar.name }}" {% end %}
 {% block caption %}permite hacer ingresos de productos a una bodega{% end %}
 
 {% block body %}
@@ -39,13 +39,13 @@
 						<td>{{ p["color"] }}</td>
 						<td>
 							<a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
-								Agregar de este producto
+								Sacar de este producto
 							</a>
 							<div class="lptooltip col-sm-2" >
 								<div class="pointer">
 									<img src="/static/img/pointer.png" />
 								</div>
-								<form action="/cellar/easyinput" class="form-add" >
+								<form action="/cellar/easyoutput" class="form-add" >
 									<fieldset>
 										<div class="control-group">
 											<label for="" class="control-label">Cantidad</label>
@@ -53,14 +53,8 @@
 												<div class="col-sm-12"><input type="number" required="required" name="quantity" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
 											</div>
 										</div>
-										<div class="control-group">
-											<label for="" class="control-label">Precio</label>
-											<div class="controls form-group">
-												<div class="col-sm-12"><input type="number" required="required" name="price" placeholder="precio de compra" autocomplete="off" class="form-control"></div>
-											</div>
-										</div>
 										<div class="form-actions">
-											<button type="submit" class="btn btn-primary">Agregar</button>
+											<button type="submit" class="btn btn-primary">Sacar</button>
 										</div>
 									</fieldset>
 									<input type="hidden" name="product_id" value="{{ p["_id"] }}" />

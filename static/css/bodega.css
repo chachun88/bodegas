@@ -24,3 +24,19 @@
 	display: none;
 	z-index: 100;
 }
+
+.pointer
+{
+	width: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	position: absolute;
+	top: -17px;
+	left: 73px;
+}
+
+.pointer img
+{
+	height: 10px;
+	opacity: 0.4;
+}
