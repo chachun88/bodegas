@@ -6,21 +6,6 @@ $(document).ready(function(){
 		}
 	});
 
-	$(".cellar").click(function()
-	{
-		var idcellar = $(this).attr("cellar-id");
-		
-		$.ajax({
-			url: "/cellar/detail?cellar_id=" + idcellar,
-			type: "get",
-			success: function(response)
-			{
-				alert(idcellar);
-			}
-		});
-
-	});
-
 
 	//// formulario para agregar productos
 
@@ -71,12 +56,25 @@ $(document).ready(function(){
 		var price = $("input[name=price]", $(this)).val();
 		var cellar_name = $("input[name=cellar_name]", $(this)).val();
 		var product_name = $("input[name=product_name]", $(this)).val();
+		var new_cellar = $("select[name=new_cellar]", $(this)).val();
+		var balance_price = $("input[name=balance_price]", $(this)).val();
+		var transaction = $("input[name=transaction]", $(this)).val();
+
+		if (transaction== undefined){
+			transaction="agregado";
+		}
+
+		if (new_cellar==undefined){
+			new_cellar="delete"
+		}
 
 		var post_data = {
 			"cellar_id":cellar_id,
 			"product_id":product_id,
 			"quantity":quantity,
-			"price":price
+			"price":price,
+			"new_cellar":new_cellar,
+			"balance_price":balance_price
 		};
 
 		$(".lptooltip").hide(animation_duration);
@@ -87,7 +85,7 @@ $(document).ready(function(){
 			data: post_data,
 			success: function(response)
 			{
-				$(".mmessage").html("Se han agregado "+ quantity +" '" + product_name + "' a la bodega '" + cellar_name + "'" );
+				$(".mmessage").html("Se han "+ transaction +" "+ quantity +" '" + product_name + "' a la bodega '" + cellar_name + "'" );
 				$(".alert-success").show(animation_duration);
 
 				setTimeout(function() {

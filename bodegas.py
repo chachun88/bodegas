@@ -18,7 +18,7 @@ from globals import port, debugMode, domainName, carpeta_img, userMode, Menu, to
 
 from home_handler import HomeHandler
 from home_handler import ProductRemoveHandler
-from home_handler import ProductLoadHandler
+from home_handler import ProductLoadHandler, ProductOutHandler, ProductMassiveOutputHandler
 from login_handler import LoginHandler
 from login_handler import LoginPassHandler
 from product_add_handler import ProductAddHandler
@@ -65,6 +65,8 @@ class Application(tornado.web.Application):
             # products
             (r"/", HomeHandler),
             (r"/product", HomeHandler),
+            (r"/product/out", ProductOutHandler),
+            (r"/product/massiveoutput", ProductMassiveOutputHandler),
             (r"/product/load", ProductLoadHandler),
             (r"/product/add", ProductAddHandler),
             (r"/product/list", ProductListHandler),
@@ -99,6 +101,7 @@ class Application(tornado.web.Application):
                         {"class":"panel", "name":Menu.PRODUCTOS, "icon":"home", "link":"/", 
                             "sub_menu":[
                                         {"class":"", "name":Menu.PRODUCTOS_CARGA_MASIVA, "link":"/"},
+                                        {"class":"", "name":Menu.PRODUCTOS_SALIDA_MASIVA, "link":"/product/out"},
                                         {"class":"", "name":Menu.PRODUCTOS_CARGA, "link":"/product/add"},
                                         {"class":"", "name":Menu.PRODUCTOS_LISTA, "link":"/product/list"}
                                         ]},

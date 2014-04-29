@@ -211,6 +211,34 @@ class Product(BaseModel):
 		self.image_2 = data ["image_2"]
 		self.image_3 = data ["image_3"]
 
+	def InitWithSku(self, sku):
+		url = self.wsurl() + "/product/find"
+
+		url += "?token=" + self.token()
+		url += "&sku=" + sku
+
+		json_string = urllib.urlopen(url).read()
+		data = json_util.loads(json_string)
+
+		self.identifier = str(data["_id"])
+		self.category = data["category"]
+		self.sku = data["sku"]
+		self.name = data["name"] 
+		self.upc= data ["upc"]
+		self.description = data["description"]
+		self.brand = data["brand"]
+		self.manufacturer= data["manufacturer"]
+		self.size=data ["size"]
+		self.color= data ["color"]
+		self.material = data ["material"] 
+		self.bullet_1=data ["bullet_1"]
+		self.bullet_2=data ["bullet_2"]
+		self.bullet_3=data ["bullet_3"]
+		self.currency=data ["currency"]
+		self.image = data ["image"]
+		self.image_2 = data ["image_2"]
+		self.image_3 = data ["image_3"]	
+
 
 	def Remove(self):
 		if self.identifier!="":

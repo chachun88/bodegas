@@ -169,6 +169,22 @@ class Cellar(BaseModel):
 			data_rtn.append(cellar.Print())
 		return data_rtn
 
+	def InitByName(self, name):
+		try:
+			datas = self.collection.find({"name": name})
+
+			if datas >= 1:
+				data = datas[0]
+				self.identifier = str(data["_id"])
+				self.name = data["name"]
+				self.description = data["description"]
+
+				return self.ShowSuccessMessage("cellar initialized")
+			else:
+				raise
+		except:
+			return self.ShowError("item not found")
+
 	def InitById(self, idd):
 		try:
 			datas = self.collection.find({"_id": ObjectId(idd)})
