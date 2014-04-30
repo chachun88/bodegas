@@ -90,12 +90,18 @@ class CellarEasyOutputHandler(BaseHandler):
 
 		cellar = Cellar()
 		cellar.InitWithId(self.get_argument("id", ""))
-		self.render("cellar/easyoutput.html", cellar=cellar, products=cellar.ListProducts())
+
+		data = Cellar().List(1, 10)
+		self.render("cellar/easyoutput.html", cellar=cellar, products=cellar.ListProducts(), cellarList=data)
 
 	def post(self):
 		cellar_id = self.get_argument("cellar_id", "")
 		product_id = self.get_argument("product_id", "")
 		quantity = self.get_argument("quantity", "")
+		balance_price=self.get_argument("balance_price", "")
+		new_cellar = self.get_argument("new_cellar", "")
+
+		print "aca "+new_cellar
 
 		cellar = Cellar()
 		cellar.InitWithId(cellar_id)
@@ -104,6 +110,22 @@ class CellarEasyOutputHandler(BaseHandler):
 			self.write("ok")
 		else:
 			self.write("no")
+
+		if new_cellar!='delete':
+			
+			cellar2 = Cellar()
+			cellar2.InitWithId(new_cellar)
+
+			redirect = "t"
+
+			if "success" in cellar2.AddProducts(product_id, quantity, balance_price):
+				self.write("ok")
+				redirect = "bpt"
+			else:
+				self.write("no")
+				redirect = "bpf"
+
+
 
 	## invalidate xsfr cookie for ajax use
 	def check_xsrf_cookie(self):

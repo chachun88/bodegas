@@ -56,6 +56,18 @@ class Cellar(BaseModel):
 		self.name = json_data["name"]
 		self.description = json_data["description"]
 
+	def InitWithName(self, name):
+		url = self.wsurl() + "/cellar/find"
+		url += "?token=" + self.token()
+		url += "&name=" + name
+
+		json_string = urllib.urlopen(url).read()
+		json_data = json_util.loads(json_string)
+
+		self.identifier = str(json_data["_id"])
+		self.name = json_data["name"]
+		self.description = json_data["description"]		
+
 	def List(self, page, items):
 		url = self.wsurl() + "/cellar/list"
 		url += "?token=" + self.token()

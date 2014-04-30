@@ -67,13 +67,17 @@ class CellarFindHandler(BaseHandler):
 			return
 
 		idd = self.get_argument("id", "")
+		name = self.get_argument("name", "")
 		
 		cellar = Cellar()
-		cellar.InitById(idd)
+
+		if idd != "":
+			cellar.InitById(idd)
+		else:
+			cellar.InitByName(name)
 		
 		self.write(json_util.dumps(cellar.Print()))
 		pass
-
 
 class CellarProductsListHandler(BaseHandler):
 	"""docstring for CellarProductsListHandler"""

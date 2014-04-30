@@ -71,6 +71,7 @@ class Menu:
 
     # sub_menu
     PRODUCTOS_CARGA_MASIVA = "Carga Masiva"
+    PRODUCTOS_SALIDA_MASIVA = "Salida Masiva"
     PRODUCTOS_CARGA = "Agregar producto"
     PRODUCTOS_LISTA = "Lista de productos"
     # end sub_menu
