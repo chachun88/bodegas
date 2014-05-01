@@ -4,7 +4,18 @@
 {% block caption %} puedes cargar un excel con una lista de productos{% end %}
 
 {% block body %}
-
+{% if dn == "t" %}
+<div class="alert alert-success">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> Se ha cargado excel correctamente.
+</div>
+{% end %}
+{% if dn == "t2" %}
+<div class="alert alert-warning">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong> Debe cargar excel antes de subir archivo.
+</div>
+{% end %}
 <div class="col-md-12">
 	<section class="widget">
 		<form enctype="multipart/form-data" action="" method="post">

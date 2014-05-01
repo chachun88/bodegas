@@ -17,6 +17,7 @@ import order_handler
 import order_detail_handler
 import cellar_handler
 import category_handler
+import color_handler
 
 import doc_handler
 
@@ -64,6 +65,12 @@ class Application(tornado.web.Application):
             (r"/category/remove",          category_handler.RemoveCategoryHandler),
             (r"/category/find",            category_handler.GetCategoryHandler),
             (r"/category/list",            category_handler.LisCategoryHandler),
+
+            (r"/color/add",             color_handler.AddColorHandler),
+            (r"/color/edit",            color_handler.AddColorHandler),
+            (r"/color/remove",          color_handler.RemoveColorHandler),
+            (r"/color/find",            color_handler.GetColorHandler),
+            (r"/color/list",            color_handler.LisColorHandler),            
 
             (r"/order/add",             order_handler.AddOrderHandler),
             (r"/order/edit",            order_handler.EditOrderHandler),
