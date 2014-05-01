@@ -29,6 +29,7 @@ from globals import port, debugMode, domainName, carpeta_img, userMode, Menu
 class HomeHandler(BaseHandler):
 
 	fn =''
+	fnout =''
 
 	@tornado.web.authenticated
 	def get(self):
@@ -51,40 +52,54 @@ class HomeHandler(BaseHandler):
 		  
 		form = cgi.FieldStorage()
 		
+		fileitem=''
 		# A nested FieldStorage instance holds the file
-		fileitem = self.request.files['file'][0]
-	
-		# strip leading path from file name to avoid directory traversal attacks
-		global fn 
-		fn = fileitem['filename']
-		
-		#print fn 
-		open('uploads/entradas_masivas/' + fn, 'wb').write(fileitem["body"])
-		#message = 'The file "' + fn + '" was uploaded successfully'
-
 		try:
-			dn = self.get_argument("dn", "f")
-		
-			doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
-
-			sheet = doc.sheet_by_index(0)
-
-			nrows = sheet.nrows
-			ncols = sheet.ncols
-			#print ncols
-			#self.write("{}".format(ncols))
-
-			matriz=[]
-
-			for i in range(nrows):
-				matriz.append([])
-				for j in range(ncols):
-					matriz[i].append(sheet.cell_value(i,j))
-
-			self.render("product/home.html", side_menu=self.side_menu, dn=dn, matriz=matriz, nrows=nrows, ncols=ncols)
-
-		except ImportError:
+			fileitem = self.request.files['file'][0]
+		except:
 			pass
+	
+		# strip leading path from file name to avoid directory traversal attacks		
+
+		if fileitem != "":
+			global fn 
+			
+			fn = fileitem['filename']
+			open('uploads/entradas_masivas/' + fn, 'wb').write(fileitem["body"])
+			#message = 'The file "' + fn + '" was uploaded successfully'
+
+			try:
+				#dn = self.get_argument("dn", "t")
+				dn="t"
+			
+				doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
+
+				sheet = doc.sheet_by_index(0)
+
+				nrows = sheet.nrows
+				ncols = sheet.ncols
+				#print ncols
+				#self.write("{}".format(ncols))
+
+				matriz=[]
+
+				for i in range(nrows):
+					matriz.append([])
+					for j in range(ncols):
+						matriz[i].append(sheet.cell_value(i,j))	
+
+				#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
+				self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn)
+
+			except ImportError:
+				pass
+
+		else:
+			dn="t2"
+			self.render("product/home.html", side_menu=self.side_menu, dn=dn)
+
+
+
 
 class ProductLoadHandler(BaseHandler):
 	def get(self):
@@ -92,66 +107,77 @@ class ProductLoadHandler(BaseHandler):
 
 	def post(self):	
 
-		doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
+		if 'fn' in vars() or 'fn' in globals():
 
-		sheet = doc.sheet_by_index(0)
+			if fn != "":
 
-		nrows = sheet.nrows
-		ncols = sheet.ncols
-		#print ncols
-		#self.write("{}".format(ncols))
+				doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
 
-		matriz=[]
+				sheet = doc.sheet_by_index(0)
 
-		prod = Product()
-		cellar=Cellar()
+				nrows = sheet.nrows
+				ncols = sheet.ncols
+				#print ncols
+				#self.write("{}".format(ncols))
 
-		for i in range(nrows):	
-			matriz.append([])
-			for j in range(ncols):				
-				matriz[i].append(sheet.cell_value(i,j))
-				if i > 3:
-					if j == 0:
-						prod.category = matriz[i][j]
-					elif j == 1:
-						prod.sku = str(int(matriz[i][j]))
-					elif j == 2:
-						prod.name = matriz[i][j]
-					elif j == 3:
-						prod.description = matriz[i][j]
-					elif j == 4:						
-						if matriz[i][j]=="":
-							prod.size = '0'
-						else:
-							prod.size = str(int(matriz[i][j]))
-					elif j == 5:
-						price = str(int(matriz[i][j]))
-					elif j == 6:
-						quantity = str(int(matriz[i][j]))
-					elif j == 7:
-						prod.manufacturer = matriz[i][j]
-					elif j == 8:
-						cellar_name= matriz[i][j]
-					elif j == 9:
-						prod.brand = matriz[i][j]
-			
-			#product is stored
-			prod.Save()	
+				matriz=[]
 
-			#recovering identified
-			prod.InitWithSku(prod.sku)
-			product_id=prod.identifier
+				prod = Product()
+				cellar=Cellar()
 
-			#products stored for cellar
-			try:
-				cellar.InitWithName(cellar_name)
-				cellar.AddProducts(product_id, quantity, price)
-			except:
-				pass
+				for i in range(nrows):	
+					matriz.append([])
+					for j in range(ncols):				
+						matriz[i].append(sheet.cell_value(i,j))
+						if i > 3:
+							if j == 0:
+								prod.category = matriz[i][j]
+							elif j == 1:
+								prod.sku = str(int(matriz[i][j]))
+							elif j == 2:
+								prod.name = matriz[i][j]
+							elif j == 3:
+								prod.description = matriz[i][j]
+							elif j == 4:						
+								if matriz[i][j]=="":
+									prod.size = '0'
+								else:
+									prod.size = str(int(matriz[i][j]))
+							elif j == 5:
+								price = str(int(matriz[i][j]))
+							elif j == 6:
+								quantity = str(int(matriz[i][j]))
+							elif j == 7:
+								prod.manufacturer = matriz[i][j]
+							elif j == 8:
+								cellar_name= matriz[i][j]
+							elif j == 9:
+								prod.brand = matriz[i][j]
+					
+					#product is stored
+					prod.Save()	
 
+					#recovering identified
+					prod.InitWithSku(prod.sku)
+					product_id=prod.identifier
 
+					#products stored for cellar
+					try:
+						cellar.InitWithName(cellar_name)
+						cellar.AddProducts(product_id, quantity, price)
+					except:
+						pass
 
-		self.redirect("/")	
+				dn="t"
+				#self.redirect("/product?dn="+dn)
+				self.render("product/home.html", side_menu=self.side_menu, dn=dn)	
+
+			else:
+				dn="t2"
+				self.redirect("/product?dn="+dn)
+		else:
+			dn="t2"
+			self.redirect("/product?dn="+dn)	
 
 class ProductRemoveHandler(BaseHandler):
 	
@@ -185,40 +211,50 @@ class ProductOutHandler(BaseHandler):
 		  
 		form = cgi.FieldStorage()
 		
-		# A nested FieldStorage instance holds the file
-		fileitem = self.request.files['file'][0]
+		fileitem=''
+		try:
+			# A nested FieldStorage instance holds the file
+			fileitem = self.request.files['file'][0]
+		except:
+			pass
 	
 		# strip leading path from file name to avoid directory traversal attacks
-		global fn 
-		fn = fileitem['filename']
+
 		
-		#print fn 
-		open('uploads/salidas_masivas/' + fn, 'wb').write(fileitem["body"])
-		#message = 'The file "' + fn + '" was uploaded successfully'
+		if fileitem != "":
 
-		try:
-			dn = self.get_argument("dn", "f")
-		
-			doc = xlrd.open_workbook('uploads\\salidas_masivas\\'+fn)
+			global fnout 
+			fnout = fileitem['filename']
 
-			sheet = doc.sheet_by_index(0)
+			open('uploads/salidas_masivas/' + fnout, 'wb').write(fileitem["body"])
+			#message = 'The file "' + fn + '" was uploaded successfully'
 
-			nrows = sheet.nrows
-			ncols = sheet.ncols
-			#print ncols
-			#self.write("{}".format(ncols))
+			try:
+				dn = self.get_argument("dn", "f")
+			
+				doc = xlrd.open_workbook('uploads\\salidas_masivas\\'+fnout)
 
-			matriz=[]
+				sheet = doc.sheet_by_index(0)
 
-			for i in range(nrows):
-				matriz.append([])
-				for j in range(ncols):
-					matriz[i].append(sheet.cell_value(i,j))
+				nrows = sheet.nrows
+				ncols = sheet.ncols
+				#print ncols
+				#self.write("{}".format(ncols))
 
-			self.render("product/out.html", side_menu=self.side_menu, dn=dn, matriz=matriz, nrows=nrows, ncols=ncols)
+				matriz=[]
 
-		except ImportError:
-			pass
+				for i in range(nrows):
+					matriz.append([])
+					for j in range(ncols):
+						matriz[i].append(sheet.cell_value(i,j))
+
+				self.render("product/out.html", side_menu=self.side_menu, dn=dn, matriz=matriz, nrows=nrows, ncols=ncols)
+
+			except ImportError:
+				pass
+		else:
+			dn="t2"
+			self.render("product/out.html", side_menu=self.side_menu, dn=dn)
 
 class ProductMassiveOutputHandler(BaseHandler):
 	def get(self):
@@ -226,65 +262,75 @@ class ProductMassiveOutputHandler(BaseHandler):
 
 	def post(self):
 
-		doc = xlrd.open_workbook('uploads\\salidas_masivas\\'+fn)
+		if 'fnout' in vars() or 'fnout' in globals():
 
-		sheet = doc.sheet_by_index(0)
+			if fnout != "":
 
-		nrows = sheet.nrows
-		ncols = sheet.ncols
-		print ncols
-		#self.write("{}".format(ncols))
+				doc = xlrd.open_workbook('uploads\\salidas_masivas\\'+fnout)
 
-		matriz=[]
+				sheet = doc.sheet_by_index(0)
 
-		prod = Product()
-		cellar=Cellar()
+				nrows = sheet.nrows
+				ncols = sheet.ncols
+				print ncols
+				#self.write("{}".format(ncols))
 
-		for i in range(nrows):	
-			matriz.append([])
-			for j in range(ncols):				
-				matriz[i].append(sheet.cell_value(i,j))
-				if i > 3:
-					if j == 0:
-						prod.category = matriz[i][j]
-					elif j == 1:
-						prod.sku = str(int(matriz[i][j]))
-					elif j == 2:
-						prod.name = matriz[i][j]
-					elif j == 3:
-						prod.description = matriz[i][j]
-					elif j == 4:						
-						if matriz[i][j]=="":
-							prod.size = '0'
-						else:
-							prod.size = str(int(matriz[i][j]))
-					elif j == 5:
-						price_buy = str(int(matriz[i][j]))
-					elif j == 6:
-						price_sell = str(int(matriz[i][j]))						
-					elif j == 7:
-						quantity = str(int(matriz[i][j]))
-					elif j == 8:
-						prod.manufacturer = matriz[i][j]
-					elif j == 9:
-						user = matriz[i][j]						
-					elif j == 10:
-						cellar_name= matriz[i][j]
-					elif j == 11:
-						prod.brand = matriz[i][j]
-			
-			#product is saved
-			#prod.Save()	
+				matriz=[]
 
-			#recovering identified
-			prod.InitWithSku(prod.sku)
-			product_id=prod.identifier
+				prod = Product()
+				cellar=Cellar()
 
-			#products stored for cellar
-			try:	
-				cellar.InitWithName(cellar_name)
-				cellar.RemoveProducts(product_id, quantity)
-			except:
-				pass
+				for i in range(nrows):	
+					matriz.append([])
+					for j in range(ncols):				
+						matriz[i].append(sheet.cell_value(i,j))
+						if i > 3:
+							if j == 0:
+								prod.category = matriz[i][j]
+							elif j == 1:
+								prod.sku = str(int(matriz[i][j]))
+							elif j == 2:
+								prod.name = matriz[i][j]
+							elif j == 3:
+								prod.description = matriz[i][j]
+							elif j == 4:						
+								if matriz[i][j]=="":
+									prod.size = '0'
+								else:
+									prod.size = str(int(matriz[i][j]))
+							elif j == 5:
+								price_buy = str(int(matriz[i][j]))
+							elif j == 6:
+								price_sell = str(int(matriz[i][j]))						
+							elif j == 7:
+								quantity = str(int(matriz[i][j]))
+							elif j == 8:
+								prod.manufacturer = matriz[i][j]
+							elif j == 9:
+								user = matriz[i][j]						
+							elif j == 10:
+								cellar_name= matriz[i][j]
+							elif j == 11:
+								prod.brand = matriz[i][j]
+					
+					#product is saved
+					#prod.Save()	
 
-		self.redirect("/product/out")
+					#recovering identified
+					prod.InitWithSku(prod.sku)
+					product_id=prod.identifier
+
+					#products stored for cellar
+					try:	
+						cellar.InitWithName(cellar_name)
+						cellar.RemoveProducts(product_id, quantity)
+					except:
+						pass
+				fnout=""		
+				self.redirect("/product/out")
+			else:
+				dn="t2"
+				self.redirect("/product/out?dn="+dn)
+		else:
+			dn="t2"
+			self.redirect("/product/out?dn="+dn)
