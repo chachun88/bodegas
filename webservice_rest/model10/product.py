@@ -16,8 +16,8 @@ class Product(BaseModel):
 		self._description = ''
 		self._brand = ''
 		self._manufacturer = ''
-		self._size = ''
-		self._color = ''
+		self._size = []
+		self._color = []
 		self._material = ''
 		self._bullet_point_1 = ''
 		self._bullet_point_2 = ''
@@ -185,7 +185,13 @@ class Product(BaseModel):
 		try:
 			#if Category().Exist(self.category) == False and Brand().Exist(self.brand) == False:
 			#	raise
-			
+			sizes=self.size.split(',')
+			colors=self.color.split(',')
+			if len(sizes) > len(colors):
+				count=len(sizes)
+			else:
+				count=len(colors)
+
 			sku_count = self.collection.find({"sku":self.sku}).count()
 
 			## solve when sku already exists
@@ -198,8 +204,8 @@ class Product(BaseModel):
 							"description":self.description,
 							"brand":self.brand,
 							"manufacturer":self.manufacturer,
-							"size":self.size,
-							"color":self.color,
+							# "size":self.size,
+							# "color":self.color,
 							"material":self.material,
 							"bullet_point_1":self.bullet_point_1,
 							"bullet_point_2":self.bullet_point_2,
@@ -211,6 +217,15 @@ class Product(BaseModel):
 							"category":self.category
 							}
 						})
+				for i in range(count):
+					self.collection.update({
+							"sku":self.sku
+							},{
+							"$addToSet":{
+								"size":sizes[i],
+								"color":colors[i]
+								}
+							})
 				self.identifier = str(self.collection.find({"sku":self.sku})[0]["_id"])
 			##solve when id is not empty
 			elif self.identifier.strip() != "":
@@ -223,8 +238,8 @@ class Product(BaseModel):
 						"sku":self.sku,
 						"brand":self.brand,
 						"manufacturer":self.manufacturer,
-						"size":self.size,
-						"color":self.color,
+						# "size":self.size,
+						# "color":self.color,
 						"material":self.material,
 						"bullet_point_1":self.bullet_point_1,
 						"bullet_point_2":self.bullet_point_2,
@@ -235,6 +250,15 @@ class Product(BaseModel):
 						"currency":self.currency,
 						"category":self.category
 					}})
+				for i in range(count):
+					self.collection.update({
+							"sku":self.sku
+							},{
+							"$addToSet":{
+								"size":sizes[i],
+								"color":colors[i]
+								}
+							})
 			##solve when the product does not exists
 			else:
 				self.identifier = str(self.collection.save({
@@ -243,8 +267,8 @@ class Product(BaseModel):
 						"sku":self.sku,
 						"brand":self.brand,
 						"manufacturer":self.manufacturer,
-						"size":self.size,
-						"color":self.color,
+						# "size":self.size,
+						# "color":self.color,
 						"material":self.material,
 						"bullet_point_1":self.bullet_point_1,
 						"bullet_point_2":self.bullet_point_2,
@@ -255,6 +279,16 @@ class Product(BaseModel):
 						"currency":self.currency,
 						"category":self.category
 					}))
+				
+				for i in range(count):
+					self.collection.update({
+							"sku":self.sku
+							},{
+							"$addToSet":{
+								"size":sizes[i],
+								"color":colors[i]
+								}
+							})
 
 			return self.ShowSuccessMessage("product correctly saved")
 		except Exception, e:

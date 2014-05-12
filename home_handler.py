@@ -121,6 +121,7 @@ class ProductLoadHandler(BaseHandler):
 				#self.write("{}".format(ncols))
 
 				matriz=[]
+				tallas=[]
 
 				prod = Product()
 				cellar=Cellar()
@@ -128,45 +129,55 @@ class ProductLoadHandler(BaseHandler):
 				for i in range(nrows):	
 					matriz.append([])
 					for j in range(ncols):				
-						matriz[i].append(sheet.cell_value(i,j))
-						if i > 3:
-							if j == 0:
-								prod.category = matriz[i][j]
-							elif j == 1:
-								prod.sku = str(int(matriz[i][j]))
-							elif j == 2:
-								prod.name = matriz[i][j]
-							elif j == 3:
-								prod.description = matriz[i][j]
-							elif j == 4:						
-								if matriz[i][j]=="":
-									prod.size = '0'
-								else:
-									prod.size = str(int(matriz[i][j]))
-							elif j == 5:
-								price = str(int(matriz[i][j]))
-							elif j == 6:
-								quantity = str(int(matriz[i][j]))
-							elif j == 7:
-								prod.manufacturer = matriz[i][j]
-							elif j == 8:
-								cellar_name= matriz[i][j]
-							elif j == 9:
-								prod.brand = matriz[i][j]
-					
-					#product is stored
-					prod.Save()	
+						if i == 4 and j > 9:
+							tallas.append(sheet.cell_value(i,j))				
 
-					#recovering identified
-					prod.InitWithSku(prod.sku)
-					product_id=prod.identifier
+				for i in range(nrows):	
+					matriz.append([])
+					for k in range(len(tallas)):
+						for j in range(ncols):	
 
-					#products stored for cellar
-					try:
-						cellar.InitWithName(cellar_name)
-						cellar.AddProducts(product_id, quantity, price)
-					except:
-						pass
+							matriz[i].append(sheet.cell_value(i,j))
+							
+							if i > 4 and i < nrows:
+								prod.size=str(tallas[k]).split(",")
+								size=str(tallas[k])
+								if j == 0:
+									prod.category = matriz[i][j]
+								elif j == 1:
+									prod.sku = str(int(matriz[i][j]))
+								elif j == 2:
+									prod.name = matriz[i][j]
+								elif j == 3:
+									prod.description = matriz[i][j]
+								elif j == 4:
+									prod.color=matriz[i][j].split(",")
+									color=matriz[i][j]
+								elif j == 5:
+									price = str(int(matriz[i][j]))
+								elif j == 6:
+									prod.manufacturer = matriz[i][j]
+								elif j == 7:
+									cellar_name= matriz[i][j]
+								elif j == 8:
+									prod.brand = matriz[i][j]
+								elif j == 10:
+									q = k +j
+									quantity=str(int(matriz[i][q]))
+									#recovering identified
+									prod.InitWithSku(prod.sku)
+									product_id=prod.identifier
+
+									#products stored for cellar
+									try:
+										cellar.InitWithName(cellar_name)
+										cellar.AddProducts(prod.sku, quantity, price, size, color)
+									except:
+										pass		
+						#product is stored
+						prod.Save()
+
+
 
 				dn="t"
 				#self.redirect("/product?dn="+dn)

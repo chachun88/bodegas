@@ -33,7 +33,7 @@ class Cellar(BaseModel):
 		return urllib.urlopen(url).read()
 
 	def ListProducts(self):
-		print "entra a ListProducts "+self.identifier
+
 		url = self.wsurl() + "/cellar/products/list"
 
 		url += "?token=" + self.token()
@@ -77,13 +77,15 @@ class Cellar(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)
 	
-	def AddProducts(self, product_id, quantity, price):
+	def AddProducts(self, product_sku, quantity, price, size, color):
 		url = self.wsurl() + "/cellar/products/add?token=" + self.token()
 		url += "&cellar_id=" + self.identifier
-		url += "&product_id=" + product_id 
+		url += "&product_sku=" + product_sku 
 		url += "&operation=buy"
 		url += "&quantity=" + quantity
 		url += "&price=" + price
+		url += "&size=" + size
+		url += "&color=" + color
 
 		json_string = urllib.urlopen(url).read()
 
@@ -93,7 +95,7 @@ class Cellar(BaseModel):
 		url = self.wsurl() + "/cellar/products/remove?token=" + self.token()
 
 		url += "&cellar_id=" + self.identifier
-		url += "&product_id=" + product_id 
+		url += "&product_sku=" + product_sku
 		url += "&operation=sell"
 		url += "&quantity=" + quantity
 		url += "&price=0"

@@ -104,20 +104,24 @@ class CellarProductsAddHandler(BaseHandler):
 			return
 
 		cellar_id = self.get_argument("cellar_id", "")
-		product_id = self.get_argument("product_id", "")
+		product_sku = self.get_argument("product_sku", "")
 		quantity = self.get_argument("quantity", "0")
 		operation = self.get_argument("operation", Kardex.OPERATION_BUY)
 		price = self.get_argument("price", "0")
+		size = self.get_argument("size", "")
+		color = self.get_argument("color", "")
 
 		kardex = Kardex()
 
-		kardex.product_identifier = product_id
+		kardex.product_sku = product_sku
 		kardex.cellar_identifier = cellar_id
 		kardex.date = str(datetime.datetime.now().time().isoformat())
 
 		kardex.operation_type = operation
 		kardex.units = float(quantity)
 		kardex.price = float(price)
+		kardex.size = size
+		kardex.color= color
 
 		self.write(json_util.dumps(kardex.Insert()))
 		

@@ -8,6 +8,7 @@ import tornado.options
 import tornado.web
 import urllib
 import urllib2
+import pprint
 
 from basehandler import BaseHandler
 from bson import json_util
@@ -28,8 +29,8 @@ class Product(BaseModel):
 		self._description=""
 		self._brand=""
 		self._manufacturer=""
-		self._size=""
-		self._color=""
+		self._size=[]
+		self._color=[]
 		self._material=""
 		self._bullet_1=""
 		self._bullet_2=""
@@ -249,9 +250,11 @@ class Product(BaseModel):
 			urllib.urlopen(url)
 
 	def Save(self):
+		#siz={ 'size':[self.size] }
+		#col={ 'color':[self.color] }
+
 		url = self.wsurl()+"/product/add?token=" + self.token()
 
-		
 		url += "&category=" + self.category
 		url += "&sku=" + self.sku
 		url += "&name=" + self.name		
@@ -259,9 +262,9 @@ class Product(BaseModel):
 		url += "&description=" + self.description
 		url += "&brand=" + self.brand
 		url += "&manufacturer=" + self.manufacturer
-		url += "&size=" + self.size
-		url += "&color=" + self.color
-		url += "&material=" + self.material
+		url += "&size=" + ",".join(str(v) for v in self.size)  
+		url += "&color=" + ",".join(str(v) for v in self.color)  
+		#url += "&material=" + self.material
 		url += "&bullet_1=" + self.bullet_1
 		url += "&bullet_2=" + self.bullet_2
 		url += "&bullet_3=" + self.bullet_3	

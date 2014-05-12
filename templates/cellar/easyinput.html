@@ -63,10 +63,12 @@
 											<button type="submit" class="btn btn-primary">Agregar</button>
 										</div>
 									</fieldset>
-									<input type="hidden" name="product_id" value="{{ p["_id"] }}" />
+									<input type="hidden" name="product_sku" value="{{ p["sku"] }}" />
 									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
+									<input type="hidden" name="size" value="37" />
+									<input type="hidden" name="color" value="{{ p["color"] }}" />
 								</form>
 							</div>
 						</td>

@@ -65,14 +65,16 @@ class CellarEasyInputHandler(BaseHandler):
 	
 	def post(self):
 		cellar_id = self.get_argument("cellar_id", "")
-		product_id = self.get_argument("product_id", "")
+		product_sku = self.get_argument("product_sku", "")
 		quantity = self.get_argument("quantity", "")
 		price = self.get_argument("price", "")
+		size= self.get_argument("size", "")
+		color=self.get_argument("color", "")
 
 		cellar = Cellar()
 		cellar.InitWithId(cellar_id)
 
-		if "success" in cellar.AddProducts(product_id, quantity, price):
+		if "success" in cellar.AddProducts(product_sku, quantity, price, size, color):
 			self.write("ok")
 		else:
 			self.write("no")
@@ -151,13 +153,20 @@ class CellarInputHandler(BaseHandler):
 		units = self.get_argument("units", "0")
 		product_id = self.get_argument("product_id", "")
 		cellar_id = self.get_argument("cellar_id", "")
+		size = self.get_argument("size", "")
+		color = self.get_argument("color", "")
 
 		cellar = Cellar()
 		cellar.InitWithId(cellar_id)
 
+		product = Product()
+		print "product idddddddddddddd "+ product_id
+		product.InitWithId(product_id)
+		product_sku=product.sku
+
 		redirect = "t"
 
-		if "success" in cellar.AddProducts(product_id, units, price):
+		if "success" in cellar.AddProducts(product_sku, units, price, size, color):
 			self.write("ok")
 			redirect = "bpt"
 		else:
@@ -170,8 +179,6 @@ class CellarDetailHandler(BaseHandler):
 	def get(self):
 
 		idd = self.get_argument("id", "")
-
-		print "entro a detalle "+idd
 
 		cellar = Cellar()
 		cellar.InitWithId(idd)

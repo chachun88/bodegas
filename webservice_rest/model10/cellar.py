@@ -1,4 +1,4 @@
-#!/usr/bin/python
+				#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 from basemodel import BaseModel, db
@@ -6,6 +6,7 @@ from bson.objectid import ObjectId
 
 from kardex import Kardex
 from product import Product
+from bson import json_util
 
 class Cellar(BaseModel):
 	def __init__(self):
@@ -37,7 +38,7 @@ class Cellar(BaseModel):
 				{"cellar_identifier":self.identifier}
 			},{
 			"$group":
-			{"_id":{ "product_identifier":"$product_identifier"}}
+			{"_id":{ "product_sku":"$product_sku"}}
 			}])
 
 		kardex = Kardex()
@@ -45,7 +46,7 @@ class Cellar(BaseModel):
 		total_units = 0
 
 		for x in data["result"]:
-			product = x["_id"]["product_identifier"]
+			product = x["_id"]["product_sku"]
 			kardex.FindKardex(product, self.identifier)
 
 			total_units += kardex.balance_units
@@ -60,7 +61,7 @@ class Cellar(BaseModel):
 				{"cellar_identifier":self.identifier}
 			},{
 			"$group":
-			{"_id":{ "product_identifier":"$product_identifier"}}
+			{"_id":{ "product_sku":"$product_sku"}}
 			}])
 
 		kardex = Kardex()
@@ -68,7 +69,7 @@ class Cellar(BaseModel):
 		total_price = 0
 
 		for x in data["result"]:
-			product = x["_id"]["product_identifier"]
+			product = x["_id"]["product_sku"]
 			kardex.FindKardex(product, self.identifier)
 
 			total_price += kardex.balance_total
@@ -209,7 +210,7 @@ class Cellar(BaseModel):
 				{"cellar_identifier":self.identifier}
 			},{
 				"$group":
-					{"_id":{ "product_identifier":"$product_identifier"}}
+					{"_id":{ "product_sku":"$product_sku"}}
 			}])
 
 		rtn_data = []
@@ -218,11 +219,13 @@ class Cellar(BaseModel):
 
 		for x in data["result"]:
 			product = Product()
-			product.InitById(str(x["_id"]["product_identifier"]))
+			product.InitBySku(str(x["_id"]["product_sku"]))
+			#print "idddddddddd"+str(x["_id"]["product_sku"])
 			prod_print = product.Print()
+			#print "product print "+json_util.dumps(prod_print)
 
 			if "error" not in prod_print:
-				kardex.FindKardex(str(prod_print["_id"]), self.identifier)
+				kardex.FindKardex(str(prod_print["sku"]), self.identifier)
 				prod_print["balance_units"] = kardex.balance_units
 				prod_print["balance_price"] = kardex.balance_price
 				prod_print["balance_total"] = kardex.balance_total

@@ -1,9 +1,14 @@
-$(document).ready(function(){
+ 	$(document).ready(function(){
 	$(".lp-autocomplete").lpAutoComplete({
 		auto:true,
 		onSelect:function(result){
-			$("#product_id").val(result.key)
+			$("#product_id").val(result.key);
+
 		}
+	});
+
+	$(".load-products").click(function(event){
+		$("#load").addClass("fa");	
 	});
 
 
@@ -54,11 +59,15 @@ $(document).ready(function(){
 		var product_id = $("input[name=product_id]", $(this)).val();
 		var quantity = $("input[name=quantity]", $(this)).val();
 		var price = $("input[name=price]", $(this)).val();
+		var size = $("input[name=size]", $(this)).val();
+		var color = $("input[name=color]", $(this)).val();
 		var cellar_name = $("input[name=cellar_name]", $(this)).val();
 		var product_name = $("input[name=product_name]", $(this)).val();
 		var new_cellar = $("select[name=new_cellar]", $(this)).val();
 		var balance_price = $("input[name=balance_price]", $(this)).val();
 		var transaction = $("input[name=transaction]", $(this)).val();
+
+		console.log("entra " + product_id);
 
 		if (transaction== undefined){
 			transaction="agregado";
@@ -73,6 +82,8 @@ $(document).ready(function(){
 			"product_id":product_id,
 			"quantity":quantity,
 			"price":price,
+			"size":size,
+			"color":color,
 			"new_cellar":new_cellar,
 			"balance_price":balance_price
 		};
@@ -96,4 +107,4 @@ $(document).ready(function(){
 
 		return false;
 	});
-})
+});

@@ -7,11 +7,13 @@ from bson.objectid import ObjectId
 class Kardex(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
-		self._product_identifier = ''
+		self._product_sku = ''
 		self._cellar_identifier = ''
 		self._operation_type = Kardex.OPERATION_BUY
 		self._units = 0
 		self._price = 0.0
+		self._size= ''
+		self._color=''
 		self._total = 0.0
 		self._balance_units = 0
 		self._balance_price = 0.0
@@ -24,11 +26,11 @@ class Kardex(BaseModel):
 	OPERATION_SELL= "sell"
 
 	@property
-	def product_identifier(self):
-		return self._product_identifier
-	@product_identifier.setter
-	def product_identifier(self, value):
-		self._product_identifier = value
+	def product_sku(self):
+		return self._product_sku
+	@product_sku.setter
+	def product_sku(self, value):
+		self._product_sku = value
 
 	@property
 	def cellar_identifier(self):
@@ -57,6 +59,20 @@ class Kardex(BaseModel):
 	@price.setter
 	def price(self, value):
 		self._price = value
+
+	@property
+	def size(self):
+	    return self._size
+	@size.setter
+	def size(self, value):
+	    self._size = value
+	
+	@property
+	def color(self):
+	    return self._color
+	@color.setter
+	def color(self, value):
+	    self._color = value
 
 	@property
 	def total(self):
@@ -99,17 +115,20 @@ class Kardex(BaseModel):
 	def InitById(self, idd):
 		return ''
 
-	def FindKardex(self, product_identifier, cellar_identifier):
+	def FindKardex(self, product_sku, cellar_identifier):
 		try:
 			data = self.collection.find({
-								"product_identifier":product_identifier,
+								"product_sku":product_sku,
 								"cellar_identifier":cellar_identifier
 								}).sort("_id",-1)
 
 			self.identifier = str(data[0]["_id"])
+			self.product_sku = str(data[0]["product_sku"])
 			self.operation_type = data[0]["operation_type"]
 			self.units = data[0]["units"]
 			self.price = data[0]["price"]
+			self.size =data[0]["size"]
+			self.color = data[0]["color"]
 			self.total = data[0]["total"]
 			self.balance_units = data[0]["balance_units"]
 			self.balance_price = data[0]["balance_price"]
@@ -123,12 +142,12 @@ class Kardex(BaseModel):
 	def GetPrevKardex(self):
 		new_kardex = Kardex()
 
-		new_kardex.product_identifier = self.product_identifier
+		new_kardex.product_sku = self.product_sku
 		new_kardex.cellar_identifier = self.cellar_identifier
 
 		try:
 			data = self.collection.find({
-										"product_identifier":self.product_identifier,
+										"product_sku":self.product_sku,
 										"cellar_identifier":self.cellar_identifier
 										}).sort("_id",-1)
 
@@ -137,6 +156,8 @@ class Kardex(BaseModel):
 				new_kardex.operation_type = data[0]["operation_type"]
 				new_kardex.units = data[0]["units"]
 				new_kardex.price = data[0]["price"]
+				new_kardex.size =data[0]["size"]
+				new_kardex.color = data[0]["color"]
 				new_kardex.total = data[0]["total"]
 				new_kardex.balance_units = data[0]["balance_units"]
 				new_kardex.balance_price = data[0]["balance_price"]
@@ -181,7 +202,7 @@ class Kardex(BaseModel):
 
 		'''
 		## detect if product exists
-		product_data = db.products.find({"_id":ObjectId(self.product_identifier)}).count()
+		product_data = db.products.find({"_id":ObjectId(self.product_sku)}).count()
 		## detect if cellar exists
 		cellar_data = db.cellar.find({"_id":ObjectId(self.cellar_identifier)}).count()
 
@@ -190,13 +211,14 @@ class Kardex(BaseModel):
 		if cellar_data == 0 or product_data == 0:
 			return self.ShowError("the cellar does not exist")
 		'''
-
 		self.collection.save({
-				"product_identifier":self.product_identifier,
+				"product_sku":self.product_sku,
 				"cellar_identifier":self.cellar_identifier,
 				"operation_type":self.operation_type,
 				"units":self.units,
 				"price":self.price,
+				"size":self.size,
+				"color":self.color,
 				"total":self.total,
 				"balance_units":self.balance_units,
 				"balance_price":self.balance_price,
@@ -207,9 +229,9 @@ class Kardex(BaseModel):
 		return self.ShowSuccessMessage("products has been added")
 
 	## only for debugging.
-	def Debug(self, product_identifier, cellar_identifier):
+	def Debug(self, product_sku, cellar_identifier):
 		data = self.collection.find({
-							"product_identifier":self.product_identifier,
+							"product_sku":self.product_sku,
 							"cellar_identifier":self.cellar_identifier
 							}).sort("_id",1)
 
@@ -217,6 +239,8 @@ class Kardex(BaseModel):
 			print d["operation_type"]
 			print "	units : 	{}".format(d["units"])
 			print "	price : 	{}".format(d["price"])
+			print "	size : 	{}".format(d["size"])
+			print "	color : 	{}".format(d["color"])
 			print "	total : 	{}".format(d["total"])
 			print "	balance units : 	{}".format(d["balance_units"])
 			print "	balance price : 	{}".format(d["balance_price"])
