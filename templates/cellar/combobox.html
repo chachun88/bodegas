@@ -1,0 +1,25 @@
+
+<div class="control-group">
+	<label for="" class="control-label">Talla</label>
+	<div class="controls form-group combobox">
+		<div class="col-sm-8">
+			<select name="size" class="form-control">
+				{% for p in product.size %}
+				<option value="{{ p }}"> {{ p }}</option>
+				{% end %}
+			</select>
+		</div>
+	</div>
+</div>
+<div class="control-group">
+	<label for="" class="control-label">Color</label>
+	<div class="controls form-group combobox">
+		<div class="col-sm-8">
+			<select name="color" class="form-control">
+				{% for p in product.color %}
+				<option value="{{ p }}"> {{ p }}</option>
+				{% end %}
+			</select>
+		</div>
+	</div>
+</div>

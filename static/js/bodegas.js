@@ -1,15 +1,31 @@
  	$(document).ready(function(){
+	
 	$(".lp-autocomplete").lpAutoComplete({
 		auto:true,
 		onSelect:function(result){
 			$("#product_id").val(result.key);
+			var cellar_id = $("input[name=name]").attr("cellar_id");
 
+			$.ajax({
+			url:"/cellar/combobox" ,
+			type: "post",
+			data: {product_id: result.key, cellar_id:cellar_id},
+			success: function(response)
+			{
+				$(".combobox").html(response);
+			}
+		});
 		}
 	});
 
 	$(".load-products").click(function(event){
 		$("#load").addClass("fa");	
 	});
+
+/*	//// Llenar combobox de output.html
+	$(".name").change(function(){
+		alert("entra");		
+	});*/
 
 
 	//// formulario para agregar productos
@@ -57,6 +73,7 @@
 		// agregar productos a bodega
 		var cellar_id = $("input[name=cellar_id]", $(this)).val();
 		var product_id = $("input[name=product_id]", $(this)).val();
+		var product_sku = $("input[name=product_sku]", $(this)).val();
 		var quantity = $("input[name=quantity]", $(this)).val();
 		var price = $("input[name=price]", $(this)).val();
 		var size = $("input[name=size]", $(this)).val();
@@ -67,7 +84,13 @@
 		var balance_price = $("input[name=balance_price]", $(this)).val();
 		var transaction = $("input[name=transaction]", $(this)).val();
 
-		console.log("entra " + product_id);
+		if (size == undefined){
+			size = $("select[name=size]", $(this)).val();
+		}
+
+		if (color == undefined){
+			color = $("select[name=color]", $(this)).val();
+		}
 
 		if (transaction== undefined){
 			transaction="agregado";
@@ -80,6 +103,7 @@
 		var post_data = {
 			"cellar_id":cellar_id,
 			"product_id":product_id,
+			"product_sku":product_sku,
 			"quantity":quantity,
 			"price":price,
 			"size":size,

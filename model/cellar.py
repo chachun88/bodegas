@@ -91,7 +91,7 @@ class Cellar(BaseModel):
 
 		return json_util.loads(json_string)
 
-	def RemoveProducts(self, product_id, quantity):
+	def RemoveProducts(self, product_sku, quantity, size, color):
 		url = self.wsurl() + "/cellar/products/remove?token=" + self.token()
 
 		url += "&cellar_id=" + self.identifier
@@ -99,6 +99,8 @@ class Cellar(BaseModel):
 		url += "&operation=sell"
 		url += "&quantity=" + quantity
 		url += "&price=0"
+		url += "&size=" + size
+		url += "&color=" + color
 
 		json_string = urllib.urlopen(url).read()
 

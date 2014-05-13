@@ -59,6 +59,18 @@
 												<div class="col-sm-12"><input type="number" required="required" name="price" placeholder="precio de compra" autocomplete="off" class="form-control"></div>
 											</div>
 										</div>
+										<div class="control-group">
+											<label for="" class="control-label">Size</label>
+											<div class="controls form-group">
+												<div class="col-sm-12"><input type="text" required="required" name="size" placeholder="Ingresar talla" autocomplete="off" class="form-control"></div>
+											</div>
+										</div>
+										<div class="control-group">
+											<label for="" class="control-label">Color</label>
+											<div class="controls form-group">
+												<div class="col-sm-12"><input type="text" required="required" name="color" placeholder="Ingresar color" autocomplete="off" class="form-control"></div>
+											</div>
+										</div>
 										<div class="form-actions">
 											<button type="submit" class="btn btn-primary">Agregar</button>
 										</div>
@@ -67,8 +79,6 @@
 									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
-									<input type="hidden" name="size" value="37" />
-									<input type="hidden" name="color" value="{{ p["color"] }}" />
 								</form>
 							</div>
 						</td>

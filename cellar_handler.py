@@ -30,21 +30,33 @@ class CellarOutputHandler(BaseHandler):
 		cellar = Cellar()
 		cellar.InitWithId(self.get_argument("id", ""))
 
-		self.render("cellar/input.html", operation="Salidas", opp="out", side_menu=self.side_menu, cellar=cellar)
+		data = Cellar().List(1, 10)
+
+		product = Product()
+		# product.InitWithId(product_id)
+
+		self.render("cellar/output.html", operation="Salidas", opp="out", side_menu=self.side_menu, cellar=cellar, data=data, product=product)
 
 	def post(self):
 		name = self.get_argument("name", "")
 		price = self.get_argument("price", "0")
+		size = self.get_argument("size", "")
+		color = self.get_argument("color", "")
 		units = self.get_argument("units", "0")
 		product_id = self.get_argument("product_id", "")
 		cellar_id = self.get_argument("cellar_id", "")
 
+
 		cellar = Cellar()
 		cellar.InitWithId(cellar_id)
 
+		product = Product()
+		product.InitWithId(product_id)
+		product_sku=product.sku
+
 		redirect = "t"
 
-		if "success" in cellar.RemoveProducts(product_id, units):
+		if "success" in cellar.RemoveProducts(product_sku, units, size, color):
 			self.write("ok")
 			redirect = "bpt"
 		else:
@@ -52,6 +64,9 @@ class CellarOutputHandler(BaseHandler):
 			redirect = "bpf"
 
 		self.redirect("/cellar?dn=" + redirect)
+		
+	def check_xsrf_cookie(self):
+		pass
 
 
 class CellarEasyInputHandler(BaseHandler):
@@ -71,8 +86,16 @@ class CellarEasyInputHandler(BaseHandler):
 		size= self.get_argument("size", "")
 		color=self.get_argument("color", "")
 
+
 		cellar = Cellar()
 		cellar.InitWithId(cellar_id)
+
+		product = Product()
+		product.InitWithSku(product_sku)
+
+		product.size=size.split(",")
+		product.color=color.split(",")
+		product.Save()
 
 		if "success" in cellar.AddProducts(product_sku, quantity, price, size, color):
 			self.write("ok")
@@ -102,13 +125,17 @@ class CellarEasyOutputHandler(BaseHandler):
 		quantity = self.get_argument("quantity", "")
 		balance_price=self.get_argument("balance_price", "")
 		new_cellar = self.get_argument("new_cellar", "")
-
-		print "aca "+new_cellar
+		size= self.get_argument("size", "")
+		color=self.get_argument("color", "")
 
 		cellar = Cellar()
 		cellar.InitWithId(cellar_id)
 
-		if "success" in cellar.RemoveProducts(product_id, quantity):
+		product = Product()
+		product.InitWithId(product_id)
+		product_sku=product.sku
+
+		if "success" in cellar.RemoveProducts(product_sku, quantity, size, color):
 			self.write("ok")
 		else:
 			self.write("no")
@@ -120,7 +147,7 @@ class CellarEasyOutputHandler(BaseHandler):
 
 			redirect = "t"
 
-			if "success" in cellar2.AddProducts(product_id, quantity, balance_price):
+			if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color):
 				self.write("ok")
 				redirect = "bpt"
 			else:
@@ -160,9 +187,12 @@ class CellarInputHandler(BaseHandler):
 		cellar.InitWithId(cellar_id)
 
 		product = Product()
-		print "product idddddddddddddd "+ product_id
 		product.InitWithId(product_id)
 		product_sku=product.sku
+
+		product.size=size.split(",")
+		product.color=color.split(",")
+		product.Save()
 
 		redirect = "t"
 
@@ -189,3 +219,27 @@ class CellarDetailHandler(BaseHandler):
 	def post(self):
 
 		pass
+
+class CellarComboboxHandler(BaseHandler):	
+
+	def get(self):
+		pass
+
+	def post(self):
+		
+		product_id = self.get_argument("product_id", "")
+		cellar_id = self.get_argument("cellar_id", "")
+
+		cellar = Cellar()
+		cellar.InitWithId(cellar_id)
+
+		data = Cellar().List(1, 10)
+
+		product = Product()
+		product.InitWithId(product_id)
+
+		self.render("cellar/combobox.html", operation="Salidas", opp="out", cellar=cellar, data=data, product=product)
+
+	## invalidate xsfr cookie for ajax use
+	def check_xsrf_cookie(self):
+		pass	

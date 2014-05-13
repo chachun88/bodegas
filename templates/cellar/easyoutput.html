@@ -55,6 +55,18 @@
 												<div class="col-sm-12"><input type="number" required="required" name="quantity" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
 											</div>
 										</div>
+										<div class="control-group">
+											<label for="" class="control-label">Talla</label>
+											<div class="controls form-group">
+												<div class="col-sm-12"><input type="text" required="required" name="size" placeholder="Ingresar talla producto" autocomplete="off" class="form-control"></div>
+											</div>
+										</div>
+										<div class="control-group">
+											<label for="" class="control-label">Color</label>
+											<div class="controls form-group">
+												<div class="col-sm-12"><input type="text" required="required" name="color" placeholder="Ingresar color de producto" autocomplete="off" class="form-control"></div>
+											</div>
+										</div>																				
 										<div class="form-actions">
 											<button type="submit" class="btn btn-primary">Sacar</button>
 										</div>
@@ -81,6 +93,26 @@
 											<label for="" class="control-label">Cantidad</label>
 											<div class="controls form-group">
 												<div class="col-sm-12"><input type="number" required="required" name="quantity" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
+											</div>
+											<label for="" class="control-label">Talla</label>
+											<div class="controls form-group">
+												<div class="col-sm-12">
+													<select name="size" class="form-control">
+													{% for s in p["size"] %}
+													<option value="{{ s }}"> {{ s }}</option>													
+													{% end %}
+													</select>
+												</div>
+											</div>
+											<label for="" class="control-label">Color</label>
+											<div class="controls form-group">
+												<div class="col-sm-12">
+													<select name="color" class="form-control">
+													{% for col in p["color"] %}
+													<option value="{{ col }}"> {{ col }}</option>													
+													{% end %}
+													</select>
+												</div>
 											</div>
 											<label for="" class="control-label">Bodega Destino</label>
 											<div class="controls form-group">
