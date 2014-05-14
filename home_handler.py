@@ -68,31 +68,59 @@ class HomeHandler(BaseHandler):
 			open('uploads/entradas_masivas/' + fn, 'wb').write(fileitem["body"])
 			#message = 'The file "' + fn + '" was uploaded successfully'
 
-			try:
-				#dn = self.get_argument("dn", "t")
-				dn="t"
-			
-				doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
+			if os.name == "nt":
 
-				sheet = doc.sheet_by_index(0)
+				try:
+					#dn = self.get_argument("dn", "t")
+					dn="t"
+				
+					doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
 
-				nrows = sheet.nrows
-				ncols = sheet.ncols
-				#print ncols
-				#self.write("{}".format(ncols))
+					sheet = doc.sheet_by_index(0)
 
-				matriz=[]
+					nrows = sheet.nrows
+					ncols = sheet.ncols
+					#print ncols
+					#self.write("{}".format(ncols))
 
-				for i in range(nrows):
-					matriz.append([])
-					for j in range(ncols):
-						matriz[i].append(sheet.cell_value(i,j))	
+					matriz=[]
 
-				#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
-				self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn)
+					for i in range(nrows):
+						matriz.append([])
+						for j in range(ncols):
+							matriz[i].append(sheet.cell_value(i,j))	
 
-			except ImportError:
-				pass
+					#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
+					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn)
+
+				except ImportError:
+					pass
+			else:
+				try:
+					#dn = self.get_argument("dn", "t")
+					dn="t"
+				
+					doc = xlrd.open_workbook('uploads/entradas_masivas/'+fn)
+
+					sheet = doc.sheet_by_index(0)
+
+					nrows = sheet.nrows
+					ncols = sheet.ncols
+					#print ncols
+					#self.write("{}".format(ncols))
+
+					matriz=[]
+
+					for i in range(nrows):
+						matriz.append([])
+						for j in range(ncols):
+							matriz[i].append(sheet.cell_value(i,j))	
+
+					#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
+					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn)
+
+				except ImportError:
+					pass	
 
 		else:
 			dn="t2"
