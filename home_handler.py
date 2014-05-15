@@ -193,17 +193,19 @@ class ProductLoadHandler(BaseHandler):
 									q = k +j
 									quantity=str(int(matriz[i][q]))
 									#recovering identified
+									prod.Save()
 									prod.InitWithSku(prod.sku)
 									product_id=prod.identifier
 
 									#products stored for cellar
 									try:
+
 										cellar.InitWithName(cellar_name)
 										cellar.AddProducts(prod.sku, quantity, price, size, color)
 									except:
 										pass		
 						#product is stored
-						prod.Save()
+						
 
 
 
