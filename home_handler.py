@@ -139,7 +139,7 @@ class ProductLoadHandler(BaseHandler):
 
 			if fn != "":
 
-				doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
+				doc = xlrd.open_workbook('uploads/entradas_masivas/'+fn)
 
 				sheet = doc.sheet_by_index(0)
 
@@ -271,7 +271,7 @@ class ProductOutHandler(BaseHandler):
 			try:
 				dn = self.get_argument("dn", "f")
 			
-				doc = xlrd.open_workbook('uploads\\salidas_masivas\\'+fnout)
+				doc = xlrd.open_workbook('uploads/salidas_masivas/'+fnout)
 
 				sheet = doc.sheet_by_index(0)
 
@@ -305,7 +305,7 @@ class ProductMassiveOutputHandler(BaseHandler):
 
 			if fnout != "":
 
-				doc = xlrd.open_workbook('uploads\\salidas_masivas\\'+fnout)
+				doc = xlrd.open_workbook('uploads/salidas_masivas/'+fnout)
 
 				sheet = doc.sheet_by_index(0)
 
