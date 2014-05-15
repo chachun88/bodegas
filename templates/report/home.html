@@ -1,6 +1,6 @@
 {% extends "../base.html" %}
 
-{% block title %}Lista de bodegas {% end %}
+{% block title %}Informe de bodegas {% end %}
 {% block caption %}muestra las bodegas que existen{% end %}
 
 {% block body %}
@@ -10,23 +10,25 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th>Nombre</th>
+						<th>Nombre Bodega</th>
 						<th>Descripción</th>
-						<th>Total entradas</th>
-						<th>Total salidas</th>
+<!-- 						<th>Total entradas</th>
+						<th>Total salidas</th> -->
 						<th>Saldo (unidades)</th>
 						<th>Saldo ($)</th>
 					</tr>
 				</thead>
 				<tbody>
+				{% for p in data %}
 					<tr>
-						<td>ejemplo</td>
-						<td>este es un ejemplo</td>
-						<td>600</td>
-						<td>600</td>
-						<td>10</td>
-						<td>100</td>
+						<td>{{ p["name"] }}</td>
+						<td>{{ p["description"] }}</td>
+<!-- 						<td>falta</td>
+						<td>falta</td> -->
+						<td>{{ p["total_units"] }}</td>
+						<td>{{ MoneyFormat(p["total_price"]) }}</td>
 					</tr>
+				{% end %}	
 				</tbody>
 			</table>
 		</div>

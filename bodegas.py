@@ -63,7 +63,7 @@ class Application(tornado.web.Application):
             (r"/auth/recover", LoginPassHandler),
 
             # products
-            (r"/", HomeHandler),
+            #(r"/", HomeHandler),
             (r"/product", HomeHandler),
             (r"/product/out", ProductOutHandler),
             (r"/product/massiveoutput", ProductMassiveOutputHandler),
@@ -92,16 +92,20 @@ class Application(tornado.web.Application):
             (r"/user/edit", UserEditHandler),
 
             #report
-            (r"/report/cellar", ReportHandler)
+            (r"/", ReportHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 
         # Have one global connection to the blog DB across all handlers
 
         self.side_menu = [
-                        {"class":"panel", "name":Menu.PRODUCTOS, "icon":"home", "link":"/", 
+                        {"class":"panel", "name":Menu.INFORMES, "icon":"bar-chart-o", "link":"/",
                             "sub_menu":[
-                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_MASIVA, "link":"/"},
+                                        {"class":"", "name":Menu.INFORMES_POR_BODEGA, "link":"/"}
+                                        ]},
+                        {"class":"panel", "name":Menu.PRODUCTOS, "icon":"home", "link":"/product", 
+                            "sub_menu":[
+                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_MASIVA, "link":"/product"},
                                         {"class":"", "name":Menu.PRODUCTOS_SALIDA_MASIVA, "link":"/product/out"},
                                         {"class":"", "name":Menu.PRODUCTOS_CARGA, "link":"/product/add"},
                                         {"class":"", "name":Menu.PRODUCTOS_LISTA, "link":"/product/list"}
@@ -116,10 +120,7 @@ class Application(tornado.web.Application):
                                         {"class":"", "name":Menu.USUARIOS_LISTAR, "link":"/user"},
                                         {"class":"", "name":Menu.USUARIOS_AGREGAR, "link":"/user/add"}
                                         ]},
-                        {"class":"panel", "name":Menu.INFORMES, "icon":"bar-chart-o", "link":"/report",
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.INFORMES_POR_BODEGA, "link":"/report/cellar"}
-                                        ]},
+                        
                         {"class":"panel", "name":Menu.SALIR, "icon":"sign-out", "link":"/auth/login"},]
 
 

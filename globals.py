@@ -67,6 +67,12 @@ else:
 
 class Menu:
 
+    INFORMES = "Informes"
+
+    # sub_menu
+    INFORMES_POR_BODEGA = "Informe por bodega"
+    # end sub_menu
+
     PRODUCTOS = "Productos"
 
     # sub_menu
@@ -90,10 +96,6 @@ class Menu:
     USUARIOS_AGREGAR = "Agregar usuario"
     # sub_menu
 
-    INFORMES = "Informes"
 
-    # sub_menu
-    INFORMES_POR_BODEGA = "Informe por bodega"
-    # end sub_menu
 
     SALIR = "Salir"

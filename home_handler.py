@@ -74,7 +74,7 @@ class HomeHandler(BaseHandler):
 					#dn = self.get_argument("dn", "t")
 					dn="t"
 				
-					doc = xlrd.open_workbook('uploads\\entradas_masivas\\'+fn)
+					doc = xlrd.open_workbook('uploads/entradas_masivas/'+fn)
 
 					sheet = doc.sheet_by_index(0)
 
