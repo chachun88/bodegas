@@ -20,6 +20,7 @@ import category_handler
 import color_handler
 
 import doc_handler
+from bson.objectid import ObjectId
 
 from tornado.options import define, options
 
@@ -111,6 +112,32 @@ class Application(tornado.web.Application):
         ''' configure database '''
         connection  = pymongo.Connection("localhost", 27017)
         self.db     = connection.market_tab
+
+
+        ''' repair script for user permissions '''
+        users_list = self.db.salesman.find()
+        for user in users_list:
+            user_id = user["_id"]
+
+            try:
+                permissions = user["permissions"]
+            except Exception, e:
+                ## adding empty permissions
+
+                self.db.salesman.update( { "_id": ObjectId(user_id) }, { "$set": { "permissions": [] } } )
+                print "user updated"
+
+                pass
+
+        product_list = self.db.product.find()
+        for product in product_list:
+            product_id = product["_id"]
+
+            try:
+                upc = product["upc"]
+            except Exception, e:
+                self.db.product.update( { "_id": ObjectId(product_id) }, { "$set": {"upc": ""} })
+                pass
 
 def main():
     tornado.options.parse_command_line()

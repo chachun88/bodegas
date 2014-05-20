@@ -13,8 +13,7 @@ class Salesman(BaseModel):
 		self._name = ''
 		self._password = '' 
 		self._email = ''
-
-		self._permissions = SalesmanPermission() #private 
+		self._permissions = []
 
 	@property
 	def name(self):
@@ -37,12 +36,21 @@ class Salesman(BaseModel):
 	def email(self, value):
 		self._email = value
 
+	@property
+	def permissions(self):
+	    return self._permissions
+	@permissions.setter
+	def permissions(self, value):
+	    self._permissions = value
+	
+
 	def Print(self):
 		return {
 			"_id":ObjectId(self.identifier),
 			"name":self.name,
 			"email":self.email,
-			"password":self.password
+			"password":self.password,
+			"permissions":self.permissions
 		}
 
 	def Remove(self):
@@ -72,6 +80,7 @@ class Salesman(BaseModel):
 				self.password 	= data[0]["password"]
 				self.email 		= email
 				self.identifier = str(data[0]["_id"])
+				self.permissions= data[0]["permissions"]
 
 				return self.ShowSuccessMessage("user initialized")
 			else:
@@ -88,6 +97,7 @@ class Salesman(BaseModel):
 				self.password 	= data[0]["password"]
 				self.email 		= data[0]["email"]
 				self.identifier = str(data[0]["_id"])
+				self.permissions=  data[0]["permissions"]
 
 				return self.ShowSuccessMessage("user initialized")
 			else:
@@ -122,7 +132,8 @@ class Salesman(BaseModel):
 					{"$set" : {
 						"name" 		: self.name,
 						"password"  : self.password,
-						"email" 	: self.email
+						"email" 	: self.email,
+						"permissions": self.permissions
 					}}))
 
 				return self.ShowSuccessMessage(str(data[0]["_id"]))
@@ -132,7 +143,8 @@ class Salesman(BaseModel):
 				{
 				"name" 		: self.name,
 				"password"  : self.password,
-				"email"  	: self.email
+				"email"  	: self.email,
+				"permissions": self.permissions
 				})
 
 			self.identifier = str(object_id)

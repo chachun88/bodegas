@@ -7,7 +7,7 @@
 {% block body %}
 <div class="col-md-7">
 	<section class="widget">
-		<form action="/user/add" class="form-horizontal label-left" method="post" enctype="multipart/form-data">
+		<form action="/user/add" class="form-horizontal label-left" method="post" id="user-form" enctype="multipart/form-data">
 			<fieldset>
 				<legend class="section">Agregar usuario</legend>
 				<div class="control-group">
@@ -45,20 +45,23 @@
 				</style>
 				<div class="control-group">
 					<label for="" class="control-label">Permisos</label>
+
+					<input type="hidden" name="permissions" >
 					<div class="controls form-group">
-						<div class="col-sm-8"><div id="perm" name="permissions" type="" class="form-control" value="{{ user.permissions }}">
-						{% set permiso = ["acceso a api","cargar productos nuevos","vender","modificar bodegas","adminsitrar usuarios","ver informes"] %}
-							{% for i in range(0,len(permiso)) %} 
+						<div class="col-sm-8">
+							<div id="perm" name="permissions" type="" class="form-control" >
+								{% set permiso = ["acceso a api","cargar productos nuevos","vender","modificar bodegas","adminsitrar usuarios","ver informes"] %}
+								{% for i in range(0,len(permiso)) %} 
 									<a id="perm_top{{ i }}" class="btn-sm btn-primary btn-perm" onclick="addElementBot({{ i }})">{{ permiso[i] }}</a>
-							{% end %}
-						</div>
+								{% end %}
+							</div>
 							<div id="perm_bot">
 								{% for i in range(0,len(permiso)) %} 
 									<a id="perm_{{ i }}" class="btn-sm btn-primary btn-perm-bot" onclick="addElement({{ i }})">{{ permiso[i] }}</a>
 								{% end %}
 							</div>
 						</div>
-					</div>									
+					</div>
 				</div>
 			</fieldset>
 			<input type="hidden" name="id" value="{{ user.identifier }}">
@@ -70,4 +73,66 @@
 		</form>
 	</section>
 </div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	function exist_permission( permission )
+	{
+		$(".btn-perm").each(function(){
+			if ($(this).html() == permission ) {
+				$(this).css("display", "inline");
+			};
+		});
+
+		$(".btn-perm-bot").each(function(){
+			if ($(this).html() == permission) {
+				$(this).css("display", "none");
+			}
+		});
+	}
+
+	// loading user current permissions
+	var current_permissions = ['{{ "' , '".join(user.permissions) }}'];
+
+	for (var i = 0; i <= current_permissions.length - 1; i++) {
+		console.log(current_permissions[i]);
+
+		exist_permission(current_permissions[i]);
+	};
+
+
+	// ssetting permissions logic for form
+	$("#user-form").submit(function(){
+
+		// setting vars
+		var hidden_permissions = $("input[name=permissions]");
+		var is_first = true;
+
+
+		// clear
+		hidden_permissions.val("");
+
+		$(".btn-perm").each(function(){
+
+			if ($(this).css("display") != "none") 
+			{
+				// refill separated by comma
+				if (is_first){
+					hidden_permissions.val( hidden_permissions.val() + $(this).html() );
+					is_first = false;
+				}
+				else{
+					hidden_permissions.val( hidden_permissions.val() + "," + $(this).html() );
+				}
+
+			}
+			console.log($(this).css("display"));
+		});
+
+		return true;
+	});
+});
+</script>
 {% end %}

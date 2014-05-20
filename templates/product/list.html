@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 
 {% block title %}Listado de productos {% end %}
-{% block caption %}blah blah{% end %}
+{% block caption %}se muestra una lista general de todos los productos{% end %}
 
 {% block body %}
 <div class="col-md-12">
@@ -12,21 +12,21 @@
 					<tr>
 						<th>#</th>
 						<th class="hidden-xs " >Categor&iacutea</th>
-						<th class="hidden-xs " >sku</th>
+						<th class="hidden-xs " >SKU</th>
+						<th class="" >Artículo</th>
 						<th class="" >Nombre</th>
-						<th class="" >UPC/EAN</th>
 						<th class="" >Description</th>
 						<th class="hidden-xs " >Marca</th>
-						<th class="hidden-xs">Fabricante</th>
-						<th class="hidden-xs">Talla</th>
-						<th class="hidden-xs">Color</th>
-						<th class="hidden-xs">Material</th>
-						<th class="hidden-xs">Viñeta 1</th>
+						<th class="hidden-xs">Proveedor</th>
+						<th class="hidden-xs">Tallas</th>
+						<th class="hidden-xs">Colores</th>
+						<!--<th class="hidden-xs">Material</th>-->
+						<!-- <th class="hidden-xs">Viñeta 1</th>
 						<th class="hidden-xs">Viñeta 2</th>
 						<th class="hidden-xs">Viñeta 3</th>
-						<th class="hidden-xs " >Moneda</th>
-						<!--<th class="hidden-xs-portrait ">Precio</th>						
-						<th class="hidden-xs " >Cantidad</th>-->
+						<th class="hidden-xs " >Moneda</th> -->
+						<th class="hidden-xs-portrait ">Precio</th>
+						<!-- <th class="hidden-xs " >Cantidad</th> -->
 						
 						
 						<th></th>
@@ -40,17 +40,17 @@
 						</td>
 						<td class="hidden-xs-portrait">{{ p["category"] }}</td>
 						<td class="hidden-xs-portrait">{{ p["sku"] }}</td>
+						<td>{{ p["upc"] }}</td>
 						<td class="hidden-xs-portrait">{{ p["name"] }}</td> 
-						<td><!-- upc --></td>
 						<td class="hidden-xs-portrait">{{ p["description"] }}</td>
 						<td>{{ p["brand"] }}</td>
 						<td>{{ p["manufacturer"] }}</td>
-						<td>{{ p["size"] }}</td>	
-						<td>{{ p["color"] }}</td>	
-						<td>{{ p["material"] }}</td>
+						<td>{{ ", ".join(p["size"]) }}</td>	
+						<td>{{ ", ".join(p["color"]) }}</td>	
+						<!-- <td>{{ p["material"] }}</td>
 						<td>{{ p["bullet_point_1"] }}</td>	
 						<td>{{ p["bullet_point_2"] }}</td>	
-						<td>{{ p["bullet_point_3"] }}</td>
+						<td>{{ p["bullet_point_3"] }}</td> -->
 						<td class="hidden-xs">{{ p["currency"] }}</td>		
 						<!--<td></td>
 						<td class="hidden-xs"></td>	-->					
