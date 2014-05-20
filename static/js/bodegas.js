@@ -83,6 +83,7 @@
 		var new_cellar = $("select[name=new_cellar]", $(this)).val();
 		var balance_price = $("input[name=balance_price]", $(this)).val();
 		var transaction = $("input[name=transaction]", $(this)).val();
+		var operation =$("input[name=operation]", $(this)).val();
 
 		if (size == undefined){
 			size = $("select[name=size]", $(this)).val();
@@ -100,6 +101,10 @@
 			new_cellar="delete"
 		}
 
+		if (price==undefined){
+			price="0"
+		}
+
 		var post_data = {
 			"cellar_id":cellar_id,
 			"product_id":product_id,
@@ -109,7 +114,8 @@
 			"size":size,
 			"color":color,
 			"new_cellar":new_cellar,
-			"balance_price":balance_price
+			"balance_price":balance_price,
+			"operation": operation
 		};
 
 		$(".lptooltip").hide(animation_duration);

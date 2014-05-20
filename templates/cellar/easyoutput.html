@@ -56,15 +56,33 @@
 											</div>
 										</div>
 										<div class="control-group">
+											<label for="" class="control-label">Precio</label>
+											<div class="controls form-group">
+												<div class="col-sm-12"><input type="number" required="required" name="price" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
+											</div>
+										</div>
+										<div class="control-group">
 											<label for="" class="control-label">Talla</label>
 											<div class="controls form-group">
-												<div class="col-sm-12"><input type="text" required="required" name="size" placeholder="Ingresar talla producto" autocomplete="off" class="form-control"></div>
+												<div class="col-sm-12">
+													<select name="size" class="form-control">
+														{% for pro in p["size"] %}
+														<option value="{{ pro }}"> {{ pro }}</option>
+														{% end %}
+													</select>
+												</div>
 											</div>
 										</div>
 										<div class="control-group">
 											<label for="" class="control-label">Color</label>
 											<div class="controls form-group">
-												<div class="col-sm-12"><input type="text" required="required" name="color" placeholder="Ingresar color de producto" autocomplete="off" class="form-control"></div>
+												<div class="col-sm-12">
+													<select name="color" class="form-control">
+													{% for pro in p["color"] %}
+														<option value="{{ pro }}"> {{ pro }}</option>
+														{% end %}
+													</select>
+												</div>
 											</div>
 										</div>																				
 										<div class="form-actions">
@@ -76,6 +94,7 @@
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
 									<input type="hidden" name="transaction" value="eliminado" />
+									<input type="hidden" name="operation" value="sell" />
 								</form>
 							</div>
 						</td>
@@ -136,6 +155,7 @@
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar_name }}" />
 									<input type="hidden" name="transaction" value="movido" />
+									<input type="hidden" name="operation" value="mov" />
 								</form>
 							</div>
 						</td>

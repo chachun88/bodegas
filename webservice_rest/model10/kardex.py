@@ -24,6 +24,7 @@ class Kardex(BaseModel):
 
 	OPERATION_BUY = "buy"
 	OPERATION_SELL= "sell"
+	OPERATION_MOV = "mov"
 
 	@property
 	def product_sku(self):
@@ -181,6 +182,8 @@ class Kardex(BaseModel):
 		## doing maths...
 		if self.operation_type == Kardex.OPERATION_SELL:
 			self.price = prev_kardex.balance_price ## calculate price
+		if self.price == "0":
+			self.price = prev_kardex.balance_price
 
 		self.total = self.units * self.price
 

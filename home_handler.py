@@ -157,7 +157,7 @@ class ProductLoadHandler(BaseHandler):
 				for i in range(nrows):	
 					matriz.append([])
 					for j in range(ncols):				
-						if i == 4 and j > 9:
+						if i == 3 and j > 9:
 							tallas.append(sheet.cell_value(i,j))				
 
 				for i in range(nrows):	
@@ -167,47 +167,52 @@ class ProductLoadHandler(BaseHandler):
 
 							matriz[i].append(sheet.cell_value(i,j))
 							
-							if i > 4 and i < nrows:
-								prod.size=str(tallas[k]).split(",")
-								size=str(tallas[k])
-								if j == 0:
-									prod.category = matriz[i][j]
-								elif j == 1:
-									prod.sku = str(int(matriz[i][j]))
-								elif j == 2:
-									prod.name = matriz[i][j]
-								elif j == 3:
-									prod.description = matriz[i][j]
-								elif j == 4:
-									prod.color=matriz[i][j].split(",")
-									color=matriz[i][j]
-								elif j == 5:
-									price = str(int(matriz[i][j]))
-								elif j == 6:
-									prod.manufacturer = matriz[i][j]
-								elif j == 7:
-									cellar_name= matriz[i][j]
-								elif j == 8:
-									prod.brand = matriz[i][j]
-								elif j == 10:
-									q = k +j
-									quantity=str(int(matriz[i][q]))
-									#recovering identified
-									prod.Save()
-									prod.InitWithSku(prod.sku)
-									product_id=prod.identifier
+							try: 
+								if i > 3 and i < nrows:
+									prod.size=str(tallas[k]).split(",")
+									size=str(tallas[k])
+									if j == 0:
+										prod.category = matriz[i][j]
+									elif j == 1:
+										prod.sku = str(int(matriz[i][j]))
+									elif j == 2:
+										prod.name = matriz[i][j]
+									elif j == 3:
+										prod.description = matriz[i][j]
+									elif j == 4:
+										
+											prod.color=matriz[i][j].split(",")
+											color=matriz[i][j]
 
-									#products stored for cellar
-									try:
+									elif j == 5:
+										price = str(int(matriz[i][j]))
+									elif j == 6:
+										prod.manufacturer = matriz[i][j]
+									elif j == 7:
+										cellar_name= matriz[i][j]
+									elif j == 8:
+										prod.brand = matriz[i][j]
+									elif j == 10:
+										try:
+											q = k +j
+											quantity=str(int(matriz[i][q]))
+							
+											prod.Save()
+											prod.InitWithSku(prod.sku)
+											product_id=prod.identifier
+											operation="buy"
 
-										cellar.InitWithName(cellar_name)
-										cellar.AddProducts(prod.sku, quantity, price, size, color)
-									except:
-										pass		
+											#products stored for cellar
+										
+											cellar.InitWithName(cellar_name)
+											cellar.AddProducts(prod.sku, quantity, price, size, color, operation)
+										except:
+											pass	
+
+							except:
+								dn="t3"
+								self.redirect("/product?dn="+dn)											
 						#product is stored
-						
-
-
 
 				dn="t"
 				#self.redirect("/product?dn="+dn)
@@ -265,6 +270,7 @@ class ProductOutHandler(BaseHandler):
 		if fileitem != "":
 
 			global fnout 
+
 			fnout = fileitem['filename']
 
 			open('uploads/salidas_masivas/' + fnout, 'wb').write(fileitem["body"])
@@ -313,10 +319,10 @@ class ProductMassiveOutputHandler(BaseHandler):
 
 				nrows = sheet.nrows
 				ncols = sheet.ncols
-				print ncols
 				#self.write("{}".format(ncols))
 
 				matriz=[]
+				tallas=[]
 
 				prod = Product()
 				cellar=Cellar()
@@ -324,50 +330,75 @@ class ProductMassiveOutputHandler(BaseHandler):
 				for i in range(nrows):	
 					matriz.append([])
 					for j in range(ncols):				
-						matriz[i].append(sheet.cell_value(i,j))
-						if i > 3:
-							if j == 0:
-								prod.category = matriz[i][j]
-							elif j == 1:
-								prod.sku = str(int(matriz[i][j]))
-							elif j == 2:
-								prod.name = matriz[i][j]
-							elif j == 3:
-								prod.description = matriz[i][j]
-							elif j == 4:						
-								if matriz[i][j]=="":
-									prod.size = '0'
-								else:
-									prod.size = str(int(matriz[i][j]))
-							elif j == 5:
-								price_buy = str(int(matriz[i][j]))
-							elif j == 6:
-								price_sell = str(int(matriz[i][j]))						
-							elif j == 7:
-								quantity = str(int(matriz[i][j]))
-							elif j == 8:
-								prod.manufacturer = matriz[i][j]
-							elif j == 9:
-								user = matriz[i][j]						
-							elif j == 10:
-								cellar_name= matriz[i][j]
-							elif j == 11:
-								prod.brand = matriz[i][j]
+						if i == 3 and j > 11:
+							tallas.append(sheet.cell_value(i,j))				
+
+				for i in range(nrows):	
+					matriz.append([])
+					for k in range(len(tallas)):
+						for j in range(ncols):	
+
+							matriz[i].append(sheet.cell_value(i,j))
+							
+							# try: 
+							if i > 3 and i < nrows:
+								prod.size=str(tallas[k]).split(",")
+								size=str(tallas[k])
+								if j == 0:
+									prod.category = matriz[i][j]
+								elif j == 1:
+									prod.sku = str(int(matriz[i][j]))
+								elif j == 2:
+									prod.name = matriz[i][j]
+								elif j == 3:
+									prod.description = matriz[i][j]
+								elif j == 4:										
+									prod.color=matriz[i][j].split(",")
+									color=matriz[i][j]
+								elif j == 5:
+									price = str(int(matriz[i][j]))
+								elif j == 6:
+									price_sell = str(int(matriz[i][j]))										
+								elif j == 7:
+									prod.manufacturer = matriz[i][j]
+								elif j == 9:
+									cellar_name= matriz[i][j]
+								elif j == 10:
+									prod.brand = matriz[i][j]
+								elif j == 12:
+									try:
+										q = k + j
+										quantity=str(int(matriz[i][q]))
+										#recovering identified
+
+										prod.InitWithSku(prod.sku)
+										# product_id=prod.identifier
+										operation="sell"
+
+									#products stored for cellar
+									
+										cellar.InitWithName(cellar_name)
+										cellar.RemoveProducts(prod.sku, quantity, price_sell, size, color, operation)
+									except:
+										pass	
+							# except:
+							# 	dn="t3"
+							# 	self.redirect("/product?dn="+dn)				
 					
 					#product is saved
 					#prod.Save()	
 
 					#recovering identified
-					prod.InitWithSku(prod.sku)
-					product_id=prod.identifier
+					# prod.InitWithSku(prod.sku)
+					# product_id=prod.identifier
 
-					#products stored for cellar
-					try:	
-						cellar.InitWithName(cellar_name)
-						cellar.RemoveProducts(product_id, quantity)
-					except:
-						pass
-				fnout=""		
+					# #products stored for cellar
+					# try:	
+					# 	cellar.InitWithName(cellar_name)
+					# 	cellar.RemoveProducts(prod.sku, quantity, price, size, color, operation) #mejorar salidas 
+					# except:
+					# 	pass
+				# fnout=""		
 				self.redirect("/product/out")
 			else:
 				dn="t2"

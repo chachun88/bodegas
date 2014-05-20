@@ -45,6 +45,8 @@ class CellarOutputHandler(BaseHandler):
 		units = self.get_argument("units", "0")
 		product_id = self.get_argument("product_id", "")
 		cellar_id = self.get_argument("cellar_id", "")
+		operation="sell"
+
 
 
 		cellar = Cellar()
@@ -56,7 +58,7 @@ class CellarOutputHandler(BaseHandler):
 
 		redirect = "t"
 
-		if "success" in cellar.RemoveProducts(product_sku, units, size, color):
+		if "success" in cellar.RemoveProducts(product_sku, units, size, color, operation):
 			self.write("ok")
 			redirect = "bpt"
 		else:
@@ -85,6 +87,7 @@ class CellarEasyInputHandler(BaseHandler):
 		price = self.get_argument("price", "")
 		size= self.get_argument("size", "")
 		color=self.get_argument("color", "")
+		operation="buy"
 
 
 		cellar = Cellar()
@@ -97,7 +100,7 @@ class CellarEasyInputHandler(BaseHandler):
 		product.color=color.split(",")
 		product.Save()
 
-		if "success" in cellar.AddProducts(product_sku, quantity, price, size, color):
+		if "success" in cellar.AddProducts(product_sku, quantity, price, size, color, operation):
 			self.write("ok")
 		else:
 			self.write("no")
@@ -123,10 +126,12 @@ class CellarEasyOutputHandler(BaseHandler):
 		cellar_id = self.get_argument("cellar_id", "")
 		product_id = self.get_argument("product_id", "")
 		quantity = self.get_argument("quantity", "")
+		price = self.get_argument("price", "")
 		balance_price=self.get_argument("balance_price", "")
 		new_cellar = self.get_argument("new_cellar", "")
 		size= self.get_argument("size", "")
 		color=self.get_argument("color", "")
+		operation=self.get_argument("operation", "")
 
 		cellar = Cellar()
 		cellar.InitWithId(cellar_id)
@@ -135,19 +140,19 @@ class CellarEasyOutputHandler(BaseHandler):
 		product.InitWithId(product_id)
 		product_sku=product.sku
 
-		if "success" in cellar.RemoveProducts(product_sku, quantity, size, color):
+		if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, operation):
 			self.write("ok")
 		else:
 			self.write("no")
 
-		if new_cellar!='delete':
+		if operation =='mov':
 			
 			cellar2 = Cellar()
 			cellar2.InitWithId(new_cellar)
 
 			redirect = "t"
 
-			if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color):
+			if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, operation):
 				self.write("ok")
 				redirect = "bpt"
 			else:
@@ -182,6 +187,7 @@ class CellarInputHandler(BaseHandler):
 		cellar_id = self.get_argument("cellar_id", "")
 		size = self.get_argument("size", "")
 		color = self.get_argument("color", "")
+		operation= "buy"
 
 		cellar = Cellar()
 		cellar.InitWithId(cellar_id)
@@ -196,7 +202,7 @@ class CellarInputHandler(BaseHandler):
 
 		redirect = "t"
 
-		if "success" in cellar.AddProducts(product_sku, units, price, size, color):
+		if "success" in cellar.AddProducts(product_sku, units, price, size, color, operation):
 			self.write("ok")
 			redirect = "bpt"
 		else:
