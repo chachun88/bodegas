@@ -43,7 +43,7 @@
 					<tr>
 						<td>{{ u["name"] }}</td>
 						<td>{{ u["email"] }}</td>
-						<td>permissions</td>
+						<td>{{ ", ".join(u["permissions"]) }}</td>
 						<td>
 						{% if current_user_email != u["email"] %}
 							<a class="btn btn-success" href="/user/edit?id={{ u["_id"] }}">

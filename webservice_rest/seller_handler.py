@@ -19,6 +19,7 @@ class AddSellerHandler(BaseHandler):
 		salesman.name 		= self.TryGetParam("name", "")
 		salesman.password 	= self.TryGetParam("password", "")
 		salesman.email		= self.TryGetParam("email", "")
+		salesman.permissions = self.TryGetParam("permissions", "").split(",")
 
 		# saving current seller
 		oid = salesman.Save()

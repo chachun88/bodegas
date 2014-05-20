@@ -101,7 +101,7 @@ class User(BaseModel):
 			self.SplitName(data["name"]) ##name and surname
 			self.identifier = str(data["_id"])
 			self.password = data["password"]
-			#self.permissions = data["permissions"]
+			self.permissions = data["permissions"]
 			self.email = data["email"]
 		except:
 			pass
@@ -119,7 +119,7 @@ class User(BaseModel):
 		self.SplitName(data["name"]) ## name and surname
 		self.identifier = str(data["_id"])
 		self.password = data["password"]
-		#self.permissions = data["permisos"]
+		self.permissions = data["permissions"]
 		self.email = data["email"]
 
 	def Remove(self):
