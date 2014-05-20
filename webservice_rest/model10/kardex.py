@@ -12,6 +12,7 @@ class Kardex(BaseModel):
 		self._operation_type = Kardex.OPERATION_BUY
 		self._units = 0
 		self._price = 0.0
+		self._sell_price = 0.0
 		self._size= ''
 		self._color=''
 		self._total = 0.0
@@ -60,6 +61,14 @@ class Kardex(BaseModel):
 	@price.setter
 	def price(self, value):
 		self._price = value
+
+	@property
+	def sell_price(self):
+	    return self._sell_price
+	@sell_price.setter
+	def sell_price(self, value):
+	    self._sell_price = value
+		
 
 	@property
 	def size(self):
@@ -128,6 +137,7 @@ class Kardex(BaseModel):
 			self.operation_type = data[0]["operation_type"]
 			self.units = data[0]["units"]
 			self.price = data[0]["price"]
+			# self.sell_price = data[0]["sell_price"]
 			self.size =data[0]["size"]
 			self.color = data[0]["color"]
 			self.total = data[0]["total"]
@@ -157,6 +167,7 @@ class Kardex(BaseModel):
 				new_kardex.operation_type = data[0]["operation_type"]
 				new_kardex.units = data[0]["units"]
 				new_kardex.price = data[0]["price"]
+				# new_kardex.sell_price = data[0]["sell_price"]
 				new_kardex.size =data[0]["size"]
 				new_kardex.color = data[0]["color"]
 				new_kardex.total = data[0]["total"]
@@ -181,6 +192,7 @@ class Kardex(BaseModel):
 
 		## doing maths...
 		if self.operation_type == Kardex.OPERATION_SELL:
+			self.sell_price = self.price
 			self.price = prev_kardex.balance_price ## calculate price
 		if self.price == "0":
 			self.price = prev_kardex.balance_price
@@ -188,6 +200,7 @@ class Kardex(BaseModel):
 		self.total = self.units * self.price
 
 		if self.operation_type == Kardex.OPERATION_BUY:
+			self.sell_price = "0"
 			self.balance_units = prev_kardex.balance_units + self.units
 			self.balance_total = prev_kardex.balance_total + self.total
 		else:
@@ -220,6 +233,7 @@ class Kardex(BaseModel):
 				"operation_type":self.operation_type,
 				"units":self.units,
 				"price":self.price,
+				"sell_price":self.sell_price,
 				"size":self.size,
 				"color":self.color,
 				"total":self.total,
@@ -242,6 +256,7 @@ class Kardex(BaseModel):
 			print d["operation_type"]
 			print "	units : 	{}".format(d["units"])
 			print "	price : 	{}".format(d["price"])
+			print "	sell_price : 	{}".format(d["sell_price"])
 			print "	size : 	{}".format(d["size"])
 			print "	color : 	{}".format(d["color"])
 			print "	total : 	{}".format(d["total"])
