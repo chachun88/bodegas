@@ -242,18 +242,25 @@ class Cellar(BaseModel):
 		if day == "today":
 			now = datetime.datetime.now()
 			yesterday = now - datetime.timedelta(days=1)
-			start_date = datetime.datetime(yesterday.year, yesterday.month, yesterday.day, 23, 59, 59)
-			end_date = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
-			oid_start = ObjectId.from_datetime(start_date)
-			oid_stop = ObjectId.from_datetime(end_date)
+		if day == "yesterday":
+			now = datetime.datetime.now() - datetime.timedelta(days=1)
+			yesterday = now - datetime.timedelta(days=2)
+		if day == "period":
+			now = datetime.datetime.now()
+			yesterday = now - datetime.timedelta(days=30)	
+			
+		start_date = datetime.datetime(yesterday.year, yesterday.month, yesterday.day, 23, 59, 59)
+		end_date = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
+		oid_start = ObjectId.from_datetime(start_date)
+		oid_stop = ObjectId.from_datetime(end_date)
 
-			str_query = '{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }' % ( str(oid_start), str(oid_stop) )
-			data = db.kardex.find( json_util.loads(str_query) )
+		str_query = '{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }' % ( str(oid_start), str(oid_stop) )
+		data = db.kardex.find( json_util.loads(str_query) )
 
-			# data = db.kardex.find({"$and":
-			# 	[{"operation_type":"sell"}, {"_id": {"$lt": dummy_id}}]
-			# 	})
-			return data
+		# data = db.kardex.find({"$and":
+		# 	[{"operation_type":"sell"}, {"_id": {"$lt": dummy_id}}]
+		# 	})
+		return data
 
 	def Rename(self, new_name):
 		try:

@@ -44,14 +44,14 @@ class Cellar(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)
 
-	def ListKardex(self):
+	def ListKardex(self, day):
 
 		url = self.wsurl() + "/cellar/products/kardex"
 
 		url += "?token=" + self.token()
 		url += "&page=1"
 		url += "&items=1"
-		url += "&day=today"
+		url += "&day="+ day
 
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)	
