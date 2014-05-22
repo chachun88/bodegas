@@ -41,6 +41,7 @@ class Application(tornado.web.Application):
             (r"/cellar/products/list",  cellar_handler.CellarProductsListHandler),
             (r"/cellar/products/add",   cellar_handler.CellarProductsAddHandler),
             (r"/cellar/products/remove",cellar_handler.CellarProductsAddHandler),
+            (r"/cellar/products/kardex",cellar_handler.CellarProductsKardex),
 
             (r"/product/add",           product_handler.AddProductHandler),
             (r"/product/edit",          product_handler.AddProductHandler),

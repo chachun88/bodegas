@@ -124,7 +124,7 @@ class Kardex(BaseModel):
 
 	def InitById(self, idd):
 		return ''
-
+		
 	def FindKardex(self, product_sku, cellar_identifier):
 		try:
 			data = self.collection.find({
@@ -137,7 +137,7 @@ class Kardex(BaseModel):
 			self.operation_type = data[0]["operation_type"]
 			self.units = data[0]["units"]
 			self.price = data[0]["price"]
-			# self.sell_price = data[0]["sell_price"]
+			self.sell_price = data[0]["sell_price"]
 			self.size =data[0]["size"]
 			self.color = data[0]["color"]
 			self.total = data[0]["total"]
@@ -167,7 +167,7 @@ class Kardex(BaseModel):
 				new_kardex.operation_type = data[0]["operation_type"]
 				new_kardex.units = data[0]["units"]
 				new_kardex.price = data[0]["price"]
-				# new_kardex.sell_price = data[0]["sell_price"]
+				new_kardex.sell_price = data[0]["sell_price"]
 				new_kardex.size =data[0]["size"]
 				new_kardex.color = data[0]["color"]
 				new_kardex.total = data[0]["total"]
@@ -263,3 +263,4 @@ class Kardex(BaseModel):
 			print "	balance units : 	{}".format(d["balance_units"])
 			print "	balance price : 	{}".format(d["balance_price"])
 			print "	balance total : 	{}".format(d["balance_total"])
+

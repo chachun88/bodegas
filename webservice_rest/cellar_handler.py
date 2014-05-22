@@ -96,6 +96,20 @@ class CellarProductsListHandler(BaseHandler):
 		self.write(json_util.dumps(cellar.ListProducts(page, items)))
 		pass
 
+class CellarProductsKardex(BaseHandler):
+	"""docstring for CellarProductsListHandler"""
+	def get(self):
+		# validate access token
+		if not self.ValidateToken():
+			return
+
+		page = self.get_argument("page", 1)
+		items = self.get_argument("items", 10)
+
+		cellar = Cellar()
+		self.write(json_util.dumps(cellar.ListKardex(page, items)))
+		pass		
+
 class CellarProductsAddHandler(BaseHandler):
 	"""docstring for CellarProductsAddHandler"""
 	def get(self):

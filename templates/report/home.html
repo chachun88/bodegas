@@ -10,23 +10,37 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th>Nombre Bodega</th>
+						<th>SKU</th>
+						<th>Nombre</th>
 						<th>Descripción</th>
-<!-- 						<th>Total entradas</th>
-						<th>Total salidas</th> -->
 						<th>Saldo (unidades)</th>
-						<th>Saldo ($)</th>
+						<th>Precio</th>
+						<th>Cantidad</th>
+						<th>Total</th>
+						<th>Usuario</th>
 					</tr>
 				</thead>
 				<tbody>
 				{% for p in data %}
 					<tr>
-						<td>{{ p["name"] }}</td>
-						<td>{{ p["description"] }}</td>
-<!-- 						<td>falta</td>
-						<td>falta</td> -->
-						<td>{{ p["total_units"] }}</td>
-						<td>{{ MoneyFormat(p["total_price"]) }}</td>
+						<td>{{ p["product_sku"] }}</td>
+					{% for pro in product %}
+						{% if p["product_sku"] == pro["sku"] %}
+						<td>{{ pro["name"] }}</td>
+						<td>{{ pro["description"] }}</td>
+						{% end %}
+					{% end %}	
+						<td>{{ p["balance_units"]}}</td>
+						{% try %}
+						<td>{{ p["sell_price"] }}</td>
+						{% except %}
+						{% end %}
+						<td>{{ p["units"] }}</td>
+						{% try %}
+						<td>{{ int(p["sell_price"]) * int(p["units"])}}</td>
+						{% except %}
+						{% end %}
+						<td></td>
 					</tr>
 				{% end %}	
 				</tbody>

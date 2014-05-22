@@ -6,7 +6,7 @@ import urllib
 from model.base_model import BaseModel
 from bson import json_util
 
-class Cellar(BaseModel):
+class Kardex(BaseModel):
 
 	""" docstring for Cellar """
 	def __init__(self):
@@ -43,17 +43,6 @@ class Cellar(BaseModel):
 
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)
-
-	def ListKardex(self):
-
-		url = self.wsurl() + "/cellar/products/kardex"
-
-		url += "?token=" + self.token()
-		url += "&page=1"
-		url += "&items=1"
-
-		json_string = urllib.urlopen(url).read()
-		return json_util.loads(json_string)	
 
 	def InitWithId(self, idd):
 		url = self.wsurl() + "/cellar/find"

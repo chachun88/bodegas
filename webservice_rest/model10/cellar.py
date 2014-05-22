@@ -234,6 +234,9 @@ class Cellar(BaseModel):
 		
 		return rtn_data
 
+	def ListKardex(self, page, items):	
+		data = db.kardex.find({"operation_type":"sell"})
+		return data
 
 	def Rename(self, new_name):
 		try:
