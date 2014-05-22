@@ -105,9 +105,10 @@ class CellarProductsKardex(BaseHandler):
 
 		page = self.get_argument("page", 1)
 		items = self.get_argument("items", 10)
+		day= self.get_argument("day","")
 
 		cellar = Cellar()
-		self.write(json_util.dumps(cellar.ListKardex(page, items)))
+		self.write(json_util.dumps(cellar.ListKardex(page, items, day)))
 		pass		
 
 class CellarProductsAddHandler(BaseHandler):

@@ -8,6 +8,9 @@ from kardex import Kardex
 from product import Product
 from bson import json_util
 
+import time
+import datetime
+
 class Cellar(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
@@ -234,9 +237,23 @@ class Cellar(BaseModel):
 		
 		return rtn_data
 
-	def ListKardex(self, page, items):	
-		data = db.kardex.find({"operation_type":"sell"})
-		return data
+	def ListKardex(self, page, items, day):	
+
+		if day == "today":
+			now = datetime.datetime.now()
+			yesterday = now - datetime.timedelta(days=1)
+			start_date = datetime.datetime(yesterday.year, yesterday.month, yesterday.day, 23, 59, 59)
+			end_date = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
+			oid_start = ObjectId.from_datetime(start_date)
+			oid_stop = ObjectId.from_datetime(end_date)
+
+			str_query = '{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }' % ( str(oid_start), str(oid_stop) )
+			data = db.kardex.find( json_util.loads(str_query) )
+
+			# data = db.kardex.find({"$and":
+			# 	[{"operation_type":"sell"}, {"_id": {"$lt": dummy_id}}]
+			# 	})
+			return data
 
 	def Rename(self, new_name):
 		try:

@@ -51,6 +51,7 @@ class Cellar(BaseModel):
 		url += "?token=" + self.token()
 		url += "&page=1"
 		url += "&items=1"
+		url += "&day=today"
 
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)	

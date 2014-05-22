@@ -16,6 +16,7 @@ class ReportHandler(BaseHandler):
 	def get(self):
 		self.set_active(Menu.INFORMES_POR_BODEGA)
 		# data = Cellar().List(1, 10)
+		cellar = Cellar().List(1, 10)
 		data = Cellar().ListKardex()
 		product = Product().get_product_list()
-		self.render("report/home.html", side_menu=self.side_menu, data=data, product=product)
+		self.render("report/home.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar)

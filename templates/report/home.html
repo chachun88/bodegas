@@ -6,31 +6,35 @@
 {% block body %}
 <div class="col-md-12">
 	<section class="widget">
+	<div style="float:right;"><a href="/?day=today">HOY  </a><a href="/?day=yesterday">AYER  </a> <a href="/?day=period">PERIODO</a></div>
 		<div class="body">
 			<table class="table table-striped">
 				<thead>
 					<tr>
 						<th>SKU</th>
-						<th>Nombre</th>
-						<th>Descripción</th>
-						<th>Saldo (unidades)</th>
-						<th>Precio</th>
+<!-- 						<th>Nombre</th>
+						<th>Descripción</th> -->
+						<th>Talla</th>
+						<th>Precio U. Compra</th>
+						<th>Precio U. Venta</th>
 						<th>Cantidad</th>
 						<th>Total</th>
 						<th>Usuario</th>
+						<th>Bodega</th>
 					</tr>
 				</thead>
 				<tbody>
 				{% for p in data %}
 					<tr>
 						<td>{{ p["product_sku"] }}</td>
-					{% for pro in product %}
+<!-- 					{% for pro in product %}
 						{% if p["product_sku"] == pro["sku"] %}
 						<td>{{ pro["name"] }}</td>
 						<td>{{ pro["description"] }}</td>
 						{% end %}
-					{% end %}	
-						<td>{{ p["balance_units"]}}</td>
+					{% end %}	 -->
+						<td>{{ p["size"]}}</td>
+						<td>{{ p["balance_price"]}}</td>
 						{% try %}
 						<td>{{ p["sell_price"] }}</td>
 						{% except %}
@@ -41,6 +45,11 @@
 						{% except %}
 						{% end %}
 						<td></td>
+					{% for c in cellar %}
+						{% if p["cellar_identifier"] == str(c["_id"]) %}	
+						<td>{{ c["name"] }}</td>
+						{% end %}
+					{% end %}							
 					</tr>
 				{% end %}	
 				</tbody>
