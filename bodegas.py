@@ -41,6 +41,8 @@ from user_add_handler import UserAddHandler, UserEditHandler
 
 from report_handler import ReportHandler
 
+from image_handler import ImageHandler, ImageHandler2
+
 #something
 define("port", default=port, help="run on the given port", type=int)
 
@@ -92,7 +94,12 @@ class Application(tornado.web.Application):
             (r"/user/edit", UserEditHandler),
 
             #report
-            (r"/", ReportHandler)
+            (r"/", ReportHandler),
+
+            #images
+            (r"/image/([^/]+)", ImageHandler),
+            (r"/image", ImageHandler2),
+            (r"/image/", ImageHandler2)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 

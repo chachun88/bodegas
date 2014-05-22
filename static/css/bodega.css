@@ -25,6 +25,12 @@
 	z-index: 100;
 }
 
+.alert-success-nohidden
+{
+	display: block;
+	z-index: 100;
+}
+
 .pointer
 {
 	width: 15px;
