@@ -10,12 +10,12 @@
 			<table class="table table-striped table-images">
 				<thead>
 					<tr>
-						<th>#</th>
+						<th>Imágen</th>
 						<th class="hidden-xs " >Categor&iacutea</th>
 						<th class="hidden-xs " >SKU</th>
 						<th class="" >Artículo</th>
 						<th class="" >Nombre</th>
-						<th class="" >Description</th>
+						<th class="" >Descripción</th>
 						<th class="hidden-xs " >Marca</th>
 						<th class="hidden-xs">Proveedor</th>
 						<th class="hidden-xs">Tallas</th>
@@ -36,7 +36,8 @@
 					{% for p in product_list %}
 					<tr>
 						<td>
-							<input type="checkbox" />
+							<img src="/image/{{ p["image"] }}?mw=60" width="60">
+							<!--<input type="checkbox" />-->
 						</td>
 						<td class="hidden-xs-portrait">{{ p["category"] }}</td>
 						<td class="hidden-xs-portrait">{{ p["sku"] }}</td>

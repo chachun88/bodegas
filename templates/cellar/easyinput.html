@@ -17,6 +17,7 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
+						<th>Imágen</th>
 						<th>SKU</th>
 						<th>Nombre</th>
 						<th>Descripción</th>
@@ -30,13 +31,14 @@
 				<tbody>
 					{% for p in products %}
 					<tr>
+						<td><img width=60 src="/image/{{ p["image"] }}?mw=60" /></td>
 						<td>{{ p["sku"] }}</td>
 						<td>{{ p["name"] }}</td>
 						<td>{{ p["description"] }}</td>
 						<td>{{ p["brand"] }}</td>
 						<td>{{ p["manufacturer"] }}</td>
-						<td>{{ p["size"] }}</td>
-						<td>{{ p["color"] }}</td>
+						<td>{{ ", ".join(p["size"]) }}</td>
+						<td>{{ ", ".join(p["color"]) }}</td>
 						<td>
 							<a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
 								Agregar de este producto
@@ -45,6 +47,9 @@
 								<div class="pointer">
 									<img src="/static/img/pointer.png" />
 								</div>
+
+
+								<!-- EASY INPUT -->
 								<form action="/cellar/easyinput" class="form-add" >
 									<fieldset>
 										<div class="control-group">
@@ -60,15 +65,29 @@
 											</div>
 										</div>
 										<div class="control-group">
-											<label for="" class="control-label">Size</label>
+											<label for="" class="control-label">Talla</label>
 											<div class="controls form-group">
-												<div class="col-sm-12"><input type="text" required="required" name="size" placeholder="Ingresar talla" autocomplete="off" class="form-control"></div>
+												<div class="col-sm-12">
+													<select name="size" id="size" class="selectpicker" data-style="btn-default" tabindex="-1" >
+														{% for s in p["size"] %}
+														<option value="{{ s }}">{{ s }}</option>
+														{% end %}
+													</select>
+													<!--<input type="text" required="required" name="size" placeholder="Ingresar talla" autocomplete="off" class="form-control">-->
+												</div>
 											</div>
 										</div>
 										<div class="control-group">
 											<label for="" class="control-label">Color</label>
 											<div class="controls form-group">
-												<div class="col-sm-12"><input type="text" required="required" name="color" placeholder="Ingresar color" autocomplete="off" class="form-control"></div>
+												<div class="col-sm-12">
+													<select name="color" id="color" class="selectpicker" data-style="btn-default" tabindex="-1" >
+														{% for c in p["color"] %}
+														<option value="{{ c }}">{{ c }}</option>
+														{% end %}
+													</select>
+													<!-- <input type="text" required="required" name="color" placeholder="Ingresar color" autocomplete="off" class="form-control"> -->
+												</div>
 											</div>
 										</div>
 										<div class="form-actions">
@@ -80,6 +99,8 @@
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
 								</form>
+								<!-- EASY INPUT -->
+
 							</div>
 						</td>
 					</tr>

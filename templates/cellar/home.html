@@ -5,19 +5,19 @@
 
 {% block body %}
 {% if dn == "t" %}
-<div class="alert alert-success">
+<div class="alert alert-success alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Bien hecho!</strong> bodega creado correctamente.
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> bodega creada correctamente.
 </div>
 {% elif dn == "bpt" %}
-<div class="alert alert-success">
+<div class="alert alert-success alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se han agregado productos.
 </div>
 {% elif dn == "bpf" %}
-<div class="alert alert-warning">
+<div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Usuario borrado!</strong> ha fallado al agregar productos.
+	<strong><i class="fa fa-check"></i> Problema al agregar productos!</strong> ha fallado al agregar productos.
 </div>
 {% end %}
 <div class="col-md-12">
@@ -94,6 +94,7 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
+
 	$(".btn-delete").click(function(){
 
 		var cell = $(this);

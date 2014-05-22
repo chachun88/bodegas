@@ -33,6 +33,11 @@
 	var mouse_over = false;
 	var animation_duration = 300;
 
+	setTimeout( function(){
+		console.log("close alert");
+		$(".alert").hide(animation_duration);
+	}, 5000 )
+
 	$("html").click(function()
 	{
 		if (!mouse_over) 
