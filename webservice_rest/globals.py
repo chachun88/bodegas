@@ -17,7 +17,7 @@ ws_port = 0
 
 
 ### reading config file
-config_file = open("CONFIG.txt", "r")
+config_file = open("../CONFIG.txt", "r")
 config_data = config_file.read()
 
 config = {}
@@ -30,6 +30,8 @@ for x in config_data.split("\n"):
 
     config[key] = val
 
+
+print "debug mode enabled : " + config["DEBUG"] 
 
 ### setting config values
 if config["DEBUG"] == "True":

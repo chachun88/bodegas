@@ -21,7 +21,7 @@ import cgitb; cgitb.enable()
 import sys
 
 from basehandler import BaseHandler
-from globals import port, debugMode, domainName, carpeta_img, userMode, Menu
+from globals import port, debugMode, carpeta_img, userMode, Menu
 from model.product import Product
 from model.category import Category
 from model.brand import Brand

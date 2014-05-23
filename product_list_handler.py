@@ -13,7 +13,7 @@ import tornado.web
 from tornado.options import define, options
 
 from basehandler import BaseHandler
-from globals import port, debugMode, domainName, carpeta_img, userMode, Menu
+from globals import port, debugMode, carpeta_img, userMode, Menu
 
 from basehandler import BaseHandler
 

@@ -24,7 +24,7 @@ from tornado.options import define, options
 from basehandler import BaseHandler
 from model.product import Product
 from model.cellar import Cellar
-from globals import port, debugMode, domainName, carpeta_img, userMode, Menu
+from globals import port, debugMode, carpeta_img, userMode, Menu
 
 class HomeHandler(BaseHandler):
 

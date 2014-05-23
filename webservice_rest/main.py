@@ -24,7 +24,9 @@ from bson.objectid import ObjectId
 
 from tornado.options import define, options
 
-define("port", default=8888, help="run on the given port", type=int)
+from globals import ws_port, debugMode
+
+define("port", default=ws_port, help="run on the given port", type=int)
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -112,7 +114,13 @@ class Application(tornado.web.Application):
 
         ''' configure database '''
         connection  = pymongo.Connection("localhost", 27017)
-        self.db     = connection.market_tab
+
+        if debugMode:
+            self.db = connection.dev_market_tab
+            print "database : dev_market_tab"
+        else:
+            self.db = connection.market_tab
+            print "database : market_tab"
 
 
         ''' repair script for user permissions '''

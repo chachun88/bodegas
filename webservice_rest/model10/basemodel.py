@@ -6,9 +6,15 @@ import pymongo
 from bson import json_util
 from bson.objectid import ObjectId
 
+from globals import debugMode
+
 # database_connection
 connection 	= pymongo.Connection("localhost", 27017)
-db 			= connection.market_tab
+
+if debugMode:
+	db = connection.dev_market_tab
+else:
+	db = connection.market_tab
 
 class BaseModel(object):
 	def __init__(self):
