@@ -41,7 +41,11 @@
 						</td>
 						<td class="hidden-xs-portrait">{{ p["category"] }}</td>
 						<td class="hidden-xs-portrait">{{ p["sku"] }}</td>
-						<td>{{ p["upc"] }}</td>
+						<td>
+							{% if "upc" in p %}
+							{{ p["upc"] }}
+							{% end %}
+						</td>
 						<td class="hidden-xs-portrait">{{ p["name"] }}</td> 
 						<td class="hidden-xs-portrait">{{ p["description"] }}</td>
 						<td>{{ p["brand"] }}</td>
