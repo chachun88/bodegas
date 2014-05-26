@@ -22,7 +22,24 @@ class ReportHandler(BaseHandler):
 			day="today"	
 		
 		# data = Cellar().List(1, 10)
+		fromm = "from"
+		until = "until"
 		cellar = Cellar().List(1, 10)
-		data = Cellar().ListKardex(day)
+		data = Cellar().ListKardex(day, fromm, until)
 		product = Product().get_product_list()
 		self.render("report/home.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar)
+
+	def post(self):
+
+		day = self.get_argument("day", "")
+		fromm = self.get_argument("from", "")
+		until = self.get_argument("until", "")
+
+		cellar = Cellar().List(1, 10)
+		data = Cellar().ListKardex(day, fromm, until)
+		product = Product().get_product_list()
+		self.render("report/period.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar)
+		# self.redirect("/")
+
+	def check_xsrf_cookie(self):
+		pass		

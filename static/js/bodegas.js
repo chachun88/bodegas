@@ -72,7 +72,7 @@
 		$(".alert-success").hide(animation_duration);
 		return false;
 	});
-
+	
 	$(".form-add").submit(function(event)
 	{
 		// agregar productos a bodega
@@ -123,6 +123,7 @@
 			"operation": operation
 		};
 
+
 		$(".lptooltip").hide(animation_duration);
 
 		$.ajax({
@@ -133,6 +134,39 @@
 			{
 				$(".mmessage").html("Se han "+ transaction +" "+ quantity +" '" + product_name + "' a la bodega '" + cellar_name + "'" );
 				$(".alert-success").show(animation_duration);
+
+				setTimeout(function() {
+					$(".alert-success").hide(animation_duration);
+				}, 3000);
+			}
+		});
+
+		return false;
+	});
+
+	$(".form-period").submit(function(event)
+	{
+		var from = $("input[name=from]", $(this)).val();
+		var until = $("input[name=until]", $(this)).val();
+		var day = $("input[name=day]", $(this)).val();
+
+		var post_data = {
+			"from":from,
+			"until":until,
+			"day":day
+		};
+
+		$(".lptooltip").hide(animation_duration);		
+
+		$.ajax({
+			url: $(".form-period").attr("action"),
+			type: "post",
+			data: post_data,
+			success: function(response)
+			{
+				/*$(".mmessage").html("Se han "+ transaction +" "+ quantity +" '" + product_name + "' a la bodega '" + cellar_name + "'" );*/
+				$(".alert-success").show(animation_duration);
+				$("#period").html(response);
 
 				setTimeout(function() {
 					$(".alert-success").hide(animation_duration);

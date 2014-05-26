@@ -237,7 +237,7 @@ class Cellar(BaseModel):
 		
 		return rtn_data
 
-	def ListKardex(self, page, items, day):	
+	def ListKardex(self, page, items, day, fromm, until):
 
 		if day == "today":
 			now = datetime.datetime.now()
@@ -245,22 +245,43 @@ class Cellar(BaseModel):
 		if day == "yesterday":
 			now = datetime.datetime.now() - datetime.timedelta(days=1)
 			yesterday = now - datetime.timedelta(days=2)
+
+		if day == "today" or day == "yesterday":
+
+			start_date = datetime.datetime(yesterday.year, yesterday.month, yesterday.day, 23, 59, 59)
+			end_date = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
+			oid_start = ObjectId.from_datetime(start_date)
+			oid_stop = ObjectId.from_datetime(end_date)
+
+			str_query = '{ "$and" : [{"operation_type":"sell"},{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }]}' % ( str(oid_start), str(oid_stop) )
+			data = db.kardex.find( json_util.loads(str_query) )
+			return data
+ 			
 		if day == "period":
-			now = datetime.datetime.now()
-			yesterday = now - datetime.timedelta(days=30)	
-			
-		start_date = datetime.datetime(yesterday.year, yesterday.month, yesterday.day, 23, 59, 59)
-		end_date = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
-		oid_start = ObjectId.from_datetime(start_date)
-		oid_stop = ObjectId.from_datetime(end_date)
 
-		str_query = '{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }' % ( str(oid_start), str(oid_stop) )
-		data = db.kardex.find( json_util.loads(str_query) )
+			ffrom=fromm.split("-")
 
-		# data = db.kardex.find({"$and":
-		# 	[{"operation_type":"sell"}, {"_id": {"$lt": dummy_id}}]
-		# 	})
-		return data
+			from_y=int(ffrom[0])
+			from_m=int(ffrom[1])
+			from_d=int(ffrom[2])
+
+			untill= until.split("-")
+
+			until_y=int(untill[0])
+			until_m=int(untill[1])
+			until_d=int(untill[2])
+
+			# now = datetime.datetime.now()
+			# yesterday = now - datetime.timedelta(days=30)	
+
+			start_date = datetime.datetime(from_y, from_m, from_d, 0, 0, 0)
+			end_date = datetime.datetime(until_y, until_m, until_d, 23, 59, 59)
+			oid_start = ObjectId.from_datetime(start_date)
+			oid_stop = ObjectId.from_datetime(end_date)
+
+			str_query = '{ "$and" : [{"operation_type":"sell"},{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }]}' % ( str(oid_start), str(oid_stop) )
+			data = db.kardex.find( json_util.loads(str_query) )
+			return data
 
 	def Rename(self, new_name):
 		try:

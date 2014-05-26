@@ -44,7 +44,7 @@ class Cellar(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)
 
-	def ListKardex(self, day):
+	def ListKardex(self, day, fromm, until):
 
 		url = self.wsurl() + "/cellar/products/kardex"
 
@@ -52,6 +52,8 @@ class Cellar(BaseModel):
 		url += "&page=1"
 		url += "&items=1"
 		url += "&day="+ day
+		url += "&from="+ fromm
+		url += "&until="+ until
 
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)	
