@@ -172,26 +172,26 @@ class ProductLoadHandler(BaseHandler):
 									prod.size=str(tallas[k]).split(",")
 									size=str(tallas[k])
 									if j == 0:
-										prod.category = matriz[i][j]
+										prod.category = matriz[i][j].encode('utf-8')
 									elif j == 1:
-										prod.sku = str(int(matriz[i][j]))
+										prod.sku = matriz[i][j].encode('utf-8')
 									elif j == 2:
-										prod.name = matriz[i][j]
+										prod.name = matriz[i][j].encode('utf-8')
 									elif j == 3:
-										prod.description = matriz[i][j]
+										prod.description = matriz[i][j].encode('utf-8')
 									elif j == 4:
 										
-											prod.color=matriz[i][j].split(",")
-											color=matriz[i][j]
+										prod.color=matriz[i][j].encode('utf-8').split(",")
+										color=matriz[i][j].encode('utf-8')
 
 									elif j == 5:
 										price = str(int(matriz[i][j]))
 									elif j == 6:
-										prod.manufacturer = matriz[i][j]
+										prod.manufacturer = matriz[i][j].encode('utf-8')
 									elif j == 7:
-										cellar_name= matriz[i][j]
+										cellar_name= matriz[i][j].encode('utf-8')
 									elif j == 8:
-										prod.brand = matriz[i][j]
+										prod.brand = matriz[i][j].encode('utf-8')
 									elif j == 10:
 										try:
 											q = k +j
@@ -345,26 +345,26 @@ class ProductMassiveOutputHandler(BaseHandler):
 								prod.size=str(tallas[k]).split(",")
 								size=str(tallas[k])
 								if j == 0:
-									prod.category = matriz[i][j]
+									prod.category = matriz[i][j].encode('utf-8')
 								elif j == 1:
-									prod.sku = str(int(matriz[i][j]))
+									prod.sku = str(matriz[i][j]).encode('utf-8')
 								elif j == 2:
-									prod.name = matriz[i][j]
+									prod.name = matriz[i][j].encode('utf-8')
 								elif j == 3:
-									prod.description = matriz[i][j]
+									prod.description = matriz[i][j].encode('utf-8')
 								elif j == 4:										
-									prod.color=matriz[i][j].split(",")
-									color=matriz[i][j]
+									prod.color=matriz[i][j].split(",").encode('utf-8')
+									color=matriz[i][j].encode('utf-8')
 								elif j == 5:
 									price = str(int(matriz[i][j]))
 								elif j == 6:
 									price_sell = str(int(matriz[i][j]))										
 								elif j == 7:
-									prod.manufacturer = matriz[i][j]
+									prod.manufacturer = matriz[i][j].encode('utf-8')
 								elif j == 9:
-									cellar_name= matriz[i][j]
+									cellar_name= matriz[i][j].encode('utf-8')
 								elif j == 10:
-									prod.brand = matriz[i][j]
+									prod.brand = matriz[i][j].encode('utf-8')
 								elif j == 12:
 									try:
 										q = k + j

@@ -36,7 +36,7 @@ class BaseHandler(tornado.web.RequestHandler):
                 for y in x['sub_menu']:
                     y['class'] = ""
                     if y["name"] == active_name:
-                        print "llegaaaa"
+                        #print "llegaaaa"
                         x["class"] += " active"
                         y["class"] = " active"
 

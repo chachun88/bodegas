@@ -253,30 +253,57 @@ class Product(BaseModel):
 		#siz={ 'size':[self.size] }
 		#col={ 'color':[self.color] }
 
+		descripcion = ""
+		name = ""
+		color = ""
+		brand = ""
+
+		try:
+			descripcion = self.description.encode('utf-8')
+		except:
+			descripcion = self.description
+
+		try:
+			name = self.name.encode("utf-8")
+		except:
+			name = self.name
+
+		try:
+			color =  ",".join(v for v in self.color)
+			color =unicode(color, errors="ignore")
+		except:
+			color = ",".join(str(v) for v in self.color)				
+
+		try:
+			brand = self.brand.encode("utf-8")
+		except:
+			brand = self.brand
+
 		url = self.wsurl()+"/product/add?token=" + self.token()
 
 		url += "&category=" + self.category
 		url += "&sku=" + self.sku
-		url += "&name=" + self.name		
+		url += "&name=" + name
 		url += "&upc=" + self.upc
-		url += "&description=" + self.description
-		url += "&brand=" + self.brand
+		url += "&description=" + descripcion
+		url += "&brand=" + brand
 		url += "&manufacturer=" + self.manufacturer
-		url += "&size=" + ",".join(str(v) for v in self.size)  
-		url += "&color=" + ",".join(str(v) for v in self.color)  
+		url += "&size=" + ",".join(str(v) for v in self.size)
+		url += "&color=" + color
 		#url += "&material=" + self.material
 		url += "&bullet_1=" + self.bullet_1
 		url += "&bullet_2=" + self.bullet_2
-		url += "&bullet_3=" + self.bullet_3	
-		url += "&currency=" + self.currency	
+		url += "&bullet_3=" + self.bullet_3
+		url += "&currency=" + self.currency
 		#url += "&price=" + self.price
 		url += "&image=" + self.image
 		url += "&image_2=" + self.image_2
 		url += "&image_3=" + self.image_3
-		
+
 		url += "&id=" + self.identifier
 
 		return urllib.urlopen(url).read()
+
 
 	def get_product_list(self):
 			
