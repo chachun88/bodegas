@@ -37,6 +37,7 @@ class ProductAddHandler(BaseHandler):
 		prod = Product()
 		self.render("product/add.html", side_menu=self.side_menu, product=prod)
 
+
 	def post(self):
 		try: # Windows needs stdio set for binary mode.
 		    import msvcrt
