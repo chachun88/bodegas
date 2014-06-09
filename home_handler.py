@@ -32,8 +32,8 @@ class HomeHandler(BaseHandler):
 	fnout =''
 
 	@tornado.web.authenticated
-	@asynchronous
-	@gen.engine
+	@tornado.web.asynchronous
+	@tornado.gen.engine
 	def get(self):
 		self.set_active(Menu.PRODUCTOS_CARGA_MASIVA) #change menu active item
 
@@ -41,8 +41,8 @@ class HomeHandler(BaseHandler):
 
 		self.render("product/home.html", side_menu=self.side_menu, dn=dn)
 
-	@asynchronous
-	@gen.engine
+	@tornado.web.asynchronous
+	@tornado.gen.engine
 	def post(self):
 		
 		#upload file 
@@ -137,8 +137,8 @@ class ProductLoadHandler(BaseHandler):
 	def get(self):
 		pass
 
-	@asynchronous
-	@gen.engine
+	@tornado.web.asynchronous
+	@tornado.gen.engine
 	def post(self):	
 
 		if 'fn' in vars() or 'fn' in globals():
@@ -250,8 +250,8 @@ class ProductOutHandler(BaseHandler):
 
 		self.render("product/out.html", side_menu=self.side_menu, dn=dn)
 
-	@asynchronous
-	@gen.engine
+	@tornado.web.asynchronous
+	@tornado.gen.engine
 	def post(self):
 
 		#upload file 
@@ -315,8 +315,8 @@ class ProductMassiveOutputHandler(BaseHandler):
 	def get(self):
 		pass
 
-	@asynchronous
-	@gen.engine
+	@tornado.web.asynchronous
+	@tornado.gen.engine
 	def post(self):
 
 		if 'fnout' in vars() or 'fnout' in globals():
