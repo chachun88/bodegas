@@ -10,6 +10,8 @@ import tornado.web
 from basehandler import BaseHandler
 from model.cellar import Cellar
 
+from bson import json_util
+
 class CellarRemoveHandler(BaseHandler):
 	def get(self):
 
@@ -18,5 +20,10 @@ class CellarRemoveHandler(BaseHandler):
 		cellar = Cellar()
 		cellar.InitWithId(idd)
 
-		cellar.Remove()
-		self.write("Bodega eliminada correctamente.")
+		json_string = cellar.Remove()
+		json_data = json_util.loads( cellar.Remove() )
+
+		if ( "error" in json_data ):
+			self.write( json_data )
+		else:
+			self.write("{ \"message\" : \"Bodega eliminada correctamente.\"}")

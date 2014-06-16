@@ -35,6 +35,11 @@ class BaseModel(object):
 	def collection(self, value):
 		self._collection = value
 
+	@property
+	def db(self):
+	    return db
+	
+
 	def Save(self):
 		return ShowError("must be overriden by user")
 

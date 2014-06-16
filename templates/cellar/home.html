@@ -102,25 +102,42 @@ $(document).ready(function(){
 		var message = "Realmente desea eliminar esta bodega \n"+
 					"los productos serán dejados sin bodegas";
 
-		if (cell.hasClass("btn-danger") && confirm(message)) 
+
+		if (confirm(message)) 
 		{
-			cell.removeClass("btn-danger");
-			cell.addClass("btn-success");
-			cell.html("Eliminado");
+			$.ajax({
+				url: "/cellar/remove?id=" + cellar_id
+			}).done(function(data) {
 
-			cell.parent().parent().animate({
-				opacity: 0.0,
-				height:"toggle"
-			}, 3000, function() {
-				$.ajax({
-					url: "/cellar/remove?id=" + cellar_id
-				}).done(function(data) {
-					console.log(data);
-				});
+				try
+				{
+					var error_message = data[ "error" ];
+					alert ( error_message );
 
-				cell.parent().parent().css("display", "none");
+					return;
+				}
+				catch(exception)
+				{}
+
+				if (cell.hasClass("btn-danger")) 
+				{
+					cell.removeClass("btn-danger");
+					cell.addClass("btn-success");
+					cell.html("Eliminado");
+
+					cell.parent().parent().animate({
+						opacity: 0.0,
+						height:"toggle"
+					}, 3000, function() {
+
+						cell.parent().parent().css("display", "none");
+					});
+				}
+
+				console.log(data);
 			});
 		}
+
 	});
 });
 </script>

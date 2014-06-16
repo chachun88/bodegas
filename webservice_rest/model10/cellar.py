@@ -32,6 +32,25 @@ class Cellar(BaseModel):
 	def description(self, value):
 		self._description = value
 
+	## override
+	def Remove(self):
+		#validate if cellar still has products
+		data = self.db.kardex.find({ "cellar_identifier": self.identifier })
+		is_empty = True
+
+		for d in data:
+			#detect if product exists
+			product_data = self.db.product.find( { "sku": d["product_sku"] } )
+			if ( product_data.count() >= 1 ):
+				##validate
+				is_empty = False
+
+		if (is_empty):
+			BaseModel.Remove(self)
+		else:
+			return self.ShowError("No se puede eliminar, aún contiene productos.")
+
+
 	def GetTotalUnits(self):
 
 		data = db.kardex.find({"cellar_identifier":self.identifier})
