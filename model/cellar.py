@@ -66,6 +66,8 @@ class Cellar(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		json_data = json_util.loads(json_string)
 
+		print "{}".format(json_string)
+
 		self.identifier = str(json_data["_id"])
 		self.name = json_data["name"]
 		self.description = json_data["description"]

@@ -46,7 +46,7 @@ class Cellar(BaseModel):
 				is_empty = False
 
 		if (is_empty):
-			BaseModel.Remove(self)
+			return BaseModel.Remove(self)
 		else:
 			return self.ShowError("No se puede eliminar, aún contiene productos.")
 

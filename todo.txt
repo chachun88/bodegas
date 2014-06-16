@@ -5,7 +5,7 @@ ok 2- No Permite Acentos, por ejemplo trate de crear la Bodega Concepción, y me
 
 ok 3- Cuando una crea una Bodega, en esa sección el botón Validar y Agregar tiene la misma función que el Botón Cancelar, ya que el Botón Cancelar NO funciona como tal, y si uno lo aprieta igual crea la Bodega.
 
-4- Se puede eliminar una Bodega si esta tiene productos!!!!, acabo de eliminar la Bodega General con 491 productos y me dejo. Ya habíamos conversado este tema, y quedamos en que NO se puede eliminar una bodega si esta tiene inventario adentro, y el sistema todavía lo permite.
+ok 4- Se puede eliminar una Bodega si esta tiene productos!!!!, acabo de eliminar la Bodega General con 491 productos y me dejo. Ya habíamos conversado este tema, y quedamos en que NO se puede eliminar una bodega si esta tiene inventario adentro, y el sistema todavía lo permite.
 
 5- Las bodegas es posible que se puedan ordenar, es decir que si yo quiero que una bodega aparesca primero en la lista se pueda??
 

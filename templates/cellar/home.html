@@ -111,13 +111,16 @@ $(document).ready(function(){
 
 				try
 				{
-					var error_message = data[ "error" ];
-					alert ( error_message );
-
-					return;
+					if (data.hasOwnProperty( "error" )) {
+						var error_message = data[ "error" ];
+						alert ( error_message );
+						return;
+					}
 				}
 				catch(exception)
-				{}
+				{
+					console.log( "no se pudo remover" );
+				}
 
 				if (cell.hasClass("btn-danger")) 
 				{

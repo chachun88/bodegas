@@ -21,7 +21,7 @@ class CellarRemoveHandler(BaseHandler):
 		cellar.InitWithId(idd)
 
 		json_string = cellar.Remove()
-		json_data = json_util.loads( cellar.Remove() )
+		json_data = json_util.loads( json_string )
 
 		if ( "error" in json_data ):
 			self.write( json_data )
