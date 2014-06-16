@@ -20,8 +20,8 @@ class CellarAddHandler(BaseHandler):
 
 	def post(self):
 
-		name = self.get_argument("name", "bodega sin nombre")
-		description = self.get_argument("description", "")
+		name = self.get_argument("name", "bodega sin nombre").encode("UTF-8")
+		description = self.get_argument("description", "").encode("UTF-8")
 
 		cellar = Cellar()
 		cellar.name = name

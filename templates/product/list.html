@@ -56,7 +56,7 @@
 						<td>{{ p["bullet_point_1"] }}</td>	
 						<td>{{ p["bullet_point_2"] }}</td>	
 						<td>{{ p["bullet_point_3"] }}</td> -->
-						<td class="hidden-xs">{{ p["currency"] }}</td>		
+						{% if "currency" in p %}<td class="hidden-xs">{{ p["currency"] }}</td>{% end %}
 						<!--<td></td>
 						<td class="hidden-xs"></td>	-->					
 						<td>

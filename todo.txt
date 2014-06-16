@@ -1,0 +1,68 @@
+ok 1- No permite Ñ el sistema.
+Trate de crear una bodega con Ñ, Viña del Mar
+
+ok 2- No Permite Acentos, por ejemplo trate de crear la Bodega Concepción, y me sale error, solo aceptar Concepcion sin acento en la O
+
+ok 3- Cuando una crea una Bodega, en esa sección el botón Validar y Agregar tiene la misma función que el Botón Cancelar, ya que el Botón Cancelar NO funciona como tal, y si uno lo aprieta igual crea la Bodega.
+
+4- Se puede eliminar una Bodega si esta tiene productos!!!!, acabo de eliminar la Bodega General con 491 productos y me dejo. Ya habíamos conversado este tema, y quedamos en que NO se puede eliminar una bodega si esta tiene inventario adentro, y el sistema todavía lo permite.
+
+5- Las bodegas es posible que se puedan ordenar, es decir que si yo quiero que una bodega aparesca primero en la lista se pueda??
+
+6- En la planilla de carga Masiva puse una Bodega que no existía, y el inventario se deja cargar, no avisa que la bodega NO existe y se carga igual. Obvio que luego no aparece en ningún lados. Esto se presta para errores ya que pasa si alguien en vez de escribir Viña pine Vina, oetc..... uno creera que el inventario se cargo  pero no es así.
+Debe existir una validación al momento de cargar.
+
+7- Tallas, que pasa cuando empecemos a fabricar zapatos de niñas y de hombres, donde las tallas iran desde la 30 a la 44 apróx. Es fácil ampliar esto, o mejor que se deje de una vez programado así??
+
+8.- Estimados subí un archivo para carga masiva, me sale en amarillo Excel Erroneo e Igual me aprece la bodega Central Caragada, pero con unos números gigantes que desbordan toda realidad. Como es esto posible que aparesca excel erroneo y aún así se carga igual la bodega??
+
+9.- Informes - No veo nada, y este tema ya lo conversamos hace tres semanas.
+Si bien hago un movimiento este luego aparece, pero cuando esto sea enorme, como uno se fija si fue un movimiento o una salida o una venta.
+Es como un historial gigante de movimientos
+No registra al usuario que realizó el movimiento.
+Si bien registra los movimientos, por ejemplo la cargo masiva que realice no la registro.
+Relice unas entredas Fácil y la sección de informes no la muestra, quizas no ls detecta.
+
+10.- Cuando se cargan los productos en la Bodega, no sería más fácil que se guarden y se auto orden según SKU, ya que hay varios SKU que son igual y que la única diferencia es la combinación, es decir terminan en C1 y el otro en C2, pero es el misma zapato con diferente combinación, por lo que esperaria que estuvieran juntos, así además es más fácil para buscar y ver.
+
+11.- Que pasa si cargo una foto, pero quiero eliminar solo la foto, por que quizas esa estaba mala?
+El sistema no permite eliminar la foto.
+Por ejemplo cargue un prducto, le subí cualquier foto, pero ahora no se como eliminar esa foto, a no se que elimine el productos completo.
+
+12.- Me aprece haber conversado que se iba a eliminar o modificar las opciones que aparecen en Lista de Bodega en cada Bodega o en Productos, ya que se cruzaban las funciones entre sacar y meter, etc...
+La sección dentro de Bodega "Salidas", es raro, se replica, no tiene todos los items que deben tener las salidas, y además que filtra por el nombre dle producto y no por el SKU, que es como debiera ser. Lo mismo pasa con entradas.
+En producto solo deja ingresar el Nombre, y no el SKU.
+
+13.- Sigo insistiendo en el tema de los usuarios y permisos.
+Como se hace para que un usuario solo tenga acceso a una bodega en específico?
+
+14.- Sección de Movimientos entre Bodegas
+Solo permite Mover de un producto a las vez y además por talla, es decir que si quiero mover un solo producto debo mover primero los 35, luego los 36, y así sucesivamente. Imaginense cuando quiera mover 450 productos.
+Una locura.
+Si de una bodega saco todos los productos de un SKU, este queda en Cero y sigue existiendo en esa bodega. Esto no genera problemas a la hora de ver el informe?.
+
+15.- Hay varias cosas que ya habíamos conversado, como por ejemplo. En Entradas en alguna Bodega, como se separan las Tallas?? para ingresar varias a la vez pero sin ser una carga masiva.
+- Habíamos conversado y que era muy fácil, que en algunos cosas uno podía ponerse sobre el Item y que salga un pequeño detalle, por ejemplo, acá ingrese tellas de esta manera 35; 36, 37, eyc....
+
+16.- Planilla de Salidas
+La planilla para saldias masivas solicita el precio de Compre, y solo debiese solicitar el precio de venta, ya que el precio de compra ya está registrado en el Sistema.
+No se puede cargar la planilla de salidas Masivas
+Que pasa si uno en la salida masiva trta de sacar más productos de los que hay en Bodega?? el sistema te avisa de inmediato y no te deja seguir hasta que uno arregle el tema??
+
+17.- En producto se cruzan las funciones con Bodega.
+En Producto, sección Agregar Producto los items no cuadran a la perfección con los solicitados en la planilla.
+En la sección Bodegas, debieran aparecer de manera desplegable las bodegas existentes.
+
+18.- Mecanismos de Control
+- El sistema detecta cuando se están ingresando productos a un bodega que no existe?
+- El sistema detecta y te avisa cuando se están sacando tallas o productos que no hay en Stock y te avisa?
+
+19.- Quizas como medida de control, y para no duplicar productos iguales con Distintos SKI, etc... se podría crear un paso previo.
+Quizas es más complicado, pero ver si es posible que el primer paso sea crear el SKU en el sistema, junto con su descripción y posible foto, luego ya una vez creado el SKU es posible cargarle productos de menara masiva o individual, y el SKU no se puede eliminar así como así, solo el "administrador".
+Así es como funciona la gran mayoría de los sistemas de inventarios, y de este modo evitamos crear dos SKU para el mimso producto, cargar productos que no existen, etc..........
+
+20.- Me preocupa la parte de Control, tanto de usuarios, como de informe de errores, verificaciones de inventario, de productos, etc... como los que les he mencionado antes.
+
+21.- Me preocupa no ver todos los avances que hemos conversado antes, lamentablemente yo no los tengo anotado, pero se que Ricardo si.
+
+22.- Me preocupa que siendo un sistema bien simple de utilizar en la práctica no es tan simple debido a la cantidad de pasos, y que hay secciones donde se repiten los pasos o se pueden hacer las mismas cosas.
