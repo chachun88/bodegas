@@ -38,8 +38,9 @@ class HomeHandler(BaseHandler):
 		self.set_active(Menu.PRODUCTOS_CARGA_MASIVA) #change menu active item
 
 		dn = self.get_argument("dn", "f")
+		w = self.get_argument("w", "").split( "," )
 
-		self.render("product/home.html", side_menu=self.side_menu, dn=dn)
+		self.render("product/home.html", side_menu=self.side_menu, dn=dn, w=w)
 
 	@tornado.web.asynchronous
 	@tornado.gen.engine
@@ -141,6 +142,8 @@ class ProductLoadHandler(BaseHandler):
 	@tornado.gen.engine
 	def post(self):	
 
+		warnings = []
+
 		if 'fn' in vars() or 'fn' in globals():
 
 			if fn != "":
@@ -209,27 +212,34 @@ class ProductLoadHandler(BaseHandler):
 											operation="buy"
 
 											#products stored for cellar
-										
-											cellar.InitWithName(cellar_name)
-											cellar.AddProducts(prod.sku, quantity, price, size, color, operation)
+											if cellar.CellarExist( cellar_name ):
+												cellar.InitWithName(cellar_name)
+												cellar.AddProducts(prod.sku, quantity, price, size, color, operation)
+											else:
+												error_name = "No existe la bodega \"" + cellar_name + "\""
+												if error_name not in warnings:
+													warnings.append( error_name )
 										except:
 											pass	
 
 							except:
 								dn="t3"
-								self.redirect("/product?dn="+dn)											
+								self.redirect("/product?dn="+dn + "&w=" + ",".join(warnings))
+								return
 						#product is stored
 
 				dn="t"
 				#self.redirect("/product?dn="+dn)
-				self.render("product/home.html", side_menu=self.side_menu, dn=dn)	
+				#self.render("product/home.html", side_menu=self.side_menu, dn=dn)
+
 
 			else:
 				dn="t2"
-				self.redirect("/product?dn="+dn)
 		else:
 			dn="t2"
-			self.redirect("/product?dn="+dn)	
+		
+
+		self.redirect("/product?dn="+dn + "&w=" + ",".join(warnings))
 
 class ProductRemoveHandler(BaseHandler):
 	

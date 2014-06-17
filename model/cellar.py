@@ -131,6 +131,14 @@ class Cellar(BaseModel):
 		print json_string
 
 		return json_util.loads(json_string)
+
+	def CellarExist( self, cellar_name ):
+		url = self.wsurl() + "/cellar/exists?token=" + self.token()
+
+		url += "&cellar_name" + cellar_name
+
+		json_string = urllib.urlopen( url ).read()
+		return json_util.loads( json_string )[ "exists" ]
  
 	@property
 	def name(self):

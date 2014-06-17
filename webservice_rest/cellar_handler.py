@@ -163,3 +163,13 @@ class CellarProductsRemoveHandler(BaseHandler):
 
 		#self.write(cellar.RemoveProducts(product_list))
 		pass
+
+class CellarExistsHandler(BaseHandler):
+	
+	def get(self):
+		#validate access token
+		cellar_name = self.get_argument("cellar_name", "")
+		cellar_exist = Cellar.CellarExists( cellar_name )
+
+		self.write( json_util.dumps( { "exists" : cellar_exist } ) )
+		

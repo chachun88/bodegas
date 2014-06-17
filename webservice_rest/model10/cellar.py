@@ -111,6 +111,15 @@ class Cellar(BaseModel):
 		except:
 			return self.ShowError("failed to print cellar")
 
+	@staticmethod
+	def CellarExists( cellar_name ):
+
+		data = db.cellar.find({"name" : cellar_name })
+		
+		if data.count() >= 1:
+			return True
+		return False
+
 	## validates and save cellar, it could be validated by name
 	def Save(self):
 		try:
