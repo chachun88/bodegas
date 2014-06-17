@@ -77,7 +77,7 @@ class Kardex(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)
 	
-	def AddProducts(self, product_sku, quantity, price, size, color, operation):
+	def AddProducts(self, product_sku, quantity, price, size, color, operation, user):
 		url = self.wsurl() + "/cellar/products/add?token=" + self.token()
 		url += "&cellar_id=" + self.identifier
 		url += "&product_sku=" + product_sku 
@@ -86,12 +86,13 @@ class Kardex(BaseModel):
 		url += "&price=" + price
 		url += "&size=" + size
 		url += "&color=" + color
+		url += "&user=" + user
 
 		json_string = urllib.urlopen(url).read()
 
 		return json_util.loads(json_string)
 
-	def RemoveProducts(self, product_sku, quantity, price, size, color, operation):
+	def RemoveProducts(self, product_sku, quantity, price, size, color, operation, user):
 		url = self.wsurl() + "/cellar/products/remove?token=" + self.token()
 
 		url += "&cellar_id=" + self.identifier
@@ -101,6 +102,7 @@ class Kardex(BaseModel):
 		url += "&price=" + price
 		url += "&size=" + size
 		url += "&color=" + color
+		url += "&user=" + user
 
 		json_string = urllib.urlopen(url).read()
 

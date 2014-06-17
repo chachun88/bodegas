@@ -5,6 +5,7 @@ Created on 13/12/2012
 '''
 import tornado.web
 from lputils import MoneyFormat
+from bson import json_util
 #from loadingplay.multilang.lang import lpautoSelectCurrentLang
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -62,6 +63,11 @@ class BaseHandler(tornado.web.RequestHandler):
             self.set_secure_cookie("user", tornado.escape.json_encode(user))
         else:
             self.clear_cookie("user")
+
+    def get_user_email(self):
+        json_data = json_util.loads( self.get_secure_cookie("user") )
+
+        return json_data["email"]
 
     def render(self, template_name ,**kwargs):
 

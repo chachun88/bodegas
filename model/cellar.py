@@ -93,7 +93,7 @@ class Cellar(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)
 	
-	def AddProducts(self, product_sku, quantity, price, size, color, operation):
+	def AddProducts(self, product_sku, quantity, price, size, color, operation, user):
 		
 		col=""
 		
@@ -110,12 +110,13 @@ class Cellar(BaseModel):
 		url += "&price=" + price
 		url += "&size=" + size
 		url += "&color=" + col
+		url += "&user=" + user
 
 		json_string = urllib.urlopen(url).read()
 
 		return json_util.loads(json_string)
 
-	def RemoveProducts(self, product_sku, quantity, price, size, color, operation):
+	def RemoveProducts(self, product_sku, quantity, price, size, color, operation, user):
 		url = self.wsurl() + "/cellar/products/remove?token=" + self.token()
 
 		url += "&cellar_id=" + self.identifier
@@ -125,6 +126,7 @@ class Cellar(BaseModel):
 		url += "&price=" + price
 		url += "&size=" + size
 		url += "&color=" + color
+		url += "&user=" + user
 
 		json_string = urllib.urlopen(url).read()
 

@@ -58,7 +58,7 @@ class CellarOutputHandler(BaseHandler):
 
 		redirect = "t"
 
-		if "success" in cellar.RemoveProducts(product_sku, units, size, color, operation):
+		if "success" in cellar.RemoveProducts(product_sku, units, size, color, operation, self.get_user_email()):
 			self.write("ok")
 			redirect = "bpt"
 		else:
@@ -100,7 +100,7 @@ class CellarEasyInputHandler(BaseHandler):
 		product.color=color.split(",")
 		product.Save()
 
-		if "success" in cellar.AddProducts(product_sku, quantity, price, size, color, operation):
+		if "success" in cellar.AddProducts(product_sku, quantity, price, size, color, operation, self.get_user_email() ):
 			self.write("ok")
 		else:
 			self.write("no")
@@ -140,7 +140,7 @@ class CellarEasyOutputHandler(BaseHandler):
 		product.InitWithId(product_id)
 		product_sku=product.sku
 
-		if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, operation):
+		if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, operation, self.get_user_email()):
 			self.write("ok")
 		else:
 			self.write("no")
@@ -152,7 +152,7 @@ class CellarEasyOutputHandler(BaseHandler):
 
 			redirect = "t"
 
-			if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, operation):
+			if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, operation, self.get_user_email("user")):
 				self.write("ok")
 				redirect = "bpt"
 			else:
@@ -202,7 +202,7 @@ class CellarInputHandler(BaseHandler):
 
 		redirect = "t"
 
-		if "success" in cellar.AddProducts(product_sku, units, price, size, color, operation):
+		if "success" in cellar.AddProducts(product_sku, units, price, size, color, operation, self.get_user_email()):
 			self.write("ok")
 			redirect = "bpt"
 		else:

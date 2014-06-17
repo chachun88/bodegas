@@ -214,7 +214,7 @@ class ProductLoadHandler(BaseHandler):
 											#products stored for cellar
 											if cellar.CellarExist( cellar_name ):
 												cellar.InitWithName(cellar_name)
-												cellar.AddProducts(prod.sku, quantity, price, size, color, operation)
+												cellar.AddProducts(prod.sku, quantity, price, size, color, operation, self.get_user_email() )
 											else:
 												error_name = "No existe la bodega \"" + cellar_name + "\""
 												if error_name not in warnings:
@@ -398,7 +398,7 @@ class ProductMassiveOutputHandler(BaseHandler):
 									#products stored for cellar
 									
 										cellar.InitWithName(cellar_name)
-										cellar.RemoveProducts(prod.sku, quantity, price_sell, size, color, operation)
+										cellar.RemoveProducts(prod.sku, quantity, price_sell, size, color, operation, self.get_user_email() )
 									except:
 										pass	
 							# except:

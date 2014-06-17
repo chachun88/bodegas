@@ -127,6 +127,7 @@ class CellarProductsAddHandler(BaseHandler):
 		price = self.get_argument("price", "0")
 		size = self.get_argument("size", "")
 		color = self.get_argument("color", "")
+		user = self.get_argument("user", "")
 
 		kardex = Kardex()
 
@@ -139,6 +140,7 @@ class CellarProductsAddHandler(BaseHandler):
 		kardex.price = float(price)
 		kardex.size = size
 		kardex.color= color
+		kardex.user = user
 
 		self.write(json_util.dumps(kardex.Insert()))
 		

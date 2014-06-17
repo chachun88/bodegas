@@ -74,7 +74,9 @@
 						<td>{{ int(p["sell_price"]) * int(p["units"])}}</td>
 						{% except %}
 						{% end %}
-						<td></td>
+						<td>
+							{% if "user" in p %}{{ p["user"] }}{% end %}
+						</td>
 						{% for c in cellar %}
 						{% if p["cellar_identifier"] == str(c["_id"]) %}	
 						<td>{{ c["name"] }}</td>

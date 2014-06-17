@@ -20,12 +20,21 @@ class Kardex(BaseModel):
 		self._balance_price = 0.0
 		self._balance_total = 0.0
 		self._date = 0000000 
+		self._user = ""
 
 		self.collection = db.kardex
 
 	OPERATION_BUY = "buy"
 	OPERATION_SELL= "sell"
 	OPERATION_MOV = "mov"
+
+	@property
+	def user(self):
+	    return self._user
+	@user.setter
+	def user(self, value):
+	    self._user = value
+	
 
 	@property
 	def product_sku(self):
@@ -145,6 +154,8 @@ class Kardex(BaseModel):
 			self.balance_price = data[0]["balance_price"]
 			self.balance_total = data[0]["balance_total"]
 			self.date = data[0]["date"]
+			if "user" in data[0]:
+				self.user = data[0]["user"]
 		except:
 			return self.ShowError("kardex not found")
 
@@ -175,6 +186,8 @@ class Kardex(BaseModel):
 				new_kardex.balance_price = data[0]["balance_price"]
 				new_kardex.balance_total = data[0]["balance_total"]
 				new_kardex.date = data[0]["date"]
+				if "user" in data[0]:
+					new_kardex.user = data[0]["user"]
 		except Exception, e:
 			pass
 
@@ -240,7 +253,8 @@ class Kardex(BaseModel):
 				"balance_units":self.balance_units,
 				"balance_price":self.balance_price,
 				"balance_total":self.balance_total,
-				"date":self.date
+				"date":self.date,
+				"user":self.user
 			})
 
 		return self.ShowSuccessMessage("products has been added")
