@@ -38,7 +38,10 @@ class HomeHandler(BaseHandler):
 		self.set_active(Menu.PRODUCTOS_CARGA_MASIVA) #change menu active item
 
 		dn = self.get_argument("dn", "f")
-		w = self.get_argument("w", "").split( "," )
+		w = []
+
+		if self.get_argument("w", "") != "":
+			w = self.get_argument("w", "").split( "," )
 
 		self.render("product/home.html", side_menu=self.side_menu, dn=dn, w=w)
 
