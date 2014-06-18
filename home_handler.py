@@ -99,7 +99,7 @@ class HomeHandler(BaseHandler):
 							matriz[i].append(sheet.cell_value(i,j))	
 
 					#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
-					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn)
+					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn, w="")
 
 				except ImportError:
 					pass
@@ -125,14 +125,14 @@ class HomeHandler(BaseHandler):
 							matriz[i].append(sheet.cell_value(i,j))	
 
 					#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
-					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn)
+					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn,  w="")
 
 				except ImportError:
 					pass	
 
 		else:
 			dn="t2"
-			self.render("product/home.html", side_menu=self.side_menu, dn=dn)
+			self.render("product/home.html", side_menu=self.side_menu, dn=dn, w="")
 
 
 
