@@ -86,13 +86,38 @@
 						<label class="control-label" for="prefix">Imagen</label>
 						<div class="controls form-group">
 							<div class="col-sm-8">
+								<ul class="image-list">
+									<li>
+										<button type="button" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+										<img  src="/image/?mw=60" />
+										<input type="file" name="image" class="image-item-fille" />
+									</li>
+									<li>
+										<button type="button" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+										<img  src="/image/?mw=60" />
+										<input type="file" name="image-1" class="image-item-fille" />
+									</li>
+									<li>
+										<button type="button" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+										<img  src="/image/?mw=60" />
+										<input type="file" name="image-2" class="image-item-fille" />
+									</li>
+									<li>
+										<button type="button" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+										<img  src="/image/?mw=60" />
+										<input type="file" name="image-3" class="image-item-fille" />
+									</li>
+								</ul>
 <!-- 								<form enctype="multipart/form-data" action="" method="post">
 									<div class="form-actions fileupload-buttonbar no-margin" action="/" method="post" enctype="multipart/form-data"> -->
+
+										<!--
 										<span class="btn btn-sm btn-default fileinput-button">
 											<i class="fa fa-plus"></i>
 											<span>Cargar Imagen...</span>
 											<input type="file" name="image" multiple="">
 										</span>
+										-->
 <!-- 										<button type="submit" class="btn btn-primary btn-sm start">
 											<i class="fa fa-upload"></i>
 											<span>Subir Archivo</span>
@@ -168,5 +193,26 @@
 		</div>
 	</section>
 </div>
+
+<script type="text/javascript">
+	$(document).ready(function()
+		{
+			$(".image-item-fille").on("change", function(ev)
+				{
+					var f = ev.target.files[0];
+					var fr = new FileReader();
+					var img = $( "img", $(this).parent());
+
+					fr.onload = function(ev2)
+					{
+						console.dir(ev2);
+						img.attr("src", ev2.target.result);
+
+					};
+
+					fr.readAsDataURL(f);
+				});
+		});
+</script>
 
 {% end %}

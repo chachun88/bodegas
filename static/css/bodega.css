@@ -51,3 +51,14 @@
 {
 	cursor: pointer;
 }
+
+.image-list li
+{
+	display: block;
+	float: left;
+}
+
+.close-image-list
+{
+	margin-left: -20px;
+}

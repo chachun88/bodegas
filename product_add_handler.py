@@ -38,6 +38,23 @@ class ProductAddHandler(BaseHandler):
 		self.render("product/add.html", side_menu=self.side_menu, product=prod)
 
 
+	def saveImage( self, imagedata, sku, image_number ):
+
+		final_name = ""
+
+		try:
+			fn = imagedata["filename"]
+			final_name = image_number + "_" + sku + '.png'
+
+			file_path = 'uploads/images/' + sku + '.png'
+
+			open('uploads/images/' + sku + '.png', 'wb').write(fileitem["body"])
+		except Exception, e:
+			pass
+
+		return final_name
+
+
 	def post(self):
 		try: # Windows needs stdio set for binary mode.
 		    import msvcrt
@@ -46,24 +63,37 @@ class ProductAddHandler(BaseHandler):
 		except ImportError:
 		    pass
 
+		''' 
 		fn =""    
 		try:   
 			form = cgi.FieldStorage()
 			
 			# A nested FieldStorage instance holds the file
 			fileitem = self.request.files['image'][0]
+
+			for i in self.request.files:
+				self.write("llega : {} <br>".format( self.request.files[i][0]["filename"] ))
 		
 			# strip leading path from file name to avoid directory traversal attacks
 			fn = fileitem['filename']
 		except:
 			pass
 
+		return
+		'''
+
+		'''
 		if fn != "":
 			#print fn 
 			open('uploads/images/' + self.get_argument("sku", "")+'.png', 'wb').write(fileitem["body"])
 			image_name=self.get_argument("sku", "")+'.png'
 		else:
 			image_name=''
+		'''
+
+		img1 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
+		img2 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
+		img3 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
 
 		##if the category does not exist is created
 		category = Category()
@@ -99,9 +129,9 @@ class ProductAddHandler(BaseHandler):
 		prod.bullet_2 	= self.get_argument("bullet_2", "")
 		prod.bullet_3 	= self.get_argument("bullet_3", "")
 		prod.currency 	= self.get_argument("currency", "")
-		prod.image 		= image_name
-		prod.image2 	= self.get_argument("image2", "")
-		prod.image3 	= self.get_argument("image3", "")
+		prod.image 		= img1
+		prod.image2 	= img2
+		prod.image3 	= img3
 
 		prod.Save()
 		self.redirect("/product/list")
