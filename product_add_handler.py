@@ -38,6 +38,22 @@ class ProductAddHandler(BaseHandler):
 		self.render("product/add.html", side_menu=self.side_menu, product=prod)
 
 
+	def saveImage( self, imagedata, sku, image_number ):
+
+		final_name = "{}_{}.png".format( image_number, sku )
+
+		try:
+			fn = imagedata["filename"]
+			file_path = 'uploads/images/' + final_name
+
+			open(file_path, 'wb').write(imagedata["body"])
+		except Exception, e:
+			print str(e)
+			pass
+
+		return final_name
+
+
 	def post(self):
 		try: # Windows needs stdio set for binary mode.
 		    import msvcrt
@@ -46,24 +62,44 @@ class ProductAddHandler(BaseHandler):
 		except ImportError:
 		    pass
 
+		''' 
 		fn =""    
 		try:   
 			form = cgi.FieldStorage()
 			
 			# A nested FieldStorage instance holds the file
 			fileitem = self.request.files['image'][0]
+
+			for i in self.request.files:
+				self.write("llega : {} <br>".format( self.request.files[i][0]["filename"] ))
 		
 			# strip leading path from file name to avoid directory traversal attacks
 			fn = fileitem['filename']
 		except:
 			pass
 
+		return
+		'''
+
+		'''
 		if fn != "":
 			#print fn 
 			open('uploads/images/' + self.get_argument("sku", "")+'.png', 'wb').write(fileitem["body"])
 			image_name=self.get_argument("sku", "")+'.png'
 		else:
 			image_name=''
+		'''
+
+		img1 = "{}_{}.png".format( 0, self.get_argument("sku", "") )
+		img2 = "{}_{}.png".format( 1, self.get_argument("sku", "") )
+		img3 = "{}_{}.png".format( 2, self.get_argument("sku", "") )
+
+		if ( "image" in self.request.files ):
+			img1 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
+		if ( "image-1" in self.request.files ):
+			img2 = self.saveImage( self.request.files['image-1'][0], self.get_argument("sku", ""), 1 )
+		if ( "image-2" in self.request.files ):
+			img3 = self.saveImage( self.request.files['image-2'][0], self.get_argument("sku", ""), 2 )
 
 		##if the category does not exist is created
 		category = Category()
@@ -99,9 +135,9 @@ class ProductAddHandler(BaseHandler):
 		prod.bullet_2 	= self.get_argument("bullet_2", "")
 		prod.bullet_3 	= self.get_argument("bullet_3", "")
 		prod.currency 	= self.get_argument("currency", "")
-		prod.image 		= image_name
-		prod.image2 	= self.get_argument("image2", "")
-		prod.image3 	= self.get_argument("image3", "")
+		prod.image 		= img1
+		prod.image_2 	= img2
+		prod.image_3 	= img3
 
 		prod.Save()
 		self.redirect("/product/list")
