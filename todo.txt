@@ -25,18 +25,18 @@ ok No registra al usuario que realizó el movimiento.
 
 10.- Cuando se cargan los productos en la Bodega, no sería más fácil que se guarden y se auto orden según SKU, ya que hay varios SKU que son igual y que la única diferencia es la combinación, es decir terminan en C1 y el otro en C2, pero es el misma zapato con diferente combinación, por lo que esperaria que estuvieran juntos, así además es más fácil para buscar y ver.
 
-11.- Que pasa si cargo una foto, pero quiero eliminar solo la foto, por que quizas esa estaba mala?
-El sistema no permite eliminar la foto.
-Por ejemplo cargue un prducto, le subí cualquier foto, pero ahora no se como eliminar esa foto, a no se que elimine el productos completo.
+ok 11.- Que pasa si cargo una foto, pero quiero eliminar solo la foto, por que quizas esa estaba mala?
+ok El sistema no permite eliminar la foto.
+ok Por ejemplo cargue un prducto, le subí cualquier foto, pero ahora no se como eliminar esa foto, a no se que elimine el productos completo.
 
-12.- Me aprece haber conversado que se iba a eliminar o modificar las opciones que aparecen en Lista de Bodega en cada Bodega o en Productos, ya que se cruzaban las funciones entre sacar y meter, etc...
-La sección dentro de Bodega "Salidas", es raro, se replica, no tiene todos los items que deben tener las salidas, y además que filtra por el nombre dle producto y no por el SKU, que es como debiera ser. Lo mismo pasa con entradas.
-En producto solo deja ingresar el Nombre, y no el SKU.
+ok 12.- Me aprece haber conversado que se iba a eliminar o modificar las opciones que aparecen en Lista de Bodega en cada Bodega o en Productos, ya que se cruzaban las funciones entre sacar y meter, etc...
+ok La sección dentro de Bodega "Salidas", es raro, se replica, no tiene todos los items que deben tener las salidas, y además que filtra por el nombre dle producto y no por el SKU, que es como debiera ser. Lo mismo pasa con entradas.
+ok En producto solo deja ingresar el Nombre, y no el SKU.
 
-13.- Sigo insistiendo en el tema de los usuarios y permisos.
+ok 13.- Sigo insistiendo en el tema de los usuarios y permisos.
 Como se hace para que un usuario solo tenga acceso a una bodega en específico?
 
-14.- Sección de Movimientos entre Bodegas
+cómo lo podemos resolver? 14.- Sección de Movimientos entre Bodegas
 Solo permite Mover de un producto a las vez y además por talla, es decir que si quiero mover un solo producto debo mover primero los 35, luego los 36, y así sucesivamente. Imaginense cuando quiera mover 450 productos.
 Una locura.
 Si de una bodega saco todos los productos de un SKU, este queda en Cero y sigue existiendo en esa bodega. Esto no genera problemas a la hora de ver el informe?.

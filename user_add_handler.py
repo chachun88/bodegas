@@ -10,6 +10,7 @@ import tornado.web
 from basehandler import BaseHandler
 from globals import Menu
 from model.user import User
+from model.cellar import Cellar
 
 class UserAddHandler(BaseHandler):
 
@@ -17,12 +18,14 @@ class UserAddHandler(BaseHandler):
 		self.set_active(Menu.USUARIOS_AGREGAR)
 
 		usr = User()
-		self.render("user/add.html", side_menu=self.side_menu, user=usr)
+		cellar = Cellar()
+
+		self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
 
 	def post(self):
 
 		usr = User()
-		
+
 		usr.name 		= self.get_argument("name", "")
 		usr.surname 	= self.get_argument("surname", "")
 		usr.email 		= self.get_argument("email", "")
@@ -41,7 +44,8 @@ class UserEditHandler(BaseHandler):
 		
 		usr = User()
 		usr.InitWithId(self.get_argument("id", ""))
+		cellar = Cellar()
 
-		self.render("user/add.html", side_menu=self.side_menu, user=usr)
+		self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
 
 		

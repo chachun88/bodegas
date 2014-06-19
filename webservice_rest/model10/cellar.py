@@ -11,6 +11,8 @@ from bson import json_util
 import time
 import datetime
 
+from salesman import Salesman
+
 class Cellar(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
@@ -46,6 +48,15 @@ class Cellar(BaseModel):
 				is_empty = False
 
 		if (is_empty):
+
+			## remove permissions from user
+			try:
+				self.db.salesman.update({"permissions":self.name},{"$pull": { "permissions": self.name} }, multi=True);
+
+			except Exception, e:
+				self.ShowError(str( e ))
+			
+			return self.ShowError( "nn" )
 			return BaseModel.Remove(self)
 		else:
 			return self.ShowError("No se puede eliminar, aún contiene productos.")

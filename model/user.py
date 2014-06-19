@@ -136,7 +136,7 @@ class User(BaseModel):
 		url += "&name=" + self.name + "%20" + self.surname
 		url += "&password=" + self.password
 		url += "&email=" + self.email
-		url += "&permissions=" + self.permissions
+		url += "&permissions=" + urllib.quote ( self.permissions.encode("utf8") )
 		url += "&id=" + self.identifier
 
 		#url = urllib.urlencode(url)
