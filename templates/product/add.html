@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 
 {% block title %}Agregar Producto {% end %}
-{% block caption %}permite agregar un producto{% end %}
+{% block caption %}permite agregar un producto al maestro de productos{% end %}
 
 
 {% block body %}
@@ -49,6 +49,12 @@
 						</div>
 					</div>
 					<div class="control-group">
+						<label class="control-label" for="prefix">Color</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Escriba los colores separadas por coma (,)" name="color" type="text" class="form-control" value="{{ ",".join(product.color) }}"></div>
+						</div>
+					</div>
+					<div class="control-group">
 						<label class="control-label" for="prefix">Precio de compra</label>
 						<div class="controls form-group">
 							<div class="col-sm-8"><input placeholder="Precio de compra" name="price" type="text" class="form-control" value="{{ product.price }}"></div>
@@ -68,6 +74,7 @@
 					</div>
 
 					<!--- bodega???? -->
+					<!--
 					<div class="control-group">
 						<label class="control-label" for="prefix">Cantidad</label>
 						<div class="controls form-group">
@@ -80,7 +87,7 @@
 							<div class="col-sm-8"><input placeholder="bodega" name="cellar"  type="text" class="form-control" value=""></div>
 						</div>
 					</div>
-
+					-->
 					<!--- fin bodega -->
 					<div class="control-group">
 						<label class="control-label" for="prefix">Imagen</label>
@@ -103,26 +110,6 @@
 										<input type="file" name="image-2" class="image-item-fille" />
 									</li>
 								</ul>
-<!-- 								<form enctype="multipart/form-data" action="" method="post">
-									<div class="form-actions fileupload-buttonbar no-margin" action="/" method="post" enctype="multipart/form-data"> -->
-
-										<!--
-										<span class="btn btn-sm btn-default fileinput-button">
-											<i class="fa fa-plus"></i>
-											<span>Cargar Imagen...</span>
-											<input type="file" name="image" multiple="">
-										</span>
-										-->
-<!-- 										<button type="submit" class="btn btn-primary btn-sm start">
-											<i class="fa fa-upload"></i>
-											<span>Subir Archivo</span>
-										</button>
-									</div>
-									{% raw xsrf_form_html() %}
-								</form> -->
-
-
-							<!-- <input placeholder="Imagen" name="image" type="text" class="form-control" value="{{ product.image }}"> -->
 							</div>
 						</div>
 					</div>

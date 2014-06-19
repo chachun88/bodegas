@@ -41,7 +41,7 @@ Solo permite Mover de un producto a las vez y además por talla, es decir que si
 Una locura.
 Si de una bodega saco todos los productos de un SKU, este queda en Cero y sigue existiendo en esa bodega. Esto no genera problemas a la hora de ver el informe?.
 
-15.- Hay varias cosas que ya habíamos conversado, como por ejemplo. En Entradas en alguna Bodega, como se separan las Tallas?? para ingresar varias a la vez pero sin ser una carga masiva.
+hay que ver, ya que las tallas tienen una cantidad asociaad 15.- Hay varias cosas que ya habíamos conversado, como por ejemplo. En Entradas en alguna Bodega, como se separan las Tallas?? para ingresar varias a la vez pero sin ser una carga masiva.
 - Habíamos conversado y que era muy fácil, que en algunos cosas uno podía ponerse sobre el Item y que salga un pequeño detalle, por ejemplo, acá ingrese tellas de esta manera 35; 36, 37, eyc....
 
 16.- Planilla de Salidas
@@ -49,9 +49,9 @@ La planilla para saldias masivas solicita el precio de Compre, y solo debiese so
 No se puede cargar la planilla de salidas Masivas
 Que pasa si uno en la salida masiva trta de sacar más productos de los que hay en Bodega?? el sistema te avisa de inmediato y no te deja seguir hasta que uno arregle el tema??
 
-17.- En producto se cruzan las funciones con Bodega.
-En Producto, sección Agregar Producto los items no cuadran a la perfección con los solicitados en la planilla.
-En la sección Bodegas, debieran aparecer de manera desplegable las bodegas existentes.
+ok 17.- En producto se cruzan las funciones con Bodega.
+ok En Producto, sección Agregar Producto los items no cuadran a la perfección con los solicitados en la planilla.
+na... En la sección Bodegas, debieran aparecer de manera desplegable las bodegas existentes.
 
 18.- Mecanismos de Control
 - El sistema detecta cuando se están ingresando productos a un bodega que no existe?
