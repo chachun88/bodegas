@@ -58,6 +58,12 @@
 	float: left;
 }
 
+.image-list img
+{
+	max-width: 60px;
+	max-height: 60px;
+}
+
 .close-image-list
 {
 	margin-left: -20px;

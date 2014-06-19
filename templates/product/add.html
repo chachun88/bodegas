@@ -88,24 +88,19 @@
 							<div class="col-sm-8">
 								<ul class="image-list">
 									<li>
-										<button type="button" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-										<img  src="/image/?mw=60" />
+										<button type="button" image-name="{{ product.image }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+										<img  src="/image/{{ product.image }}?mw=60"  />
 										<input type="file" name="image" class="image-item-fille" />
 									</li>
 									<li>
-										<button type="button" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-										<img  src="/image/?mw=60" />
+										<button type="button" image-name="{{ product.image_2 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+										<img  src="/image/{{ product.image_2 }}?mw=60" />
 										<input type="file" name="image-1" class="image-item-fille" />
 									</li>
 									<li>
-										<button type="button" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-										<img  src="/image/?mw=60" />
+										<button type="button" image-name="{{ product.image_3 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+										<img  src="/image/{{ product.image_3 }}?mw=60" />
 										<input type="file" name="image-2" class="image-item-fille" />
-									</li>
-									<li>
-										<button type="button" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-										<img  src="/image/?mw=60" />
-										<input type="file" name="image-3" class="image-item-fille" />
 									</li>
 								</ul>
 <!-- 								<form enctype="multipart/form-data" action="" method="post">
@@ -197,6 +192,7 @@
 <script type="text/javascript">
 	$(document).ready(function()
 		{
+			// load image from client
 			$(".image-item-fille").on("change", function(ev)
 				{
 					var f = ev.target.files[0];
@@ -212,6 +208,22 @@
 
 					fr.readAsDataURL(f);
 				});
+
+			// remove an image
+			$(".close-image-list").click(function()
+			{
+				var image_name = $(this).attr("image-name");
+				var element = $(this);
+				var img_display = $("img", element.parent());
+				var file = $("input", element.parent());
+
+				$.get("/imageremove?image_name=" + image_name)
+				.done(function(data)
+					{
+						img_display.attr("src", "/image/"+ image_name +"?mw=60");
+						file.val("");
+					});
+			});
 		});
 </script>
 

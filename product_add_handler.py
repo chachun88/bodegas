@@ -40,16 +40,15 @@ class ProductAddHandler(BaseHandler):
 
 	def saveImage( self, imagedata, sku, image_number ):
 
-		final_name = ""
+		final_name = "{}_{}.png".format( image_number, sku )
 
 		try:
 			fn = imagedata["filename"]
-			final_name = image_number + "_" + sku + '.png'
+			file_path = 'uploads/images/' + final_name
 
-			file_path = 'uploads/images/' + sku + '.png'
-
-			open('uploads/images/' + sku + '.png', 'wb').write(fileitem["body"])
+			open(file_path, 'wb').write(imagedata["body"])
 		except Exception, e:
+			print str(e)
 			pass
 
 		return final_name
@@ -91,9 +90,16 @@ class ProductAddHandler(BaseHandler):
 			image_name=''
 		'''
 
-		img1 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
-		img2 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
-		img3 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
+		img1 = "{}_{}.png".format( 0, self.get_argument("sku", "") )
+		img2 = "{}_{}.png".format( 1, self.get_argument("sku", "") )
+		img3 = "{}_{}.png".format( 2, self.get_argument("sku", "") )
+
+		if ( "image" in self.request.files ):
+			img1 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
+		if ( "image-1" in self.request.files ):
+			img2 = self.saveImage( self.request.files['image-1'][0], self.get_argument("sku", ""), 1 )
+		if ( "image-2" in self.request.files ):
+			img3 = self.saveImage( self.request.files['image-2'][0], self.get_argument("sku", ""), 2 )
 
 		##if the category does not exist is created
 		category = Category()
@@ -130,8 +136,8 @@ class ProductAddHandler(BaseHandler):
 		prod.bullet_3 	= self.get_argument("bullet_3", "")
 		prod.currency 	= self.get_argument("currency", "")
 		prod.image 		= img1
-		prod.image2 	= img2
-		prod.image3 	= img3
+		prod.image_2 	= img2
+		prod.image_3 	= img3
 
 		prod.Save()
 		self.redirect("/product/list")
