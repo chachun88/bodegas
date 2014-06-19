@@ -45,6 +45,7 @@
 {
 	height: 10px;
 	opacity: 0.4;
+	cursor: pointer;
 }
 
 .btn-perm-bot, .btn-perm
@@ -62,6 +63,11 @@
 {
 	max-width: 60px;
 	max-height: 60px;
+}
+
+.image-list input
+{
+	display: none;
 }
 
 .close-image-list
