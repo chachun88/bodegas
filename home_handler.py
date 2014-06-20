@@ -294,6 +294,14 @@ class ProductOutHandler(BaseHandler):
 
 			fnout = fileitem['filename']
 
+			dir = "uploads/salidas_masivas/"
+
+			## chegk if directory exists
+			try:
+				os.stat( dir )
+			except:
+				os.mkdir(dir)
+
 			open('uploads/salidas_masivas/' + fnout, 'wb').write(fileitem["body"])
 			#message = 'The file "' + fn + '" was uploaded successfully'
 
@@ -376,19 +384,22 @@ class ProductMassiveOutputHandler(BaseHandler):
 								elif j == 3:
 									prod.description = matriz[i][j].encode('utf-8')
 								elif j == 4:										
-									prod.color=matriz[i][j].split(",").encode('utf-8')
+									prod.color=matriz[i][j].encode('utf-8').split(",")
 									color=matriz[i][j].encode('utf-8')
+								#elif j == 5:
+								#	try:
+								#		price = str(int(matriz[i][j]))
+								#	except:
+								#		price = 0
 								elif j == 5:
-									price = str(int(matriz[i][j]))
-								elif j == 6:
 									price_sell = str(int(matriz[i][j]))										
-								elif j == 7:
+								elif j == 6:
 									prod.manufacturer = matriz[i][j].encode('utf-8')
-								elif j == 9:
+								elif j == 8:
 									cellar_name= matriz[i][j].encode('utf-8')
-								elif j == 10:
+								elif j == 9:
 									prod.brand = matriz[i][j].encode('utf-8')
-								elif j == 12:
+								elif j == 11:
 									try:
 										q = k + j
 										quantity=str(int(matriz[i][q]))

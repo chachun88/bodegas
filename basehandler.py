@@ -65,9 +65,13 @@ class BaseHandler(tornado.web.RequestHandler):
             self.clear_cookie("user")
 
     def get_user_email(self):
-        json_data = json_util.loads( self.get_secure_cookie("user") )
+        try:
+            json_data = json_util.loads( self.get_secure_cookie("user") )
 
-        return json_data["email"]
+            return json_data["email"]
+        except:
+            pass
+        return self.get_secure_cookie("user")
 
     def render(self, template_name ,**kwargs):
 

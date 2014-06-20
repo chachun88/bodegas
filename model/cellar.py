@@ -135,7 +135,7 @@ class Cellar(BaseModel):
 	def CellarExist( self, cellar_name ):
 		url = self.wsurl() + "/cellar/exists?token=" + self.token()
 
-		url += "&cellar_name" + cellar_name
+		url += "&cellar_name=" + cellar_name
 
 		json_string = urllib.urlopen( url ).read()
 		return json_util.loads( json_string )[ "exists" ]

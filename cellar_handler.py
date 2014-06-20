@@ -85,9 +85,9 @@ class CellarEasyInputHandler(BaseHandler):
 		product_sku = self.get_argument("product_sku", "")
 		quantity = self.get_argument("quantity", "")
 		price = self.get_argument("price", "")
-		size= self.get_argument("size", "")
-		color=self.get_argument("color", "")
-		operation="buy"
+		size = self.get_argument("size", "")
+		color = self.get_argument("color", "")
+		operation = "buy"
 
 
 		cellar = Cellar()
