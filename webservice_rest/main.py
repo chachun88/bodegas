@@ -56,6 +56,7 @@ class Application(tornado.web.Application):
             (r"/salesman/add",          seller_handler.AddSellerHandler),
             (r"/salesman/edit",         seller_handler.AddSellerHandler),
             (r"/salesman/remove",       seller_handler.RemoveSellerHandler),
+            (r"/salesman/delete",       seller_handler.RemoveSellerHandler), ## old, must be deleted
             (r"/salesman/find",         seller_handler.GetSalesmanHandler),
             (r"/salesman/list",         seller_handler.ListSalesmanHandler),
 

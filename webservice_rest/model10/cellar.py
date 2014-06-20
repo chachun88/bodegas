@@ -56,7 +56,6 @@ class Cellar(BaseModel):
 			except Exception, e:
 				self.ShowError(str( e ))
 			
-			return self.ShowError( "nn" )
 			return BaseModel.Remove(self)
 		else:
 			return self.ShowError("No se puede eliminar, aún contiene productos.")

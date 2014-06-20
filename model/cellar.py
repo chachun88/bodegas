@@ -28,8 +28,6 @@ class Cellar(BaseModel):
 		url += "?token=" + self.token()
 		url += "&id=" + self.identifier
 
-		print url
-
 		return urllib.urlopen(url).read()
 
 	def ListProducts(self):

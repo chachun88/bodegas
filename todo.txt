@@ -54,7 +54,7 @@ ok En Producto, sección Agregar Producto los items no cuadran a la perfección 
 na... En la sección Bodegas, debieran aparecer de manera desplegable las bodegas existentes.
 
 18.- Mecanismos de Control
-- El sistema detecta cuando se están ingresando productos a un bodega que no existe?
+ok - El sistema detecta cuando se están ingresando productos a un bodega que no existe?
 - El sistema detecta y te avisa cuando se están sacando tallas o productos que no hay en Stock y te avisa?
 
 19.- Quizas como medida de control, y para no duplicar productos iguales con Distintos SKI, etc... se podría crear un paso previo.

@@ -117,18 +117,21 @@ class User(BaseModel):
 		data = json_util.loads(json_string)
 
 		self.SplitName(data["name"]) ## name and surname
-		self.identifier = str(data["_id"])
+		self.identifier = idd
 		self.password = data["password"]
 		self.permissions = data["permissions"]
 		self.email = data["email"]
 
 	def Remove(self):
+
 		if self.identifier != "":
 			url  =self.wsurl() + "/salesman/delete"
 			url += "?token=" + self.token()
 			url += "&id=" + self.identifier
 
 			urllib.urlopen(url)
+
+			print "url : {}".format( url )
 
 	def Save(self):
 		url = self.wsurl() + "/salesman/add?token=" + self.token()

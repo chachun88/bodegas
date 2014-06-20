@@ -55,9 +55,9 @@ class Salesman(BaseModel):
 
 	def Remove(self):
 		try:
-			delete = self._permissions.RemoveAllByUser()
-			if "error" in delete:
-				return delete
+			#delete = self._permissions.RemoveAllByUser()
+			#if "error" in delete:
+			#	return delete
 
 			return BaseModel.Remove(self)
 		except Exception, e:
