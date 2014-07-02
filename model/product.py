@@ -76,11 +76,11 @@ class Product(BaseModel):
 
 	@property
 	def upc(self):
-		return self._upc
+	    return self._upc
 	@upc.setter
 	def upc(self, value):
-		self._upc = value
-
+	    self._upc = value
+	
 	@property
 	def description(self):
 	    return self._description
@@ -197,17 +197,18 @@ class Product(BaseModel):
 		self.category = data["category"]
 		self.sku = data["sku"]
 		self.name = data["name"] 
-		self.upc= data ["upc"]
+		self.upc= data["upc"]
 		self.description = data["description"]
 		self.brand = data["brand"]
 		self.manufacturer= data["manufacturer"]
-		self.size=data ["size"]
-		self.color= data ["color"]
-		self.material = data ["material"] 
+		self.size=data["size"]
+		self.color= data["color"]
+		self.material = data["material"] 
 		self.bullet_1=data ["bullet_1"]
 		self.bullet_2=data ["bullet_2"]
 		self.bullet_3=data ["bullet_3"]
-		self.currency=data ["currency"]
+		# self.currency=data ["currency"]
+		self.price =data["price"]
 		self.image = data ["image"]
 		self.image_2 = data ["image_2"]
 		self.image_3 = data ["image_3"]
@@ -225,17 +226,18 @@ class Product(BaseModel):
 		self.category = data["category"]
 		self.sku = data["sku"]
 		self.name = data["name"] 
-		self.upc= data ["upc"]
+		self.upc= data["upc"]
 		self.description = data["description"]
 		self.brand = data["brand"]
 		self.manufacturer= data["manufacturer"]
-		self.size=data ["size"]
-		self.color= data ["color"]
+		self.size=data["size"]
+		self.color= data["color"]
 		self.material = data ["material"] 
 		self.bullet_1=data ["bullet_1"]
 		self.bullet_2=data ["bullet_2"]
 		self.bullet_3=data ["bullet_3"]
-		self.currency=data ["currency"]
+		# self.currency=data ["currency"]
+		self.price=data["price"]
 		self.image = data ["image"]
 		self.image_2 = data ["image_2"]
 		self.image_3 = data ["image_3"]	
@@ -272,7 +274,7 @@ class Product(BaseModel):
 			color =  ",".join(v for v in self.color)
 			color =unicode(color, errors="ignore")
 		except:
-			color = ",".join(str(v) for v in self.color)				
+			color = ",".join(v.encode('utf-8') for v in self.color)				
 
 		try:
 			brand = self.brand.encode("utf-8")
@@ -289,13 +291,13 @@ class Product(BaseModel):
 		url += "&brand=" + brand
 		url += "&manufacturer=" + self.manufacturer
 		url += "&size=" + ",".join(str(v) for v in self.size)
-		url += "&color=" + color
+		url += "&color=" + unicode(color, errors="ignore")
 		#url += "&material=" + self.material
 		url += "&bullet_1=" + self.bullet_1
 		url += "&bullet_2=" + self.bullet_2
 		url += "&bullet_3=" + self.bullet_3
-		url += "&currency=" + self.currency
-		#url += "&price=" + self.price
+		# url += "&currency=" + self.currency
+		url += "&price=" + self.price
 		url += "&image=" + self.image
 		url += "&image_2=" + self.image_2
 		url += "&image_3=" + self.image_3

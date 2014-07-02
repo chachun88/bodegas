@@ -67,8 +67,8 @@ class Menu:
     PRODUCTOS = "Productos"
 
     # sub_menu
-    PRODUCTOS_CARGA_MASIVA = "Carga Masiva"
-    PRODUCTOS_SALIDA_MASIVA = "Salida Masiva"
+    PRODUCTOS_CARGA_MASIVA = "Carga masiva"
+    PRODUCTOS_SALIDA_MASIVA = "Salida masiva"
     PRODUCTOS_CARGA = "Agregar producto"
     PRODUCTOS_LISTA = "Maestro productos"
     # end sub_menu

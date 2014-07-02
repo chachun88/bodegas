@@ -1,7 +1,21 @@
 {% extends "../base.html" %}
 
-{% block title %}Agregar Producto {% end %}
-{% block caption %}permite agregar un producto al maestro de productos{% end %}
+
+{% block title %}
+	{% if tit == "edit" %}
+		Editar Producto 
+	{% elif tit == "add" %}
+		Agregar Producto
+	{% end %}
+{% end %}
+
+{% block caption %}
+	{% if tit == "edit" %}
+		permite editar un producto en el maestro de productos 
+	{% elif tit == "add" %}
+		permite agregar un producto al maestro de productos
+	{% end %}
+{% end %}			
 
 
 {% block body %}
@@ -11,17 +25,21 @@
 		<div class="body">
 			<form action="/product/add" class="form-horizontal label-left" method="post" enctype="multipart/form-data">
 				<fieldset>
+				{% if tit == "edit" %}
+					<legend class="section">Editar Producto</legend>
+				{% elif tit == "add"  %}
 					<legend class="section">Agregar Producto</legend>
+				{% end %}
 					<div class="control-group">
 						<label class="control-label" for="prefix">Categoría</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Categoria" name="category" type="text" class="form-control" value="{{ product.category }}"></div>
+							<div class="col-sm-8"><input placeholder="Categoría" name="category" type="text" class="form-control" value="{{ product.category }}"></div>
 						</div>
 					</div>
 					<div class="control-group">
 						<label class="control-label" for="prefix">SKU</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}"></div>
+							<div class="col-sm-8"><input placeholder="SKU" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}"></div>
 						</div>
 					</div>
 					<div class="control-group">
@@ -39,7 +57,7 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">Descripción</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Descripcion" name="description" type="text" class="form-control" value="{{ product.description }}"></div>
+							<div class="col-sm-8"><input placeholder="Descripción" name="description" type="text" class="form-control" value="{{ product.description }}"></div>
 						</div>
 					</div>
 					<div class="control-group">
@@ -51,19 +69,28 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">Combinación</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Escriba los colores separadas por coma (,)" name="color" type="text" class="form-control" value="{{ ",".join(product.color) }}"></div>
+							<div class="col-sm-8"><input placeholder="Escriba los colores separados por coma (,)" name="color" type="text" class="form-control" value="{{ ",".join(product.color) }}"></div>
 						</div>
 					</div>
+					{% try %}
 					<div class="control-group">
 						<label class="control-label" for="prefix">Precio de compra</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Precio de compra" name="price" type="text" class="form-control" value="{{ product.price }}"></div>
+							<div class="col-sm-8"><input placeholder="Precio de compra" name="price" type="number" min="0" class="form-control" value="{{ product.price }}"></div>
 						</div>
 					</div>
+					{% except %}
+						<div class="control-group">
+							<label class="control-label" for="prefix">Precio de compra</label>
+							<div class="controls form-group">
+								<div class="col-sm-8"><input placeholder="Precio de compra" name="price" type="number" min="0"  class="form-control" value="0"></div>
+							</div>
+						</div>
+					{% end %}
 					<div class="control-group">
 						<label class="control-label" for="prefix">Proveedor</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="proveedor" name="manufacturer"  type="text" class="form-control" value="{{ product.manufacturer }}"></div>
+							<div class="col-sm-8"><input placeholder="Proveedor" name="manufacturer"  type="text" class="form-control" value="{{ product.manufacturer }}"></div>
 						</div>
 					</div>
 					<div class="control-group">
@@ -167,8 +194,13 @@
 					-->
 				</fieldset>
 				<div class="form-actions">
+					
+				{% if tit == "edit" %}
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				{% elif tit == "add"  %}
 					<button type="submit" class="btn btn-primary">Validar y agregar</button>
-					<button type="button" class="btn btn-default">Cancelar</button>
+				{% end %}
+					<button type="reset" class="btn btn-default">Cancelar</button>
 				</div>
 				{% raw xsrf_form_html() %}
 			</form>

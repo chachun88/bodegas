@@ -191,11 +191,9 @@ class ProductLoadHandler(BaseHandler):
 										prod.name = matriz[i][j].encode('utf-8')
 									elif j == 3:
 										prod.description = matriz[i][j].encode('utf-8')
-									elif j == 4:
-										
+									elif j == 4:										
 										prod.color=matriz[i][j].encode('utf-8').split(",")
 										color=matriz[i][j].encode('utf-8')
-
 									elif j == 5:
 										price = str(int(matriz[i][j]))
 									elif j == 6:

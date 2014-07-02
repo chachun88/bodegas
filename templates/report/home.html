@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 
 {% block title %}Informe de bodegas {% end %}
-{% block caption %}muestra las bodegas que existen{% end %}
+{% block caption %}muestra las salidas realizadas{% end %}
 
 {% block body %}
 <div class="col-md-12">
@@ -19,12 +19,12 @@
 							<label for="" class="control-label">Desde</label>
 							<div class="controls form-group">
 								<div class="col-sm-12">
-									<input type="date" required="required" name="from" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
+									<input type="date" required="required" name="from" placeholder="dd-mm-aaaa" autocomplete="off" class="form-control"></div>
 							</div>
 							<label for="" class="control-label">Hasta</label>
 							<div class="controls form-group">
 								<div class="col-sm-12">
-									<input type="date" required="required" name="until" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
+									<input type="date" required="required" name="until" placeholder="dd-mm-aaaa" autocomplete="off" class="form-control"></div>
 								</div>
 							</div>
 
@@ -38,7 +38,7 @@
 			</div>
 			<div id="period">
 				<div class="body">
-					<table class="table table-striped">
+					<table class="table table-report table-striped" >
 						<thead>
 							<tr>
 								<th>SKU</th>

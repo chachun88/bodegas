@@ -35,7 +35,7 @@ class ProductAddHandler(BaseHandler):
 		self.set_active(Menu.PRODUCTOS_CARGA) #change menu active item
 
 		prod = Product()
-		self.render("product/add.html", side_menu=self.side_menu, product=prod)
+		self.render("product/add.html", side_menu=self.side_menu, product=prod, tit="add")
 
 
 	def saveImage( self, imagedata, sku, image_number ):
@@ -135,6 +135,7 @@ class ProductAddHandler(BaseHandler):
 		prod.bullet_2 	= self.get_argument("bullet_2", "")
 		prod.bullet_3 	= self.get_argument("bullet_3", "")
 		prod.currency 	= self.get_argument("currency", "")
+		prod.price		= self.get_argument("price", "")
 		prod.image 		= img1
 		prod.image_2 	= img2
 		prod.image_3 	= img3
@@ -149,7 +150,7 @@ class ProductEditHandler(BaseHandler):
 
 		prod = Product()
 		prod.InitWithId(self.get_argument("id", ""))
-		self.render("product/add.html", side_menu=self.side_menu, product=prod)
+		self.render("product/add.html", side_menu=self.side_menu, product=prod, tit="edit")
 
  		 
 		

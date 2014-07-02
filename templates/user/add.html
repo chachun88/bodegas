@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 
 {% block title %}Agregar {% end %}
-{% block caption %}agrega una nueva bodega{% end %}
+{% block caption %}agrega un nuevo usuario{% end %}
 
 
 {% block body %}
@@ -25,19 +25,19 @@
 				<div class="control-group">
 					<label for="" class="control-label">Email</label>
 					<div class="controls form-group">
-						<div class="col-sm-8"><input placeholder="ejemplo@gianidafirenze.cl" name="email" required="required" type="email" class="form-control" value="{{ user.email }}"></div>
+						<div class="col-sm-8"><input id="email" placeholder="ejemplo@gianidafirenze.cl" name="email" required="required" type="email" class="form-control" value="{{ user.email }}"></div>
 					</div>
 				</div>
 				<div class="control-group">
 					<label for="" class="control-label">Contraseña</label>
 					<div class="controls form-group">
-						<div class="col-sm-8"><input placeholder="contraseña" name="password" required="required" required="required" type="password" class="form-control" onchange="form.re_password.pattern = this.value;" value="{{ user.password }}"></div>
+						<div class="col-sm-8"><input id="pass_1" placeholder="contraseña" name="password" required="required" type="password" class="form-control" onchange="form.re_password.pattern = this.value;" value="{{ user.password }}"></div>
 					</div>
 				</div>
 				<div class="control-group">
 					<label for="" class="control-label">Repita contraseña</label>
 					<div class="controls form-group">
-						<div class="col-sm-8"><input placeholder="contraseña" name="re_password" required="required" type="password" class="form-control" value="{{ user.password }}"></div>
+						<div class="col-sm-8"><input id="pass_2" placeholder="contraseña" name="re_password"  type="password" class="form-control"  value="{{ user.password }}" required></div>
 					</div>
 				</div>
 				<style type="text/css">
@@ -50,7 +50,7 @@
 					<div class="controls form-group">
 						<div class="col-sm-8">
 							<div id="perm" name="permissions" type="" class="form-control" >
-								{% set permiso = ["acceso a api","cargar productos nuevos","vender","modificar bodegas","adminsitrar usuarios","ver informes"] %}
+								{% set permiso = ["acceso a api","cargar productos nuevos","vender","modificar bodegas","administrar usuarios","ver informes"] %}
 								{% set cnt = 0 %}
 								{% for i in range(0,len(permiso)) %} 
 									<a id="perm_top{{ i }}" class="btn-sm btn-primary btn-perm" onclick="addElementBot({{ i }})">{{ permiso[i] }}</a>
@@ -145,6 +145,55 @@ $(document).ready(function(){
 
 		return true;
 	});
+
+	var intputElements = document.getElementsByTagName("INPUT");
+    for (var i = 0; i < intputElements.length; i++) {
+        intputElements[i].oninvalid = function (e) {
+            e.target.setCustomValidity("");
+            if (!e.target.validity.valid) {
+                if (e.target.name == "re_password") {
+                    e.target.setCustomValidity("La contraseña ingresada no coincide con la anterior");
+                }
+            }
+        };
+    }
 });
+
+$('#pass_1').keyup(function(){
+        var _this = $('#pass_1');
+        var pass_1 = $('#pass_1').val();
+                _this.attr('style', 'background:white');
+        if(pass_1.charAt(0) == ' '){
+            _this.attr('style', 'background:#FF4A4A');
+        }
+ 
+        if(_this.val() == ''){
+            _this.attr('style', 'background:#FF4A4A');
+        }
+    });
+ 
+ $('#pass_2').keyup(function(){
+        var pass_1 = $('#pass_1').val();
+        var pass_2 = $('#pass_2').val();
+        var _this = $('#pass_2');
+                _this.attr('style', 'background:white');
+        if(pass_1 != pass_2 && pass_2 != ''){
+            _this.attr('style', 'background:#FF4A4A');
+        }
+    });
+
+ $('#email').keyup(function(){
+        var _this = $('#email');
+        var _email = $('#email').val();
+ 
+        var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        var valid = re.test(_email);
+ 
+        if(valid){
+            _this.attr('style', 'background:white');
+        } else {
+            _this.attr('style', 'background:#FF4A4A');
+        }
+    });
 </script>
 {% end %}

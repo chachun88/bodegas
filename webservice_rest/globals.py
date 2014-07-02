@@ -17,8 +17,8 @@ ws_port = 0
 
 
 ### reading config file
-config_file = open("../CONFIG.txt", "r")
-#config_file = open("C:\\Users\\Estefi\\Desktop\\git\\bodegas\\CONFIG.txt", "r")
+#config_file = open("../CONFIG.txt", "r")
+config_file = open("C:\\Users\\Estefi\\Desktop\\git\\bodegas\\CONFIG.txt", "r")
 config_data = config_file.read()
 
 config = {}

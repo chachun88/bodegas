@@ -7,6 +7,7 @@ from brand import Brand
 from category import Category
 
 import re
+import sys
 
 class Product(BaseModel):
 	def __init__(self):
@@ -28,6 +29,7 @@ class Product(BaseModel):
 		self._image_3 = ''
 		self._category = ''
 		self._upc = ''
+		self._price=''
 
 		self.collection = db.product
 
@@ -150,6 +152,14 @@ class Product(BaseModel):
 	def category(self, value):
 		self._category = value
 
+	@property
+	def price(self):
+	    return self._price
+	@price.setter
+	def price(self, value):
+	    self._price = value
+		
+
 	def GetCellars(self):
 		return ''
 
@@ -171,9 +181,10 @@ class Product(BaseModel):
 				"image":self.image,
 				"image_2":self.image_2,
 				"image_3":self.image_3,
-				"currency":self.currency,
+				# "currency":self.currency,
 				"category":self.category,
-				"upc":self.upc
+				"upc":self.upc,
+				"price":self.price
 			}
 
 			return rtn_data
@@ -181,10 +192,11 @@ class Product(BaseModel):
 			return self.ShowError("id: " + self.identifier + " not found")
 
 	def Save(self):
-
+ 
 		try:
 			#if Category().Exist(self.category) == False and Brand().Exist(self.brand) == False:
 			#	raise
+			print "coloooooooooooooooooor "+ self.color
 			sizes=self.size.split(',')
 			colors=self.color.split(',')
 			if len(sizes) > len(colors):
@@ -196,6 +208,33 @@ class Product(BaseModel):
 
 			## solve when sku already exists
 			if sku_count >= 1:
+				for i in range(0,len(sizes)):
+					
+					try:
+						self.collection.update({
+								"sku":self.sku
+								},{
+								"$addToSet":{
+									"size":sizes[i]
+									}
+									})
+					except Exception, e:
+						print " except "+str(e)+ " i "	+ str(i)
+						pass
+				for i in range(0,len(colors)):
+					
+					try:
+						self.collection.update({
+								"sku":self.sku
+								},{
+								"$addToSet":{
+									"color":colors[i]
+									}
+									})
+					except Exception, e:
+						print " except "+str(e)+ " i "	+ str(i)
+						pass			
+
 				self.collection.update({
 						"sku":self.sku
 						},{
@@ -204,8 +243,8 @@ class Product(BaseModel):
 							"description":self.description,
 							"brand":self.brand,
 							"manufacturer":self.manufacturer,
-							# "size":self.size,
-							# "color":self.color,
+							# "size":self.sizes,
+							# "color":self.colors,
 							"material":self.material,
 							"bullet_point_1":self.bullet_point_1,
 							"bullet_point_2":self.bullet_point_2,
@@ -213,22 +252,44 @@ class Product(BaseModel):
 							"image":self.image,
 							"image_2":self.image_2,
 							"image_3":self.image_3,
-							"currency":self.currency,
-							"category":self.category
+							# "currency":self.currency,
+							"category":self.category,
+							"price":self.price,
+							"upc":self.upc
 							}
 						})
-				for i in range(count):
-					self.collection.update({
-							"sku":self.sku
-							},{
-							"$addToSet":{
-								"size":sizes[i],
-								"color":colors[i]
-								}
-							})
+
 				self.identifier = str(self.collection.find({"sku":self.sku})[0]["_id"])
 			##solve when id is not empty
 			elif self.identifier.strip() != "":
+				for i in range(0,len(sizes)):
+					
+					try:
+						self.collection.update({
+								"sku":self.sku
+								},{
+								"$addToSet":{
+									"size":sizes[i]
+									}
+									})
+					except Exception, e:
+						print " except "+str(e)+ " i "	+ str(i)
+						pass
+				for i in range(0,len(colors)):
+					
+					try:
+						self.collection.update({
+								"sku":self.sku
+								},{
+								"$addToSet":{
+									"color":colors[i]
+									}
+									})
+					except Exception, e:
+						print " except "+str(e)+ " i "	+ str(i)
+						pass			
+
+
 				self.collection.update({
 						"_id":ObjectId(self.identifier)
 					},{
@@ -238,8 +299,8 @@ class Product(BaseModel):
 						"sku":self.sku,
 						"brand":self.brand,
 						"manufacturer":self.manufacturer,
-						# "size":self.size,
-						# "color":self.color,
+						# "size":self.sizes,
+						# "color":self.colors,
 						"material":self.material,
 						"bullet_point_1":self.bullet_point_1,
 						"bullet_point_2":self.bullet_point_2,
@@ -247,18 +308,12 @@ class Product(BaseModel):
 						"image":self.image,
 						"image_2":self.image_2,
 						"image_3":self.image_3,
-						"currency":self.currency,
-						"category":self.category
+						# "currency":self.currency,
+						"category":self.category,
+						"price":self.price,
+						"upc":self.upc
 					}})
-				for i in range(count):
-					self.collection.update({
-							"sku":self.sku
-							},{
-							"$addToSet":{
-								"size":sizes[i],
-								"color":colors[i]
-								}
-							})
+				
 			##solve when the product does not exists
 			else:
 				self.identifier = str(self.collection.save({
@@ -276,8 +331,9 @@ class Product(BaseModel):
 						"image":self.image,
 						"image_2":self.image_2,
 						"image_3":self.image_3,
-						"currency":self.currency,
-						"category":self.category
+						"category":self.category,
+						"price":self.price,
+						"upc":self.upc
 					}))
 				
 				for i in range(count):
@@ -305,16 +361,18 @@ class Product(BaseModel):
 			self.manufacturer = data[0]["manufacturer"]
 			self.size = data[0]["size"]
 			self.color = data[0]["color"]
-			self.material = data[0]["color"]
+			self.material = data[0]["material"]
 			self.bullet_point_1 = data[0]["bullet_point_1"]
 			self.bullet_point_2 = data[0]["bullet_point_2"]
 			self.bullet_point_3 = data[0]["bullet_point_3"]
 			self.image = data[0]["image"]
 			self.image_2 = data[0]["image_2"]
 			self.image_3 = data[0]["image_3"]
-			self.currency=data[0]["currency"]
+			# self.currency=data[0]["currency"]
 			self.category = data[0]["category"]
+			self.upc = data[0]["upc"]
 			self.sku = data[0]["sku"]
+			self.price = data[0]["price"]
 
 			return self.ShowSuccessMessage("product initialized")
 		return self.ShowError("product can not be initialized")
@@ -330,17 +388,21 @@ class Product(BaseModel):
 			self.manufacturer = data[0]["manufacturer"]
 			self.size = data[0]["size"]
 			self.color = data[0]["color"]
-			self.material = data[0]["color"]
+			self.material = data[0]["material"]
 			self.bullet_point_1 = data[0]["bullet_point_1"]
 			self.bullet_point_2 = data[0]["bullet_point_2"]
 			self.bullet_point_3 = data[0]["bullet_point_3"]
 			self.image = data[0]["image"]
 			self.image_2 = data[0]["image_2"]
 			self.image_3 = data[0]["image_3"]
-			self.currency=data[0]["currency"]
+			# self.currency=data[0]["currency"]
 			self.category = data[0]["category"]
+			self.upc = data[0]["upc"]
 			self.sku = data[0]["sku"]
-
+			try:
+				self.price = data[0]["price"]
+			except:
+				self.price = 0
 			return self.ShowSuccessMessage("product initialized")
 		return self.ShowError("product can not be initialized")
 

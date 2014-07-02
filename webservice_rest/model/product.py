@@ -7,6 +7,8 @@ from basemodel import BaseModel
 class Product(BaseModel):
 
 	def __init__(self):
+		self._category		= ""
+		self._upc			= ""
 		self._sku			= ""
 		self._name 			= ""
 		self._description 	= ""
@@ -33,6 +35,7 @@ class Product(BaseModel):
 			collection.update(
 				{"_id" : data[0]["_id"]},
 				{"$set" : {
+					"category"			: self.category,
 					"sku" 				: self.sku,
 					"name"  			: self.name,
 					"upc"				: self.upc,
@@ -57,6 +60,7 @@ class Product(BaseModel):
 		#save the object and return the id
 		object_id = collection.insert(
 			{
+				"category"			: self.category,
 				"sku" 				: self.sku,
 				"name"  			: self.name,
 				"upc"				: self.upc,
@@ -80,7 +84,14 @@ class Product(BaseModel):
 
 	def Search(self, query):
 		return self.collection.find({"name":"/"+query+"/i"})
-
+		
+	@property
+	def category(self):
+	    return self._category
+	@category.setter
+	def category(self, value):
+	    self._category = value
+		
 	@property
 	def sku(self):
 	    return self._sku

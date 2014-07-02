@@ -23,12 +23,20 @@ class CellarAddHandler(BaseHandler):
 		name = self.get_argument("name", "bodega sin nombre").encode("UTF-8")
 		description = self.get_argument("description", "").encode("UTF-8")
 
+
 		cellar = Cellar()
 		cellar.name = name
 		cellar.description = description
 
-		cellar.Save()
+		bodega=cellar.CellarExist(name)
+
+		if bodega == False:
+			cellar.Save()
+			self.redirect("/cellar?dn=t")
+		else:
+			self.redirect("/cellar?dn=dnt")
+
 
 		#self.write("llega")
 
-		self.redirect("/cellar?dn=t")
+		

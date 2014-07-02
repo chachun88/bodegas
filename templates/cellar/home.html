@@ -9,6 +9,11 @@
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<strong><i class="fa fa-check"></i> Bien hecho!</strong> bodega creada correctamente.
 </div>
+{% elif dn == "dnt" %}
+<div class="alert alert-success alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> No se ha guardado!</strong> bodega ya existe.
+</div>
 {% elif dn == "bpt" %}
 <div class="alert alert-success alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -103,8 +108,8 @@ $(document).ready(function(){
 	{
 		var cell = $(this);
 		var cellar_id = $(this).attr("cellar-id");
-		var message = "Realmente desea eliminar esta bodega \n"+
-					"los productos serán dejados sin bodegas";
+		var message = "¿Realmente desea eliminar esta bodega? \n"+
+					"Todos los productos de esta bodega serán eliminados";
 
 
 		if (confirm(message)) 

@@ -10,7 +10,7 @@
 			<table class="table table-striped table-images">
 				<thead>
 					<tr>
-						<th>Imágen</th>
+						<th>Imagen</th>
 						<th class="hidden-xs " >Categor&iacutea</th>
 						<th class="hidden-xs " >SKU</th>
 						<th class="" >Artículo</th>
@@ -56,14 +56,18 @@
 						<td>{{ p["bullet_point_1"] }}</td>	
 						<td>{{ p["bullet_point_2"] }}</td>	
 						<td>{{ p["bullet_point_3"] }}</td> -->
-						{% if "currency" in p %}<td class="hidden-xs">{{ p["currency"] }}</td>{% end %}
+						{% if "price" in p %}
+						<td class="hidden-xs">{{ p["price"] }}</td>
+						{% else %}
+						<td></td>
+						{% end %} 
 						<!--<td></td>
 						<td class="hidden-xs"></td>	-->					
 						<td>
 							<a class="btn btn-sm btn-primary" href="/product/edit?id={{ p["_id"] }}">
 								Editar
 							</a>
-							<a class="btn btn-sm btn-danger" href="/product/remove?id={{ p["_id"] }}" >
+							<a class="btn btn-sm btn-danger" href="/product/remove?id={{ p["_id"] }}" onclick="return confirm('¿Está seguro que desea eliminar el producto?');">
 								Eliminar
 							</a>
 						</td>
