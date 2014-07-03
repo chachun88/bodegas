@@ -140,7 +140,7 @@ class ProductAddHandler(BaseHandler):
 		prod.image_2 	= img2
 		prod.image_3 	= img3
 
-		prod.Save()
+		prod.Save("one")
 		self.redirect("/product/list")
 
 class ProductEditHandler(BaseHandler):

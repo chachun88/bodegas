@@ -118,3 +118,8 @@ class ImageHandler2(BaseHandler):
 		self.write(getIamgeBuffer(self, DEFAULT_IMAGE))
 		self.finish()
 		
+class ImageDeleteHandler(BaseHandler):
+	
+	@tornado.web.asynchronous
+	def get(self):
+		pass

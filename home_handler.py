@@ -172,62 +172,70 @@ class ProductLoadHandler(BaseHandler):
 						if i == 3 and j > 9:
 							tallas.append(sheet.cell_value(i,j))				
 
-				for i in range(nrows):	
-					matriz.append([])
-					for k in range(len(tallas)):
-						for j in range(ncols):	
+				try:			
+					for i in range(nrows):	
+						matriz.append([])
+						for k in range(len(tallas)):
+							for j in range(ncols):	
 
-							matriz[i].append(sheet.cell_value(i,j))
-							
-							try: 
-								if i > 3 and i < nrows:
-									prod.size=str(tallas[k]).split(",")
-									size=str(tallas[k])
-									if j == 0:
-										prod.category = matriz[i][j].encode('utf-8')
-									elif j == 1:
-										prod.sku = matriz[i][j].encode('utf-8')
-									elif j == 2:
-										prod.name = matriz[i][j].encode('utf-8')
-									elif j == 3:
-										prod.description = matriz[i][j].encode('utf-8')
-									elif j == 4:										
-										prod.color=matriz[i][j].encode('utf-8').split(",")
-										color=matriz[i][j].encode('utf-8')
-									elif j == 5:
-										price = str(int(matriz[i][j]))
-									elif j == 6:
-										prod.manufacturer = matriz[i][j].encode('utf-8')
-									elif j == 7:
-										cellar_name= matriz[i][j].encode('utf-8')
-									elif j == 8:
-										prod.brand = matriz[i][j].encode('utf-8')
-									elif j == 10:
-										try:
-											q = k +j
-											quantity=str(int(matriz[i][q]))
-							
-											prod.Save()
-											prod.InitWithSku(prod.sku)
-											product_id=prod.identifier
-											operation="buy"
+								matriz[i].append(sheet.cell_value(i,j))
+								
+								try: 
+									if i > 3 and i < nrows:
+										prod.size=str(tallas[k]).split(",")
+										size=str(tallas[k])
+										if j == 0:
+											prod.category = matriz[i][j].encode('utf-8')
+										elif j == 1:
+											prod.sku = matriz[i][j].encode('utf-8')
+										elif j == 2:
+											prod.name = matriz[i][j].encode('utf-8')
+										elif j == 3:
+											prod.description = matriz[i][j].encode('utf-8')
+										elif j == 4:										
+											prod.color=matriz[i][j].encode('utf-8').split(",")
+											color=matriz[i][j].encode('utf-8')
+										elif j == 5:
+											price = str(int(matriz[i][j]))
+										elif j == 6:
+											prod.manufacturer = matriz[i][j].encode('utf-8')
+										elif j == 7:
+											cellar_name= matriz[i][j].encode('utf-8')
+										elif j == 8:
+											prod.brand = matriz[i][j].encode('utf-8')
+										elif j == 10:
+											try:
+												q = k +j
+												quantity=str(int(matriz[i][q]))
+												
+												try:
+													prod.Save("masive")
+												except Exception, e:
+													print "guardaaaaaaaaaaaaaaaaar" + str(e)	
+												# prod.InitWithSku(prod.sku)
+												# product_id=prod.identifier
+												operation="buy"
 
-											#products stored for cellar
-											if cellar.CellarExist( cellar_name ):
-												cellar.InitWithName(cellar_name)
-												cellar.AddProducts(prod.sku, quantity, price, size, color, operation, self.get_user_email() )
-											else:
-												error_name = "No existe la bodega \"" + cellar_name + "\""
-												if error_name not in warnings:
-													warnings.append( error_name )
-										except:
-											pass	
+												#products stored for cellar
+												if cellar.CellarExist( cellar_name ):
+													cellar.InitWithName(cellar_name)
+													cellar.AddProducts(prod.sku, quantity, price, size, color, operation, self.get_user_email() )
+												else:
+													error_name = "No existe la bodega \"" + cellar_name + "\""
+													if error_name not in warnings:
+														warnings.append( error_name )
+											except Exception, e:
+												print str(e)
+												pass	
 
-							except:
-								dn="t3"
-								self.redirect("/product?dn="+dn + "&w=" + ",".join(warnings))
-								return
-						#product is stored
+								except Exception, e:
+									# print "jjjjjjjjjj "+str(j)+" "+str(e)
+									dn="t3"
+									self.redirect("/product?dn="+dn + "&w=" + ",".join(warnings))
+									return
+				except Exception, e:
+					print "fiiiiiiinnnnnnn "+str(j)+" "+str(e)			#product is stored
+
 
 				dn="t"
 				#self.redirect("/product?dn="+dn)

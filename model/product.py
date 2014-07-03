@@ -251,7 +251,7 @@ class Product(BaseModel):
 
 			urllib.urlopen(url)
 
-	def Save(self):
+	def Save(self, typee):
 		#siz={ 'size':[self.size] }
 		#col={ 'color':[self.color] }
 
@@ -272,7 +272,7 @@ class Product(BaseModel):
 
 		try:
 			color =  ",".join(v for v in self.color)
-			color =unicode(color, errors="ignore")
+			# color =unicode(color, errors="ignore")
 		except:
 			color = ",".join(v.encode('utf-8') for v in self.color)				
 
@@ -283,29 +283,54 @@ class Product(BaseModel):
 
 		url = self.wsurl()+"/product/add?token=" + self.token()
 
-		url += "&category=" + self.category
-		url += "&sku=" + self.sku
-		url += "&name=" + name
-		url += "&upc=" + self.upc
-		url += "&description=" + descripcion
-		url += "&brand=" + brand
-		url += "&manufacturer=" + self.manufacturer
-		url += "&size=" + ",".join(str(v) for v in self.size)
-		url += "&color=" + unicode(color, errors="ignore")
-		#url += "&material=" + self.material
-		url += "&bullet_1=" + self.bullet_1
-		url += "&bullet_2=" + self.bullet_2
-		url += "&bullet_3=" + self.bullet_3
-		# url += "&currency=" + self.currency
-		url += "&price=" + self.price
-		url += "&image=" + self.image
-		url += "&image_2=" + self.image_2
-		url += "&image_3=" + self.image_3
+		if typee == "masive":
+			url += "&category=" + unicode(self.category, errors="ignore")
+			url += "&sku=" + unicode(self.sku, errors="ignore")
+			url += "&name=" + unicode(name, errors="ignore")
+			url += "&upc=" + unicode(self.upc, errors="ignore")
+			url += "&description=" + unicode(descripcion, errors="ignore")
+			url += "&brand=" + unicode(brand, errors="ignore")
+			url += "&manufacturer=" + unicode(self.manufacturer, errors="ignore")
+			url += "&size=" + ",".join(str(v) for v in self.size)
+			url += "&color=" + unicode(color, errors="ignore")
+			#url += "&material=" + self.material
+			url += "&bullet_1=" + unicode(self.bullet_1, errors="ignore")
+			url += "&bullet_2=" + unicode(self.bullet_2, errors="ignore")
+			url += "&bullet_3=" + unicode(self.bullet_3, errors="ignore")
+			# url += "&currency=" + self.currency
+			url += "&price=" + unicode(self.price, errors="ignore")
+			url += "&image=" + unicode(self.image, errors="ignore")
+			url += "&image_2=" + unicode(self.image_2, errors="ignore")
+			url += "&image_3=" + unicode(self.image_3, errors="ignore")
 
-		url += "&id=" + self.identifier
+			url += "&id=" + self.identifier
 
-		return urllib.urlopen(url).read()
+			return urllib.urlopen(url).read()
+		else:	
 
+			#color= unicode(color, errors="ignore")
+			url += "&category=" + self.category
+			url += "&sku=" + self.sku
+			url += "&name=" + name
+			url += "&upc=" + self.upc
+			url += "&description=" + unicode(descripcion, errors="ignore")
+			url += "&brand=" + brand
+			url += "&manufacturer=" + self.manufacturer
+			url += "&size=" + ",".join(str(v) for v in self.size)
+			url += "&color=" + color
+			#url += "&material=" + self.material
+			url += "&bullet_1=" + self.bullet_1
+			url += "&bullet_2=" + self.bullet_2
+			url += "&bullet_3=" + self.bullet_3
+			# url += "&currency=" + self.currency
+			url += "&price=" + self.price
+			url += "&image=" + self.image
+			url += "&image_2=" + self.image_2
+			url += "&image_3=" + self.image_3
+
+			url += "&id=" + self.identifier
+
+			return urllib.urlopen(url).read()
 
 	def get_product_list(self):
 			
