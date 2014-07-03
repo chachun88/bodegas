@@ -99,7 +99,7 @@ class HomeHandler(BaseHandler):
 							matriz[i].append(sheet.cell_value(i,j))	
 
 					#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
-					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn, w="")
+					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn="", w="")
 
 				except ImportError:
 					pass
@@ -125,7 +125,7 @@ class HomeHandler(BaseHandler):
 							matriz[i].append(sheet.cell_value(i,j))	
 
 					#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
-					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn=dn,  w="")
+					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn="",  w="")
 
 				except ImportError:
 					pass	
@@ -207,11 +207,8 @@ class ProductLoadHandler(BaseHandler):
 											try:
 												q = k +j
 												quantity=str(int(matriz[i][q]))
-												
-												try:
-													prod.Save("masive")
-												except Exception, e:
-													print "guardaaaaaaaaaaaaaaaaar" + str(e)	
+				
+												prod.Save("masive")		
 												# prod.InitWithSku(prod.sku)
 												# product_id=prod.identifier
 												operation="buy"

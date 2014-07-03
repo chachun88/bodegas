@@ -36,6 +36,7 @@ def getIamgeBuffer(handler, image_name):
 	else:
 		## show scaled image
 		try: # detect if image exist
+
 			f = open("uploads/images/{}{}".format(wwidth, image_name), "r")
 			buff = f.read()
 			f.close()
@@ -95,11 +96,10 @@ def getIamgeBuffer(handler, image_name):
 
 class ImageHandler(BaseHandler):
 
-	@tornado.web.asynchronous
 	def get(self, image_name):
 
 		#setting headers
-		self.set_header("Content-Type", "image/png")
+		#self.set_header("Content-Type", "image/png")
 
 		millis = int(round(time.time() * 1000))
 		self.write(getIamgeBuffer(self, image_name))
@@ -113,7 +113,6 @@ class ImageHandler(BaseHandler):
 
 class ImageHandler2(BaseHandler):
 
-	@tornado.web.asynchronous
 	def get(self):
 		self.write(getIamgeBuffer(self, DEFAULT_IMAGE))
 		self.finish()

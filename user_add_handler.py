@@ -33,7 +33,11 @@ class UserAddHandler(BaseHandler):
 		usr.permissions = self.get_argument("permissions", "")
 		usr.identifier	= self.get_argument("id", "")
 
-		usr.Save()
+		if usr.permissions == "":
+			self.redirect("/user?dn=t3")
+		else:
+			usr.Save()
+			
 		self.redirect("/user?dn=t")
 
 

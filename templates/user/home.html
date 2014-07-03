@@ -16,6 +16,12 @@
 	<strong><i class="fa fa-check"></i> Usuario borrado!</strong> se ha borrado correctamente al usuario.
 </div>
 {% end %}
+{% if dn == "t3" %}
+<div class="alert alert-warning">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> No se ha guardado usuario!</strong> falta agregar permiso.
+</div>
+{% end %}
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
