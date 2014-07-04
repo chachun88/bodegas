@@ -116,9 +116,26 @@ class ImageHandler2(BaseHandler):
 	def get(self):
 		self.write(getIamgeBuffer(self, DEFAULT_IMAGE))
 		self.finish()
-		
+
 class ImageDeleteHandler(BaseHandler):
-	
-	@tornado.web.asynchronous
+
+	@tornado.web.authenticated
 	def get(self):
-		pass
+
+		image_name = self.get_argument("image_name", "")
+
+		os.chdir( "uploads/images" )
+
+		print "files"
+		for file in glob.glob("*" + image_name):
+			try:
+				os.remove( file )
+			except Exception, e:
+				print "no se elimino : {}".format( str(e) )
+				pass
+
+		os.chdir("../../")
+		
+
+		self.write("imagen eliminada")
+
