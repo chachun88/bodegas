@@ -17,4 +17,5 @@ class ProductSearchHandler(BaseHandler):
 
 		product = Product()
 
-		self.write(product.Search(query))
+		self.render("product/list.html", side_menu=self.side_menu, product_list=product.Search(query))
+

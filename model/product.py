@@ -348,9 +348,15 @@ class Product(BaseModel):
 	def Search(self, query):
 		url = self.wsurl() + "/product/search?token=" + self.token()
 		url += "&q=" + query
-		return urllib.urlopen(url).read()
+		# return urllib.urlopen(url).read()
 
+		content = urllib2.urlopen(url).read()
 
+		data = json_util.loads(content)
+
+		self.identifier = data
+		
+		return data
 
 	
 	

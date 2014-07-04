@@ -114,12 +114,13 @@
 		<div class="wrap">
 			<header class="page-header">
 				<div class="navbar">
-<!-- 					<ul class="nav navbar-nav navbar-right pull-right">
+					<ul class="nav navbar-nav navbar-right pull-right">
 						<li class="hidden-xs"><a href="/auth/login"><i class="fa fa-sign-out"></i></a></li>
 					</ul>
-					<form id="search-form" class="navbar-form pull-right" role="search">
-						<input type="search" class="search-query" placeholder="búsqueda de productos">
-					</form> -->
+					<form action="/product/search" id="search-form" class="navbar-form pull-right" role="search">
+						<input type="search" name="q" class="search-query" placeholder="búsqueda de productos">
+						<input type="submit" class="btn btn-sm btn-primary" value="Buscar">
+					</form>
 				</div>
 			</header>
 			<div class="content container">

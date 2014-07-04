@@ -420,9 +420,10 @@ class Product(BaseModel):
 
 		data = self.collection.find({"name":regx}).limit(5)
 
-		rtn_data = []
-		for d in data:
-			obj = {"key":str(d["_id"]), "value":d["name"]}
-			rtn_data.append(obj)
+		# rtn_data = []
+		# for d in data:
+		# 	obj = {"key":str(d["_id"]), "value":d["name"]}
+		# 	rtn_data.append(obj)
 
-		return rtn_data
+		# return rtn_data
+		return data
