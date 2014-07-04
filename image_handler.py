@@ -99,7 +99,7 @@ class ImageHandler(BaseHandler):
 	def get(self, image_name):
 
 		#setting headers
-		#self.set_header("Content-Type", "image/png")
+		self.set_header("Content-Type", "image/png")
 
 		millis = int(round(time.time() * 1000))
 		self.write(getIamgeBuffer(self, image_name))
