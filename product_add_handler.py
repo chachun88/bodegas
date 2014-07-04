@@ -48,6 +48,7 @@ class ProductAddHandler(BaseHandler):
 
 			open(file_path, 'wb').write(imagedata["body"])
 		except Exception, e:
+			print "herreeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 			print str(e)
 			pass
 
