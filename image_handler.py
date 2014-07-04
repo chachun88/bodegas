@@ -10,6 +10,7 @@ from PIL import Image
 import StringIO
 
 import time
+import os
 
 from basehandler import BaseHandler
 
