@@ -10,6 +10,8 @@ from PIL import Image
 import StringIO
 
 import time
+import os
+import glob
 
 from basehandler import BaseHandler
 
@@ -99,7 +101,7 @@ class ImageHandler(BaseHandler):
 	def get(self, image_name):
 
 		#setting headers
-		#self.set_header("Content-Type", "image/png")
+		self.set_header("Content-Type", "image/png")
 
 		millis = int(round(time.time() * 1000))
 		self.write(getIamgeBuffer(self, image_name))
@@ -116,9 +118,26 @@ class ImageHandler2(BaseHandler):
 	def get(self):
 		self.write(getIamgeBuffer(self, DEFAULT_IMAGE))
 		self.finish()
-		
+
 class ImageDeleteHandler(BaseHandler):
-	
-	@tornado.web.asynchronous
+
+	@tornado.web.authenticated
 	def get(self):
-		pass
+
+		image_name = self.get_argument("image_name", "")
+
+		os.chdir( "uploads/images" )
+
+		print "files"
+		for file in glob.glob("*" + image_name):
+			try:
+				os.remove( file )
+			except Exception, e:
+				print "no se elimino : {}".format( str(e) )
+				pass
+
+		os.chdir("../../")
+		
+
+		self.write("imagen eliminada")
+

@@ -251,7 +251,7 @@ class Product(BaseModel):
 
 			urllib.urlopen(url)
 
-	def Save(self, typee):
+	def Save(self, typee="other"):
 		#siz={ 'size':[self.size] }
 		#col={ 'color':[self.color] }
 
