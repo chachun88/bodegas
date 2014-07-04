@@ -8,6 +8,10 @@ Jueves 12 dic 2012
 reutilizado por chinostroza en tellmecuando
 reutilizado por estefy en bodegas
 '''
+
+import os
+
+
 debugMode = False
 
 token = "5334d6c29ec9a710f56d9ab5"
@@ -17,8 +21,11 @@ ws_port = 0
 
 
 ### reading config file
-#config_file = open("../CONFIG.txt", "r")
-config_file = open("C:\\Users\\Estefi\\Desktop\\git\\bodegas\\CONFIG.txt", "r")
+if os.name == "posix":
+    config_file = open("../CONFIG.txt", "r")
+else:
+    config_file = open("C:\\Users\\Estefi\\Desktop\\git\\bodegas\\CONFIG.txt", "r")
+
 config_data = config_file.read()
 
 config = {}
