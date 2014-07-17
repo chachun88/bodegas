@@ -152,7 +152,7 @@ class CellarEasyOutputHandler(BaseHandler):
 
 			redirect = "t"
 
-			if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, operation, self.get_user_email("user")):
+			if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, operation, self.get_user_email()):
 				self.write("ok")
 				redirect = "bpt"
 			else:
