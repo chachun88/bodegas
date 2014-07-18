@@ -11,6 +11,8 @@ from bson import json_util
 import time
 import datetime
 
+import re
+
 from salesman import Salesman
 
 class Cellar(BaseModel):
@@ -320,6 +322,28 @@ class Cellar(BaseModel):
 			str_query = '{ "$and" : [{"operation_type":"sell"},{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }]}' % ( str(oid_start), str(oid_stop) )
 			data = db.kardex.find( json_util.loads(str_query) )
 			return data
+	def FindProductKardex(self, product_sku, cellar_identifier, size):
+
+		try:
+			# str_query = '[{$match:{"product_sku":"%s", "cellar_identifier":"%s", "size":"%s.0" }},{$group:{"_id":"$operation_type", total:{$sum:"$units"}}}]' % ( str(product_sku), str(cellar_identifier), size )
+			str_query = [
+				{'$match':{'product_sku': product_sku, 'cellar_identifier':cellar_identifier, 'size':size }}
+				,
+				{'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
+				] 
+
+			eps = db.kardex.aggregate(pipeline=str_query)
+
+
+			return eps['result']
+
+			# str_query = '{"product_sku":"%s", "cellar_identifier": "%s", "size":"%s.0", "operation_type":"sell"}' % ( str(product_sku), str(cellar_identifier), size )
+			# data2 = db.kardex.find( json_util.loads(str_query)).sort("_id", -1)
+			
+			# return data2
+
+		except Exception, e:			
+			print e			
 
 	def Rename(self, new_name):
 		try:

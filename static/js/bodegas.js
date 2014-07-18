@@ -132,12 +132,28 @@
 			data: post_data,
 			success: function(response)
 			{
-				$(".mmessage").html("Se han "+ transaction +" "+ quantity +" '" + product_name + "' a la bodega '" + cellar_name + "'" );
-				$(".alert-success").show(animation_duration);
 
-				setTimeout(function() {
-					$(".alert-success").hide(animation_duration);
-				}, 3000);
+				if(response=="okok" || response=="ok"){
+					$(".tit").html("Bien hecho!")
+					$(".mmessage").html("Se han "+ transaction +" "+ quantity +" '" + product_name + "' a la bodega '" + cellar_name + "'" );
+					$(".alert-success").show(animation_duration);
+
+					setTimeout(function() {
+						$(".alert-success").hide(animation_duration);
+					}, 3000);
+				}else{
+
+					$(".tit").html("Problemas!")
+					$(".mmessage").html("Cantidad supera a existencia en bodega");	
+					$("#alert-message").removeClass("alert-success");
+					$("#alert-message").addClass("alert-warning");
+					$(".alert-warning").show(animation_duration);
+
+					setTimeout(function() {
+						$(".alert-warning").hide(animation_duration);
+					}, 3000);
+				}
+				
 			}
 		});
 

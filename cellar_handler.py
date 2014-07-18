@@ -140,25 +140,40 @@ class CellarEasyOutputHandler(BaseHandler):
 		product.InitWithId(product_id)
 		product_sku=product.sku
 
-		if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, operation, self.get_user_email()):
-			self.write("ok")
-		else:
-			self.write("no")
+		product_find =cellar.ProductKardex(product_sku, cellar_id, size)
 
-		if operation =='mov':
-			
-			cellar2 = Cellar()
-			cellar2.InitWithId(new_cellar)
+		for p in product_find:
+			if p["_id"] == "buy":
+				buy=p["total"]	
 
-			redirect = "t"
+			if p["_id"] == "sell":
+				sell=p["total"]
 
-			if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, operation, self.get_user_email()):
+		units=buy-sell		
+
+		if int(units) >= int(quantity): 
+
+			if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, operation, self.get_user_email()):
 				self.write("ok")
-				redirect = "bpt"
 			else:
 				self.write("no")
-				redirect = "bpf"
 
+			if operation =='mov':
+				
+				cellar2 = Cellar()
+				cellar2.InitWithId(new_cellar)
+
+				# redirect = "t"
+
+				if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, operation, self.get_user_email()):
+					self.write("ok")
+					redirect = "bpt"
+				else:
+					self.write("no")
+					redirect = "bpf"
+		else:
+			self.write("no")
+			redirect = "bpf"
 
 
 	## invalidate xsfr cookie for ajax use

@@ -56,6 +56,20 @@ class Cellar(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		return json_util.loads(json_string)	
 
+	def ProductKardex(self, sku, idd, size):
+
+		url = self.wsurl() + "/cellar/products/find"
+
+		url += "?token=" + self.token()
+		url += "&product_sku="+ sku
+		url += "&cellar_id="+ idd
+		url += "&size="+ size
+
+		json_string = urllib.urlopen(url).read()
+		# print "{}".format(json_string)
+		return json_util.loads(json_string)	
+
+
 	def InitWithId(self, idd):
 		url = self.wsurl() + "/cellar/find"
 		url += "?token=" + self.token()
@@ -64,7 +78,7 @@ class Cellar(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		json_data = json_util.loads(json_string)
 
-		print "{}".format(json_string)
+		# print "{}".format(json_string)
 
 		self.identifier = str(json_data["_id"])
 		self.name = json_data["name"]

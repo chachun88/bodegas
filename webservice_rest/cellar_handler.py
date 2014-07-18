@@ -174,4 +174,18 @@ class CellarExistsHandler(BaseHandler):
 		cellar_exist = Cellar.CellarExists( cellar_name )
 
 		self.write( json_util.dumps( { "exists" : cellar_exist } ) )
-		
+		pass
+
+class CellarProductFind(BaseHandler):
+	
+	def get(self):
+		if not self.ValidateToken():
+			return
+
+		cellar_id = self.get_argument("cellar_id", "")
+		product_sku = self.get_argument("product_sku", "")
+		size = self.get_argument("size", "")
+
+		cellar = Cellar()
+		self.write(json_util.dumps(cellar.FindProductKardex(product_sku, cellar_id, size)))
+		pass
