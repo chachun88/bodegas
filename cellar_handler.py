@@ -142,6 +142,9 @@ class CellarEasyOutputHandler(BaseHandler):
 
 		product_find =cellar.ProductKardex(product_sku, cellar_id, size)
 
+		buy=0
+		sell=0
+
 		for p in product_find:
 			if p["_id"] == "buy":
 				buy=p["total"]	

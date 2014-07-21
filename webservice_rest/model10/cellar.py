@@ -44,11 +44,15 @@ class Cellar(BaseModel):
 
 		for d in data:
 			#detect if product exists
-			product_data = self.db.product.find( { "sku": d["product_sku"] } )
-			if ( product_data.count() >= 1 ):
-				##validate
-				is_empty = False
+			product_data = self.db.kardex.find({"product_sku": d["product_sku"], "cellar_identifier": self.identifier}).sort("_id", -1).limit(1)
 
+			for dat in product_data:
+				
+				if int(dat["balance_units"]) >=1:
+					is_empty = False
+			# if ( product_data.count() >= 1 ):
+			# 	##validate
+			# 	is_empty = False
 		if (is_empty):
 
 			## remove permissions from user
