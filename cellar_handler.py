@@ -19,7 +19,7 @@ class CellarHandler(BaseHandler):
 	def get(self):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
-		data = Cellar().List(1, 10)
+		data = Cellar().List(1, 100)
 		self.render("cellar/home.html",side_menu=self.side_menu, data=data, dn=self.get_argument("dn", ""))
 
 
