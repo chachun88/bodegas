@@ -119,7 +119,7 @@ class CellarEasyOutputHandler(BaseHandler):
 		cellar = Cellar()
 		cellar.InitWithId(self.get_argument("id", ""))
 
-		data = Cellar().List(1, 10)
+		data = Cellar().List(1, 100)
 		self.render("cellar/easyoutput.html", cellar=cellar, products=cellar.ListProducts(), cellarList=data)
 
 	def post(self):
