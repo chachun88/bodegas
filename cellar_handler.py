@@ -19,7 +19,7 @@ class CellarHandler(BaseHandler):
 	def get(self):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
-		data = Cellar().List(1, 10)
+		data = Cellar().List(1, 100)
 		self.render("cellar/home.html",side_menu=self.side_menu, data=data, dn=self.get_argument("dn", ""))
 
 
@@ -119,7 +119,7 @@ class CellarEasyOutputHandler(BaseHandler):
 		cellar = Cellar()
 		cellar.InitWithId(self.get_argument("id", ""))
 
-		data = Cellar().List(1, 10)
+		data = Cellar().List(1, 100)
 		self.render("cellar/easyoutput.html", cellar=cellar, products=cellar.ListProducts(), cellarList=data)
 
 	def post(self):
@@ -141,6 +141,9 @@ class CellarEasyOutputHandler(BaseHandler):
 		product_sku=product.sku
 
 		product_find =cellar.ProductKardex(product_sku, cellar_id, size)
+
+		buy=0
+		sell=0
 
 		for p in product_find:
 			if p["_id"] == "buy":

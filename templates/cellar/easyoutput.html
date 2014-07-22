@@ -36,8 +36,8 @@
 						<td>{{ p["description"] }}</td>
 						<td>{{ p["brand"] }}</td>
 						<td>{{ p["manufacturer"] }}</td>
-						<td>{{ p["size"] }}</td>
-						<td>{{ p["color"] }}</td>
+						<td>{{ ", ".join(p["size"]) }}</td>
+						<td>{{ ", ".join(p["color"]) }}</td>
 						<td>{{ int(p["balance_units"]) }}</td>
 						<td>
 							<a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
