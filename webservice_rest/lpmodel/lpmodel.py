@@ -4,7 +4,7 @@
 import xml.etree.ElementTree as ET
 import os
 
-f = open ('bodegas.uml', 'r')
+f = open ('genmymodel.uml', 'r')
 file_data = f.read().replace("uml:", "uml_").replace("xmi:", "xmi_") ## translate uml to common xml
 file_data = file_data.strip()
 
