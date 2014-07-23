@@ -204,7 +204,7 @@
 			data: {load: upload},
 			success: function(response)
 			{
-				alert("Se generó excel");
+				document.location.href = "report/download/informe.csv"
 			}
 		});
 

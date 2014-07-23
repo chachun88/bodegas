@@ -96,6 +96,7 @@ class Application(tornado.web.Application):
             #report
             (r"/", ReportHandler),
             (r"/report/upload", ReportUploadHandler),
+            (r"/report/download/([^/]+)", tornado.web.StaticFileHandler, {'path': 'uploads/'}),
 
             #images
             (r"/image/([^/]+)", ImageHandler),

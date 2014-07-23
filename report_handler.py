@@ -85,7 +85,7 @@ class ReportUploadHandler(BaseHandler):
 		# print lol
 		item_length = len(tras[0])
 
-		with open('test.csv', 'wb') as test_file:
+		with open('uploads/informe.csv', 'wb') as test_file:
 			file_writer = csv.writer(test_file, delimiter=';')
 			file_writer.writerow([x for x in tit])
 			for i in range(item_length):
