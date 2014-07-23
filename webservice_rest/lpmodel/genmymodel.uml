@@ -1,0 +1,156 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_MIlHIBEBEeSTV6l4790RsQ" name="model">
+  <eAnnotations xmi:id="_MIlHIREBEeSTV6l4790RsQ" source="genmymodel">
+    <details xmi:id="_MIlHIhEBEeSTV6l4790RsQ" key="uuid" value="_PG35sBEAEeSTV6l4790RsQ"/>
+  </eAnnotations>
+  <packageImport xmi:id="_MIlHIxEBEeSTV6l4790RsQ">
+    <eAnnotations xmi:id="_MIlHJBEBEeSTV6l4790RsQ" source="genmymodel">
+      <details xmi:id="_MIlHJREBEeSTV6l4790RsQ" key="uuid" value="_r3SOsNqBEDGyLdMX9tXFiA"/>
+    </eAnnotations>
+    <importedPackage href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#/"/>
+  </packageImport>
+  <packageImport xmi:id="_MIlHJhEBEeSTV6l4790RsQ">
+    <eAnnotations xmi:id="_MIlHJxEBEeSTV6l4790RsQ" source="genmymodel">
+      <details xmi:id="_MIlHKBEBEeSTV6l4790RsQ" key="uuid" value="_r3UD4NqBEDGyLdMX9tXFiA"/>
+    </eAnnotations>
+    <importedPackage href="pathmap://GENMYMODEL_LIBRARIES/GenMyModelPrimitiveTypes.library.uml#/"/>
+  </packageImport>
+  <packagedElement xsi:type="uml:Class" xmi:id="_MIlHKREBEeSTV6l4790RsQ" name="Usuario">
+    <eAnnotations xmi:id="_MIlHKhEBEeSTV6l4790RsQ" source="genmymodel">
+      <details xmi:id="_MIlHKxEBEeSTV6l4790RsQ" key="uuid" value="_b1dOYPMuEDGHHMqrt7QFUg"/>
+    </eAnnotations>
+    <ownedAttribute xmi:id="_MIlHLBEBEeSTV6l4790RsQ" name="nombre">
+      <eAnnotations xmi:id="_MIlHLREBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHLhEBEeSTV6l4790RsQ" key="uuid" value="_w38wwPMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_MIlHLxEBEeSTV6l4790RsQ" name="apellido">
+      <eAnnotations xmi:id="_MIlHMBEBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHMREBEeSTV6l4790RsQ" key="uuid" value="_xsM4MPMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_MIlHMhEBEeSTV6l4790RsQ" name="email">
+      <eAnnotations xmi:id="_MIlHMxEBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHNBEBEeSTV6l4790RsQ" key="uuid" value="_yb0-UPMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_MIlHNREBEeSTV6l4790RsQ" name="attribute">
+      <eAnnotations xmi:id="_MIlHNhEBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHNxEBEeSTV6l4790RsQ" key="uuid" value="_zEs8MPMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_MIlHOBEBEeSTV6l4790RsQ" name="Login">
+      <eAnnotations xmi:id="_MIlHOREBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHOhEBEeSTV6l4790RsQ" key="uuid" value="_fHV14fMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+      <ownedParameter xmi:id="_MIlHOxEBEeSTV6l4790RsQ" name="returnParameter" isUnique="false" direction="return">
+        <eAnnotations xmi:id="_MIlHPBEBEeSTV6l4790RsQ" source="genmymodel">
+          <details xmi:id="_MIlHPREBEeSTV6l4790RsQ" key="uuid" value="_fHV14PMuEDGHHMqrt7QFUg"/>
+        </eAnnotations>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_MIlHPhEBEeSTV6l4790RsQ" name="Cotiza">
+      <eAnnotations xmi:id="_MIlHPxEBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHQBEBEeSTV6l4790RsQ" key="uuid" value="_f7J4cfMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+      <ownedParameter xmi:id="_MIlHQREBEeSTV6l4790RsQ" name="returnParameter" isUnique="false" direction="return">
+        <eAnnotations xmi:id="_MIlHQhEBEeSTV6l4790RsQ" source="genmymodel">
+          <details xmi:id="_MIlHQxEBEeSTV6l4790RsQ" key="uuid" value="_f7J4cPMuEDGHHMqrt7QFUg"/>
+        </eAnnotations>
+      </ownedParameter>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xsi:type="uml:Class" xmi:id="_MIlHRBEBEeSTV6l4790RsQ" name="Cotizacion">
+    <eAnnotations xmi:id="_MIlHRREBEeSTV6l4790RsQ" source="genmymodel">
+      <details xmi:id="_MIlHRhEBEeSTV6l4790RsQ" key="uuid" value="_dCY7kPMuEDGHHMqrt7QFUg"/>
+    </eAnnotations>
+  </packagedElement>
+  <packagedElement xsi:type="uml:Class" xmi:id="_MIlHRxEBEeSTV6l4790RsQ" name="Producto">
+    <eAnnotations xmi:id="_MIlHSBEBEeSTV6l4790RsQ" source="genmymodel">
+      <details xmi:id="_MIlHSREBEeSTV6l4790RsQ" key="uuid" value="_d7DB4PMuEDGHHMqrt7QFUg"/>
+    </eAnnotations>
+    <ownedAttribute xmi:id="_MIlHShEBEeSTV6l4790RsQ" name="identificador">
+      <eAnnotations xmi:id="_MIlHSxEBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHTBEBEeSTV6l4790RsQ" key="uuid" value="_03nEQPMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_MIlHTREBEeSTV6l4790RsQ" name="nombre">
+      <eAnnotations xmi:id="_MIlHThEBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHTxEBEeSTV6l4790RsQ" key="uuid" value="_10qiYPMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_MIlHUBEBEeSTV6l4790RsQ" name="ListadeProuctos">
+      <eAnnotations xmi:id="_MIlHUREBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHUhEBEeSTV6l4790RsQ" key="uuid" value="_3iGUkfMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+      <ownedParameter xmi:id="_MIlHUxEBEeSTV6l4790RsQ" name="returnParameter" isUnique="false" direction="return">
+        <eAnnotations xmi:id="_MIlHVBEBEeSTV6l4790RsQ" source="genmymodel">
+          <details xmi:id="_MIlHVREBEeSTV6l4790RsQ" key="uuid" value="_3iGUkPMuEDGHHMqrt7QFUg"/>
+        </eAnnotations>
+      </ownedParameter>
+      <ownedParameter xmi:id="_MIlHVhEBEeSTV6l4790RsQ" name="pagina" isUnique="false">
+        <eAnnotations xmi:id="_MIlHVxEBEeSTV6l4790RsQ" source="genmymodel">
+          <details xmi:id="_MIlHWBEBEeSTV6l4790RsQ" key="uuid" value="_8o_V4PMuEDGHHMqrt7QFUg"/>
+        </eAnnotations>
+        <type xsi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#//Integer"/>
+      </ownedParameter>
+      <ownedParameter xmi:id="_MIlHWREBEeSTV6l4790RsQ" name="offset" isUnique="false">
+        <eAnnotations xmi:id="_MIlHWhEBEeSTV6l4790RsQ" source="genmymodel">
+          <details xmi:id="_MIlHWxEBEeSTV6l4790RsQ" key="uuid" value="_-NcyQPMuEDGHHMqrt7QFUg"/>
+        </eAnnotations>
+        <type xsi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#//Integer"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_MIlHXBEBEeSTV6l4790RsQ" name="AgregarProducto">
+      <eAnnotations xmi:id="_MIlHXREBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHXhEBEeSTV6l4790RsQ" key="uuid" value="_5mYggfMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+      <ownedParameter xmi:id="_MIlHXxEBEeSTV6l4790RsQ" name="returnParameter" isUnique="false" direction="return">
+        <eAnnotations xmi:id="_MIlHYBEBEeSTV6l4790RsQ" source="genmymodel">
+          <details xmi:id="_MIlHYREBEeSTV6l4790RsQ" key="uuid" value="_5mYggPMuEDGHHMqrt7QFUg"/>
+        </eAnnotations>
+      </ownedParameter>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xsi:type="uml:Class" xmi:id="_MIlHYhEBEeSTV6l4790RsQ" name="Cotizador">
+    <eAnnotations xmi:id="_MIlHYxEBEeSTV6l4790RsQ" source="genmymodel">
+      <details xmi:id="_MIlHZBEBEeSTV6l4790RsQ" key="uuid" value="_jxzZ4PMuEDGHHMqrt7QFUg"/>
+    </eAnnotations>
+    <generalization xmi:id="_MIlHZREBEeSTV6l4790RsQ" general="_MIlHKREBEeSTV6l4790RsQ">
+      <eAnnotations xmi:id="_MIlHZhEBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHZxEBEeSTV6l4790RsQ" key="uuid" value="_lSyrgPMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+    </generalization>
+    <ownedOperation xmi:id="_MIlHaBEBEeSTV6l4790RsQ" name="CreaArbol">
+      <eAnnotations xmi:id="_MIlHaREBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHahEBEeSTV6l4790RsQ" key="uuid" value="_nX9BMPMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+      <ownedParameter xmi:id="_MIlHaxEBEeSTV6l4790RsQ" name="returnParameter" isUnique="false" direction="return">
+        <eAnnotations xmi:id="_MIlHbBEBEeSTV6l4790RsQ" source="genmymodel">
+          <details xmi:id="_MIlHbREBEeSTV6l4790RsQ" key="uuid" value="_nX8aIPMuEDGHHMqrt7QFUg"/>
+        </eAnnotations>
+      </ownedParameter>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xsi:type="uml:Class" xmi:id="_MIlHbhEBEeSTV6l4790RsQ" name="Administrador">
+    <eAnnotations xmi:id="_MIlHbxEBEeSTV6l4790RsQ" source="genmymodel">
+      <details xmi:id="_MIlHcBEBEeSTV6l4790RsQ" key="uuid" value="_tDBtoPMuEDGHHMqrt7QFUg"/>
+    </eAnnotations>
+    <generalization xmi:id="_MIlHcREBEeSTV6l4790RsQ" general="_MIlHKREBEeSTV6l4790RsQ">
+      <eAnnotations xmi:id="_MIlHchEBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHcxEBEeSTV6l4790RsQ" key="uuid" value="_urYykPMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+    </generalization>
+    <ownedOperation xmi:id="_MIlHdBEBEeSTV6l4790RsQ" name="AprobarCotizaciones">
+      <eAnnotations xmi:id="_MIlHdREBEeSTV6l4790RsQ" source="genmymodel">
+        <details xmi:id="_MIlHdhEBEeSTV6l4790RsQ" key="uuid" value="_vLsDQfMuEDGHHMqrt7QFUg"/>
+      </eAnnotations>
+      <ownedParameter xmi:id="_MIlHdxEBEeSTV6l4790RsQ" name="returnParameter" isUnique="false" direction="return">
+        <eAnnotations xmi:id="_MIlHeBEBEeSTV6l4790RsQ" source="genmymodel">
+          <details xmi:id="_MIlHeREBEeSTV6l4790RsQ" key="uuid" value="_vLsDQPMuEDGHHMqrt7QFUg"/>
+        </eAnnotations>
+      </ownedParameter>
+    </ownedOperation>
+  </packagedElement>
+</uml:Model>
