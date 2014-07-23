@@ -193,5 +193,23 @@
 		return false;
 	});
 
+
+	$(".cargarExcel").click(function(){
+
+		var upload = $("input[name=upload]", $(this)).val();
+
+		$.ajax({
+			url:"/report/upload" ,
+			type: "post",
+			data: {load: upload},
+			success: function(response)
+			{
+				alert("Se generó excel");
+			}
+		});
+
+	});
+
 });
+
 

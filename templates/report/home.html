@@ -6,7 +6,13 @@
 {% block body %}
 <div class="col-md-12">
 	<section class="widget">
-		<div style="float:right;"><a type="button" href="/?day=today" class="btn btn-success btn-sm">HOY</a>
+		<div style="float:right;">
+			<button type="submit" class="btn btn-primary btn-sm start cargarExcel" >
+				<i class="fa fa-upload"></i>
+				<span>Exportar a excel</span>
+				<input type="hidden" name="upload" value="{{ data }}" id="upload">
+			</button>
+			<a type="button" href="/?day=today" class="btn btn-success btn-sm">HOY</a>
 			<a type="button" href="/?day=yesterday" class="btn btn-success btn-sm">AYER  </a> 
 			<a type="button" href="#!" class="btn btn-success btn-sm btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">PERIODO</a>
 			<div class="lptooltip col-sm-2" >

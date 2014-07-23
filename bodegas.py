@@ -39,7 +39,7 @@ from cellar_remove_handler import CellarRemoveHandler
 from user_handler import UserHandler, UserRemoveHandler
 from user_add_handler import UserAddHandler, UserEditHandler
 
-from report_handler import ReportHandler
+from report_handler import ReportHandler, ReportUploadHandler
 
 from image_handler import ImageHandler, ImageHandler2, ImageDeleteHandler
 
@@ -95,6 +95,7 @@ class Application(tornado.web.Application):
 
             #report
             (r"/", ReportHandler),
+            (r"/report/upload", ReportUploadHandler),
 
             #images
             (r"/image/([^/]+)", ImageHandler),

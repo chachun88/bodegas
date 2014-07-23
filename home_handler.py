@@ -397,7 +397,7 @@ class ProductMassiveOutputHandler(BaseHandler):
 								elif j == 5:
 									price_sell = str(int(matriz[i][j]))										
 								elif j == 6:
-									prod.manufacturer = matriz[i][j].encode('utf-8')
+									prod.manufacturer = matriz[i][j].encode('utf-8')	
 								elif j == 8:
 									cellar_name= matriz[i][j].encode('utf-8')
 								elif j == 9:

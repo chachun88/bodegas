@@ -196,7 +196,7 @@ class Product(BaseModel):
 		try:
 			#if Category().Exist(self.category) == False and Brand().Exist(self.brand) == False:
 			#	raise
-			print "coloooooooooooooooooor "+ self.color
+			# print "coloooooooooooooooooor "+ self.color
 			sizes=self.size.split(',')
 			colors=self.color.split(',')
 			if len(sizes) > len(colors):
