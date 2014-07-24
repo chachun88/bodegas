@@ -23,7 +23,7 @@
 <div class="col-md-7">
 	<section class="widget">
 		<div class="body">
-			<form action="/product/add" class="form-horizontal label-left" method="post" enctype="multipart/form-data">
+			<form action="/product/add" id="product-form" class="form-horizontal label-left" method="post" enctype="multipart/form-data">
 				<fieldset>
 				{% if tit == "edit" %}
 					<legend class="section">Editar Producto</legend>
@@ -39,19 +39,19 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">SKU</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="SKU" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}"></div>
+							<div class="col-sm-8"><input placeholder="SKU" id="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}" required></div>
 						</div>
 					</div>
 					<div class="control-group">
 						<label class="control-label" for="prefix">Artículo</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Artículo" name="upc" type="text" class="form-control" value="{{ product.upc }}"></div>
+							<div class="col-sm-8"><input placeholder="Artículo" id="upc" name="upc" type="text" class="form-control" value="{{ product.upc }}" required></div>
 						</div>
 					</div>
 					<div class="control-group">
 						<label class="control-label" for="prefix">Nombre</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Nombre" name="name" required="required" type="text" class="form-control" value="{{ product.name }}"></div>
+							<div class="col-sm-8"><input placeholder="Nombre" id="name" name="name" required="required" type="text" class="form-control" value="{{ product.name }}" required></div>
 						</div>
 					</div>
 					<div class="control-group">
@@ -63,27 +63,27 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">Tallas</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Escriba las tallas separadas por coma (,)" name="size" required="required" type="text" class="form-control" value="{{ ",".join(product.size) }}"></div>
+							<div class="col-sm-8"><input placeholder="Escriba las tallas separadas por coma (,)" id="size" name="size" required="required" type="text" class="form-control" value="{{ ",".join(product.size) }}"></div>
 						</div>
 					</div>
 					<div class="control-group">
 						<label class="control-label" for="prefix">Combinación</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Escriba los colores separados por coma (,)" name="color" type="text" class="form-control" value="{{ ",".join(product.color) }}"></div>
+							<div class="col-sm-8"><input placeholder="Escriba los colores separados por coma (,)" id="colors" name="color" type="text" class="form-control" value="{{ ",".join(product.color) }}" required></div>
 						</div>
 					</div>
 					{% try %}
 					<div class="control-group">
 						<label class="control-label" for="prefix">Precio de compra</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Precio de compra" name="price" type="number" min="0" class="form-control" value="{{ product.price }}"></div>
+							<div class="col-sm-8"><input placeholder="Precio de compra" name="price" type="number" step="any" min="1" class="form-control" value="{{ product.price }}" required></div>
 						</div>
 					</div>
 					{% except %}
 						<div class="control-group">
 							<label class="control-label" for="prefix">Precio de compra</label>
 							<div class="controls form-group">
-								<div class="col-sm-8"><input placeholder="Precio de compra" name="price" type="number" min="0"  class="form-control" value="0"></div>
+								<div class="col-sm-8"><input placeholder="Precio de compra" id="price" name="price" type="number" step="any" min="1"  class="form-control" value="0" required></div>
 							</div>
 						</div>
 					{% end %}
@@ -249,6 +249,8 @@
 						file.val("");
 					});
 			});
+
+
 		});
 </script>
 

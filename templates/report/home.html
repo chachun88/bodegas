@@ -31,12 +31,12 @@
 							<div class="controls form-group">
 								<div class="col-sm-12">
 									<input type="date" required="required" name="until" placeholder="dd-mm-aaaa" autocomplete="off" class="form-control"></div>
-								</div>
-							</div>
+								</div>								
+						</div>
 
-							<div class="form-actions">
-								<button type="submit" class="btn btn-primary">Buscar</button>
-							</div>
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary">Buscar</button>
+						</div>
 						</fieldset>
 						<input type="hidden" name="day" value="period" />
 					</form>
@@ -75,7 +75,7 @@
 						<td>{{ p["sell_price"] }}</td>
 						{% except %}
 						{% end %}
-						<td>{{ p["units"] }}</td>
+						<td>{{ int(p["units"]) }}</td>
 						{% try %}
 						<td>{{ int(p["sell_price"]) * int(p["units"])}}</td>
 						{% except %}

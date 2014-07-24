@@ -166,6 +166,8 @@
 		var until = $("input[name=until]", $(this)).val();
 		var day = $("input[name=day]", $(this)).val();
 
+		alert(from)
+
 		var post_data = {
 			"from":from,
 			"until":until,
@@ -209,6 +211,110 @@
 		});
 
 	});
+
+	$("#product-form").submit(function(){
+
+		var sku = $("input[name=sku]", $(this)).val();
+		var upc = $("input[name=upc]", $(this)).val();//artículo
+		var name = $("input[name=name]", $(this)).val();
+		var size = $("input[name=size]", $(this)).val();
+		var color = $("input[name=color]", $(this)).val();
+		var price = $("input[name=price]", $(this)).val();
+
+		//sku
+		var espacios=false;
+		var cont = 0;
+		var esp=0;
+
+		while (!espacios && (cont < sku.length)) {
+			if (sku.charAt(cont) == " ")
+				esp++;
+			cont++;
+		}
+
+		if (sku.length == esp){
+			alert ("Falta ingresar SKU");
+			return false;
+		}
+
+		//upc(artículo)
+		cont = 0;
+		esp=0;
+
+		while (!espacios && (cont < upc.length)) {
+			if (upc.charAt(cont) == " ")
+				esp++;
+			cont++;
+		}
+
+		if (upc.length == esp){
+			alert ("Falta ingresar artículo");
+			return false;
+		}
+
+		//name
+		cont = 0;
+		esp=0;
+
+		while (!espacios && (cont < name.length)) {
+			if (name.charAt(cont) == " ")
+				esp++;
+			cont++;
+		}
+
+		if (name.length == esp){
+			alert ("Falta ingresar nombre");
+			return false;
+		}
+
+		//size
+		cont = 0;
+		esp=0;
+
+		while (!espacios && (cont < size.length)) {
+			if (size.charAt(cont) == " ")
+				esp++;
+			cont++;
+		}
+
+		if (size.length == esp){
+			alert ("Falta ingresar talla");
+			return false;
+		}
+
+		//color
+		cont = 0;
+		esp=0;
+
+		while (!espacios && (cont < color.length)) {
+			if (color.charAt(cont) == " ")
+				esp++;
+			cont++;
+		}
+
+		if (color.length == esp){
+			alert ("Falta ingresar combinación");
+			return false;
+		}
+
+		//price
+		cont = 0;
+		esp=0;
+
+		while (!espacios && (cont < price.length)) {
+			if (price.charAt(cont) == " ")
+				esp++;
+			cont++;
+		}
+
+		if (price.length == esp){
+			alert ("Falta ingresar precio de compra");
+			return false;
+		}
+
+		return true
+	});
+
 
 });
 
