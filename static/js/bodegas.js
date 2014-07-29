@@ -166,8 +166,6 @@
 		var until = $("input[name=until]", $(this)).val();
 		var day = $("input[name=day]", $(this)).val();
 
-		alert(from)
-
 		var post_data = {
 			"from":from,
 			"until":until,

@@ -256,9 +256,33 @@ class ProductRemoveHandler(BaseHandler):
 
 		prod = Product()
 		prod.InitWithId(self.get_argument("id", ""))
-		prod.Remove()		
+		print "skuuuuuuuuuuuuuu " + prod.sku 
 
-		self.redirect("/product/list")
+		cellar_id="remove"
+		size="remove"
+
+		cellar = Cellar()		
+		product_find =cellar.ProductKardex(prod.sku, cellar_id, size)
+
+		buy=0
+		sell=0
+
+		for p in product_find:
+			if p["_id"] == "buy":
+				buy=p["total"]	
+
+			if p["_id"] == "sell":
+				sell=p["total"]
+
+		units=buy-sell	
+
+		if units > 0:
+			self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=prod.get_product_list())	
+		else:
+			prod.Remove()	
+
+			self.render("product/list.html", dn="bpt", side_menu=self.side_menu, product_list=prod.get_product_list())
+			#self.redirect("/product/list")
 
 class ProductOutHandler(BaseHandler):
 
