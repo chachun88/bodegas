@@ -329,22 +329,36 @@ class Cellar(BaseModel):
 	def FindProductKardex(self, product_sku, cellar_identifier, size):
 
 		try:
-			# str_query = '[{$match:{"product_sku":"%s", "cellar_identifier":"%s", "size":"%s.0" }},{$group:{"_id":"$operation_type", total:{$sum:"$units"}}}]' % ( str(product_sku), str(cellar_identifier), size )
-			str_query = [
-				{'$match':{'product_sku': product_sku, 'cellar_identifier':cellar_identifier, 'size':size }}
-				,
-				{'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
-				] 
 
-			eps = db.kardex.aggregate(pipeline=str_query)
+			if cellar_identifier == "remove" and size == "remove":
+				str_query = [
+					{'$match':{'product_sku': product_sku}}
+					,
+					{'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
+					] 
+
+				eps = db.kardex.aggregate(pipeline=str_query)
 
 
-			return eps['result']
+				return eps['result']
 
-			# str_query = '{"product_sku":"%s", "cellar_identifier": "%s", "size":"%s.0", "operation_type":"sell"}' % ( str(product_sku), str(cellar_identifier), size )
-			# data2 = db.kardex.find( json_util.loads(str_query)).sort("_id", -1)
-			
-			# return data2
+			else:	
+				# str_query = '[{$match:{"product_sku":"%s", "cellar_identifier":"%s", "size":"%s.0" }},{$group:{"_id":"$operation_type", total:{$sum:"$units"}}}]' % ( str(product_sku), str(cellar_identifier), size )
+				str_query = [
+					{'$match':{'product_sku': product_sku, 'cellar_identifier':cellar_identifier, 'size':size }}
+					,
+					{'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
+					] 
+
+				eps = db.kardex.aggregate(pipeline=str_query)
+
+
+				return eps['result']
+
+				# str_query = '{"product_sku":"%s", "cellar_identifier": "%s", "size":"%s.0", "operation_type":"sell"}' % ( str(product_sku), str(cellar_identifier), size )
+				# data2 = db.kardex.find( json_util.loads(str_query)).sort("_id", -1)
+				
+				# return data2
 
 		except Exception, e:			
 			print e			

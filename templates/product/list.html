@@ -5,6 +5,18 @@
 
 {% block body %}
 
+{% if dn == "bpf" %}
+<div class="alert alert-warning alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Problema al eliminar producto!</strong> aún quedan productos en bodega.
+</div>
+{% elif dn == "bpt" %}
+<div class="alert alert-success alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado producto.
+</div>
+{% end %}
+
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">

@@ -27,4 +27,4 @@ class ProductListHandler(BaseHandler):
 
 		product = Product()
 
-		self.render("product/list.html", side_menu=self.side_menu, product_list=product.get_product_list())
+		self.render("product/list.html", dn="", side_menu=self.side_menu, product_list=product.get_product_list())
