@@ -97,9 +97,9 @@ class ProductAddHandler(BaseHandler):
 			image_name=''
 		'''
 
-		img1 = "{}_{}.png".format( 0, self.get_argument("sku", "") )
-		img2 = "{}_{}.png".format( 1, self.get_argument("sku", "") )
-		img3 = "{}_{}.png".format( 2, self.get_argument("sku", "") )
+		img1 = "{}_{}.png".format( 0, self.get_argument("sku", "").encode('utf-8') )
+		img2 = "{}_{}.png".format( 1, self.get_argument("sku", "").encode('utf-8') )
+		img3 = "{}_{}.png".format( 2, self.get_argument("sku", "").encode('utf-8') )
 
 		if ( "image" in self.request.files ):
 			img1 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
@@ -136,13 +136,13 @@ class ProductAddHandler(BaseHandler):
 
 				prod.category 	= self.get_argument("category", "")
 				prod.sku 		= self.get_argument("sku", "")
-				prod.name		= self.get_argument("name", "")
+				prod.name		= self.get_argument("name", "").encode('utf-8')
 				prod.upc		= self.get_argument("upc", "")
 				prod.description= self.get_argument("description", "")
 				prod.brand 		= self.get_argument("brand", "")
 				prod.manufacturer= self.get_argument("manufacturer", "")
-				prod.size 		= self.get_argument("size", "").split(",")
-				prod.color 		= self.get_argument("color", "").split(",")
+				prod.size 		= self.get_argument("size", "").split(",").encode('utf-8')
+				prod.color 		= self.get_argument("color", "").split(",").encode('utf-8')
 				prod.material 	= self.get_argument("material", "")
 				prod.bullet_1 	= self.get_argument("bullet_1", "")
 				prod.bullet_2 	= self.get_argument("bullet_2", "")

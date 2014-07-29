@@ -308,15 +308,21 @@ class Product(BaseModel):
 			return urllib.urlopen(url).read()
 		else:	
 
+			try:
+				size =  ",".join(v for v in self.size)
+				# color =unicode(color, errors="ignore")
+			except:
+				size = ",".join(v.encode('utf-8') for v in self.size)	
+
 			#color= unicode(color, errors="ignore")
-			url += "&category=" + self.category
-			url += "&sku=" + self.sku
-			url += "&name=" + name
+			url += "&category=" + self.category.decode('utf-8')
+			url += "&sku=" + self.sku.decode('utf-8')
+			url += "&name=" + name.decode('utf-8')
 			url += "&upc=" + self.upc
-			url += "&description=" + unicode(descripcion, errors="ignore")
+			url += "&description=" + descripcion.decode('utf-8')
 			url += "&brand=" + brand
 			url += "&manufacturer=" + self.manufacturer
-			url += "&size=" + ",".join(str(v) for v in self.size)
+			url += "&size=" + size
 			url += "&color=" + color
 			#url += "&material=" + self.material
 			url += "&bullet_1=" + self.bullet_1
@@ -324,13 +330,13 @@ class Product(BaseModel):
 			url += "&bullet_3=" + self.bullet_3
 			# url += "&currency=" + self.currency
 			url += "&price=" + self.price
-			url += "&image=" + self.image
-			url += "&image_2=" + self.image_2
-			url += "&image_3=" + self.image_3
+			url += "&image=" + self.image.decode('utf-8')
+			url += "&image_2=" + self.image_2.decode('utf-8')
+			url += "&image_3=" + self.image_3.decode('utf-8')
 
 			url += "&id=" + self.identifier
 
-			return urllib.urlopen(url).read()
+			return urllib.urlopen(url.encode('utf-8')).read()
 
 	def get_product_list(self):
 			
