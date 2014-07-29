@@ -16,6 +16,7 @@ from model.product import Product
 from bson import json_util
 
 class CellarHandler(BaseHandler):
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
@@ -24,6 +25,7 @@ class CellarHandler(BaseHandler):
 
 
 class CellarOutputHandler(BaseHandler):
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
@@ -37,6 +39,7 @@ class CellarOutputHandler(BaseHandler):
 
 		self.render("cellar/output.html", operation="Salidas", opp="out", side_menu=self.side_menu, cellar=cellar, data=data, product=product)
 
+	@tornado.web.authenticated
 	def post(self):
 		name = self.get_argument("name", "")
 		price = self.get_argument("price", "0")
@@ -72,6 +75,7 @@ class CellarOutputHandler(BaseHandler):
 
 
 class CellarEasyInputHandler(BaseHandler):
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
@@ -80,6 +84,7 @@ class CellarEasyInputHandler(BaseHandler):
 
 		self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar, products=Product().get_product_list())
 	
+	@tornado.web.authenticated
 	def post(self):
 		cellar_id = self.get_argument("cellar_id", "")
 		product_sku = self.get_argument("product_sku", "")
@@ -113,6 +118,8 @@ class CellarEasyInputHandler(BaseHandler):
 #### easy output #####
 ######################
 class CellarEasyOutputHandler(BaseHandler):
+
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
@@ -122,6 +129,7 @@ class CellarEasyOutputHandler(BaseHandler):
 		data = Cellar().List(1, 100)
 		self.render("cellar/easyoutput.html", cellar=cellar, products=cellar.ListProducts(), cellarList=data)
 
+	@tornado.web.authenticated
 	def post(self):
 		cellar_id = self.get_argument("cellar_id", "")
 		product_id = self.get_argument("product_id", "")
@@ -189,6 +197,8 @@ class CellarEasyOutputHandler(BaseHandler):
 #### cellar input ####
 ######################
 class CellarInputHandler(BaseHandler):
+
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
@@ -197,6 +207,7 @@ class CellarInputHandler(BaseHandler):
 
 		self.render("cellar/input.html",operation="Entradas ", opp="in", cellar=cellar)
 
+	@tornado.web.authenticated
 	def post(self):
 		name = self.get_argument("name", "")
 		price = self.get_argument("price", "0")
@@ -230,6 +241,7 @@ class CellarInputHandler(BaseHandler):
 		self.redirect("/cellar?dn=" + redirect)
 
 class CellarDetailHandler(BaseHandler):
+	@tornado.web.authenticated
 	def get(self):
 
 		idd = self.get_argument("id", "")
@@ -240,15 +252,18 @@ class CellarDetailHandler(BaseHandler):
 
 		self.render("cellar/detail.html", side_menu=self.side_menu, cellar=cellar)
 
+	@tornado.web.authenticated
 	def post(self):
 
 		pass
 
 class CellarComboboxHandler(BaseHandler):	
 
+	@tornado.web.authenticated
 	def get(self):
 		pass
 
+	@tornado.web.authenticated
 	def post(self):
 		
 		product_id = self.get_argument("product_id", "")

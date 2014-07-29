@@ -1,9 +1,16 @@
 {% extends "../base.html" %}
 
 {% block title %}Agregar {% end %}
-{% block caption %}agrega una nueva bodega{% end %}
+{% block caption %}
+{% if "modificar bodegas" in ",".join(current_user.permissions) %}
+	agrega una nueva bodega
+{% else %}
+	sección no autorizada
+{% end %}
+{% end %}
 
 {% block body %}
+{% if "modificar bodegas" in ",".join(current_user.permissions) %}
 <div class="col-md-7">
 	<section class="widget">
 		<form action="" class="form-horizontal label-left" method="post" action="/cellar/add" enctype="multipart/form-data">
@@ -30,4 +37,12 @@
 		</form>
 	</section>
 </div>
+{% else %}
+<div class="col-md-12">
+	<section class="widget">
+		<div style="float:right;">
+		</div>
+	</section>
+</div>
+{% end %}
 {% end %}

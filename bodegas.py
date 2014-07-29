@@ -130,7 +130,6 @@ class Application(tornado.web.Application):
                                         {"class":"", "name":Menu.USUARIOS_LISTAR, "link":"/user"},
                                         {"class":"", "name":Menu.USUARIOS_AGREGAR, "link":"/user/add"}
                                         ]},
-                        
                         {"class":"panel", "name":Menu.SALIR, "icon":"sign-out", "link":"/auth/login"},]
 
 

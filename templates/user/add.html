@@ -1,10 +1,17 @@
 {% extends "../base.html" %}
 
 {% block title %}Agregar {% end %}
-{% block caption %}agrega un nuevo usuario{% end %}
+{% block caption %}
+	{% if "administrar usuarios" in ",".join(current_user.permissions) %}
+	agrega un nuevo usuario
+	{% else %}
+	sección no autorizada
+	{% end %}
+{% end %}
 
 
 {% block body %}
+{% if "administrar usuarios" in ",".join(current_user.permissions) %}
 <div class="col-md-7">
 	<section class="widget">
 		<form action="/user/add" class="form-horizontal label-left" method="post" id="user-form" enctype="multipart/form-data">
@@ -220,4 +227,12 @@ $('#pass_1').keyup(function(){
 
 
 </script>
+{% else %}
+<div class="col-md-12">
+	<section class="widget">
+		<div style="float:right;">
+		</div>
+	</section>
+</div>
+{% end %}
 {% end %}

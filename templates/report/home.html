@@ -1,9 +1,16 @@
 {% extends "../base.html" %}
 
 {% block title %}Informe de bodegas {% end %}
-{% block caption %}muestra las salidas realizadas{% end %}
 
+{% block caption %}
+	{% if "ver informes" in ",".join(current_user.permissions) %}
+		muestra las salidas realizadas
+	{% else %}
+		sección no autorizada
+	{% end %}
+{% end %}
 {% block body %}
+{% if "ver informes" in ",".join(current_user.permissions) %}
 <div class="col-md-12">
 	<section class="widget">
 		<div style="float:right;">
@@ -96,4 +103,12 @@
 	</div>
 	</section>
 </div>
+{% else %}
+<div class="col-md-12">
+	<section class="widget">
+		<div style="float:right;">
+		</div>
+	</section>
+</div>
+{% end %}
 {% end %}

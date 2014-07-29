@@ -13,6 +13,8 @@ from model.user import User
 from globals import Menu
 
 class UserHandler(BaseHandler):
+
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.USUARIOS_LISTAR)
 
@@ -25,6 +27,7 @@ class UserHandler(BaseHandler):
 
 class UserRemoveHandler(BaseHandler):
 	
+	@tornado.web.authenticated
 	def get(self):
 		usr = User()
 		usr.InitWithId(self.get_argument("id", ""))

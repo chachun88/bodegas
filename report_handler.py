@@ -18,6 +18,7 @@ class ReportHandler(BaseHandler):
 
 	data=[]
 
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.INFORMES_POR_BODEGA)
 		global data
@@ -34,6 +35,7 @@ class ReportHandler(BaseHandler):
 		product = Product().get_product_list()
 		self.render("report/home.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar)
 
+	@tornado.web.authenticated
 	def post(self):
 		global data
 		day = self.get_argument("day", "")
@@ -50,9 +52,11 @@ class ReportHandler(BaseHandler):
 		pass		
 
 class ReportUploadHandler(BaseHandler):
+	@tornado.web.authenticated
 	def get(self):
 		pass
 
+	@tornado.web.authenticated
 	def post(self):
 
 		load = self.get_argument("load", "")

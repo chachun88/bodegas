@@ -34,7 +34,7 @@ class ProductAddHandler(BaseHandler):
 
 	load="new"	
 
-	#@tornado.web.authenticated
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.PRODUCTOS_CARGA) #change menu active item
 
@@ -58,6 +58,7 @@ class ProductAddHandler(BaseHandler):
 		return final_name
 
 
+	@tornado.web.authenticated
 	def post(self):
 
 		

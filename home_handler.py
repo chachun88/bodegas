@@ -138,9 +138,11 @@ class HomeHandler(BaseHandler):
 
 
 class ProductLoadHandler(BaseHandler):
+	@tornado.web.authenticated
 	def get(self):
 		pass
 
+	@tornado.web.authenticated
 	@tornado.web.asynchronous
 	@tornado.gen.engine
 	def post(self):	
@@ -249,6 +251,7 @@ class ProductLoadHandler(BaseHandler):
 
 class ProductRemoveHandler(BaseHandler):
 	
+	@tornado.web.authenticated
 	def get(self):
 
 		prod = Product()
@@ -259,6 +262,7 @@ class ProductRemoveHandler(BaseHandler):
 
 class ProductOutHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.PRODUCTOS_SALIDA_MASIVA) #change menu active item
 
@@ -266,6 +270,7 @@ class ProductOutHandler(BaseHandler):
 
 		self.render("product/out.html", side_menu=self.side_menu, dn=dn)
 
+	@tornado.web.authenticated
 	@tornado.web.asynchronous
 	@tornado.gen.engine
 	def post(self):
@@ -336,9 +341,12 @@ class ProductOutHandler(BaseHandler):
 			self.render("product/out.html", side_menu=self.side_menu, dn=dn)
 
 class ProductMassiveOutputHandler(BaseHandler):
+
+	@tornado.web.authenticated
 	def get(self):
 		pass
 
+	@tornado.web.authenticated
 	@tornado.web.asynchronous
 	@tornado.gen.engine
 	def post(self):

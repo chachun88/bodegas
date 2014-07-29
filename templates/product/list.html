@@ -65,12 +65,16 @@
 						<!--<td></td>
 						<td class="hidden-xs"></td>	-->					
 						<td>
+							{% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
 							<a class="btn btn-sm btn-primary" href="/product/edit?id={{ p["_id"] }}">
 								Editar
 							</a>
 							<a class="btn btn-sm btn-danger" href="/product/remove?id={{ p["_id"] }}" onclick="return confirm('¿Está seguro que desea eliminar el producto?');">
 								Eliminar
 							</a>
+							{% else %}
+							-
+							{% end %}
 						</td>
 					</tr>
 					{% end %}
