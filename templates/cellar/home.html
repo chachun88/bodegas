@@ -51,7 +51,13 @@
 				<tbody>
 					{% for p in data %}
 					<tr>
-						<td><a href="/cellar/detail?id={{ str(p['_id']) }}">{{ p["name"] }}</a></td>
+						<td>
+							{% if p["name"] in ",".join(current_user.permissions) %}
+							<a href="/cellar/detail?id={{ str(p['_id']) }}">{{ p["name"] }}</a>
+							{% else %}
+							{{ p["name"] }}
+							{% end %}
+						</td>
 						<td>{{ p["description"] }}</td>
 						<!--
 						<td>-</td>
@@ -60,19 +66,31 @@
 						<td>{{ p["total_units"] }}</td>
 						<td>{{ MoneyFormat(p["total_price"]) }}</td>
 						<td>
+							{% if "modificar bodegas" in ",".join(current_user.permissions) %}
 							<button type="button" cellar-id="{{ str(p['_id']) }}" class="btn btn-danger btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-danger .btn-sm">
 								Eliminar
 							</button>
+							{% else %}
+							-
+							{% end %}
 						</td>
 						<td>
+							{% if p["name"] in ",".join(current_user.permissions) %}
 							<a type="button" href="/cellar/easyinput?id={{ str(p['_id']) }}" cellar-id="{{ str(p['_id']) }}" class="btn btn-success btn-sm" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
 								Entrada Fácil
 							</a>
+							{% else %}
+							-
+							{% end %}
 						</td>
 						<td>
+							{% if p["name"] in ",".join(current_user.permissions) %}
 							<a type="button" href="/cellar/easyoutput?id={{ str(p['_id']) }}" cellar-id="{{ str(p['_id']) }}" class="btn btn-success btn-sm" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
 								Salida Fácil
 							</a>
+							{% else %}
+							-
+							{% end %}
 						</td>
 						<!--
 						<td>

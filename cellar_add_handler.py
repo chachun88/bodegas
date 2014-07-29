@@ -14,10 +14,12 @@ from basehandler import BaseHandler
 from model.cellar import Cellar
 
 class CellarAddHandler(BaseHandler):
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.BODEGAS_AGREGAR) #change menu active item
 		self.render("cellar/add.html", side_menu=self.side_menu)
 
+	@tornado.web.authenticated
 	def post(self):
 
 		name = self.get_argument("name", "bodega sin nombre").encode("UTF-8")

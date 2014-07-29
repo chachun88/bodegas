@@ -7,7 +7,6 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from basehandler import BaseHandler
 from globals import token
 from globals import webservice_url
 

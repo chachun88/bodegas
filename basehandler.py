@@ -6,6 +6,7 @@ Created on 13/12/2012
 import tornado.web
 from lputils import MoneyFormat
 from bson import json_util
+from model.user import User
 #from loadingplay.multilang.lang import lpautoSelectCurrentLang
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -75,9 +76,17 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def render(self, template_name ,**kwargs):
 
+        ## loading current_user
+        user = User()
+        try:
+            user.InitWithEmail( self.get_current_user() )
+        except:
+            pass
+
         # global vars
         kwargs["MoneyFormat"] = MoneyFormat
         kwargs["side_menu"] = self.side_menu
+        kwargs["current_user"] = user
 
         ## overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)

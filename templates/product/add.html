@@ -10,13 +10,18 @@
 {% end %}
 
 {% block caption %}
-	{% if tit == "edit" %}
-		permite editar un producto en el maestro de productos 
-	{% elif tit == "add" %}
-		permite agregar un producto al maestro de productos
+	{% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+		{% if tit == "edit" %}
+			permite editar un producto en el maestro de productos 
+		{% elif tit == "add" %}
+			permite agregar un producto al maestro de productos
+		{% end %}
+	{% else %}
+		sección no autorizada
 	{% end %}
 {% end %}			
 {% block body %}
+{% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
 {% if dn == "bpf" %}
 <div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -262,5 +267,12 @@
 
 		});
 </script>
-
+{% else %}
+<div class="col-md-12">
+	<section class="widget">
+		<div style="float:right;">
+		</div>
+	</section>
+</div>
+{% end %}
 {% end %}

@@ -204,7 +204,7 @@
 			data: {load: upload},
 			success: function(response)
 			{
-				document.location.href = "report/download/informe.csv"
+				document.location.href = "/report/download/informe.csv"
 			}
 		});
 

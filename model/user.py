@@ -9,7 +9,7 @@ import tornado.web
 import urllib
 import urllib2
 
-from basehandler import BaseHandler
+#from basehandler import BaseHandler
 from bson import json_util
 
 from model.base_model import BaseModel

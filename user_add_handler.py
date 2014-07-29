@@ -14,6 +14,7 @@ from model.cellar import Cellar
 
 class UserAddHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.USUARIOS_AGREGAR)
 
@@ -22,6 +23,7 @@ class UserAddHandler(BaseHandler):
 
 		self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
 
+	@tornado.web.authenticated
 	def post(self):
 
 		usr = User()
@@ -43,6 +45,7 @@ class UserAddHandler(BaseHandler):
 
 class UserEditHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.USUARIOS_AGREGAR)
 		
