@@ -358,8 +358,10 @@ class Product(BaseModel):
 		
 		return data
 
-	
-	
-	
-	
-	
+	# def ProductExist( self, product_sku ):
+	# 	url = self.wsurl() + "/product/exists?token=" + self.token()
+
+	# 	url += "&sku=" + product_sku
+
+	# 	json_string = urllib.urlopen( url ).read()
+	# 	return json_util.loads( json_string )[ "exists" ]	

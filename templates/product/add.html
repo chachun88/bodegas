@@ -16,10 +16,13 @@
 		permite agregar un producto al maestro de productos
 	{% end %}
 {% end %}			
-
-
 {% block body %}
-
+{% if dn == "bpf" %}
+<div class="alert alert-warning alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Problema al agregar productos!</strong> SKU ya existe.
+</div>
+{% end %}
 <div class="col-md-7">
 	<section class="widget">
 		<div class="body">
@@ -39,7 +42,13 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">SKU</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="SKU" id="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}" required></div>
+							<div class="col-sm-8">
+							{% if tit == "edit" %}
+							<input placeholder="SKU" id="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}" disabled>
+							{% else %}
+							<input placeholder="SKU" id="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}" required>
+							{% end %}
+							</div>
 						</div>
 					</div>
 					<div class="control-group">
