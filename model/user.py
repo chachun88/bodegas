@@ -139,7 +139,12 @@ class User(BaseModel):
 		url += "&name=" + self.name + "%20" + self.surname
 		url += "&password=" + self.password
 		url += "&email=" + self.email
-		url += "&permissions=" + urllib.quote ( self.permissions.encode("utf8") )
+
+
+		if type(self.permissions) == list:
+			url += "&permissions=" + urllib.quote ( ",".join(self.permissions).encode("utf8") )
+		else:
+			url += "&permissions=" + urllib.quote ( self.permissions.encode("utf8") )
 		url += "&id=" + self.identifier
 
 		#url = urllib.urlencode(url)

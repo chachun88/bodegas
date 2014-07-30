@@ -12,6 +12,7 @@ from globals import Menu
 from basehandler import BaseHandler
 
 from model.cellar import Cellar
+from model.user import User
 
 class CellarAddHandler(BaseHandler):
 	@tornado.web.authenticated
@@ -34,11 +35,22 @@ class CellarAddHandler(BaseHandler):
 
 		if bodega == False:
 			cellar.Save()
+
+			## trying to add current cellar permissions to current user
+			try:
+				user = User()
+				user.InitWithEmail( self.get_current_user() )
+
+				self.write(cellar.name)
+
+				if cellar.name not in user.permissions:
+					user.permissions.append( cellar.name )
+					user.Save()
+
+			except Exception, e:
+				self.write("exception : {}".format( e ) )
+
 			self.redirect("/cellar?dn=t")
 		else:
 			self.redirect("/cellar?dn=dnt")
-
-
-		#self.write("llega")
-
 		

@@ -48,6 +48,7 @@ class BaseHandler(tornado.web.RequestHandler):
         # detecto el lenguage del navegador del usuario
         #lpautoSelectCurrentLang(self)
     
+    ''' @return current user email '''
     def get_current_user(self):
         user_json = self.get_secure_cookie("user")        
         if not user_json: return None
