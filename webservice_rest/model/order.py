@@ -7,119 +7,172 @@ from basemodel import BaseModel
 
 class Order(BaseModel):
 
-	def __init__():
-		self._salesman		= ""
-		self._customer		= ""
-		self._subtotal		= ""
-		self._discount		= ""
-		self._iva			= ""
-		self._total 		= ""
-		self._address		= ""
-		self._town			= ""
-		self._city			= ""
+    def __init__():
+        self._id                     = ""
+        self._date                   = ""
+        self._type                   = ""
+        self._salesman               = ""
+        self._customer               = ""
+        self._subtotal               = ""
+        self._discount               = ""
+        self._tax                    = ""
+        self._total                  = ""
+        self._address                = ""
+        self._town                   = ""
+        self._city                   = ""
+        self._source                 = ""
+        self._country                = ""
+        self._items_quantity         = ""
+        self._product_quantity       = ""
+        self._state                  = ""
 
-	def Save(self, collection):
-		
-		# validate contrains
-		object_id = collection.insert({
-			"salesman" : self.salesman,
-			"customer" : self.customer,
-			"subtotal" : self.subtotal,
-			"discount" : self.discount,
-			"iva" : self.iva,
-			"total" : self.total,
-			"address" : self.address,
-			"town" : self.town,
-			"city" : self.city 
-			})
+    def Save(self, collection):
+        
+        # validate contrains
+        object_id = collection.insert({
+            "id": self.id,
+            "date": self.date,
+            "source": self.source,
+            "country": self.country,
+            "items_quantity": self.items_quantity,
+            "product_quantity": self.product_quantity,
+            "state": self.state,
+            "salesman" : self.salesman,
+            "customer" : self.customer,
+            "subtotal" : self.subtotal,
+            "discount" : self.discount,
+            "tax" : self.tax,
+            "total" : self.total,
+            "address" : self.address,
+            "town" : self.town,
+            "city" : self.city 
+            })
 
-		return str(object_id)
+        return str(object_id)
 
-	def Edit():
-		# validate contrains
+    def ChangeState(self, id, state):
 
-		# collection.update(
-		# 		{"_id" : self.identifier},
-		# 		{"$set" : {
-		# 			"codigo_proveedor" : self.codigo_proveedor,
-		# 			"codigo_interno" : self.codigo_interno,
-		# 			"nombre"  : self.nombre,
-		# 			"precio" : self.precio,
-		# 			"stock" : self.stock,
-		# 			"discount" : self.discount,
-		# 			"estado" : self.estado,
-		# 			"marca" : self.marca,
-		# 			"familia" : self.familia,
-		# 			"descripcion" : self.descripcion	
-		# 		}})
+        try:
+            collection.update(
+                  {"id" : id},
+                  {"$set" : {
+                      "state" : state
+                    }
+                  })
+            return "ok"
+        except Exception, e:
+            return str(e)
 
+    @property
+    def salesman(self):
+        return self._salesman
+    @salesman.setter
+    def salesman(self, value):
+        self._salesman = value
+        
+    @property
+    def customer(self):
+        return self._customer
+    @customer.setter
+    def customer(self, value):
+        self._customer = value
+    
+    @property
+    def subtotal(self):
+        return self._subtotal
+    @subtotal.setter
+    def subtotal(self, value):
+        self._subtotal = value
 
-		# return str(object_id)
+    @property
+    def discount(self):
+        return self._discount
+    @discount.setter
+    def discount(self, value):
+        self._discount = value
+    
+    @property
+    def tax(self):
+        return self._tax
+    @tax.setter
+    def tax(self, value):
+        self._tax = value
+    
+    @property
+    def total(self):
+        return self._total
+    @total.setter
+    def total(self, value):
+        self._total = value
+    
+    @property
+    def address(self):
+        return self._address
+    @address.setter
+    def address(self, value):
+        self._address = value
+    
+    @property
+    def town(self):
+        return self._town
+    @town.setter
+    def town(self, value):
+        self._town = value
+    
+    @property
+    def city(self):
+        return self._city
+    @city.setter
+    def city(self, value):
+        self._city = value
 
-		return self.identifier
+    @property
+    def date(self):
+        return self._date
+    @date.setter
+    def date(self, value):
+        self._date = value
 
-	@property
-	def salesman(self):
-	    return self._salesman
-	@salesman.setter
-	def salesman(self, value):
-	    self._salesman = value
-		
-	@property
-	def customer(self):
-	    return self._customer
-	@customer.setter
-	def customer(self, value):
-	    self._customer = value
-	
-	@property
-	def subtotal(self):
-	    return self._subtotal
-	@subtotal.setter
-	def subtotal(self, value):
-	    self._subtotal = value
+    property
+    def type(self):
+        return self._type
+    @type.setter
+    def type(self, value):
+        self._type = value
+    
+    property
+    def source(self):
+        return self._source
+    @source.setter
+    def source(self, value):
+        self._source = value
 
-	@property
-	def discount(self):
-	    return self._discount
-	@discount.setter
-	def discount(self, value):
-	    self._discount = value
-	
-	@property
-	def iva(self):
-	    return self._iva
-	@iva.setter
-	def iva(self, value):
-	    self._iva = value
-	
-	@property
-	def total(self):
-	    return self._total
-	@total.setter
-	def total(self, value):
-	    self._total = value
-	
-	@property
-	def address(self):
-	    return self._address
-	@address.setter
-	def address(self, value):
-	    self._address = value
-	
-	@property
-	def town(self):
-	    return self._town
-	@town.setter
-	def town(self, value):
-	    self._town = value
-	
-	@property
-	def city(self):
-	    return self._city
-	@city.setter
-	def city(self, value):
-	    self._city = value
+    property
+    def country(self):
+        return self._country
+    @country.setter
+    def country(self, value):
+        self._country = value
 
+    property
+    def items_quantity(self):
+        return self._items_quantity
+    @items_quantity.setter
+    def items_quantity(self, value):
+        self._items_quantity = value
+    
+    property
+    def product_quantity(self):
+        return self._product_quantity
+    @product_quantity.setter
+    def product_quantity(self, value):
+        self._product_quantity = value
 
-	
+    property
+    def state(self):
+        return self._state
+    @state.setter
+    def state(self, value):
+        self._state = value
+    
+    
