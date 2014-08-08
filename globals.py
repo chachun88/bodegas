@@ -87,7 +87,11 @@ class Menu:
     USUARIOS_AGREGAR = "Agregar usuario"
     # sub_menu
 
+    PEDIDOS = "Pedidos"
 
+    # sub_menu 
+    PEDIDOS_LISTA = "Lista de pedidos"
+    # end sub_menu
 
     SALIR = "Salir"
 

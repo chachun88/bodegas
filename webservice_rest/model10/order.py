@@ -2,66 +2,10 @@
 
 from bson import json_util
 from bson.objectid import ObjectId
-from basemodel import BaseModel
+from basemodel import BaseModel, db
 
 
 class Order(BaseModel):
-
-    def __init__():
-        self._id                     = ""
-        self._date                   = ""
-        self._type                   = ""
-        self._salesman               = ""
-        self._customer               = ""
-        self._subtotal               = ""
-        self._discount               = ""
-        self._tax                    = ""
-        self._total                  = ""
-        self._address                = ""
-        self._town                   = ""
-        self._city                   = ""
-        self._source                 = ""
-        self._country                = ""
-        self._items_quantity         = ""
-        self._product_quantity       = ""
-        self._state                  = ""
-
-    def Save(self, collection):
-        
-        # validate contrains
-        object_id = collection.insert({
-            "id": self.id,
-            "date": self.date,
-            "source": self.source,
-            "country": self.country,
-            "items_quantity": self.items_quantity,
-            "product_quantity": self.product_quantity,
-            "state": self.state,
-            "salesman" : self.salesman,
-            "customer" : self.customer,
-            "subtotal" : self.subtotal,
-            "discount" : self.discount,
-            "tax" : self.tax,
-            "total" : self.total,
-            "address" : self.address,
-            "town" : self.town,
-            "city" : self.city 
-            })
-
-        return str(object_id)
-
-    def ChangeState(self, id, state):
-
-        try:
-            collection.update(
-                  {"id" : id},
-                  {"$set" : {
-                      "state" : state
-                    }
-                  })
-            return "ok"
-        except Exception, e:
-            return str(e)
 
     @property
     def salesman(self):
@@ -133,46 +77,107 @@ class Order(BaseModel):
     def date(self, value):
         self._date = value
 
-    property
+    @property
     def type(self):
         return self._type
     @type.setter
     def type(self, value):
         self._type = value
     
-    property
+    @property
     def source(self):
         return self._source
     @source.setter
     def source(self, value):
         self._source = value
 
-    property
+    @property
     def country(self):
         return self._country
     @country.setter
     def country(self, value):
         self._country = value
 
-    property
+    @property
     def items_quantity(self):
         return self._items_quantity
     @items_quantity.setter
     def items_quantity(self, value):
         self._items_quantity = value
     
-    property
+    @property
     def product_quantity(self):
         return self._product_quantity
     @product_quantity.setter
     def product_quantity(self, value):
         self._product_quantity = value
 
-    property
+    @property
     def state(self):
         return self._state
     @state.setter
     def state(self, value):
         self._state = value
-    
-    
+
+    def __init__(self):
+        self.collection              = db.order
+        self._id                     = ""
+        self._date                   = ""
+        self._type                   = ""
+        self._salesman               = ""
+        self._customer               = ""
+        self._subtotal               = ""
+        self._discount               = ""
+        self._tax                    = ""
+        self._total                  = ""
+        self._address                = ""
+        self._town                   = ""
+        self._city                   = ""
+        self._source                 = ""
+        self._country                = ""
+        self._items_quantity         = ""
+        self._product_quantity       = ""
+        self._state                  = ""
+
+    def GetOrderById(self, id):
+
+        order = self.collection.find_one({"id":id})
+
+        return order
+
+    def Save(self):
+        
+        # validate contrains
+        object_id = self.collection.insert({
+            "id": self.id,
+            "date": self.date,
+            "source": self.source,
+            "country": self.country,
+            "items_quantity": self.items_quantity,
+            "product_quantity": self.product_quantity,
+            "state": self.state,
+            "salesman" : self.salesman,
+            "customer" : self.customer,
+            "subtotal" : self.subtotal,
+            "discount" : self.discount,
+            "tax" : self.tax,
+            "total" : self.total,
+            "address" : self.address,
+            "town" : self.town,
+            "city" : self.city 
+            })
+
+        return str(object_id)
+
+    def ChangeState(self, id, state):
+
+        try:
+            self.collection.update(
+                  {"id" : id},
+                  {"$set" : {
+                      "state" : state
+                    }
+                  })
+            return "ok"
+        except Exception, e:
+            return str(e)

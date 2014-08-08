@@ -85,8 +85,7 @@ class Application(tornado.web.Application):
             (r"/order/find",            order_handler.GetOrderHandler),
             (r"/order/list",            order_handler.ListOrderHandler),
 
-            (r"/order-detail/add",      order_detail_handler.OrderDetailHandler),
-            (r"/order-detail/edit",     order_detail_handler.OrderDetailHandler),
+            (r"/order-detail/save",     order_detail_handler.AddOrderDetailHandler),
             (r"/order-detail/remove",   order_detail_handler.RemoveOrderDetailHandler),
             (r"/order-detail/find",     order_detail_handler.GetOrderDetailHandler),
             (r"/order-detail/list",     order_detail_handler.ListOrderDetailHandler),

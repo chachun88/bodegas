@@ -33,6 +33,8 @@ from cellar_handler import CellarDetailHandler, CellarComboboxHandler
 from cellar_handler import CellarEasyInputHandler
 from cellar_handler import CellarEasyOutputHandler
 
+from order_handler import OrderHandler, AddOrderHandler
+
 from cellar_add_handler import CellarAddHandler
 from cellar_remove_handler import CellarRemoveHandler
 
@@ -43,6 +45,8 @@ from report_handler import ReportHandler, ReportUploadHandler
 
 from image_handler import ImageHandler, ImageHandler2, ImageDeleteHandler
 
+from order_detail_handler import AddOrderDetailHandler
+
 #something
 define("port", default=port, help="run on the given port", type=int)
 
@@ -51,7 +55,7 @@ class Application(tornado.web.Application):
 
 
         settings = dict(
-            blog_title=u"Pricecom",
+            blog_title=u"Bodegas",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             xsrf_cookies=True,
@@ -87,6 +91,14 @@ class Application(tornado.web.Application):
             (r"/cellar/detail", CellarDetailHandler),
             (r"/cellar/combobox", CellarComboboxHandler),
 
+            # order
+            (r"/order/list", OrderHandler),
+            (r"/order/save", AddOrderHandler),
+            # (r"/order/find", OrderHandler),
+
+            #order_detail
+            (r"/order-detail/save", AddOrderDetailHandler),
+
             # user
             (r"/user", UserHandler),
             (r"/user/add", UserAddHandler),
@@ -119,6 +131,10 @@ class Application(tornado.web.Application):
                                         {"class":"", "name":Menu.PRODUCTOS_SALIDA_MASIVA, "link":"/product/out"},
                                         {"class":"", "name":Menu.PRODUCTOS_CARGA, "link":"/product/add"},
                                         {"class":"", "name":Menu.PRODUCTOS_LISTA, "link":"/product/list"}
+                                        ]},
+                        {"class":"panel", "name":Menu.PEDIDOS, "icon":"home", "link":"/order", 
+                            "sub_menu":[
+                                        {"class":"", "name":Menu.PEDIDOS_LISTA, "link":"/order/list"}
                                         ]},
                         {"class":"panel", "name":Menu.BODEGAS, "icon":"table", "link":"/",
                             "sub_menu":[

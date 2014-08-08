@@ -1,0 +1,99 @@
+{% extends "../base.html" %}
+
+{% block title %}Listado de productos {% end %}
+{% block caption %}se muestra una lista general de todos los productos{% end %}
+
+{% block body %}
+
+{% if dn == "bpf" %}
+<div class="alert alert-warning alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Problema al eliminar producto!</strong> aún quedan productos en bodega.
+</div>
+{% elif dn == "bpt" %}
+<div class="alert alert-success alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado producto.
+</div>
+{% end %}
+
+<div class="col-md-12">
+	<section class="widget">
+		<div class="body">
+			<table class="table table-striped table-images">
+				<thead>
+					<tr>
+						<th></th>
+						<th>ID</th>
+						<th>Fecha</th>
+						<th>Cliente</th>
+						<th>Tipo</th>
+						<th>Origen</th>
+						<th>Direcci&oacute;n</th>
+						<th>Comuna</th>
+						<th>Ciudad</th>
+						<th>Pa&iacute;s</th>
+						<th>Cantidad Items</th>
+						<th>Cantidad Productos</th>
+						<th>Total</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for p in pedidos %}
+					<tr>
+						<td>
+							<input type="checkbox" name="pedidos" class="iCheck">
+						</td>
+						<td>
+							{{p["id"]}}
+						</td>
+						<td>
+							{{p["date"]}}
+						</td>
+						<td>
+							{{p["customer"]}}
+						</td>
+						<td>
+							{{p["type"]}}
+						</td>
+						<td>
+							{{p["source"]}}
+						</td>
+						<td>
+							{{p["address"]}}
+						</td>
+						<td>
+							{{p["town"]}}
+						</td>
+						<td>
+							{{p["city"]}}
+						</td>
+						<td>
+							{{p["country"]}}
+						</td>
+						<td>
+							{{p["items_quantity"]}}
+						</td>
+						<td>
+							{{p["product_quantity"]}}
+						</td>
+						<td>
+							{{p["total"]}}
+						</td>
+						<td>
+							{{p["state"]}}
+						</td>
+						<td>
+							<button type="button" class="btn btn-primary" onclick="location.href='/order/find?id={{p['id']}}'">Ver Detalle</button>
+						</td>
+					</tr>
+					{% end %}
+				</tbody>
+			</table>
+		</div>
+	</section>
+</div>
+
+{% end %}

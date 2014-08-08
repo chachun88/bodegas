@@ -10,21 +10,23 @@ reutilizado por estefy en bodegas
 '''
 
 import os
+import pymongo
 
-
-debugMode = False
+debugMode = True
 
 token = "5334d6c29ec9a710f56d9ab5"
 webservice_url = "http://localhost"
 port = 0
 ws_port = 0
 
+db = None
+
 
 ### reading config file
 if os.name == "posix":
     config_file = open("../CONFIG.txt", "r")
 else:
-    config_file = open("C:\\Users\\Estefi\\Desktop\\git\\bodegas\\CONFIG.txt", "r")
+    config_file = open("C:\\Users\\YiChun\\Documents\\bodegas\\CONFIG.txt", "r")
 
 config_data = config_file.read()
 
@@ -60,6 +62,14 @@ if (debugMode):
 else:
     port = config["PORT"]
     ws_port = config["WS_PORT"]
+
+
+if debugMode:
+    connection  = pymongo.Connection("loadingplay.com", 27017)
+    db = connection.dev_market_tab
+else:
+    connection  = pymongo.Connection("localhost", 27017)
+    db = connection.market_tab
 
 webservice_url += ":" + ws_port
 

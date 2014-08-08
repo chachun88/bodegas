@@ -3,7 +3,7 @@
 from model.order_detail import OrderDetail
 from base_handler import BaseHandler
 
-class OrderDetailHandler(BaseHandler):
+class AddOrderDetailHandler(BaseHandler):
 	def get(self):
 		
 		#validate access token
@@ -13,14 +13,12 @@ class OrderDetailHandler(BaseHandler):
 		#instantiate order detail
 		order_detail = OrderDetail()
 
-		order_detail.header		= self.TryGetParam("header", "")
-		order_detail.product	= self.TryGetParam("product", "")
-		order_detail.quantity 	= self.TryGetParam("quantity", "")
-		order_detail.discount 	= self.TryGetParam("discount","")
-		order_detail.net 		= self.TryGetParam("net", "")
-		order_detail.total 		= self.TryGetParam("total", "")
+		order_detail.id_order	= self.get_argument("id_order", "")
+		order_detail.quantity 	= self.get_argument("quantity", "")
+		order_detail.product_id = self.get_argument("product_id","")
+		order_detail.total 		= self.get_argument("total", "")
 
-		oid = order_detail.Save(self.db.order_details)
+		oid = order_detail.Save()
 
 		self.write(oid)
 

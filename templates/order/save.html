@@ -1,0 +1,72 @@
+{% extends "../base.html" %}
+
+
+{% block title %}
+	{% if mode == "edit" %}
+		Editar Detalle Pedido 
+	{% elif mode == "add" %}
+		Agregar Detalle Pedido
+	{% end %}
+{% end %}
+
+{% block caption %}
+	{% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+		{% if mode == "edit" %}
+			permite editar un detalle para un pedido
+		{% elif mode == "add" %}
+			permite agregar un detalle para un pedido
+		{% end %}
+	{% else %}
+		sección no autorizada
+	{% end %}
+{% end %}			
+{% block body %}
+{% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+{% if dn == "bpf" %}
+<div class="alert alert-warning alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Problema al agregar productos!</strong> SKU ya existe.
+</div>
+{% end %}
+<div class="col-md-7">
+	<section class="widget">
+		<div class="body">
+			<form action="/order/save" class="form-horizontal label-left" method="post" enctype="multipart/form-data">
+				<fieldset>
+				{% if mode == "edit" %}
+					<legend class="section">Editar Detalle Pedido</legend>
+				{% elif mode == "add"  %}
+					<legend class="section">Agregar Detalle Pedido</legend>
+				{% end %}
+					<div class="control-group">
+						<label class="control-label" for="prefix"></label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="" name="" type="text" class="form-control" value="{{}}"></div>
+						</div>
+					</div>
+					
+				</fieldset>
+				<div class="form-actions">
+					
+				{% if mode == "edit" %}
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				{% elif mode == "add"  %}
+					<button type="submit" class="btn btn-primary">Validar y agregar</button>
+				{% end %}
+					<button type="reset" class="btn btn-default">Cancelar</button>
+				</div>
+				{% raw xsrf_form_html() %}
+			</form>
+		</div>
+	</section>
+</div>
+
+{% else %}
+<div class="col-md-12">
+	<section class="widget">
+		<div style="float:right;">
+		</div>
+	</section>
+</div>
+{% end %}
+{% end %}
