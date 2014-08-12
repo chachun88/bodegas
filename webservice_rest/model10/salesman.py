@@ -10,10 +10,19 @@ class Salesman(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
 		self.collection = db.salesman
+		self._salesman_id = ''
 		self._name = ''
 		self._password = '' 
 		self._email = ''
 		self._permissions = []
+
+	@property
+	def salesman_id(self):
+	    return self._salesman_id
+	@salesman_id.setter
+	def salesman_id(self, value):
+	    self._salesman_id = value
+	
 
 	@property
 	def name(self):
@@ -50,7 +59,8 @@ class Salesman(BaseModel):
 			"name":self.name,
 			"email":self.email,
 			"password":self.password,
-			"permissions":self.permissions
+			"permissions":self.permissions,
+			"salesman_id":self.salesman_id
 		}
 
 	def Remove(self):
@@ -81,6 +91,7 @@ class Salesman(BaseModel):
 				self.email 		= email
 				self.identifier = str(data[0]["_id"])
 				self.permissions= data[0]["permissions"]
+				self.id         = data[0]["salesman_id"]
 
 				return self.ShowSuccessMessage("user initialized")
 			else:
@@ -98,6 +109,7 @@ class Salesman(BaseModel):
 				self.email 		= data[0]["email"]
 				self.identifier = str(data[0]["_id"])
 				self.permissions=  data[0]["permissions"]
+				self.id         = data[0]["salesman_id"]
 
 				return self.ShowSuccessMessage("user initialized")
 			else:
@@ -125,6 +137,9 @@ class Salesman(BaseModel):
 		try:
 			# validate identifier
 			data = self.collection.find({"email" : self.email})
+
+			new_id = db.seq.find_and_modify(query={'seq_name':'salesman_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True)["id"]
+
 			if data.count() >= 1:
 
 				self.identifier = str(self.collection.update(
@@ -141,6 +156,7 @@ class Salesman(BaseModel):
 			#save the object and return the id
 			object_id = self.collection.insert(
 				{
+				"salesman_id": new_id,
 				"name" 		: self.name,
 				"password"  : self.password,
 				"email"  	: self.email,

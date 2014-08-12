@@ -146,10 +146,12 @@ class Order(BaseModel):
         return order
 
     def Save(self):
+
+        new_id = db.seq.find_and_modify(query={'seq_name':'order_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True)["id"]
         
         # validate contrains
         object_id = self.collection.insert({
-            "id": self.id,
+            "id": new_id,
             "date": self.date,
             "source": self.source,
             "country": self.country,

@@ -25,11 +25,20 @@ class User(BaseModel):
 		self._password = ""
 		self._permissions = ""
 		self._identifier = ""
+		self._salesman_id = ""
 
 
 	####################
 	### Class fields ###
 	####################
+
+	@property
+	def salesman_id(self):
+	    return self._salesman_id
+	@salesman_id.setter
+	def salesman_id(self, value):
+	    self._salesman_id = value
+	
 
 	@property
 	def identifier(self):
@@ -103,6 +112,7 @@ class User(BaseModel):
 			self.password = data["password"]
 			self.permissions = data["permissions"]
 			self.email = data["email"]
+			self.salesman_id = data["salesman_id"]
 		except:
 			pass
 
@@ -121,6 +131,7 @@ class User(BaseModel):
 		self.password = data["password"]
 		self.permissions = data["permissions"]
 		self.email = data["email"]
+		self.salesman_id = data["salesman_id"]
 
 	def Remove(self):
 

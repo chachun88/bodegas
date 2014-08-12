@@ -54,11 +54,11 @@ class OrderDetail(BaseModel):
 		#save the object and return the id
 
 
-		new_id = db.seq.find_and_modify(query={'seq_name':'order_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True)["id"]
+		new_id = db.seq.find_and_modify(query={'seq_name':'order_detail_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True)["id"]
 
 		object_id = self.collection.insert(
 			{
-			"id":self.id,
+			"id":new_id,
 			"id_order":self.order_id,
 			"quantity":self.quantity,
 			"product_id":self.product_id,
