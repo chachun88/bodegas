@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 import urllib
 
@@ -150,8 +150,24 @@ class Order(BaseModel):
     def Save(self):
         url = self.wsurl() + "/order/add"
         url += "?token=" + self.token()
-        url += "&name=" + self.name
-        url += "&description=" + self.description
+        url += "&date=" + self.date.isoformat()
+        url += "&type=" + self.type
+        url += "&salesman=" + self.salesman
+        url += "&customer=" + self.customer
+        url += "&subtotal=" + self.subtotal
+        url += "&discount=" + self.discount
+        url += "&tax=" + self.tax
+        url += "&total=" + self.total
+        url += "&address=" + self.address
+        url += "&town=" + self.town
+        url += "&city=" + self.city
+        url += "&source=" + self.source
+        url += "&country=" + self.country
+        url += "&items_quantity=" + self.items_quantity
+        url += "&product_quantity" + self.product_quantity
+        url += "&state=" + self.state
+
+        # url.encode("utf-8")
 
         return urllib.urlopen(url).read()
 
