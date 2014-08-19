@@ -7,6 +7,30 @@ from bson import json_util
 from base_handler import BaseHandler
 from datetime import datetime
 
+class ChangeStateHandler(BaseHandler):
+
+    def get(self):
+        # validate access token
+        if not self.ValidateToken():
+            return
+
+        ids = self.get_argument("ids","")
+        state = self.get_argument("state","")
+
+        if ids == "":
+            self.write("Debe seleccionar al menos un pedido")
+            return
+
+        values = ids.split(",")
+
+        _v = []
+
+        for v in values:
+            _v.append(int(v))
+
+        order = Order()
+        order.ChangeStateOrders(_v,state)
+
 
 class AddOrderHandler(BaseHandler):
     
@@ -76,7 +100,7 @@ class RemoveOrderHandler(BaseHandler):
             return
 
         order = Order()
-        order.RemoveById(self.TryGetParam("id", ""), self.db.orders)
+        order.DeleteOrders(self.get_argument("id", ""))
 
 
 class GetOrderHandler(BaseHandler):

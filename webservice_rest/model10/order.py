@@ -4,6 +4,7 @@
 from bson import json_util
 from bson.objectid import ObjectId
 from basemodel import BaseModel, db
+from order_detail import OrderDetail
 
 
 class Order(BaseModel):
@@ -176,15 +177,12 @@ class Order(BaseModel):
 
         return str(object_id)
 
-    def ChangeState(self, id, state):
+    def DeleteOrders(self,ids):
+        self.collection.remove({"id":{"$in":ids}})
 
-        try:
-            self.collection.update(
-                  {"id" : id},
-                  {"$set" : {
-                      "state" : state
-                    }
-                  })
-            return "ok"
-        except Exception, e:
-            return str(e)
+    def ChangeStateOrders(self,ids,state):
+        print ids
+        self.collection.update({"id":{"$in":ids}},{"$set":{"state":state}},multi=True)
+        od = OrderDetail()
+        for i in ids:
+            od.Remove(i)

@@ -95,20 +95,20 @@ class OrdersActionsHandler(BaseHandler):
 
         if accion == ACCIONES_ACEPTAR:
             try:
-                order.changeStateOrders(_v,ESTADO_ACEPTADO)
+                order.ChangeStateOrders(_v,ESTADO_ACEPTADO)
                 self.write("ok")
             except Exception,e:
                 self.write(str(e))
 
         elif accion == ACCIONES_ELIMINAR:
             try:
-                order.deleteOrders(_v)
+                order.Remove(_v)
                 self.write("ok")
             except Exception,e:
                 self.write(str(e))
         elif accion == ACCIONES_DESPACHADO:
             try:
-                order.changeStateOrders(_v,ESTADO_DESPACHADO)
+                order.ChangeStateOrders(_v,ESTADO_DESPACHADO)
                 self.write("ok")
             except Exception,e:
                 self.write(str(e))

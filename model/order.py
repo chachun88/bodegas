@@ -6,6 +6,10 @@ import urllib
 from model.base_model import BaseModel
 from bson import json_util
 
+ACCIONES_ELIMINAR = 1
+ACCIONES_ACEPTAR = 2
+ACCIONES_DESPACHADO = 3
+
 class Order(BaseModel):
 
     @property
@@ -171,10 +175,10 @@ class Order(BaseModel):
 
         return urllib.urlopen(url).read()
 
-    def Remove(self):
+    def Remove(self, _id):
         url = self.wsurl() + "/order/remove"
         url += "?token=" + self.token()
-        url += "&id=" + self.identifier
+        url += "&id=" + _id
 
         return urllib.urlopen(url).read()
 
@@ -214,5 +218,12 @@ class Order(BaseModel):
         json_string = urllib.urlopen(url).read()
         print json_string
         return json_util.loads(json_string)
-    
+
+    def ChangeStateOrders(self,ids,state):
+
+        url = self.wsurl() + "/order/changestate"
+        url += "?token=" + self.token()
+        url += "&ids={}".format(ids)
+        url += "&state={}".format(state)
+
     
