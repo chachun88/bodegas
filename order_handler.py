@@ -17,6 +17,14 @@ from datetime import datetime
 
 from bson import json_util
 
+ACCIONES_ELIMINAR = 1
+ACCIONES_ACEPTAR = 2
+ACCIONES_DESPACHADO = 3
+
+ESTADO_PAGADO = 0
+ESTADO_ACEPTADO = 1
+ESTADO_DESPACHADO = 2
+
 class OrderHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -63,3 +71,49 @@ class AddOrderHandler(BaseHandler):
         oid = order.Save()
 
         self.write(oid)
+
+class OrdersActionsHandler(BaseHandler):
+
+    @tornado.web.authenticated
+    def post(self):
+
+        order=Order()
+
+        valores = self.get_argument("values","")
+        accion = int(self.get_argument("action",0))
+
+        if valores == "":
+            self.write("Debe seleccionar al menos un pedido")
+            return
+
+        values = valores.split(",")
+
+        _v = []
+
+        for v in values:
+            _v.append(int(v))
+
+        if accion == ACCIONES_ACEPTAR:
+            try:
+                order.changeStateOrders(_v,ESTADO_ACEPTADO)
+                self.write("ok")
+            except Exception,e:
+                self.write(str(e))
+
+        elif accion == ACCIONES_ELIMINAR:
+            try:
+                order.deleteOrders(_v)
+                self.write("ok")
+            except Exception,e:
+                self.write(str(e))
+        elif accion == ACCIONES_DESPACHADO:
+            try:
+                order.changeStateOrders(_v,ESTADO_DESPACHADO)
+                self.write("ok")
+            except Exception,e:
+                self.write(str(e))
+        else:
+            self.write("Debe seleccionar una acción")
+
+    def check_xsrf_cookie(self):
+        pass
