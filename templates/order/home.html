@@ -2,7 +2,9 @@
 
 {% block title %}Listado de productos {% end %}
 {% block caption %}se muestra una lista general de todos los productos{% end %}
-
+{% block javascript %}
+<script type="text/javascript" src="/static/js/order_list.js"></script>
+{% end %}
 {% block body %}
 
 {% if dn == "bpf" %}
@@ -30,8 +32,9 @@
 							class="chzn-select select-block-level" id="default-select">
 								<option value=""></option>
 								<option value="1">Eliminar</option>
-								<option value="2">En Proceso</option>
+								<option value="2">Aceptado</option>
 								<option value="3">Despachado</option>
+								<option value="4">Pendiente</option>
 							</select>
 						</th>
 						<th>
@@ -64,7 +67,7 @@
 					{% for p in pedidos %}
 					<tr>
 						<td>
-							<input type="checkbox" name="pedidos" class="iCheck">
+							<input type="checkbox" name="pedidos" class="iCheck" value="{{p['id']}}">
 						</td>
 						<td>
 							{{p["id"]}}
@@ -103,7 +106,13 @@
 							{{p["total"]}}
 						</td>
 						<td>
-							{{p["state"]}}
+							{% if int(p["state"]) == 0 %}
+								PENDIENTE
+							{% elif int(p["state"]) == 1 %}
+								ACEPTADO
+							{% elif int(p["state"]) == 1 %}
+								DESPACHADO
+							{% end %}
 						</td>
 						<td>
 							<button type="button" class="btn btn-primary" onclick="location.href='/order-detail/list?order_id={{p['id']}}'">Ver Detalle</button>

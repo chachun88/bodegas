@@ -33,7 +33,7 @@ from cellar_handler import CellarDetailHandler, CellarComboboxHandler
 from cellar_handler import CellarEasyInputHandler
 from cellar_handler import CellarEasyOutputHandler
 
-from order_handler import OrderHandler, AddOrderHandler
+from order_handler import OrderHandler, AddOrderHandler, OrderActionsHandler
 
 from cellar_add_handler import CellarAddHandler
 from cellar_remove_handler import CellarRemoveHandler
@@ -94,7 +94,7 @@ class Application(tornado.web.Application):
             # order
             (r"/order/list", OrderHandler),
             (r"/order/save", AddOrderHandler),
-            #(r"/order/find", OrderHandler),
+            (r"/orders/actions", OrderActionsHandler),
 
             #order_detail
             (r"/order-detail/save", AddOrderDetailHandler),

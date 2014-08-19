@@ -168,7 +168,7 @@ class Order(BaseModel):
         url += "&source=" + self.source
         url += "&country=" + self.country
         url += "&items_quantity=" + self.items_quantity
-        url += "&product_quantity" + self.product_quantity
+        url += "&product_quantity=" + self.product_quantity
         url += "&state=" + self.state
 
         url = url.encode("utf-8")
@@ -225,5 +225,6 @@ class Order(BaseModel):
         url += "?token=" + self.token()
         url += "&ids={}".format(ids)
         url += "&state={}".format(state)
+        urllib.urlopen(url).read()
 
     

@@ -20,8 +20,9 @@ from bson import json_util
 ACCIONES_ELIMINAR = 1
 ACCIONES_ACEPTAR = 2
 ACCIONES_DESPACHADO = 3
+ACCIONES_PENDIENTE = 4
 
-ESTADO_PAGADO = 0
+ESTADO_PENDIENTE = 0
 ESTADO_ACEPTADO = 1
 ESTADO_DESPACHADO = 2
 
@@ -72,7 +73,7 @@ class AddOrderHandler(BaseHandler):
 
         self.write(oid)
 
-class OrdersActionsHandler(BaseHandler):
+class OrderActionsHandler(BaseHandler):
 
     @tornado.web.authenticated
     def post(self):
@@ -80,40 +81,43 @@ class OrdersActionsHandler(BaseHandler):
         order=Order()
 
         valores = self.get_argument("values","")
-        accion = int(self.get_argument("action",0))
+        accion = self.get_argument("action","")
+
+        if accion == "":
+            self.write("Debe seleccionar una acción")
+            return 
+
+        accion = int(accion)
 
         if valores == "":
             self.write("Debe seleccionar al menos un pedido")
             return
 
-        values = valores.split(",")
-
-        _v = []
-
-        for v in values:
-            _v.append(int(v))
-
         if accion == ACCIONES_ACEPTAR:
             try:
-                order.ChangeStateOrders(_v,ESTADO_ACEPTADO)
+                order.ChangeStateOrders(valores,ESTADO_ACEPTADO)
                 self.write("ok")
             except Exception,e:
                 self.write(str(e))
 
         elif accion == ACCIONES_ELIMINAR:
             try:
-                order.Remove(_v)
+                order.Remove(valores)
                 self.write("ok")
             except Exception,e:
                 self.write(str(e))
         elif accion == ACCIONES_DESPACHADO:
             try:
-                order.ChangeStateOrders(_v,ESTADO_DESPACHADO)
+                order.ChangeStateOrders(valores,ESTADO_DESPACHADO)
                 self.write("ok")
             except Exception,e:
                 self.write(str(e))
-        else:
-            self.write("Debe seleccionar una acción")
+        elif accion == ACCIONES_PENDIENTE:
+            try:
+                order.ChangeStateOrders(valores,ESTADO_PENDIENTE)
+                self.write("ok")
+            except Exception,e:
+                self.write(str(e))
 
     def check_xsrf_cookie(self):
         pass
