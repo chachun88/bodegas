@@ -89,6 +89,7 @@ class Application(tornado.web.Application):
             (r"/order-detail/remove",   order_detail_handler.RemoveOrderDetailHandler),
             (r"/order-detail/find",     order_detail_handler.GetOrderDetailHandler),
             (r"/order-detail/list",     order_detail_handler.ListOrderDetailHandler),
+            (r"/order-detail/listbyorderid", order_detail_handler.ListDetailByOrderIdHandler),
 
             (r"/product/file-upload-sample",    product_handler.UploadPictureSampleHandler),
             (r"/product/file-upload",           product_handler.UploadPictureHandler),

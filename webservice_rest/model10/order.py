@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 from bson import json_util
 from bson.objectid import ObjectId
@@ -139,15 +140,18 @@ class Order(BaseModel):
         self._product_quantity       = ""
         self._state                  = ""
 
-    def GetOrderById(self, id):
+    def GetOrderById(self, _id):
 
-        order = self.collection.find_one({"id":id})
+        order = self.collection.find_one({"id":int(_id)})
 
-        return order
+        if order:
+            return json_util.dumps(order)
+        else:
+            return "{}"
 
     def Save(self):
 
-        new_id = db.seq.find_and_modify(query={'seq_name':'order_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True)["id"]
+        new_id = db.seq.find_and_modify(query={'seq_name':'order_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
         
         # validate contrains
         object_id = self.collection.insert({
@@ -166,7 +170,8 @@ class Order(BaseModel):
             "total" : self.total,
             "address" : self.address,
             "town" : self.town,
-            "city" : self.city 
+            "city" : self.city,
+            "type" : self.type
             })
 
         return str(object_id)

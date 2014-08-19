@@ -167,7 +167,7 @@ class Order(BaseModel):
         url += "&product_quantity" + self.product_quantity
         url += "&state=" + self.state
 
-        # url.encode("utf-8")
+        url = url.encode("utf-8")
 
         return urllib.urlopen(url).read()
 

@@ -28,7 +28,7 @@
         <div class="col-md-7">
             <section class="widget">
                 <div class="body">
-                    <form action="/order/save" class="form-horizontal label-left" method="post" enctype="multipart/form-data">
+                    <form action="/order/save" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
                         <fieldset>
                             {% if mode == "edit" %}
                                 <legend class="section">Editar Detalle Pedido</legend>
@@ -51,6 +51,12 @@
                                 <label class="control-label" for="prefix">Vendedor</label>
                                 <div class="controls form-group">
                                     <div class="col-sm-8"><input placeholder="salesman" name="salesman" type="text" class="form-control" value="{{order.salesman}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Tipo</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="type" name="type" type="text" class="form-control" value="{{order.type}}"></div>
                                 </div>
                             </div>
                             <div class="control-group">

@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 from model10.order import Order
 from bson import json_util
@@ -19,7 +20,7 @@ class AddOrderHandler(BaseHandler):
         order = Order()
 
         order.id                = self.get_argument("id", "")
-        order.date              = datetime.now()
+        order.date              = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         order.salesman          = self.get_argument("salesman", "")
         order.customer          = self.get_argument("customer", "")
         order.subtotal          = self.get_argument("subtotal", "")

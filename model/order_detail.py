@@ -5,6 +5,7 @@ import urllib
 
 from model.base_model import BaseModel
 from bson import json_util
+from product import Product
 
 class OrderDetail(BaseModel):
 
@@ -23,11 +24,11 @@ class OrderDetail(BaseModel):
         self._order_id = value
     
     @property
-    def product_id(self):
-        return self._product_id
-    @product_id.setter
-    def product_id(self, value):
-        self._product_id = value
+    def product(self):
+        return self._product
+    @product.setter
+    def product(self, value):
+        self._product = value
     
     @property
     def quantity(self):
@@ -42,22 +43,31 @@ class OrderDetail(BaseModel):
     @total.setter
     def total(self, value):
         self._total = value
+
+    @property
+    def product_id(self):
+        return self._product_id
+    @product_id.setter
+    def product_id(self, value):
+        self._product_id = value
+    
     
 
     def __init__(self):
         self._id    = ""
         self._order_id  = ""
         self._quantity  = ""
-        self._product_id = ""
+        self._product = Product()
         self._total     = ""
+        self._product_id = ""
 
     def Save(self):
         url = self.wsurl() + "/order-detail/save"
         url += "?token=" + self.token()
-        url += "&id_order=" + self.id_order
+        url += "&order_id=" + self.order_id
         url += "&quantity=" + self.quantity
         url += "&total=" + self.total
-        url += "&product_id" + self.product_id
+        url += "&product_id=" + self.product_id
 
         return urllib.urlopen(url).read()
 
@@ -69,31 +79,35 @@ class OrderDetail(BaseModel):
         return urllib.urlopen(url).read()
 
     def InitWithId(self, idd):
-        url = self.wsurl() + "/order/find"
+        url = self.wsurl() + "/order-detail/find"
         url += "?token=" + self.token()
-        url += "&id=" + idd
+        url += "&id={}".format(idd)
 
         json_string = urllib.urlopen(url).read()
         json_data = json_util.loads(json_string)
 
-        self._id                     = json_data["id"]
-        self._date                   = json_data["date"]
-        self._type                   = json_data["type"]
-        self._salesman               = json_data["salesman"]
-        self._customer               = json_data["customer"]
-        self._subtotal               = json_data["subtotal"]
-        self._discount               = json_data["discount"]
-        self._tax                    = json_data["tax"]
-        self._total                  = json_data["total"]
-        self._address                = json_data["address"]
-        self._town                   = json_data["town"]
-        self._city                   = json_data["city"]
-        self._source                 = json_data["source"]
-        self._country                = json_data["country"]
-        self._items_quantity         = json_data["items_quantity"]
-        self._product_quantity       = json_data["product_quantity"]
-        self._state                  = json_data["state"]
+        print json_data
 
+        self._id = str(json_data["_id"])
+        self._order_id = json_data["order_id"]
+        self._quantity = json_data["quantity"]
+        self._total = json_data["total"]
+        self._product_id = json_data["product_id"]
+
+        product = Product()
+        product.InitWithId(self._product_id)
+        self._product = product
+
+    def ListByOrderId(self, order_id, page=1, items=20):
+        url = self.wsurl() + "/order-detail/listbyorderid"
+        url += "?token=" + self.token()
+        url += "&page={}".format(page)
+        url += "&items={}".format(items)
+        url += "&order_id={}".format(order_id)
+
+        json_string = urllib.urlopen(url).read()
+        print json_string
+        return json_util.loads(json_string)
 
     def List(self, page=1, items=20):
         url = self.wsurl() + "/order/list"

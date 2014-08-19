@@ -45,7 +45,7 @@ from report_handler import ReportHandler, ReportUploadHandler
 
 from image_handler import ImageHandler, ImageHandler2, ImageDeleteHandler
 
-from order_detail_handler import AddOrderDetailHandler
+from order_detail_handler import AddOrderDetailHandler, ListOrderDetailHandler
 
 #something
 define("port", default=port, help="run on the given port", type=int)
@@ -94,10 +94,11 @@ class Application(tornado.web.Application):
             # order
             (r"/order/list", OrderHandler),
             (r"/order/save", AddOrderHandler),
-            # (r"/order/find", OrderHandler),
+            #(r"/order/find", OrderHandler),
 
             #order_detail
             (r"/order-detail/save", AddOrderDetailHandler),
+            (r"/order-detail/list", ListOrderDetailHandler),
 
             # user
             (r"/user", UserHandler),
