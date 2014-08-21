@@ -179,10 +179,11 @@ class Order(BaseModel):
 
     def DeleteOrders(self,ids):
         self.collection.remove({"id":{"$in":ids}})
+        od = OrderDetail()
+        for i in ids:
+            od.Remove(i)
 
     def ChangeStateOrders(self,ids,state):
         print ids
         self.collection.update({"id":{"$in":ids}},{"$set":{"state":state}},multi=True)
-        od = OrderDetail()
-        for i in ids:
-            od.Remove(i)
+        

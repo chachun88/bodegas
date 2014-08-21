@@ -48,28 +48,33 @@ class SaveHandler(BaseHandler):
         self.write(oid)
 
 
-class EditOrderHandler(BaseHandler):
+class EditHandler(BaseHandler):
     def get(self):
         # validate access token
         if not self.ValidateToken():
             return
 
         # instantiate order
-        order = Order()
+        customer = Customer()
 
-        order.identifier        = self.get_argument("id", "")
-        order.salesman          = self.get_argument("salesman_id", "")
-        order.customer          = self.get_argument("customer", "")
-        order.subtotal          = self.get_argument("subtotal", "")
-        order.discount          = self.get_argument("discount", "")
-        order.iva               = self.get_argument("iva", "")
-        order.total             = self.get_argument("total", "")
-        order.address           = self.get_argument("address", "")
-        order.town              = self.get_argument("town", "")
-        order.city              = self.get_argument("city", "")
+        customer.id = self.get_argument("id")
 
-        #saving the current order
-        oid = order.Edit(self.db.orders)
+        customer.InitById(customer.id)
+        customer.name = self.get_argument("name")
+        customer.type = self.get_argument("type", "")
+        customer.rut = self.get_argument("rut", "")
+        customer.lastname = self.get_argument("lastname","")
+        customer.bussiness = self.get_argument("bussiness","")
+        customer.registration_date = self.get_argument("registration_date","")
+        customer.approval_date = self.get_argument("approval_date","")
+        customer.status = self.get_argument("status",1)
+        customer.first_view = self.get_argument("first_view","")
+        customer.last_view = self.get_argument("last_view","")
+        customer.username = self.get_argument("username","")
+        customer.password = self.get_argument("password","")
+
+        #saving the current customer
+        oid = customer.Edit()
 
         self.write(oid)
 
@@ -98,14 +103,14 @@ class GetOrderHandler(BaseHandler):
         self.write(orden)
 
 
-class ListOrderHandler(BaseHandler):
+class ListHandler(BaseHandler):
     def get(self):
 
         #validate constrains
         if not self.ValidateToken():
             return
 
-        order = Order()
+        customer = Customer()
 
         try:
             current_page    = int(self.get_argument("page", "1"))
@@ -113,4 +118,28 @@ class ListOrderHandler(BaseHandler):
         except Exception, e:
             print str(e)
         
-        self.write(json_util.dumps(order.GetList(current_page, items_per_page)))
+        self.write(json_util.dumps(customer.List(current_page, items_per_page)))
+
+class ChangeStateHandler(BaseHandler):
+
+    def get(self):
+        # validate access token
+        if not self.ValidateToken():
+            return
+
+        ids = self.get_argument("ids","")
+        state = self.get_argument("state","")
+
+        if ids == "":
+            self.write("Debe seleccionar al menos un cliente")
+            return
+
+        values = ids.split(",")
+
+        _v = []
+
+        for v in values:
+            _v.append(int(v))
+
+        customer = Customer()
+        customer.ChangeState(_v,state)

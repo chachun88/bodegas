@@ -18,6 +18,7 @@ import order_detail_handler
 import cellar_handler
 import category_handler
 import color_handler
+import customer_handler
 
 import doc_handler
 from bson.objectid import ObjectId
