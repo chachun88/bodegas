@@ -93,6 +93,12 @@ class Menu:
     PEDIDOS_LISTA = "Lista de pedidos"
     # end sub_menu
 
+    CLIENTES = "Clientes"
+
+    # sub_menu 
+    CLIENTES_LISTAR = "Lista de clientes"
+    # end sub_menu
+
     SALIR = "Salir"
 
 

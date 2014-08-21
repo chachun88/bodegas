@@ -100,7 +100,13 @@ class Application(tornado.web.Application):
             (r"/doc/cellar",                    doc_handler.DocCellarHandler),
             (r"/doc/brand",                     doc_handler.DocBrandHandler),
             (r"/doc/category",                  doc_handler.DocCategoryHandler),
-            (r"/doc/salesman",                  doc_handler.DocSalesmanHandler)
+            (r"/doc/salesman",                  doc_handler.DocSalesmanHandler),
+
+            (r"/customer",                           customer_handler.ListHandler),
+            (r"/customer/save",                      customer_handler.SaveHandler),
+            (r"/customer/edit",                      customer_handler.EditHandler),
+            (r"/customer/changestate",               customer_handler.ChangeStateHandler)
+            
             ]
 
         settings = dict(

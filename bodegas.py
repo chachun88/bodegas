@@ -133,7 +133,11 @@ class Application(tornado.web.Application):
                                         {"class":"", "name":Menu.PRODUCTOS_CARGA, "link":"/product/add"},
                                         {"class":"", "name":Menu.PRODUCTOS_LISTA, "link":"/product/list"}
                                         ]},
-                        {"class":"panel", "name":Menu.PEDIDOS, "icon":"home", "link":"/order", 
+                        {"class":"panel", "name":Menu.CLIENTES, "icon":"users", "link":"/",
+                            "sub_menu":[
+                                        {"class":"", "name":Menu.CLIENTES_LISTAR, "link":"/customer/list"}
+                                        ]},
+                        {"class":"panel", "name":Menu.PEDIDOS, "icon":"truck", "link":"/order", 
                             "sub_menu":[
                                         {"class":"", "name":Menu.PEDIDOS_LISTA, "link":"/order/list"}
                                         ]},
