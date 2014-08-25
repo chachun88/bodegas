@@ -18,7 +18,7 @@ class SaveHandler(BaseHandler):
 
         # instantiate order
         customer = Customer()
-        contact = Contact()
+        # contact = Contact()
 
         customer.name = self.get_argument("customer_name")
         customer.type = self.get_argument("customer_type", "")
@@ -30,20 +30,20 @@ class SaveHandler(BaseHandler):
         customer.status = self.get_argument("status",1)
         customer.first_view = self.get_argument("first_view","")
         customer.last_view = self.get_argument("last_view","")
-        customer.contact = contact
+        # customer.contact = contact
         customer.username = self.get_argument("username","")
         customer.password = self.get_argument("password","")
 
         #saving the current customer
         oid = customer.Save()
 
-        contact.name = self.get_argument("contact_name","")
-        contact.type = self.get_argument("contact_type","")
-        contact.telephone = self.get_argument("telephone","")
-        contact.email = self.get_argument("email","")
-        contact.customer_id = oid
+        # contact.name = self.get_argument("contact_name","")
+        # contact.type = self.get_argument("contact_type","")
+        # contact.telephone = self.get_argument("telephone","")
+        # contact.email = self.get_argument("email","")
+        # contact.customer_id = oid
 
-        contact.Save()
+        # contact.Save()
 
         self.write(oid)
 
@@ -79,14 +79,14 @@ class EditHandler(BaseHandler):
         self.write(oid)
 
 
-class RemoveOrderHandler(BaseHandler):
-    def get(self):
+class RemoveHandler(BaseHandler):
+    def post(self):
         #validate constrains
         if not self.ValidateToken():
             return
 
-        order = Order()
-        order.DeleteOrders(self.get_argument("id", ""))
+        customer = Customer()
+        customer.Remove(self.get_argument("ids", ""))
 
 
 class GetOrderHandler(BaseHandler):
@@ -104,7 +104,7 @@ class GetOrderHandler(BaseHandler):
 
 
 class ListHandler(BaseHandler):
-    def get(self):
+    def post(self):
 
         #validate constrains
         if not self.ValidateToken():
@@ -122,7 +122,7 @@ class ListHandler(BaseHandler):
 
 class ChangeStateHandler(BaseHandler):
 
-    def get(self):
+    def post(self):
         # validate access token
         if not self.ValidateToken():
             return
@@ -134,12 +134,5 @@ class ChangeStateHandler(BaseHandler):
             self.write("Debe seleccionar al menos un cliente")
             return
 
-        values = ids.split(",")
-
-        _v = []
-
-        for v in values:
-            _v.append(int(v))
-
         customer = Customer()
-        customer.ChangeState(_v,state)
+        customer.ChangeState(ids,state)

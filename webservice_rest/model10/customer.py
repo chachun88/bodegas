@@ -157,13 +157,15 @@ class Customer(BaseModel):
 
         new_id = db.seq.find_and_modify(query={'seq_name':'customer_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
 
+        # print self.contact
+
         customer = {
         "id": new_id,
         "name": self.name,
         "lastname": self.lastname,
         "type": self.type,
         "rut": self.rut,
-        "contact": self.contact,
+        # "contact": self.contact,
         "bussiness": self.bussiness,
         "approval_date": self.approval_date,
         "registration_date": self.registration_date,
@@ -178,7 +180,7 @@ class Customer(BaseModel):
 
             self.collection.insert(customer)
 
-            return new_id
+            return str(new_id)
 
         except Exception, e:
 
@@ -221,5 +223,9 @@ class Customer(BaseModel):
         return lista
 
     def ChangeState(self,ids,state):
+        print ids.split(",")
+        self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state}},multi=True)
+
+    def Remove(self,ids):
         print ids
-        self.collection.update({"id":{"$in":ids}},{"$set":{"state":state}},multi=True)
+        self.collection.remove({"id":{"$in":[int(n) for n in ids.split(",")]}})

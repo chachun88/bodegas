@@ -31,8 +31,6 @@
 							tabindex="-1"
 							class="chzn-select select-block-level" id="default-select">
 								<option value=""></option>
-								<option value="1">Aceptado</option>
-								<option value="2">Pendiente</option>
 								<option value="3">Eliminar</option>
 							</select>
 						</th>
@@ -47,61 +45,40 @@
 					<tr>
 						<th></th>
 						<th>ID</th>
-						<th>estado</th>
-						<th>nombre</th>
-						<th>apellido</th>
-						<th>rut</th>
-						<th>tipo</th>
-						<th>giro</th>
-						<th>fecha registro</th>
-						<th>primera visita</th>
-						<th>&Uacute;ltima visita</th>
+						<th>Nombre</th>
+						<th>Tipo</th>
+						<th>Tel&eacute;fono</th>
+						<th>Email</th>
+						<th>ID Cliente</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					{% for c in clientes %}
+					{% for c in contactos %}
 					<tr>
 						<td>
-							<input type="checkbox" name="clientes" class="iCheck" value="{{c['id']}}">
+							<input type="checkbox" name="contactos" class="iCheck" value="{{c['id']}}">
 						</td>
 						<td>
-							{{c["id"]}}
+							{{c['id']}}
 						</td>
 						<td>
-							{% if int(c["status"]) == 1 %}
-							PENDIENTE
-							{% elif int(c["status"]) == 2 %}
-							ACEPTADO
-							{% end %}
+							{{c['name']}}
 						</td>
 						<td>
-							{{c["name"]}}
+							{{c['type']}}
 						</td>
 						<td>
-							{{c["lastname"]}}
+							{{c['telephone']}}
 						</td>
 						<td>
-							{{c["rut"]}}
+							{{c['email']}}
 						</td>
 						<td>
-							{{c["type"]}}
+							{{c['customer_id']}}
 						</td>
 						<td>
-							{{c["bussiness"]}}
-						</td>
-						<td>
-							{{c["registration_date"]}}
-						</td>
-						<td>
-							{{c["first_view"]}}
-						</td>
-						<td>
-							{{c["last_view"]}}
-						</td>
-						<td>
-							<a class="btn btn-primary" href="/customer/add_contact?customer_id={{c['id']}}" target="_blank">Agregar Contacto</a>
-							<a class="btn btn-primary" href="/customer/view_contact?customer_id={{c['id']}}" target="_blank">Ver Contactos</a>
+							<a href="/customer/edit_contact?id={{c['id']}}" class="btn btn-primary">Editar</a>
 						</td>
 					</tr>
 					{% end %}

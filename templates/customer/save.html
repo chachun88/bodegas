@@ -1,0 +1,114 @@
+{% extends "../base.html" %}
+{% block title %}
+    {% if mode == "edit" %}
+        Editar Datos Cliente 
+    {% elif mode == "add" %}
+        Agregar Datos Cliente
+    {% end %}
+{% end %}
+{% block caption %}
+    {% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+        {% if mode == "edit" %}
+            permite editar un detalle para un pedido
+        {% elif mode == "add" %}
+            permite agregar un detalle para un pedido
+        {% end %}
+    {% else %}
+        sección no autorizada
+    {% end %}
+{% end %}           
+{% block body %}
+    {% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+        {% if dn == "bpf" %}
+        <div class="alert alert-warning alert-success-nohidden">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <strong><i class="fa fa-check"></i> Problema al agregar productos!</strong> SKU ya existe.
+        </div>
+        {% end %}
+        <div class="col-md-7">
+            <section class="widget">
+                <div class="body">
+                    <form action="/customer/save" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+                        <fieldset>
+                            {% if mode == "edit" %}
+                                <legend class="section">Editar Datos Cliente</legend>
+                            {% elif mode == "add"  %}
+                                <legend class="section">Agregar Datos Cliente</legend>
+                            {% end %}
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Nombre</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="name" name="name" type="text" class="form-control" value="{{customer.name}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Apellido</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="type" name="lastname" type="text" class="form-control" value="{{customer.lastname}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Rut</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="rut" name="rut" type="text" class="form-control" value="{{customer.rut}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Tipo</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="type" name="type" type="text" class="form-control" value="{{customer.type}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Giro</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="bussiness" name="bussiness" type="text" class="form-control" value="{{customer.bussiness}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Fecha de Registro</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="registration_date" name="registration_date" type="text" class="datepicker form-control" value="{{customer.registration_date}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Estado</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="status" name="status" type="text" class="form-control" value="{{customer.status}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Primera Visita</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="first_view" name="first_view" type="text" class="form-control datepicker" value="{{customer.first_view}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">&Uacute;ltima Visita</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="last_view" name="last_view" type="text" class="form-control datepicker" value="{{customer.last_view}}"></div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="form-actions">
+                        {% if mode == "edit" %}
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        {% elif mode == "add"  %}
+                            <button type="submit" class="btn btn-primary">Validar y agregar</button>
+                        {% end %}
+                            <button type="reset" class="btn btn-default">Cancelar</button>
+                        </div>
+                        {% raw xsrf_form_html() %}
+                    </form>
+                </div>
+            </section>
+        </div>
+    {% else %}
+        <div class="col-md-12">
+            <section class="widget">
+                <div style="float:right;">
+                </div>
+            </section>
+        </div>
+    {% end %}
+{% end %}

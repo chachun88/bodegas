@@ -64,6 +64,8 @@ class Contact(BaseModel):
 		self._type = ""
 		self._telephone = ""
 		self._email = ""
+		self._address = ""
+		self._customer_id = ""
 
 	def InitById(self, _id):
 
@@ -76,6 +78,7 @@ class Contact(BaseModel):
 			self.telephone = contact["telephone"]
 			self.email = contact["email"]
 			self.customer_id = contact["customer_id"]
+			self.address = contact["address"]
 			return self
 		else:
 			return None
@@ -90,7 +93,8 @@ class Contact(BaseModel):
 		"type": self.type,
 		"telephone": self.telephone,
 		"email": self.email,
-		"customer_id": self.customer_id
+		"customer_id": self.customer_id,
+		"address": self.address
 		}
 
 		try:
@@ -110,7 +114,8 @@ class Contact(BaseModel):
 		"type": self.type,
 		"telephone": self.telephone,
 		"email": self.email,
-		"customer_id": self.customer_id
+		"customer_id": self.customer_id,
+		"address":self.address
 		}
 
 		try:
@@ -120,7 +125,7 @@ class Contact(BaseModel):
 
 			return str(e)
 
-	def List(self, _customer_id):
+	def ListByCustomerId(self, _customer_id):
 
 		contacts = self.collection.find({"customer_id":_customer_id})
 

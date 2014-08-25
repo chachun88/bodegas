@@ -11,18 +11,54 @@ from globals import Menu
 
 from basehandler import BaseHandler
 from model.customer import Customer
+from model.contact import Contact
 
 from datetime import datetime
 
 from bson import json_util
 
-ACCIONES_PENDIENTE = 1
-ACCIONES_ACEPTAR = 2
+ACCIONES_ACEPTAR = 1
+ACCIONES_PENDIENTE = 2
+ACCIONES_ELIMINAR = 3
 
 ESTADO_PENDIENTE = 1
 ESTADO_ACEPTADO = 2
 
-class OrderHandler(BaseHandler):
+class CustomerViewContactHandler(BaseHandler):
+
+    def get(self):
+
+        customer_id = self.get_argument("customer_id","")
+
+        contact = Contact()
+
+        if customer_id == "":
+            self.write("Debe ingresar el id de cliente")
+        else:
+            self.render("customer/view_contact.html",contactos = json_util.loads(contact.ListByCustomerId(customer_id)), dn="")
+
+
+class CustomerAddContactHandler(BaseHandler):
+
+    def get(self):
+        customer_id = self.get_argument("customer_id","")
+        contact = Contact()
+        contact.customer_id = customer_id
+        self.render("customer/add_contact.html",contact=contact,mode="add",dn="")
+
+    def post(self):
+        contact = Contact()
+        contact.customer_id = self.get_argument("customer_id","")
+        contact.name = self.get_argument("name","")
+        contact.email = self.get_argument("email","")
+        contact.address = self.get_argument("address","")
+        contact.telephone = self.get_argument("telephone","")
+        contact.type = self.get_argument("type","")
+
+        if contact.Save().isdigit():
+            self.redirect("/customer")
+
+class CustomerHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
 
@@ -32,49 +68,45 @@ class OrderHandler(BaseHandler):
         clientes = customer.List()
         self.render("customer/list.html",side_menu=self.side_menu, clientes=clientes, dn=self.get_argument("dn", ""))
 
-class AddOrderHandler(BaseHandler):
+class CustomerSaveHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
 
-        order = Order()
-        self.render("order/save.html",dn="",mode="add", order=order)
+        customer = Customer()
+        self.render("customer/save.html",dn="",mode="add", customer=customer)
 
     @tornado.web.authenticated
     def post(self):
 
         # instantiate order
-        order = Order()
+        customer = Customer()
 
-        order.id                = self.get_argument("id", "")
-        order.date              = datetime.now()
-        order.salesman          = self.get_argument("salesman", "")
-        order.customer          = self.get_argument("customer", "")
-        order.subtotal          = self.get_argument("subtotal", "")
-        order.discount          = self.get_argument("discount", "")
-        order.tax               = self.get_argument("tax", "")
-        order.total             = self.get_argument("total", "")
-        order.address           = self.get_argument("address", "")
-        order.town              = self.get_argument("town", "")
-        order.city              = self.get_argument("city", "")
-        order.country           = self.get_argument("country","")
-        order.type              = self.get_argument("type","")
-        order.source            = self.get_argument("source","")
-        order.items_quantity    = self.get_argument("items_quantity","")
-        order.product_quantity  = self.get_argument("product_quantity","")
-        order.state             = self.get_argument("state","")
+        customer.name = self.get_argument("name")
+        customer.type = self.get_argument("type", "")
+        customer.rut = self.get_argument("rut", "")
+        customer.lastname = self.get_argument("lastname","")
+        customer.bussiness = self.get_argument("bussiness","")
+        customer.registration_date = self.get_argument("registration_date","")
+        customer.approval_date = self.get_argument("approval_date","")
+        customer.status = self.get_argument("status",1)
+        customer.first_view = self.get_argument("first_view","")
+        customer.last_view = self.get_argument("last_view","")
+        customer.username = self.get_argument("username","")
+        customer.password = self.get_argument("password","")
+        customer.contact = Contact()
 
-        #saving the current order
-        oid = order.Save()
+        oid = customer.Save()
 
-        self.write(oid)
+        if oid:
+            self.redirect("/customer")
 
-class OrderActionsHandler(BaseHandler):
+class CustomerActionsHandler(BaseHandler):
 
     @tornado.web.authenticated
     def post(self):
 
-        order=Order()
+        customer=Customer()
 
         valores = self.get_argument("values","")
         accion = self.get_argument("action","")
@@ -91,29 +123,66 @@ class OrderActionsHandler(BaseHandler):
 
         if accion == ACCIONES_ACEPTAR:
             try:
-                order.ChangeStateOrders(valores,ESTADO_ACEPTADO)
-                self.write("ok")
-            except Exception,e:
-                self.write(str(e))
-
-        elif accion == ACCIONES_ELIMINAR:
-            try:
-                order.Remove(valores)
-                self.write("ok")
-            except Exception,e:
-                self.write(str(e))
-        elif accion == ACCIONES_DESPACHADO:
-            try:
-                order.ChangeStateOrders(valores,ESTADO_DESPACHADO)
+                customer.ChangeState(valores,ESTADO_ACEPTADO)
                 self.write("ok")
             except Exception,e:
                 self.write(str(e))
         elif accion == ACCIONES_PENDIENTE:
             try:
-                order.ChangeStateOrders(valores,ESTADO_PENDIENTE)
+                customer.ChangeState(valores,ESTADO_PENDIENTE)
                 self.write("ok")
             except Exception,e:
                 self.write(str(e))
+        elif accion == ACCIONES_ELIMINAR:
+            try:
+                customer.Remove(valores)
+                self.write("ok")
+            except Exception,e:
+                self.write(str(e))
+        
+
+    def check_xsrf_cookie(self):
+        pass
+
+class ContactActionsHandler(BaseHandler):
+
+    @tornado.web.authenticated
+    def post(self):
+
+        contact=Contact()
+
+        valores = self.get_argument("values","")
+        accion = self.get_argument("action","")
+
+        if accion == "":
+            self.write("Debe seleccionar una acción")
+            return 
+
+        accion = int(accion)
+
+        if valores == "":
+            self.write("Debe seleccionar al menos un pedido")
+            return
+
+        if accion == ACCIONES_ACEPTAR:
+            try:
+                contact.ChangeState(valores,ESTADO_ACEPTADO)
+                self.write("ok")
+            except Exception,e:
+                self.write(str(e))
+        elif accion == ACCIONES_PENDIENTE:
+            try:
+                contact.ChangeState(valores,ESTADO_PENDIENTE)
+                self.write("ok")
+            except Exception,e:
+                self.write(str(e))
+        elif accion == ACCIONES_ELIMINAR:
+            try:
+                contact.Remove(valores)
+                self.write("ok")
+            except Exception,e:
+                self.write(str(e))
+        
 
     def check_xsrf_cookie(self):
         pass

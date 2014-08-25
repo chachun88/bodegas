@@ -47,6 +47,8 @@ from image_handler import ImageHandler, ImageHandler2, ImageDeleteHandler
 
 from order_detail_handler import AddOrderDetailHandler, ListOrderDetailHandler
 
+from customer_handler import CustomerHandler, CustomerSaveHandler, CustomerActionsHandler, CustomerAddContactHandler, CustomerViewContactHandler, ContactActionsHandler
+
 #something
 define("port", default=port, help="run on the given port", type=int)
 
@@ -115,7 +117,16 @@ class Application(tornado.web.Application):
             (r"/image/([^/]+)", ImageHandler),
             (r"/image", ImageHandler2),
             (r"/image/", ImageHandler2),
-            (r"/imageremove", ImageDeleteHandler)
+            (r"/imageremove", ImageDeleteHandler),
+
+            #customer
+            (r"/customer", CustomerHandler),
+            (r"/customer/save", CustomerSaveHandler),
+            (r"/customer/actions", CustomerActionsHandler),
+            (r"/customer/add_contact", CustomerAddContactHandler),
+            (r"/customer/view_contact", CustomerViewContactHandler),
+
+            (r"/contact/actions", ContactActionsHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 
@@ -135,7 +146,7 @@ class Application(tornado.web.Application):
                                         ]},
                         {"class":"panel", "name":Menu.CLIENTES, "icon":"users", "link":"/",
                             "sub_menu":[
-                                        {"class":"", "name":Menu.CLIENTES_LISTAR, "link":"/customer/list"}
+                                        {"class":"", "name":Menu.CLIENTES_LISTAR, "link":"/customer"}
                                         ]},
                         {"class":"panel", "name":Menu.PEDIDOS, "icon":"truck", "link":"/order", 
                             "sub_menu":[

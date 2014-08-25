@@ -19,6 +19,7 @@ import cellar_handler
 import category_handler
 import color_handler
 import customer_handler
+import contact_handler
 
 import doc_handler
 from bson.objectid import ObjectId
@@ -106,7 +107,13 @@ class Application(tornado.web.Application):
             (r"/customer",                           customer_handler.ListHandler),
             (r"/customer/save",                      customer_handler.SaveHandler),
             (r"/customer/edit",                      customer_handler.EditHandler),
-            (r"/customer/changestate",               customer_handler.ChangeStateHandler)
+            (r"/customer/changestate",               customer_handler.ChangeStateHandler),
+            (r"/customer/remove",                    customer_handler.RemoveHandler),
+
+            (r"/contact/save",                 contact_handler.SaveHandler),
+            (r"/contact/listbycustomerid",     contact_handler.ListByCustomerIdHandler),
+            (r"/contact/changestate",               contact_handler.ChangeStateHandler),
+            (r"/contact/remove",                    contact_handler.RemoveHandler)
             
             ]
 
@@ -114,7 +121,7 @@ class Application(tornado.web.Application):
             blog_title      = u"Community",
             template_path   = os.path.join(os.path.dirname(__file__), "templates"),
             static_path     = os.path.join(os.path.dirname(__file__), "static"),
-            xsrf_cookies    = True,
+            xsrf_cookies    = False,
             cookie_secret   = "12oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o/Vo=",
             login_url       = "/auth/login",
             autoescape      = None,
