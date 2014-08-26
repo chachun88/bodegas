@@ -109,11 +109,14 @@ class Application(tornado.web.Application):
             (r"/customer/edit",                      customer_handler.EditHandler),
             (r"/customer/changestate",               customer_handler.ChangeStateHandler),
             (r"/customer/remove",                    customer_handler.RemoveHandler),
+            (r"/customer/initbyid",                  customer_handler.InitByIdHandler),
 
             (r"/contact/save",                 contact_handler.SaveHandler),
+            (r"/contact/edit",                 contact_handler.EditHandler),
             (r"/contact/listbycustomerid",     contact_handler.ListByCustomerIdHandler),
             (r"/contact/changestate",               contact_handler.ChangeStateHandler),
-            (r"/contact/remove",                    contact_handler.RemoveHandler)
+            (r"/contact/remove",                    contact_handler.RemoveHandler),
+            (r"/contact/initbyid",                  contact_handler.InitByIdHandler)
             
             ]
 

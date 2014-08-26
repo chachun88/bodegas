@@ -6,6 +6,10 @@ from bson.objectid import ObjectId
 from basemodel import BaseModel, db
 from contact import Contact
 
+from datetime import datetime
+
+ESTADO_PENDIENTE = 1
+ESTADO_ACEPTADO = 2
 
 class Customer(BaseModel):
 
@@ -126,32 +130,15 @@ class Customer(BaseModel):
     
     def InitById(self, _id):
 
-        customer = self.collection.find_one({"id":_id})
+        customer = self.collection.find_one({"id":int(_id)})
 
         if customer:
 
-            contact = Contact()
-
-            self.id = customer["id"]
-            self.name = customer["name"]
-            self.lastname = customer["lastname"]
-            self.type = customer["type"]
-            self.rut = customer["rut"]
-            self.contact = contact.List(self.id)
-            self.bussiness = customer["bussiness"]
-            self.approval_date = customer["approval_date"]
-            self.registration_date = customer["registration_date"]
-            self.status = customer["status"]
-            self.first_view = customer["first_view"]
-            self.last_view = customer["last_view"]
-            self.username = customer["username"]
-            self.password = customer["password"]
-
-            return self
+            return customer
 
         else:
 
-            return None
+            return {}
 
     def Save(self):
 
@@ -189,26 +176,17 @@ class Customer(BaseModel):
     def Edit(self):
 
         customer = {
-        "id": new_id,
         "name": self.name,
         "lastname": self.lastname,
         "type": self.type,
-        "rut": self.rut,
-        "bussiness": self.bussiness,
-        "approval_date": self.approval_date,
-        "registration_date": self.registration_date,
-        "status": self.status,
-        "first_view": self.first_view,
-        "last_view": self.last_view,
-        "username": self.username,
-        "password": self.password
+        "bussiness": self.bussiness
         }
 
         try:
 
-            self.collection.update({"id":self.id})
+            self.collection.update({"id":int(self.id)},{"$set":customer})
 
-            return new_id
+            return str(self.id)
 
         except Exception, e:
 
@@ -224,7 +202,10 @@ class Customer(BaseModel):
 
     def ChangeState(self,ids,state):
         print ids.split(",")
-        self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state}},multi=True)
+        if int(state) == ESTADO_ACEPTADO:
+            self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state,"approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')}},multi=True)
+        else:
+            self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state}},multi=True)
 
     def Remove(self,ids):
         print ids

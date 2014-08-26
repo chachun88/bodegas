@@ -1,23 +1,10 @@
 {% extends "../base.html" %}
 
-{% block title %}Listado de productos {% end %}
-{% block caption %}se muestra una lista general de todos los productos{% end %}
+{% block title %}Contactos{% end %}
 {% block javascript %}
-<script type="text/javascript" src="/static/js/customer_list.js"></script>
+<script type="text/javascript" src="/static/js/contact_list.js"></script>
 {% end %}
 {% block body %}
-
-{% if dn == "bpf" %}
-<div class="alert alert-warning alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Problema al eliminar producto!</strong> aún quedan productos en bodega.
-</div>
-{% elif dn == "bpt" %}
-<div class="alert alert-success alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado producto.
-</div>
-{% end %}
 
 <div class="col-md-12">
 	<section class="widget">
@@ -46,10 +33,11 @@
 						<th></th>
 						<th>ID</th>
 						<th>Nombre</th>
-						<th>Tipo</th>
+						<th>Direcci&oacute;n</th>
 						<th>Tel&eacute;fono</th>
 						<th>Email</th>
 						<th>ID Cliente</th>
+						<th>Tipo</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -66,7 +54,7 @@
 							{{c['name']}}
 						</td>
 						<td>
-							{{c['type']}}
+							{{c['address']}}
 						</td>
 						<td>
 							{{c['telephone']}}
@@ -76,6 +64,9 @@
 						</td>
 						<td>
 							{{c['customer_id']}}
+						</td>
+						<td>
+							{{c['type']}}
 						</td>
 						<td>
 							<a href="/customer/edit_contact?id={{c['id']}}" class="btn btn-primary">Editar</a>

@@ -9,53 +9,52 @@ class Contact(BaseModel):
 
 	@property
 	def id(self):
-	    return self._id
+		return self._id
 	@id.setter
 	def id(self, value):
-	    self._id = value
+		self._id = value
 
 	@property
 	def customer_id(self):
-	    return self._customer_id
+		return self._customer_id
 	@customer_id.setter
 	def customer_id(self, value):
-	    self._customer_id = value
-	
+		self._customer_id = value
 
 	@property
 	def name(self):
-	    return self._name
+		return self._name
 	@name.setter
 	def name(self, value):
-	    self._name = value
+		self._name = value
 	
 	@property
 	def type(self):
-	    return self._type
+		return self._type
 	@type.setter
 	def type(self, value):
-	    self._type = value
+		self._type = value
 	
 	@property
 	def address(self):
-	    return self._address
+		return self._address
 	@address.setter
 	def address(self, value):
-	    self._address = value
+		self._address = value
 	
 	@property
 	def telephone(self):
-	    return self._telephone
+		return self._telephone
 	@telephone.setter
 	def telephone(self, value):
-	    self._telephone = value
+		self._telephone = value
 	
 	@property
 	def email(self):
-	    return self._email
+		return self._email
 	@email.setter
 	def email(self, value):
-	    self._email = value
+		self._email = value
 
 	def __init__(self):
 		self.collection = db.contact
@@ -69,19 +68,12 @@ class Contact(BaseModel):
 
 	def InitById(self, _id):
 
-		contact = self.collection.find_one({"id":_id})
+		contact = self.collection.find_one({"id":int(_id)})
 
 		if contact:
-			self.id = contact["id"]
-			self.name = contact["name"]
-			self.type = contact["type"]
-			self.telephone = contact["telephone"]
-			self.email = contact["email"]
-			self.customer_id = contact["customer_id"]
-			self.address = contact["address"]
-			return self
+			return contact
 		else:
-			return None
+			return ""
 
 	def Save(self):
 
@@ -109,6 +101,8 @@ class Contact(BaseModel):
 
 	def Edit(self):
 
+		print "Edit WS id:{}\n".format(self.id)
+
 		contact = {
 		"name": self.name,
 		"type": self.type,
@@ -119,8 +113,8 @@ class Contact(BaseModel):
 		}
 
 		try:
-			self.collection.update({"id":self.id},{"$set":contact})
-			return "ok"
+			self.collection.update({"id":int(self.id)},{"$set":contact})
+			return self.id
 		except Exception, e:
 
 			return str(e)
@@ -133,4 +127,8 @@ class Contact(BaseModel):
 			return contacts
 		else:
 			return []
+
+	def Remove(self,ids):
+		print ids
+		self.collection.remove({"id":{"$in":[int(n) for n in ids.split(",")]}})
 	

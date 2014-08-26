@@ -130,8 +130,8 @@ class Customer(BaseModel):
 
         data = {
         "token":self.token(),
-        "customer_name":self.name,
-        "customer_type":self.type,
+        "name":self.name,
+        "type":self.type,
         "rut":self.rut,
         "lastname":self.lastname,
         "bussiness":self.bussiness,
@@ -142,9 +142,9 @@ class Customer(BaseModel):
         "last_view":self.last_view,
         "contact":self.contact,
         "username":self.username,
-        "password":self.password
+        "password":self.password,
+        "id":self.id
         }
-
 
         post_data = urllib.urlencode(data)
 
@@ -163,8 +163,35 @@ class Customer(BaseModel):
 
         print json_string
 
-    def InitWithId(self, idd):
-        pass
+    def InitById(self, idd):
+        
+        url = self.wsurl() + "/customer/initbyid"
+
+        data = {
+        "token":self.token(),
+        "id":idd
+        }
+
+        post_data = urllib.urlencode(data)
+        json_string = urllib.urlopen(url, post_data).read()
+
+        json_obj =  json_util.loads(json_string)
+
+        self.id = json_obj["id"]
+        self.status = json_obj["status"]
+        self.lastname = json_obj["lastname"]
+        self.name = json_obj["name"]
+        self.rut = json_obj["rut"]
+        self.type = json_obj["type"]
+        self.bussiness = json_obj["bussiness"]
+        self.registration_date = json_obj["registration_date"]
+        self.first_view = json_obj["first_view"]
+        self.last_view = json_obj["last_view"]
+        self.approval_date = json_obj["approval_date"]
+        if "contact" in json_obj:
+            self.contact = json_obj["contact"]
+        self.username = json_obj["username"]
+        self.password = json_obj["password"]
 
 
     def List(self, page=1, items=20):

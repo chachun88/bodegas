@@ -7,6 +7,17 @@ from bson import json_util
 
 from base_handler import BaseHandler
 
+class InitByIdHandler(BaseHandler):
+
+    def post(self):
+
+        if not self.ValidateToken():
+            return
+
+        customer_id = self.get_argument("id","")
+
+        customer = Customer()
+        self.write(json_util.dumps(customer.InitById(customer_id)))
 
 class SaveHandler(BaseHandler):
     
@@ -20,8 +31,8 @@ class SaveHandler(BaseHandler):
         customer = Customer()
         # contact = Contact()
 
-        customer.name = self.get_argument("customer_name")
-        customer.type = self.get_argument("customer_type", "")
+        customer.name = self.get_argument("name","")
+        customer.type = self.get_argument("type", "")
         customer.rut = self.get_argument("rut", "")
         customer.lastname = self.get_argument("lastname","")
         customer.bussiness = self.get_argument("bussiness","")
@@ -30,12 +41,15 @@ class SaveHandler(BaseHandler):
         customer.status = self.get_argument("status",1)
         customer.first_view = self.get_argument("first_view","")
         customer.last_view = self.get_argument("last_view","")
-        # customer.contact = contact
+        customer.id = self.get_argument("id","")
         customer.username = self.get_argument("username","")
         customer.password = self.get_argument("password","")
 
         #saving the current customer
-        oid = customer.Save()
+        if customer.id == "":
+            oid = customer.Save()
+        else:
+            oid = customer.Edit()
 
         # contact.name = self.get_argument("contact_name","")
         # contact.type = self.get_argument("contact_type","")

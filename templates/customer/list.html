@@ -1,24 +1,10 @@
 {% extends "../base.html" %}
 
-{% block title %}Listado de productos {% end %}
-{% block caption %}se muestra una lista general de todos los productos{% end %}
+{% block title %}Lista de Clientes {% end %}
 {% block javascript %}
 <script type="text/javascript" src="/static/js/customer_list.js"></script>
 {% end %}
 {% block body %}
-
-{% if dn == "bpf" %}
-<div class="alert alert-warning alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Problema al eliminar producto!</strong> aún quedan productos en bodega.
-</div>
-{% elif dn == "bpt" %}
-<div class="alert alert-success alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado producto.
-</div>
-{% end %}
-
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
@@ -100,8 +86,9 @@
 							{{c["last_view"]}}
 						</td>
 						<td>
-							<a class="btn btn-primary" href="/customer/add_contact?customer_id={{c['id']}}" target="_blank">Agregar Contacto</a>
-							<a class="btn btn-primary" href="/customer/view_contact?customer_id={{c['id']}}" target="_blank">Ver Contactos</a>
+							<a class="btn btn-primary" href="/customer/add_contact?customer_id={{c['id']}}">Agregar Contacto</a>
+							<a class="btn btn-primary" href="/customer/view_contact?customer_id={{c['id']}}">Ver Contactos</a>
+							<a class="btn btn-primary" href="/customer/save?id={{c['id']}}">Editar</a>
 						</td>
 					</tr>
 					{% end %}

@@ -28,9 +28,10 @@
         <div class="col-md-7">
             <section class="widget">
                 <div class="body">
-                    <form action="/customer/add_contact" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+                    <form action="/customer/edit_contact" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
                         <fieldset>
-                            <legend class="section">Agregar Datos Cliente</legend>
+                            <legend class="section">Editar Datos Cliente</legend>
+                            <input type="hidden" name="id" value="{{contact.id}}">
                             <div class="control-group">
                                 <label class="control-label" for="prefix">Nombre</label>
                                 <div class="controls form-group">
@@ -74,7 +75,7 @@
                         {% elif mode == "add"  %}
                             <button type="submit" class="btn btn-primary">Validar y agregar</button>
                         {% end %}
-                            <button type="reset" class="btn btn-default">Cancelar</button>
+                            <a href="/customer/view_contact?customer_id={{contact.customer_id}}" class="btn btn-default">Cancelar</a>
                         </div>
                         {% raw xsrf_form_html() %}
                     </form>

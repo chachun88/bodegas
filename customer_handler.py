@@ -74,7 +74,12 @@ class CustomerSaveHandler(BaseHandler):
     def get(self):
 
         customer = Customer()
-        self.render("customer/save.html",dn="",mode="add", customer=customer)
+        customer_id = self.get_argument("id","")
+        if customer_id == "":
+            self.render("customer/save.html",dn="",mode="add", customer=customer)
+        else:
+            customer.InitById(customer_id)
+            self.render("customer/save.html",dn="",mode="edit", customer=customer)
 
     @tornado.web.authenticated
     def post(self):
@@ -82,11 +87,15 @@ class CustomerSaveHandler(BaseHandler):
         # instantiate order
         customer = Customer()
 
-        customer.name = self.get_argument("name")
+        customer.id = self.get_argument("id","")
+        customer.name = self.get_argument("name","").encode("utf-8")
         customer.type = self.get_argument("type", "")
+
+        
+
         customer.rut = self.get_argument("rut", "")
-        customer.lastname = self.get_argument("lastname","")
-        customer.bussiness = self.get_argument("bussiness","")
+        customer.lastname = self.get_argument("lastname","").encode("utf-8")
+        customer.bussiness = self.get_argument("bussiness","").encode("utf-8")
         customer.registration_date = self.get_argument("registration_date","")
         customer.approval_date = self.get_argument("approval_date","")
         customer.status = self.get_argument("status",1)
@@ -186,3 +195,24 @@ class ContactActionsHandler(BaseHandler):
 
     def check_xsrf_cookie(self):
         pass
+
+class EditContactHandler(BaseHandler):
+
+    def get(self):
+        contact_id = self.get_argument("id","")
+        contact = Contact()
+        contact.InitById(contact_id)
+        self.render("customer/edit_contact.html",contact=contact,mode="edit",dn="")
+
+    def post(self):
+        contact = Contact()
+        contact.customer_id = self.get_argument("customer_id","")
+        contact.name = self.get_argument("name","").encode("utf-8")
+        contact.email = self.get_argument("email","")
+        contact.address = self.get_argument("address","").encode("utf-8")
+        contact.telephone = self.get_argument("telephone","")
+        contact.type = self.get_argument("type","")
+        contact.id = self.get_argument("id","")
+
+        if contact.Edit().isdigit():
+            self.render("customer/edit_contact.html",contact=contact,mode="edit",dn="")

@@ -47,7 +47,7 @@ from image_handler import ImageHandler, ImageHandler2, ImageDeleteHandler
 
 from order_detail_handler import AddOrderDetailHandler, ListOrderDetailHandler
 
-from customer_handler import CustomerHandler, CustomerSaveHandler, CustomerActionsHandler, CustomerAddContactHandler, CustomerViewContactHandler, ContactActionsHandler
+from customer_handler import CustomerHandler, CustomerSaveHandler, CustomerActionsHandler, CustomerAddContactHandler, CustomerViewContactHandler, ContactActionsHandler, EditContactHandler
 
 #something
 define("port", default=port, help="run on the given port", type=int)
@@ -126,7 +126,8 @@ class Application(tornado.web.Application):
             (r"/customer/add_contact", CustomerAddContactHandler),
             (r"/customer/view_contact", CustomerViewContactHandler),
 
-            (r"/contact/actions", ContactActionsHandler)
+            (r"/contact/actions", ContactActionsHandler),
+            (r"/customer/edit_contact", EditContactHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 

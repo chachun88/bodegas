@@ -86,6 +86,25 @@ class Contact(BaseModel):
 
         return urllib.urlopen(url, post_data).read()
 
+    def Edit(self):
+
+        url = self.wsurl() + "/contact/edit"
+
+        data = {
+        "token":self.token(),
+        "name":self.name,
+        "email":self.email,
+        "address":self.address,
+        "telephone":self.telephone,
+        "customer_id":self.customer_id,
+        "type":self.type,
+        "id":self.id
+        }
+
+        post_data = urllib.urlencode(data)
+
+        return urllib.urlopen(url, post_data).read()
+
     def ListByCustomerId(self,customer_id):
 
         url = self.wsurl() + "/contact/listbycustomerid"
@@ -123,3 +142,26 @@ class Contact(BaseModel):
 
         post_data = urllib.urlencode(data)
         urllib.urlopen(url, post_data).read()
+
+    def InitById(self,_id):
+
+        url = self.wsurl() + "/contact/initbyid"
+
+        data = {
+        "token":self.token(),
+        "id":_id
+        }
+
+        post_data = urllib.urlencode(data)
+        json_string = urllib.urlopen(url, post_data).read()
+
+        json_obj = json_util.loads(json_string)
+
+        self.id = json_obj["id"]
+        self.name = json_obj["name"]
+        self.email = json_obj["email"]
+        self.address = json_obj["address"]
+        self.telephone = json_obj["telephone"]
+        self.customer_id = json_obj["customer_id"]
+        self.type = json_obj["type"]
+        
