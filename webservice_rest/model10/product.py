@@ -12,24 +12,24 @@ import sys
 class Product(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
-		self._name = ''
-		self._sku = ''
-		self._description = ''
-		self._brand = ''
-		self._manufacturer = ''
-		self._size = []
-		self._color = []
-		self._material = ''
-		self._bullet_point_1 = ''
-		self._bullet_point_2 = ''
-		self._bullet_point_3 = ''
-		self._currency = '' 
-		self._image = ''
-		self._image_2 = ''
-		self._image_3 = ''
-		self._category = ''
-		self._upc = ''
-		self._price=''
+		self._name = '' #nombre de producto
+		self._sku = '' #id de producto
+		self._description = '' #descripcion de producto
+		self._brand = '' #marca de producto
+		self._manufacturer = '' #proveedor
+		self._size = [] #tallas
+		self._color = [] #color
+		self._material = '' #material
+		self._bullet_point_1 = '' #viñeta 1
+		self._bullet_point_2 = '' #viñeta 2
+		self._bullet_point_3 = '' #viñeta 3
+		self._currency = '' #divisa
+		self._image = '' #imagen 1
+		self._image_2 = '' #imagen 2
+		self._image_3 = '' #imagen 3
+		self._category = '' #categoria
+		self._upc = '' #articulo
+		self._price='' #precio compra
 
 		self.collection = db.product
 
