@@ -3,7 +3,7 @@
 
 from bson import json_util
 from bson.objectid import ObjectId
-from basemodel import BaseModel, db
+from basemodel import BaseModel
 from order_detail import OrderDetail
 
 
@@ -143,12 +143,29 @@ class Order(BaseModel):
 
     def GetOrderById(self, _id):
 
-        order = self.collection.find_one({"id":int(_id)})
+        # order = self.collection.find_one({"id":int(_id)})
+
+        # if order:
+        #     return json_util.dumps(order)
+        # else:
+        #     return "{}"
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        query = '''select * from "Order" where id = %(id)s limit 1'''
+
+        parametros = {
+        "id":_id
+        }
+
+        cur.execute(query,parametros)
+
+        order = cur.fetchone()
 
         if order:
-            return json_util.dumps(order)
+            return order
         else:
-            return "{}"
+            return {}
 
     def Save(self):
 

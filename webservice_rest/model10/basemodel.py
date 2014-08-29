@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-import pymongo
-
+import psycopg2
+import psycopg2.extras
+import math
 from bson import json_util
 from bson.objectid import ObjectId
 
@@ -11,62 +12,84 @@ from globals import debugMode, db
 
 class BaseModel(object):
 	def __init__(self):
-		self._identifier = ''
-		self._collection = db.base_testing ## mongodb collection
+		self._connection = psycopg2.connect("host='ondev.today' dbname='giani' user='yichun' password='chachun88'")
+		self._table = ""
+		self._id = ""
 
 	@property
-	def identifier(self):
-		return self._identifier
-	@identifier.setter
-	def identifier(self, value):
-		self._identifier = value
-
+	def id(self):
+	    return self._id
+	@id.setter
+	def id(self, value):
+	    self._id = value
+	
 	@property
-	def collection(self):
-		return self._collection
-	@collection.setter
-	def collection(self, value):
-		self._collection = value
-
-	@property
-	def db(self):
-	    return db
+	def table(self):
+	    return self._table
+	@table.setter
+	def table(self, value):
+	    self._table = value
 	
 
+	@property
+	def connection(self):
+	    return self._connection
+	
 	def Save(self):
 		return ShowError("must be overriden by user")
 
 	def InitById(self, idd):
 		return ShowError("must be overriden by user")
 
-	#@return json object
 	def GetList(self, page, items):
 
-		#validate inputs
 		page = int(page)
 		items = int(items)
-		return self.collection.find().skip((page-1)*items).limit(items)
+		offset = (page-1)*items
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+		try:
+			cur.execute("select from \"{tabla}\" limit {items} offset {offset}".format(tabla=self.table,items=items,offset=offset))
+			lista = cur.fetchall()
+			return lista
+		except Exception,e:
+			print str(e)
+			return {}
+
+		# return self.collection.find().skip((page-1)*items).limit(items)
 
 	#@return integer
 	def GetPages(self, limit):
-		try:
-			items = int(limit)
-			items = self.collection.find().count() / items
 
-			return items
-		except Exception, e:
+		items = float(limit)
+		cur = self.connection.cursor()
+		try:
+			cur.execute("select count(*) from \"{tabla}\"".format(tabla=self.table))
+			total = float(cur.fetchone()[0])
+			paginas = math.floor(total/items)
+			return paginas
+		except Exception,e:
+			print str(e)
 			return 0
+
+		# try:
+		# 	items = int(limit)
+		# 	items = self.collection.find().count() / items
+
+		# 	return items
+		# except Exception, e:
+		# 	return 0
 
 	#@return json object
 	def Remove(self):
 		try:
 			## raise exception if identifier is empty
-			if self.identifier == "":
+			if self.id == "":
 				raise
 
-			self.collection.remove({"_id":ObjectId(self.identifier)})
+			cur = self.connection.cursor()
+			cur.execute("delete from \"{tabla}\" where id = {id}".format(tabla=self.table,id=self.id))
 
-			return self.ShowSuccessMessage("object: " + self.identifier + " has been deleted")
+			return self.ShowSuccessMessage("object: " + self.id + " has been deleted")
 		except Exception, e:
 			return self.ShowError("object: not found")
 
