@@ -35,7 +35,7 @@ class Category(BaseModel):
 	def InitByName(self, name):
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-		query = '''select * from "Brand" where name = %(name)s'''
+		query = '''select * from "Category" where name = %(name)s'''
 		parameters = {
 		"name":name
 		}
@@ -76,7 +76,7 @@ class Category(BaseModel):
 		# 	return self.ShowError("category can not be initialized")
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-		query = '''select * from "Brand" where id = %(id)s'''
+		query = '''select * from "Category" where id = %(id)s'''
 		parameters = {
 		"id":idd
 		}
@@ -121,20 +121,73 @@ class Category(BaseModel):
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		query = '''select * from "Brand" where name = %(name)s'''
 		parameters = {
+		"name":self.name
+		}
+		cur.execute(query,parameters)
+		category = cur.fetchone()
+
+		if category:
+			query = '''update "Category" set parent = %(parent)s where name = %(name)s'''
+
+			parameters = {
+			"name": self.name,
+			"parent":self.parent
+			}
+
+			cur.execute(query,parameters)
+
+			self.connection.commit()
+
+		else:
+
+			query = '''insert into "Category" (name,parent) values (%(name)s,%(parent)s) RETURNING id;'''
+
+			parameters = {
+			"name": self.name,
+			"parent":self.parent
+			}
+
+			try:
+
+				cur.execute(query,parameters)
+
+				return self.ShowSuccessMessage("category saved correctly")
+
+			except Exception, e:
+
+				return self.ShowError("error saving category:{}".format(str(e)))
+
+			self.id = cur.fetchone()[0]
+
+			self.connection.commit()
+
+
+	def GetAllCategories(self):
+		# return self.collection.find()
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+		query = '''select * from "Category"'''
+		cur.execute(query)
+		categories = cur.fetchall()
+
+		return categories
+
+	def Exist(self, name):
+		# print "aa"
+		# if self.collection.find({"name":name}).count() >= 1:
+		# 	return True
+		# return False
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+		query = '''select * from "Category" where name = %(name)s'''
+		parameters = {
 		"name":name
 		}
 		cur.execute(query,parameters)
 		category = cur.fetchone()
 
 		if category:
-			query = '''update 
-
-	def GetAllCategories(self):
-		return self.collection.find()
-
-	def Exist(self, name):
-		print "aa"
-		if self.collection.find({"name":name}).count() >= 1:
 			return True
-		return False
+		else:
+			return False
 
