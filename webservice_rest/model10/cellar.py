@@ -549,6 +549,8 @@ class Cellar(BaseModel):
 
 	def ListKardex(self, page, items, day, fromm, until):
 
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
 		if day == "today":
 			# now = datetime.datetime.now()
 			# yesterday = now - datetime.timedelta(days=1)
@@ -610,51 +612,95 @@ class Cellar(BaseModel):
 
 	def FindProductKardex(self, product_sku, cellar_identifier, size):
 
-		try:
+		# try:
 
-			if cellar_identifier == "remove" and size == "remove":
-				str_query = [
-					{'$match':{'product_sku': product_sku}}
-					,
-					{'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
-					] 
+		# 	if cellar_identifier == "remove" and size == "remove":
+		# 		str_query = [
+		# 			{'$match':{'product_sku': product_sku}}
+		# 			,
+		# 			{'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
+		# 			] 
 
-				eps = db.kardex.aggregate(pipeline=str_query)
-
-
-				return eps['result']
-
-			else:	
-				# str_query = '[{$match:{"product_sku":"%s", "cellar_identifier":"%s", "size":"%s.0" }},{$group:{"_id":"$operation_type", total:{$sum:"$units"}}}]' % ( str(product_sku), str(cellar_identifier), size )
-				str_query = [
-					{'$match':{'product_sku': product_sku, 'cellar_identifier':cellar_identifier, 'size':size }}
-					,
-					{'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
-					] 
-
-				eps = db.kardex.aggregate(pipeline=str_query)
+		# 		eps = db.kardex.aggregate(pipeline=str_query)
 
 
-				return eps['result']
+		# 		return eps['result']
 
-				# str_query = '{"product_sku":"%s", "cellar_identifier": "%s", "size":"%s.0", "operation_type":"sell"}' % ( str(product_sku), str(cellar_identifier), size )
-				# data2 = db.kardex.find( json_util.loads(str_query)).sort("_id", -1)
+		# 	else:	
+		# 		# str_query = '[{$match:{"product_sku":"%s", "cellar_identifier":"%s", "size":"%s.0" }},{$group:{"_id":"$operation_type", 
+		        # total:{$sum:"$units"}}}]' % ( str(product_sku), str(cellar_identifier), size )
+		# 		str_query = [
+		# 			{'$match':{'product_sku': product_sku, 'cellar_identifier':cellar_identifier, 'size':size }}
+		# 			,
+		# 			{'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
+		# 			] 
+
+		# 		eps = db.kardex.aggregate(pipeline=str_query)
+
+
+		# 		return eps['result']
+
+		# 		# str_query = '{"product_sku":"%s", "cellar_identifier": "%s", "size":"%s.0", "operation_type":"sell"}' % ( str(product_sku), str(cellar_identifier), size )
+		# 		# data2 = db.kardex.find( json_util.loads(str_query)).sort("_id", -1)
 				
-				# return data2
+		# 		# return data2
 
-		except Exception, e:			
-			print e			
+		# except Exception, e:			
+		# 	print e	
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)		
+
+		if cellar_identifier == "remove" and size == "remove":
+			
+			query = '''select sum(units), operation_type from "Kardex" where product_sku = %(product_sku)s group by operation_type'''
+			parametros = {
+			"product_sku":product_sku
+			}
+			cur.execute(query, parametros)
+			result = cur.fetchall()
+			return result
+		else:
+
+			query = '''select sum(units), operation_type from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s group by operation_type'''
+			parametros = {
+			"product_sku":product_sku
+			}
+			cur.execute(query, parametros)
+			result = cur.fetchall()
+			return result
+
+
 
 	def Rename(self, new_name):
+		# try:
+
+		# 	if new_name == "":
+		# 		raise
+
+		# 	self.collection.update({"_id":ObjectId(self.identifier)},
+		# 		{"$set":{
+		# 			"name":new_name
+		# 		}})
+		# 	self.name = new_name
+		# 	self.ShowSuccessMessage("name changed correctly")
+		# except:
+		# 	self.ShowError("error changing name")
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
 		try:
 
 			if new_name == "":
 				raise
 
-			self.collection.update({"_id":ObjectId(self.identifier)},
-				{"$set":{
-					"name":new_name
-				}})
+			query = '''update "Cellar" set name = %(name)s where id = %(id)s'''
+			parametros = {
+			"name":new_name,
+			"id":self.id
+			}
+
+			cur.execute(query,parametros)
+			self.connection.commit()
 			self.name = new_name
 			self.ShowSuccessMessage("name changed correctly")
 		except:
