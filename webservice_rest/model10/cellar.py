@@ -126,55 +126,91 @@ class Cellar(BaseModel):
 
 	def GetTotalUnits(self):
 
-		data = db.kardex.find({"cellar_identifier":self.identifier})
+		# data = db.kardex.find({"cellar_identifier":self.identifier})
 
-		data = db.kardex.aggregate([
-			{"$match":
-				{"cellar_identifier":self.identifier}
-			},{
-			"$group":
-			{"_id":{ "product_sku":"$product_sku"}}
-			}])
+		# data = db.kardex.aggregate([
+		# 	{"$match":
+		# 		{"cellar_identifier":self.identifier}
+		# 	},{
+		# 	"$group":
+		# 	{"_id":{ "product_sku":"$product_sku"}}
+		# 	}])
+
+		# kardex = Kardex()
+
+		# total_units = 0
+
+		# for x in data["result"]:
+		# 	product = x["_id"]["product_sku"]
+		# 	kardex.FindKardex(product, self.identifier)
+
+		# 	total_units += kardex.balance_units
+		
+		# return int(total_units)
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select distinct product_sku from "Cellar" where id = %(id)s'''
+		parametros = {
+		"id":self.id
+		}
+		cur.execute(query,parametros)
+		psku = cur.fetchall()
 
 		kardex = Kardex()
-
 		total_units = 0
 
-		for x in data["result"]:
-			product = x["_id"]["product_sku"]
-			kardex.FindKardex(product, self.identifier)
-
+		for p in psku:
+			kardex.FindKardex(p,self.id)
 			total_units += kardex.balance_units
-		
+
 		return int(total_units)
 
 	def GetTotalPrice(self):
-		data = db.kardex.find({"cellar_identifier":self.identifier})
+		# data = db.kardex.find({"cellar_identifier":self.identifier})
 
-		data = db.kardex.aggregate([
-			{"$match":
-				{"cellar_identifier":self.identifier}
-			},{
-			"$group":
-			{"_id":{ "product_sku":"$product_sku"}}
-			}])
+		# data = db.kardex.aggregate([
+		# 	{"$match":
+		# 		{"cellar_identifier":self.identifier}
+		# 	},{
+		# 	"$group":
+		# 	{"_id":{ "product_sku":"$product_sku"}}
+		# 	}])
+
+		# kardex = Kardex()
+
+		# total_price = 0
+
+		# for x in data["result"]:
+		# 	product = x["_id"]["product_sku"]
+		# 	kardex.FindKardex(product, self.identifier)
+
+		# 	total_price += kardex.balance_total
+		
+		# return int(total_price)
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select distinct product_sku from "Cellar" where id = %(id)s'''
+		parametros = {
+		"id":self.id
+		}
+		cur.execute(query,parametros)
+		psku = cur.fetchall()
 
 		kardex = Kardex()
-
 		total_price = 0
 
-		for x in data["result"]:
-			product = x["_id"]["product_sku"]
-			kardex.FindKardex(product, self.identifier)
-
+		for p in psku:
+			kardex.FindKardex(p,self.id)
 			total_price += kardex.balance_total
-		
+
 		return int(total_price)
 
 	#@return json
 	def Print(self):
 		try:
-			me = {"_id":ObjectId(self.identifier),
+			me = {"_id":self.id,
 				"name" : self.name,
 				"description": self.description,
 				"total_price": self.GetTotalPrice(),
@@ -187,149 +223,321 @@ class Cellar(BaseModel):
 	@staticmethod
 	def CellarExists( cellar_name ):
 
-		data = db.cellar.find({"name" : cellar_name })
+		# data = db.cellar.find({"name" : cellar_name })
 		
-		if data.count() >= 1:
+		# if data.count() >= 1:
+		# 	return True
+		# return False
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Cellar" where name = %(name)s limit 1'''
+		parametros = {
+		"name":cellar_name
+		}
+		cur.execute(query,parametros)
+		cellar = cur.fetchone()
+
+		if cellar:
 			return True
-		return False
+		else:
+			return False
 
 	## validates and save cellar, it could be validated by name
 	def Save(self):
-		try:
 
-			## validate if already exists a cellar with this name
-			data_name = self.collection.find({"name": self.name})
-			if data_name.count() >= 1:
-				self.identifier = str(self.collection.update(
-					{"_id":data_name[0]["_id"]},
-					{"$set": {
-						"name" : self.name,
-						"description" : self.description
-					}}))
+		# try:
 
-				self.InitById(str(data_name[0]["_id"]))
+		# 	## validate if already exists a cellar with this name
+		# 	data_name = self.collection.find({"name": self.name})
+		# 	if data_name.count() >= 1:
+		# 		self.identifier = str(self.collection.update(
+		# 			{"_id":data_name[0]["_id"]},
+		# 			{"$set": {
+		# 				"name" : self.name,
+		# 				"description" : self.description
+		# 			}}))
 
-				return self.ShowSuccessMessage(data_name[0]["_id"])
+		# 		self.InitById(str(data_name[0]["_id"]))
 
-			##validate if the identifier exists
-			if self.identifier == "":
-				self.identifier = str(self.collection.insert({
-					"name": self.name,
-					"description": self.description
-					}))
+		# 		return self.ShowSuccessMessage(data_name[0]["_id"])
 
-				self.InitById(self.identifier)
+		# 	##validate if the identifier exists
+		# 	if self.identifier == "":
+		# 		self.identifier = str(self.collection.insert({
+		# 			"name": self.name,
+		# 			"description": self.description
+		# 			}))
 
-				return self.ShowSuccessMessage(self.identifier)
+		# 		self.InitById(self.identifier)
 
-			data = self.collection.find({"_id":ObjectId(self.identifier)})
+		# 		return self.ShowSuccessMessage(self.identifier)
 
-			if data.count() >= 1:
-				self.identifier = str(self.collection.update(
-					{"_id":data[0]["_id"]},
-					{"$set": {
-						"name" : self.name,
-						"description" : self.description
-					}}))
-				self.InitById(self.identifier)
+		# 	data = self.collection.find({"_id":ObjectId(self.identifier)})
 
-			return self.ShowSuccessMessage(str(object_id))
-		except Exception, e:
-			print str(e)
-			return self.ShowError("failed to save cellar " + self.name)
+		# 	if data.count() >= 1:
+		# 		self.identifier = str(self.collection.update(
+		# 			{"_id":data[0]["_id"]},
+		# 			{"$set": {
+		# 				"name" : self.name,
+		# 				"description" : self.description
+		# 			}}))
+		# 		self.InitById(self.identifier)
+
+		# 	return self.ShowSuccessMessage(str(object_id))
+		# except Exception, e:
+		# 	print str(e)
+		# 	return self.ShowError("failed to save cellar " + self.name)
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Cellar" where name = %(name)s limit 1'''
+		parametros = {
+		"name":cellar_name
+		}
+		cur.execute(query,parametros)
+		cellar = cur.fetchone()
+
+		if cellar:
+
+			try:
+				query = '''update "Cellar" set description = %(description)s and name = %(name)s where id = %(id)s returning id'''
+				parametros = {
+				"description": self.description,
+				"name": self.name,
+				"id":cellar['id']
+				}
+				cur.execute(query,parametros)
+				self.id = cur.fetchone()[0]
+				self.InitById(self.id)
+
+				return self.ShowSuccessMessage(self.id)
+
+			except Exception,e:
+				return self.ShowError("failed to save cellar {}, error:{}".format(self.name,str(e)))
+
+		else:
+
+			try:
+				query = '''insert into "Cellar" (description, name) values (%(description)s,%(name)s) returning id'''
+				parametros = {
+				"description": self.description,
+				"name": self.name
+				}
+				cur.execute(query,parametros)
+				self.id = cur.fetchone()[0]
+				self.InitById(self.id)
+
+				return self.ShowSuccessMessage(self.id)
+
+			except Exception,e:
+				return self.ShowError("failed to save cellar {}, error:{}".format(self.name,str(e)))			
+		
 
 	def GetList(self, page, items):
-		#validate inputs
+		# #validate inputs
+		# page = int(page)
+		# items = int(items)
+		# data = self.collection.find().skip((page-1)*items).limit(items)
+
+		# data_rtn = [] ## return this data
+
+		# for d in data:
+
+		# 	cellar = Cellar()
+		# 	cellar.identifier = str(d["_id"])
+		# 	cellar.name = d["name"]
+		# 	cellar.description = d["description"]
+
+		# 	data_rtn.append(cellar.Print())
+		# return data_rtn
+
 		page = int(page)
 		items = int(items)
-		data = self.collection.find().skip((page-1)*items).limit(items)
+		offset = items * (page - 1)
 
-		data_rtn = [] ## return this data
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		for d in data:
+		query = '''select * from "Cellar" limit %(items)s offset %(offset)s'''
+		parametros = {
+		"items":items,
+		"offset":offset
+		}
+		cur.execute(query,parametros)
+		cellar = cur.fetchall()
 
+		data_rtn = []
+
+		for c in cellar:
 			cellar = Cellar()
-			cellar.identifier = str(d["_id"])
-			cellar.name = d["name"]
-			cellar.description = d["description"]
+			self.id = c['id']
+			self.name = c['name']
+			self.description = c['description']
 
 			data_rtn.append(cellar.Print())
+
 		return data_rtn
 
 	### WARNING: this method is not opmitimized
 	#@return direct database collection
 	@staticmethod
 	def GetAllCellars():
-		data = db.cellar.find()
+		# data = db.cellar.find()
 
-		data_rtn = [] ## return this data
+		# data_rtn = [] ## return this data
 
-		for d in data:
+		# for d in data:
 
+		# 	cellar = Cellar()
+		# 	cellar.identifier = str(d["_id"])
+		# 	cellar.name = d["name"]
+		# 	cellar.description = d["description"]
+
+		# 	data_rtn.append(cellar.Print())
+		# return data_rtn
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Cellar"'''
+		cur.execute(query)
+		cellar = cur.fetchall()
+
+		data_rtn = []
+
+		for c in cellar:
 			cellar = Cellar()
-			cellar.identifier = str(d["_id"])
-			cellar.name = d["name"]
-			cellar.description = d["description"]
+			self.id = c['id']
+			self.name = c['name']
+			self.description = c['description']
 
 			data_rtn.append(cellar.Print())
+
 		return data_rtn
 
 	def InitByName(self, name):
-		try:
-			datas = self.collection.find({"name": name})
+		# try:
+		# 	datas = self.collection.find({"name": name})
 
-			if datas >= 1:
-				data = datas[0]
-				self.identifier = str(data["_id"])
-				self.name = data["name"]
-				self.description = data["description"]
+		# 	if datas >= 1:
+		# 		data = datas[0]
+		# 		self.identifier = str(data["_id"])
+		# 		self.name = data["name"]
+		# 		self.description = data["description"]
 
-				return self.ShowSuccessMessage("cellar initialized")
-			else:
-				raise
-		except:
+		# 		return self.ShowSuccessMessage("cellar initialized")
+		# 	else:
+		# 		raise
+		# except:
+		# 	return self.ShowError("item not found")
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Cellar" where name = %(name)s limit 1'''
+		parametros = {
+		"name":name
+		}
+		cur.execute(query,parametros)
+		cellar = cur.fetchone()
+
+		if cellar:
+			self.id = cellar['id']
+			self.name = cellar['name']
+			self.description = cellar['description']
+
+			return self.ShowSuccessMessage("cellar initialized")
+
+		else:
+
 			return self.ShowError("item not found")
 
 	def InitById(self, idd):
-		try:
-			datas = self.collection.find({"_id": ObjectId(idd)})
+		# try:
+		# 	datas = self.collection.find({"_id": ObjectId(idd)})
 
-			if datas >= 1:
-				data = datas[0]
-				self.identifier = str(data["_id"])
-				self.name = data["name"]
-				self.description = data["description"]
+		# 	if datas >= 1:
+		# 		data = datas[0]
+		# 		self.identifier = str(data["_id"])
+		# 		self.name = data["name"]
+		# 		self.description = data["description"]
 
-				return self.ShowSuccessMessage("cellar initialized")
-			else:
-				raise
-		except:
+		# 		return self.ShowSuccessMessage("cellar initialized")
+		# 	else:
+		# 		raise
+		# except:
+		# 	return self.ShowError("item not found")
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Cellar" where id = %(id)s limit 1'''
+		parametros = {
+		"id":idd
+		}
+		cur.execute(query,parametros)
+		cellar = cur.fetchone()
+
+		if cellar:
+			self.id = cellar['id']
+			self.name = cellar['name']
+			self.description = cellar['description']
+
+			return self.ShowSuccessMessage("cellar initialized")
+
+		else:
+
 			return self.ShowError("item not found")
 
 	def ListProducts(self, page, items):
-		data = db.kardex.find({"cellar_identifier":self.identifier})
+		# data = db.kardex.find({"cellar_identifier":self.identifier})
 
-		data = db.kardex.aggregate([
-			{"$match":
-				{"cellar_identifier":self.identifier}
-			},{
-				"$group":
-					{"_id":{ "product_sku":"$product_sku"}}
-			}])
+		# data = db.kardex.aggregate([
+		# 	{"$match":
+		# 		{"cellar_identifier":self.identifier}
+		# 	},{
+		# 		"$group":
+		# 			{"_id":{ "product_sku":"$product_sku"}}
+		# 	}])
+
+		# rtn_data = []
+
+		# kardex = Kardex()
+
+		# for x in data["result"]:
+		# 	product = Product()
+		# 	product.InitBySku(str(x["_id"]["product_sku"]))
+		# 	#print "idddddddddd"+str(x["_id"]["product_sku"])
+		# 	prod_print = product.Print()
+		# 	#print "product print "+json_util.dumps(prod_print)
+
+		# 	if "error" not in prod_print:
+		# 		kardex.FindKardex(str(prod_print["sku"]), self.identifier)
+		# 		prod_print["balance_units"] = kardex.balance_units
+		# 		prod_print["balance_price"] = kardex.balance_price
+		# 		prod_print["balance_total"] = kardex.balance_total
+
+		# 		rtn_data.append(prod_print)
+		
+		# return rtn_data
 
 		rtn_data = []
 
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select distinct product_sku from "Cellar" where id = %(id)s'''
+		parametros = {
+		"id":self.id
+		}
+		cur.execute(query,parametros)
+		psku = cur.fetchall()
+
 		kardex = Kardex()
 
-		for x in data["result"]:
+		for p in psku:
 			product = Product()
-			product.InitBySku(str(x["_id"]["product_sku"]))
-			#print "idddddddddd"+str(x["_id"]["product_sku"])
+			product.InitBySku(p)
 			prod_print = product.Print()
-			#print "product print "+json_util.dumps(prod_print)
 
 			if "error" not in prod_print:
-				kardex.FindKardex(str(prod_print["sku"]), self.identifier)
+				kardex.FindKardex(str(prod_print["sku"]), self.id)
 				prod_print["balance_units"] = kardex.balance_units
 				prod_print["balance_price"] = kardex.balance_price
 				prod_print["balance_total"] = kardex.balance_total
@@ -338,51 +546,68 @@ class Cellar(BaseModel):
 		
 		return rtn_data
 
+
 	def ListKardex(self, page, items, day, fromm, until):
 
 		if day == "today":
-			now = datetime.datetime.now()
-			yesterday = now - datetime.timedelta(days=1)
+			# now = datetime.datetime.now()
+			# yesterday = now - datetime.timedelta(days=1)
+			query = """select * from "Kardex" where date(date) = DATE 'today'"""
 		if day == "yesterday":
-			now = datetime.datetime.now() - datetime.timedelta(days=1)
-			yesterday = now - datetime.timedelta(days=2)
+			# now = datetime.datetime.now() - datetime.timedelta(days=1)
+			# yesterday = now - datetime.timedelta(days=2)
+			query = """select * from "Kardex" where date(date) = DATE 'yesterday'"""
 
 		if day == "today" or day == "yesterday":
 
-			start_date = datetime.datetime(yesterday.year, yesterday.month, yesterday.day, 23, 59, 59)
-			end_date = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
-			oid_start = ObjectId.from_datetime(start_date)
-			oid_stop = ObjectId.from_datetime(end_date)
+			# start_date = datetime.datetime(yesterday.year, yesterday.month, yesterday.day, 23, 59, 59)
+			# end_date = datetime.datetime(now.year, now.month, now.day, 23, 59, 59)
+			# oid_start = ObjectId.from_datetime(start_date)
+			# oid_stop = ObjectId.from_datetime(end_date)
 
-			str_query = '{ "$and" : [{"operation_type":"sell"},{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }]}' % ( str(oid_start), str(oid_stop) )
-			data = db.kardex.find( json_util.loads(str_query) )
+			# str_query = '{ "$and" : [{"operation_type":"sell"},{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }]}' % ( str(oid_start), str(oid_stop) )
+
+			query += """ and operation_type = 'sell'"""
+			# data = db.kardex.find( json_util.loads(str_query) )
+			cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+			cur.execute(query)
+			data = cur.fetchall()
+
 			return data
  			
 		if day == "period":
 
-			ffrom=fromm.split("-")
+			# ffrom=fromm.split("-")
 
-			from_y=int(ffrom[0])
-			from_m=int(ffrom[1])
-			from_d=int(ffrom[2])
+			# from_y=int(ffrom[0])
+			# from_m=int(ffrom[1])
+			# from_d=int(ffrom[2])
 
-			untill= until.split("-")
+			# untill= until.split("-")
 
-			until_y=int(untill[0])
-			until_m=int(untill[1])
-			until_d=int(untill[2])
+			# until_y=int(untill[0])
+			# until_m=int(untill[1])
+			# until_d=int(untill[2])
 
-			# now = datetime.datetime.now()
-			# yesterday = now - datetime.timedelta(days=30)	
+			# # now = datetime.datetime.now()
+			# # yesterday = now - datetime.timedelta(days=30)	
 
-			start_date = datetime.datetime(from_y, from_m, from_d, 0, 0, 0)
-			end_date = datetime.datetime(until_y, until_m, until_d, 23, 59, 59)
-			oid_start = ObjectId.from_datetime(start_date)
-			oid_stop = ObjectId.from_datetime(end_date)
+			# start_date = datetime.datetime(from_y, from_m, from_d, 0, 0, 0)
+			# end_date = datetime.datetime(until_y, until_m, until_d, 23, 59, 59)
+			# oid_start = ObjectId.from_datetime(start_date)
+			# oid_stop = ObjectId.from_datetime(end_date)
 
-			str_query = '{ "$and" : [{"operation_type":"sell"},{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }]}' % ( str(oid_start), str(oid_stop) )
-			data = db.kardex.find( json_util.loads(str_query) )
+			# str_query = '{ "$and" : [{"operation_type":"sell"},{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }]}' % ( str(oid_start), str(oid_stop) )
+			# data = db.kardex.find( json_util.loads(str_query) )
+			# return data
+
+			query = """select * from "Kardex" where date(date) between %(start_date)s and %(end_date)s and operation_type = 'sell'"""
+			# data = db.kardex.find( json_util.loads(str_query) )
+			cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+			cur.execute(query)
+			data = cur.fetchall()
 			return data
+
 	def FindProductKardex(self, product_sku, cellar_identifier, size):
 
 		try:
