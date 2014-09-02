@@ -1,4 +1,4 @@
-				#!/usr/bin/python
+#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 from basemodel import BaseModel, db
@@ -21,6 +21,7 @@ class Cellar(BaseModel):
 		self._name = ''
 		self._description = ''
 		self.collection = db.cellar
+		self.table = 'Cellar'
 
 	@property
 	def name(self):
@@ -38,31 +39,87 @@ class Cellar(BaseModel):
 
 	## override
 	def Remove(self):
-		#validate if cellar still has products
-		data = self.db.kardex.find({ "cellar_identifier": self.identifier })
+		# #validate if cellar still has products
+		# data = self.db.kardex.find({ "cellar_identifier": self.identifier })
+		# is_empty = True
+
+		# for d in data:
+		# 	#detect if product exists
+		# 	product_data = self.db.kardex.find({"product_sku": d["product_sku"], "cellar_identifier": self.identifier}).sort("_id", -1).limit(1)
+
+		# 	for dat in product_data:
+				
+		# 		if int(dat["balance_units"]) >=1:
+		# 			is_empty = False
+		# 	# if ( product_data.count() >= 1 ):
+		# 	# 	##validate
+		# 	# 	is_empty = False
+		# if (is_empty):
+
+		# 	## remove permissions from user
+		# 	try:
+		# 		self.db.salesman.update({"permissions":self.name},{"$pull": { "permissions": self.name} }, multi=True);
+
+		# 	except Exception, e:
+		# 		self.ShowError(str( e ))
+			
+		# 	return BaseModel.Remove(self)
+		# else:
+		# 	return self.ShowError("No se puede eliminar, aún contiene productos.")
+
 		is_empty = True
 
-		for d in data:
-			#detect if product exists
-			product_data = self.db.kardex.find({"product_sku": d["product_sku"], "cellar_identifier": self.identifier}).sort("_id", -1).limit(1)
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-			for dat in product_data:
-				
-				if int(dat["balance_units"]) >=1:
-					is_empty = False
-			# if ( product_data.count() >= 1 ):
-			# 	##validate
-			# 	is_empty = False
-		if (is_empty):
+        query = '''select * from "Kardex" where cellar_id = %(cellar_id)s'''
 
-			## remove permissions from user
-			try:
-				self.db.salesman.update({"permissions":self.name},{"$pull": { "permissions": self.name} }, multi=True);
+        parametros = {
+        "cellar_id":self.id
+        }
 
-			except Exception, e:
-				self.ShowError(str( e ))
-			
+        cur.execute(query,parametros)
+
+        kardex = cur.fetchall()
+
+        for k in kardex:
+
+        	query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s order by id desc limit 1'''
+
+        	parametros = {
+        	"product_sku":k["product_sku"],
+        	"cellar_id":self.id
+        	}
+
+        	cur.execute(query,parametros)
+
+        	_kardex = cur.fetchone()
+
+        	if _kardex:
+        		if int(_kardex["balance_units"]) >=1:
+        			is_empty = False
+
+        if is_empty:
+
+        	query = '''select cellars from "User" where 1 = any(cellars)'''
+        	cur.execute(query)
+        	cellars = cur.fetchall()
+
+        	try:
+			    cellars.remove(self.id)
+			except ValueError:
+			    pass
+
+			query = '''update "User" set cellars = %(cellars)s'''
+			parametros = {
+			"cellars":cellars
+			}
+
+			cur.execute(query,parametros)
+			self.connection.commit()
+
+
 			return BaseModel.Remove(self)
+
 		else:
 			return self.ShowError("No se puede eliminar, aún contiene productos.")
 
