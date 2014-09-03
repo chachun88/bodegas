@@ -130,29 +130,42 @@ class Customer(BaseModel):
     
     def InitById(self, _id):
 
-        customer = self.collection.find_one({"id":int(_id)})
+        # customer = self.collection.find_one({"id":int(_id)})
 
-        if customer:
+        # if customer:
 
+        #     return customer
+
+        # else:
+
+        #     return {}
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        query = '''select * from "Customer" where id = %(id)s limit 1'''
+
+        parametros = {
+        "id":_id
+        }
+
+        try:
+            cur.execute(query,parametros)
+            customer = cur.fetchone()
             return customer
-
-        else:
-
-            return {}
+        except:
+            return ""
 
     def Save(self):
 
-        new_id = db.seq.find_and_modify(query={'seq_name':'customer_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
+        # new_id = db.seq.find_and_modify(query={'seq_name':'customer_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
 
         # print self.contact
 
         customer = {
-        "id": new_id,
         "name": self.name,
         "lastname": self.lastname,
         "type": self.type,
         "rut": self.rut,
-        # "contact": self.contact,
         "bussiness": self.bussiness,
         "approval_date": self.approval_date,
         "registration_date": self.registration_date,
@@ -163,15 +176,29 @@ class Customer(BaseModel):
         "password": self.password
         }
 
+        # try:
+
+        #     self.collection.insert(customer)
+
+        #     return str(new_id)
+
+        # except Exception, e:
+
+        #     return str(e)
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        query = '''insert into "Customer" (name,lastname,type,rut,bussiness,approval_date,registration_date,status,first_view,last_view,username,password)
+        values (%(name)s,%(lastname)s,%(type)s,%(rut)s,%(bussiness)s,%(approval_date)s,%(registration_date)s,%(status)s,%(first_view)s,%(last_view)s,%(username)s,%(password)s)
+         returning id'''
+
         try:
-
-            self.collection.insert(customer)
-
-            return str(new_id)
-
-        except Exception, e:
-
-            return str(e)
+            cur.execute(query,customer)
+            self.connection.commit()
+            customer_id = cur.fetchone()[0]
+            return customer_id
+        except:
+            return ""
 
     def Edit(self):
 
@@ -179,34 +206,103 @@ class Customer(BaseModel):
         "name": self.name,
         "lastname": self.lastname,
         "type": self.type,
-        "bussiness": self.bussiness
+        "bussiness": self.bussiness,
+        "id":self.id
         }
 
+        # try:
+
+        #     self.collection.update({"id":int(self.id)},{"$set":customer})
+
+        #     return str(self.id)
+
+        # except Exception, e:
+
+        #     return str(e)
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        query = '''update "Customer" set name = %(name)s and lastname = %(lastname)s and type = %(type)s and bussiness = %(bussiness)s where id = %(id)s'''
+
         try:
+            cur.execute(query,customer)
+            self.connection.commit()
+            
+            return self.id
 
-            self.collection.update({"id":int(self.id)},{"$set":customer})
-
-            return str(self.id)
-
-        except Exception, e:
-
-            return str(e)
+        except:
+            return ""
 
     def List(self, current_page=1, items_per_page=20):
 
         skip = int(items_per_page) * ( int(current_page) - 1 )
 
-        lista = self.collection.find().skip(skip).limit(int(items_per_page))
+        #lista = self.collection.find().skip(skip).limit(int(items_per_page))
+
+        lista = {}
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        try:
+            query = '''select * from "Customer" limit %(limit)s offset %(offset)s'''
+            parametros = {
+            "limit":items_per_page,
+            "offset":skip
+            }
+            cur.execute(query,parametros)
+            lista = cur.fetchall()
+
+        except:
+            pass
 
         return lista
 
     def ChangeState(self,ids,state):
         print ids.split(",")
         if int(state) == ESTADO_ACEPTADO:
-            self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state,"approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')}},multi=True)
+
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+            try:
+                query = '''update "Customer" set status = %(status)s and approval_date = %(approval_date)s where id in %(ids)s'''
+                parametros = {
+                "ids":ids.split(","),
+                "status":state,
+                "approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+                }
+                cur.execute(query,parametros)
+                self.connection.commit()
+
+            except:
+                pass
+            
+            #self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state,"approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')}},multi=True)
         else:
-            self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state}},multi=True)
+            # self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state}},multi=True)
+
+            try:
+                query = '''update "Customer" set status = %(status)s where id in %(ids)s'''
+                parametros = {
+                "ids":ids.split(","),
+                "status":state
+                }
+                cur.execute(query,parametros)
+                self.connection.commit()
+
+            except:
+                pass
 
     def Remove(self,ids):
         print ids
-        self.collection.remove({"id":{"$in":[int(n) for n in ids.split(",")]}})
+        # self.collection.remove({"id":{"$in":[int(n) for n in ids.split(",")]}})
+
+        try:
+            query = '''delete from "Customer" where id in %(ids)s'''
+            parametros = {
+            "ids":[int(n) for n in ids.split(",")]
+            }
+            cur.execute(query,parametros)
+            self.connection.commit()
+
+        except:
+            pass

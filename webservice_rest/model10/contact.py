@@ -68,19 +68,33 @@ class Contact(BaseModel):
 
 	def InitById(self, _id):
 
-		contact = self.collection.find_one({"id":int(_id)})
+		# contact = self.collection.find_one({"id":int(_id)})
 
-		if contact:
+		# if contact:
+		# 	return contact
+		# else:
+		# 	return ""
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Contact" where id = %(id)s limit 1'''
+
+		parametros = {
+		"id":_id
+		}
+
+		try:
+			cur.execute(query,parametros)
+			contact = cur.fetchone()
 			return contact
-		else:
+		except:
 			return ""
 
 	def Save(self):
 
-		new_id = db.seq.find_and_modify(query={'seq_name':'contact_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
+		#new_id = db.seq.find_and_modify(query={'seq_name':'contact_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
 
 		contact = {
-		"id": new_id,
 		"name": self.name,
 		"type": self.type,
 		"telephone": self.telephone,
@@ -91,8 +105,13 @@ class Contact(BaseModel):
 
 		try:
 
-			self.collection.insert(contact)
-
+			# self.collection.insert(contact)
+			cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+			query = '''insert into "Contact" (name,type,telephone,email,customer_id,address)
+			values (%(name)s,%(type)s,%(telephone)s,%(email)s,%(customer_id)s,%(address)s) returning id'''
+			cur.execute(query,contact)
+			self.connection.commit()
+			new_id = cur.fetchone()[0]
 			return new_id
 
 		except Exception, e:
@@ -109,26 +128,74 @@ class Contact(BaseModel):
 		"telephone": self.telephone,
 		"email": self.email,
 		"customer_id": self.customer_id,
-		"address":self.address
+		"address":self.address,
+		"id":self.id
 		}
 
+		# try:
+		# 	self.collection.update({"id":int(self.id)},{"$set":contact})
+		# 	return self.id
+		# except Exception, e:
+
+		# 	return str(e)
+
 		try:
-			self.collection.update({"id":int(self.id)},{"$set":contact})
+
+			# self.collection.insert(contact)
+			cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+			query = '''update "Contact" set name = %(name)s and type = %(type)s and telephone = %(telephone)s and email = %(email)s and customer_id = %(customer_id)s
+			and address = %(address)s where id = %(id)s'''
+			cur.execute(query,contact)
+			self.connection.commit()
 			return self.id
+
 		except Exception, e:
 
 			return str(e)
 
 	def ListByCustomerId(self, _customer_id):
 
-		contacts = self.collection.find({"customer_id":_customer_id})
+		# contacts = self.collection.find({"customer_id":_customer_id})
 
-		if contacts:
-			return contacts
-		else:
+		# if contacts:
+		# 	return contacts
+		# else:
+		# 	return []
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		try:
+
+			query = '''select * from "Contact" where customer_id = %(customer_id)s'''
+			parametros = {
+			"customer_id":_customer_id
+			}
+			cur.execute(query,parametros)
+			contactos = cur.fetchall()
+
+			if contactos:
+				return contactos
+			else:
+				return []
+
+		except:
+
 			return []
 
 	def Remove(self,ids):
 		print ids
-		self.collection.remove({"id":{"$in":[int(n) for n in ids.split(",")]}})
-	
+		# self.collection.remove({"id":{"$in":[int(n) for n in ids.split(",")]}})
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''delete from "Contact" where id in %(id)s'''
+
+		parametros = {
+		"id":[int(n) for n in ids.split(",")]
+		}
+
+		try:
+			cur.execute(query,parametros)
+			self.connection.commit()
+		except:
+			pass

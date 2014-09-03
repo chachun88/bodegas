@@ -31,66 +31,165 @@ class Color(BaseModel):
 		return {
 				"name":self.name,
 				"idd":self.idd,
-				"_id":ObjectId(self.identifier)}
+				"id":self.id}
 
 	def InitByName(self, name):
-		try:
-			colors = self.collection.find({"name":name})
+		# try:
+		# 	colors = self.collection.find({"name":name})
 
-			if colors.count() >= 1: 
-				self.name = colors[0]["name"]
-				self.idd = colors[0]["idd"]
-				self.identifier = str(colors[0]["_id"])
-				return self.ShowSuccessMessage("color correctly initialized")
+		# 	if colors.count() >= 1: 
+		# 		self.name = colors[0]["name"]
+		# 		self.idd = colors[0]["idd"]
+		# 		self.identifier = str(colors[0]["_id"])
+		# 		return self.ShowSuccessMessage("color correctly initialized")
+		# 	else:
+		# 		raise
+		# except:
+		# 	return self.ShowError("color can not be initialized")
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Color" where name = %(name)s limit 1'''
+
+		parametros = {
+		"name":name
+		}
+
+		try:
+			cur.execute(query,parametros)
+			color = cur.fetchone()
+
+			if color:
+
+				self.name = color['name']
+				self.id = color['id']
+
 			else:
 				raise
 		except:
+
 			return self.ShowError("color can not be initialized")
 
 	def InitById(self, idd):
-		try: 
-			colors = self.collection.find({"_id":ObjectId(idd)})
+		# try: 
+		# 	colors = self.collection.find({"_id":ObjectId(idd)})
 
-			if colors.count() >= 1: 
-				self.name = colors[0]["name"]
-				self.idd = colors[0]["idd"]
-				self.identifier = str(colors[0]["_id"])
-			return self.ShowSuccessMessage("color correctly initialized")
+		# 	if colors.count() >= 1: 
+		# 		self.name = colors[0]["name"]
+		# 		self.idd = colors[0]["idd"]
+		# 		self.identifier = str(colors[0]["_id"])
+		# 	return self.ShowSuccessMessage("color correctly initialized")
+		# except:
+		# 	return self.ShowError("color can not be initialized")
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Color" where id = %(id)s limit 1'''
+
+		parametros = {
+		"id":idd
+		}
+
+		try:
+			cur.execute(query,parametros)
+			color = cur.fetchone()
+
+			if color:
+
+				self.name = color['name']
+				self.id = color['id']
+
+			else:
+				raise
 		except:
+
 			return self.ShowError("color can not be initialized")
 
 	def Save(self):
+		# try:
+		# 	data = self.collection.find({"name":self.name})			
+		# 	if data.count() >= 1:
+		# 		self.collection.update({
+		# 			"name":self.name
+		# 			},{
+		# 			"$set":{
+		# 				"name" : self.name,
+		# 				#"idd":self.idd
+		# 				}
+		# 			})
+		# 		self.identifier = str(data[0]["_id"])
+
+		# 	else:
+		# 		count=db.system_js.counter("color")
+		# 		self.collection.save({
+		# 			"name":self.name,
+		# 			"idd":count
+		# 			})
+
+		# 		data = self.collection.find({"name":self.name})
+		# 		self.identifier = str(data[0]["_id"])
+
+		# 	return self.ShowSuccessMessage("color saved correctly")
+		# except:
+		# 	return self.ShowError("error saving color")
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Color" where name = %(name)s limit 1'''
+
+		parametros = {
+		"name":self.name
+		}
+
 		try:
-			data = self.collection.find({"name":self.name})			
-			if data.count() >= 1:
-				self.collection.update({
-					"name":self.name
-					},{
-					"$set":{
-						"name" : self.name,
-						#"idd":self.idd
-						}
-					})
-				self.identifier = str(data[0]["_id"])
+			cur.execute(query,parametros)
+			color = cur.fetchone()
 
-			else:
-				count=db.system_js.counter("color")
-				self.collection.save({
-					"name":self.name,
-					"idd":count
-					})
-
-				data = self.collection.find({"name":self.name})
-				self.identifier = str(data[0]["_id"])
-
-			return self.ShowSuccessMessage("color saved correctly")
+			if not color:
+				query = '''insert into "Color" (name) values (%(name)s) returning id'''
+				cur.execute(query,parametros)
+				self.id = cur.fetchone()[0]
+				self.connection.commit()
+				return self.ShowSuccessMessage("color saved correctly")
 		except:
+
 			return self.ShowError("error saving color")
 
 	def GetAllColors(self):
-		return self.collection.find()
+		# return self.collection.find()
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Color"'''
+
+		colores = {}
+
+		try:
+			cur.execute(query)
+			colores = cur.fetchall()
+		except:
+			pass
+
+		return colores
 
 	def Exist(self, name):
-		if self.collection.find({"name":name}).count() >= 1:
-			return True
-		return False
+		# if self.collection.find({"name":name}).count() >= 1:
+		# 	return True
+		# return False
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Color" where name = %(name)s limit 1'''
+
+		parametros = {
+		"name":self.name
+		}
+
+		try:
+			cur.execute(query,parametros)
+			color = cur.fetchone()
+
+			if color:
+				return True
+			else:
+				return False
