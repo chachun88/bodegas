@@ -166,7 +166,7 @@ class Product(BaseModel):
 	def Print(self):
 		try:
 			rtn_data = {
-				"_id":ObjectId(self.identifier),
+				"id":self.id,
 				"name":self.name,
 				"description":self.description,
 				"sku":self.sku,
@@ -193,10 +193,167 @@ class Product(BaseModel):
 
 	def Save(self):
  
+		# try:
+		# 	#if Category().Exist(self.category) == False and Brand().Exist(self.brand) == False:
+		# 	#	raise
+		# 	# print "coloooooooooooooooooor "+ self.color
+		# 	sizes=self.size.split(',')
+		# 	colors=self.color.split(',')
+		# 	if len(sizes) > len(colors):
+		# 		count=len(sizes)
+		# 	else:
+		# 		count=len(colors)
+
+		# 	sku_count = self.collection.find({"sku":self.sku}).count()
+
+		# 	## solve when sku already exists
+		# 	if sku_count >= 1:
+		# 		for i in range(0,len(sizes)):
+					
+		# 			try:
+		# 				self.collection.update({
+		# 						"sku":self.sku
+		# 						},{
+		# 						"$addToSet":{
+		# 							"size":sizes[i]
+		# 							}
+		# 							})
+		# 			except Exception, e:
+		# 				print " except "+str(e)+ " i "	+ str(i)
+		# 				pass
+		# 		for i in range(0,len(colors)):
+					
+		# 			try:
+		# 				self.collection.update({
+		# 						"sku":self.sku
+		# 						},{
+		# 						"$addToSet":{
+		# 							"color":colors[i]
+		# 							}
+		# 							})
+		# 			except Exception, e:
+		# 				print " except "+str(e)+ " i "	+ str(i)
+		# 				pass			
+
+		# 		self.collection.update({
+		# 				"sku":self.sku
+		# 				},{
+		# 				"$set":{
+		# 					"name":self.name,
+		# 					"description":self.description,
+		# 					"brand":self.brand,
+		# 					"manufacturer":self.manufacturer,
+		# 					# "size":self.sizes,
+		# 					# "color":self.colors,
+		# 					"material":self.material,
+		# 					"bullet_point_1":self.bullet_point_1,
+		# 					"bullet_point_2":self.bullet_point_2,
+		# 					"bullet_point_3":self.bullet_point_3,
+		# 					"image":self.image,
+		# 					"image_2":self.image_2,
+		# 					"image_3":self.image_3,
+		# 					# "currency":self.currency,
+		# 					"category":self.category,
+		# 					"price":self.price,
+		# 					"upc":self.upc
+		# 					}
+		# 				})
+
+		# 		self.identifier = str(self.collection.find({"sku":self.sku})[0]["_id"])
+		# 	##solve when id is not empty
+		# 	elif self.identifier.strip() != "":
+		# 		for i in range(0,len(sizes)):
+					
+		# 			try:
+		# 				self.collection.update({
+		# 						"sku":self.sku
+		# 						},{
+		# 						"$addToSet":{
+		# 							"size":sizes[i]
+		# 							}
+		# 							})
+		# 			except Exception, e:
+		# 				print " except "+str(e)+ " i "	+ str(i)
+		# 				pass
+		# 		for i in range(0,len(colors)):
+					
+		# 			try:
+		# 				self.collection.update({
+		# 						"sku":self.sku
+		# 						},{
+		# 						"$addToSet":{
+		# 							"color":colors[i]
+		# 							}
+		# 							})
+		# 			except Exception, e:
+		# 				print " except "+str(e)+ " i "	+ str(i)
+		# 				pass			
+
+
+		# 		self.collection.update({
+		# 				"_id":ObjectId(self.identifier)
+		# 			},{
+		# 			"$set":{
+		# 				"name":self.name,
+		# 				"description":self.description,
+		# 				"sku":self.sku,
+		# 				"brand":self.brand,
+		# 				"manufacturer":self.manufacturer,
+		# 				# "size":self.sizes,
+		# 				# "color":self.colors,
+		# 				"material":self.material,
+		# 				"bullet_point_1":self.bullet_point_1,
+		# 				"bullet_point_2":self.bullet_point_2,
+		# 				"bullet_point_3":self.bullet_point_3,
+		# 				"image":self.image,
+		# 				"image_2":self.image_2,
+		# 				"image_3":self.image_3,
+		# 				# "currency":self.currency,
+		# 				"category":self.category,
+		# 				"price":self.price,
+		# 				"upc":self.upc
+		# 			}})
+				
+		# 	##solve when the product does not exists
+		# 	else:
+		# 		self.identifier = str(self.collection.save({
+		# 				"name":self.name,
+		# 				"description":self.description,
+		# 				"sku":self.sku,
+		# 				"brand":self.brand,
+		# 				"manufacturer":self.manufacturer,
+		# 				# "size":self.size,
+		# 				# "color":self.color,
+		# 				"material":self.material,
+		# 				"bullet_point_1":self.bullet_point_1,
+		# 				"bullet_point_2":self.bullet_point_2,
+		# 				"bullet_point_3":self.bullet_point_3,
+		# 				"image":self.image,
+		# 				"image_2":self.image_2,
+		# 				"image_3":self.image_3,
+		# 				"category":self.category,
+		# 				"price":self.price,
+		# 				"upc":self.upc
+		# 			}))
+				
+		# 		for i in range(count):
+		# 			self.collection.update({
+		# 					"sku":self.sku
+		# 					},{
+		# 					"$addToSet":{
+		# 						"size":sizes[i],
+		# 						"color":colors[i]
+		# 						}
+		# 					})
+
+		# 	return self.ShowSuccessMessage("product correctly saved")
+		# except Exception, e:
+		# 	return self.ShowError("product could not be saved")
+
 		try:
-			#if Category().Exist(self.category) == False and Brand().Exist(self.brand) == False:
-			#	raise
-			# print "coloooooooooooooooooor "+ self.color
+
+			cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
 			sizes=self.size.split(',')
 			colors=self.color.split(',')
 			if len(sizes) > len(colors):
@@ -204,99 +361,60 @@ class Product(BaseModel):
 			else:
 				count=len(colors)
 
-			sku_count = self.collection.find({"sku":self.sku}).count()
+			q = '''select count(*) from "Product" where sku = %(sku)s'''
+			p = {
+			"sku":self.sku
+			}
+			cur.execute(q,p)
+			sku_count = cur.fetchone()[0]
 
-			## solve when sku already exists
 			if sku_count >= 1:
 				for i in range(0,len(sizes)):
-					
 					try:
-						self.collection.update({
-								"sku":self.sku
-								},{
-								"$addToSet":{
-									"size":sizes[i]
-									}
-									})
-					except Exception, e:
+						q = '''update "Product" set size = array_append(size ,%(size)s) WHERE NOT (upvotes_ids @>array[%(size)s])'''
+						p = {
+						"size":sizes[i]
+						}
+						cur.execute(q,p)
+						self.connection.commit()
+					except:
 						print " except "+str(e)+ " i "	+ str(i)
 						pass
+
 				for i in range(0,len(colors)):
-					
 					try:
-						self.collection.update({
-								"sku":self.sku
-								},{
-								"$addToSet":{
-									"color":colors[i]
-									}
-									})
-					except Exception, e:
-						print " except "+str(e)+ " i "	+ str(i)
-						pass			
-
-				self.collection.update({
-						"sku":self.sku
-						},{
-						"$set":{
-							"name":self.name,
-							"description":self.description,
-							"brand":self.brand,
-							"manufacturer":self.manufacturer,
-							# "size":self.sizes,
-							# "color":self.colors,
-							"material":self.material,
-							"bullet_point_1":self.bullet_point_1,
-							"bullet_point_2":self.bullet_point_2,
-							"bullet_point_3":self.bullet_point_3,
-							"image":self.image,
-							"image_2":self.image_2,
-							"image_3":self.image_3,
-							# "currency":self.currency,
-							"category":self.category,
-							"price":self.price,
-							"upc":self.upc
-							}
-						})
-
-				self.identifier = str(self.collection.find({"sku":self.sku})[0]["_id"])
-			##solve when id is not empty
-			elif self.identifier.strip() != "":
-				for i in range(0,len(sizes)):
-					
-					try:
-						self.collection.update({
-								"sku":self.sku
-								},{
-								"$addToSet":{
-									"size":sizes[i]
-									}
-									})
-					except Exception, e:
+						q = '''update "Product" set color = array_append(color ,%(color)s) WHERE NOT (upvotes_ids @>array[%(color)s])'''
+						p = {
+						"color":colors[i]
+						}
+						cur.execute(q,p)
+						self.connection.commit()
+					except:
 						print " except "+str(e)+ " i "	+ str(i)
 						pass
-				for i in range(0,len(colors)):
-					
-					try:
-						self.collection.update({
-								"sku":self.sku
-								},{
-								"$addToSet":{
-									"color":colors[i]
-									}
-									})
-					except Exception, e:
-						print " except "+str(e)+ " i "	+ str(i)
-						pass			
 
+				q = '''update "Product" set 
+				name=%(name)s 
+				and description = %(description)s 
+				and brand = %(brand)s 
+				and manufacturer = %(manufacturer)s 
+				and material = %(material)s 
+				and bullet_point_1 = %(bullet_point_1)s 
+				and bullet_point_2 = %(bullet_point_2)s 
+				and image = %(image)s 
+				and image_2 = %(image_2)s 
+				and image_3 = %(image_3)s 
+				and category_id = %(category_id)s 
+				and price = %(price)s 
+				and upc = %(upc)s 
+				where sku = %(sku)s returning id'''
 
-				self.collection.update({
-						"_id":ObjectId(self.identifier)
-					},{
-					"$set":{
+				category = Category()
+				category.InitByName(self.category)
+
+				p = {
 						"name":self.name,
 						"description":self.description,
-						"sku":self.sku,
 						"brand":self.brand,
 						"manufacturer":self.manufacturer,
 						# "size":self.sizes,
@@ -309,14 +427,95 @@ class Product(BaseModel):
 						"image_2":self.image_2,
 						"image_3":self.image_3,
 						# "currency":self.currency,
-						"category":self.category,
+						"category_id":category.id,
 						"price":self.price,
 						"upc":self.upc
-					}})
-				
-			##solve when the product does not exists
+					}
+
+				cur.execute(q,p)
+				self.connection.commit()
+				self.id = cur.fetchone()[0]
+
+			elif self.id.strip() != "":
+
+				for i in range(0,len(sizes)):
+					try:
+						q = '''update "Product" set size = array_append(size ,%(size)s) WHERE NOT (upvotes_ids @>array[%(size)s])'''
+						p = {
+						"size":sizes[i]
+						}
+						cur.execute(q,p)
+						self.connection.commit()
+					except:
+						print " except "+str(e)+ " i "	+ str(i)
+						pass
+
+				for i in range(0,len(colors)):
+					try:
+						q = '''update "Product" set color = array_append(color ,%(color)s) WHERE NOT (upvotes_ids @>array[%(color)s])'''
+						p = {
+						"color":colors[i]
+						}
+						cur.execute(q,p)
+						self.connection.commit()
+					except:
+						print " except "+str(e)+ " i "	+ str(i)
+						pass
+
+				q = '''update "Product" set 
+				name=%(name)s 
+				and description = %(description)s 
+				and brand = %(brand)s 
+				and manufacturer = %(manufacturer)s 
+				and material = %(material)s 
+				and bullet_point_1 = %(bullet_point_1)s 
+				and bullet_point_2 = %(bullet_point_2)s 
+				and image = %(image)s 
+				and image_2 = %(image_2)s 
+				and image_3 = %(image_3)s 
+				and category_id = %(category_id)s 
+				and price = %(price)s 
+				and upc = %(upc)s
+				and sku = %(sku)s
+				where id = %(id)s'''
+
+				category = Category()
+				category.InitByName(self.category)
+
+				p = {
+						"name":self.name,
+						"description":self.description,
+						"brand":self.brand,
+						"manufacturer":self.manufacturer,
+						# "size":self.sizes,
+						# "color":self.colors,
+						"material":self.material,
+						"bullet_point_1":self.bullet_point_1,
+						"bullet_point_2":self.bullet_point_2,
+						"bullet_point_3":self.bullet_point_3,
+						"image":self.image,
+						"image_2":self.image_2,
+						"image_3":self.image_3,
+						"sku":self.sku
+						"category_id":category.id,
+						"price":self.price,
+						"upc":self.upc
+						"id":self.id
+					}
+
+				cur.execute(q,p)
+				self.connection.commit()
+				self.id = cur.fetchone()[0]
+
 			else:
-				self.identifier = str(self.collection.save({
+
+				q = '''insert into "Product" (name,description,sku,brand,manufacturer,material,bullet_point_1,bullet_point_2,bullet_point_3,image,image_2,image_3, category_id, price, upc)
+				values (%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_point_1)s,%(bullet_point_2)s,%(bullet_point_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s)'''
+
+				category = Category()
+				category.InitByName(self.name)
+
+				p = {
 						"name":self.name,
 						"description":self.description,
 						"sku":self.sku,
@@ -331,99 +530,202 @@ class Product(BaseModel):
 						"image":self.image,
 						"image_2":self.image_2,
 						"image_3":self.image_3,
-						"category":self.category,
+						"category_id":category.id,
 						"price":self.price,
 						"upc":self.upc
-					}))
-				
+					}
+
+				cur.execute(q,p)
+				self.connection.commit()
+
 				for i in range(count):
-					self.collection.update({
-							"sku":self.sku
-							},{
-							"$addToSet":{
-								"size":sizes[i],
-								"color":colors[i]
-								}
-							})
+
+					q = '''update "Product" set size = array_append(size ,%(size)s) WHERE NOT (upvotes_ids @>array[%(size)s]) and color = array_append(color ,%(color)s) WHERE NOT (upvotes_ids @>array[%(color)s])
+					where sku = %(sku)s'''
+					p = {
+					"sku":self.sku,
+					"size":sizes[i],
+					"color":colors[i]
+					}
+					cur.execute(q,p)
+					self.connection.commit()
+
 
 			return self.ShowSuccessMessage("product correctly saved")
-		except Exception, e:
+
+		except:
 			return self.ShowError("product could not be saved")
 
+
+
 	def InitBySku(self, sku):
-		data = self.collection.find({"sku":sku})
+		# data = self.collection.find({"sku":sku})
 
-		if data.count() >= 1:
-			self.identifier = str(data[0]["_id"])
-			self.name = data[0]["name"]
-			self.description = data[0]["description"]
-			self.brand = data[0]["brand"]
-			self.manufacturer = data[0]["manufacturer"]
-			self.size = data[0]["size"]
-			self.color = data[0]["color"]
-			self.material = data[0]["material"]
-			self.bullet_point_1 = data[0]["bullet_point_1"]
-			self.bullet_point_2 = data[0]["bullet_point_2"]
-			self.bullet_point_3 = data[0]["bullet_point_3"]
-			self.image = data[0]["image"]
-			self.image_2 = data[0]["image_2"]
-			self.image_3 = data[0]["image_3"]
-			# self.currency=data[0]["currency"]
-			self.category = data[0]["category"]
-			self.upc = data[0]["upc"]
-			self.sku = data[0]["sku"]
-			self.price = data[0]["price"]
+		# if data.count() >= 1:
+		# 	self.identifier = str(data[0]["_id"])
+		# 	self.name = data[0]["name"]
+		# 	self.description = data[0]["description"]
+		# 	self.brand = data[0]["brand"]
+		# 	self.manufacturer = data[0]["manufacturer"]
+		# 	self.size = data[0]["size"]
+		# 	self.color = data[0]["color"]
+		# 	self.material = data[0]["material"]
+		# 	self.bullet_point_1 = data[0]["bullet_point_1"]
+		# 	self.bullet_point_2 = data[0]["bullet_point_2"]
+		# 	self.bullet_point_3 = data[0]["bullet_point_3"]
+		# 	self.image = data[0]["image"]
+		# 	self.image_2 = data[0]["image_2"]
+		# 	self.image_3 = data[0]["image_3"]
+		# 	# self.currency=data[0]["currency"]
+		# 	self.category = data[0]["category"]
+		# 	self.upc = data[0]["upc"]
+		# 	self.sku = data[0]["sku"]
+		# 	self.price = data[0]["price"]
 
-			return self.ShowSuccessMessage("product initialized")
-		return self.ShowError("product can not be initialized")
+		# 	return self.ShowSuccessMessage("product initialized")
+		# return self.ShowError("product can not be initialized")
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		q = '''select * from "Product" where sku = %(sku)s limit 1'''
+		p = {
+		"sku":sku
+		}
+		try:
+			cur.execute(q,p)
+			producto = cur.fetchone()
+
+			if producto:
+				self.id = producto['id']
+				self.name = producto['name']
+				self.description = producto['description']
+				self.brand = producto['brand']
+				self.manufacturer = producto['manufacturer']
+				self.size = producto['size']
+				self.color = producto['color']
+				self.material = producto['material']
+				self.bullet_point_1 = producto['bullet_point_1']
+				self.bullet_point_2 = producto['bullet_point_2']
+				self.bullet_point_3 = producto['bullet_point_3']
+				self.image = producto['image']
+				self.image_2 = producto['image_2']
+				self.image_3 = producto['image_3']
+				self.category = producto['category_id']
+				self.sku = producto['sku']
+				self.price = producto['price']
+				self.upc = producto['upc']
+				return self.ShowSuccessMessage("product initialized")
+		except:
+			return self.ShowSuccessMessage("product cannot be initialized")
 
 	def InitById(self, identifier):
-		data = self.collection.find({"_id":ObjectId(identifier)})
+		# data = self.collection.find({"_id":ObjectId(identifier)})
 
-		if data.count() >= 1:
-			self.identifier = str(data[0]["_id"])
-			self.name = data[0]["name"]
-			self.description = data[0]["description"]
-			self.brand = data[0]["brand"]
-			self.manufacturer = data[0]["manufacturer"]
-			self.size = data[0]["size"]
-			self.color = data[0]["color"]
-			self.material = data[0]["material"]
-			self.bullet_point_1 = data[0]["bullet_point_1"]
-			self.bullet_point_2 = data[0]["bullet_point_2"]
-			self.bullet_point_3 = data[0]["bullet_point_3"]
-			self.image = data[0]["image"]
-			self.image_2 = data[0]["image_2"]
-			self.image_3 = data[0]["image_3"]
-			# self.currency=data[0]["currency"]
-			self.category = data[0]["category"]
-			self.upc = data[0]["upc"]
-			self.sku = data[0]["sku"]
-			try:
-				self.price = data[0]["price"]
-			except:
-				self.price = 0
-			return self.ShowSuccessMessage("product initialized")
-		return self.ShowError("product can not be initialized")
+		# if data.count() >= 1:
+		# 	self.identifier = str(data[0]["_id"])
+		# 	self.name = data[0]["name"]
+		# 	self.description = data[0]["description"]
+		# 	self.brand = data[0]["brand"]
+		# 	self.manufacturer = data[0]["manufacturer"]
+		# 	self.size = data[0]["size"]
+		# 	self.color = data[0]["color"]
+		# 	self.material = data[0]["material"]
+		# 	self.bullet_point_1 = data[0]["bullet_point_1"]
+		# 	self.bullet_point_2 = data[0]["bullet_point_2"]
+		# 	self.bullet_point_3 = data[0]["bullet_point_3"]
+		# 	self.image = data[0]["image"]
+		# 	self.image_2 = data[0]["image_2"]
+		# 	self.image_3 = data[0]["image_3"]
+		# 	# self.currency=data[0]["currency"]
+		# 	self.category = data[0]["category"]
+		# 	self.upc = data[0]["upc"]
+		# 	self.sku = data[0]["sku"]
+		# 	try:
+		# 		self.price = data[0]["price"]
+		# 	except:
+		# 		self.price = 0
+		# 	return self.ShowSuccessMessage("product initialized")
+		# return self.ShowError("product can not be initialized")
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		q = '''select * from "Product" where id = %(id)s limit 1'''
+		p = {
+		"id":identifier
+		}
+		try:
+			cur.execute(q,p)
+			producto = cur.fetchone()
+
+			if producto:
+				self.id = producto['id']
+				self.name = producto['name']
+				self.description = producto['description']
+				self.brand = producto['brand']
+				self.manufacturer = producto['manufacturer']
+				self.size = producto['size']
+				self.color = producto['color']
+				self.material = producto['material']
+				self.bullet_point_1 = producto['bullet_point_1']
+				self.bullet_point_2 = producto['bullet_point_2']
+				self.bullet_point_3 = producto['bullet_point_3']
+				self.image = producto['image']
+				self.image_2 = producto['image_2']
+				self.image_3 = producto['image_3']
+				self.category = producto['category_id']
+				self.sku = producto['sku']
+				self.price = producto['price']
+				self.upc = producto['upc']
+				return self.ShowSuccessMessage("product initialized")
+		except:
+			return self.ShowSuccessMessage("product cannot be initialized")
 
 	def Exist(self, name):
-		if self.collection.find({"name":name}).count() >= 1:
-			return True
-		return False
+		# if self.collection.find({"name":name}).count() >= 1:
+		# 	return True
+		# return False
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		q = '''select * from "Product" where name = %(name)s limit 1'''
+		p = {
+		"name":name
+		}
+		try:
+			cur.execute(q,p)
+			product = cur.fetchone()
+
+			if product:
+				return True
+			else:
+				return False
+		except:
+			return False
 
 	def Search(self, query):
 
-		if query == "":
-			return []
+		# if query == "":
+		# 	return []
 
-		regx = re.compile("^" + query, re.IGNORECASE)
+		# regx = re.compile("^" + query, re.IGNORECASE)
 
-		data = self.collection.find({"name":regx}).limit(5)
+		# data = self.collection.find({"name":regx}).limit(5)
 
-		# rtn_data = []
-		# for d in data:
-		# 	obj = {"key":str(d["_id"]), "value":d["name"]}
-		# 	rtn_data.append(obj)
+		# return data
+	
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		# return rtn_data
-		return data
+		q = '''select * from "Product" where name like '%%(name)s%' limit 5'''
+		p = {
+		"name":name
+		}
+		try:
+			cur.execute(q,p)
+			products = cur.fetchall()
+
+			if product:
+				return products
+			else:
+				return {}
+		except:
+			return {}
