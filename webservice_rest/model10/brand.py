@@ -2,14 +2,17 @@
 # -*- coding: UTF-8 -*-
 
 from basemodel import BaseModel, db
-from bson.objectid import ObjectId
+import psycopg2
+import psycopg2.extras
+# from bson.objectid import ObjectId
 
 class Brand(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
 		self._name = ''
 
-		self.collection = db.brand
+		# self.collection = db.brand
+		self.table = 'Brand'
 
 	@property
 	def name(self):
@@ -20,7 +23,7 @@ class Brand(BaseModel):
 
 	def Print(self):
 		return {"name":self.name,
-				"_id":ObjectId(self.identifier)}
+				"id":self.id}
 
 	def InitByName(self, name):
 		# try:
@@ -100,7 +103,7 @@ class Brand(BaseModel):
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		query = '''select * from "Brand" where name = %(name)s'''
 		parameters = {
-		"name":name
+		"name":self.name
 		}
 		cur.execute(query,parameters)
 		brands = cur.fetchone()

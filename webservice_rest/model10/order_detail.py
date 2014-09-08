@@ -98,8 +98,8 @@ class OrderDetail(BaseModel):
 		try:
 			query = '''select * from "Order_Detail" where order_id = %(order_id)s limit %(limit)s offset %(offset)s'''
 			parameters = {
-			"order_id":order_id
-			"limit":int(limit)
+			"order_id":order_id,
+			"limit":int(limit),
 			"offset":skip
 			}
 			cur.execute(query,parameters)

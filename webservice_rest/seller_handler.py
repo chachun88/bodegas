@@ -16,7 +16,7 @@ class AddSellerHandler(BaseHandler):
 		# isntantitate product
 		salesman = Salesman()
 
-		salesman.identifier = self.TryGetParam("id", "")
+		salesman.id = self.TryGetParam("id", "")
 		salesman.name 		= self.TryGetParam("name", "")
 		salesman.password 	= self.TryGetParam("password", "")
 		salesman.email		= self.TryGetParam("email", "")
@@ -61,12 +61,14 @@ class GetSalesmanHandler(BaseHandler):
 
 		salesman = Salesman()
 
-		if idd == "":
-			salesman.InitByEmail(email)
-		else:
-			salesman.InitById(idd)
+		res = {}
 
-		self.write(json_util.dumps(salesman.Print()))
+		if idd == "":
+			res = salesman.InitByEmail(email)
+		else:
+			res = salesman.InitById(idd)
+
+		self.write(json_util.dumps(res, indent=2))
 
 
 class ListSalesmanHandler(BaseHandler):

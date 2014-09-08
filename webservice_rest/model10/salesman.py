@@ -3,18 +3,24 @@
 
 from basemodel import BaseModel, db
 from salesmanpermission import SalesmanPermission
-from bson.objectid import ObjectId
+# from bson.objectid import ObjectId
+import psycopg2
+import psycopg2.extras
 
 
 class Salesman(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
-		self.collection = db.salesman
+		# self.collection = db.salesman
+		self.table = 'User'
 		self._salesman_id = ''
 		self._name = ''
 		self._password = '' 
 		self._email = ''
 		self._permissions = []
+		self._cellars = []
+		self._permissions_name = []
+		self._cellars_name = []
 
 	@property
 	def salesman_id(self):
@@ -59,6 +65,28 @@ class Salesman(BaseModel):
 	def user_type(self, value):
 	    self._user_type = value
 	
+	@property
+	def permissions_name(self):
+	    return self._permissions_name
+	@permissions_name.setter
+	def permissions_name(self, value):
+	    self._permissions_name = value
+
+	@property
+	def cellars(self):
+	    return self._cellars
+	@cellars.setter
+	def cellars(self, value):
+	    self._cellars = value
+
+	@property
+	def cellars_name(self):
+	    return self._cellars_name
+	@cellars_name.setter
+	def cellars_name(self, value):
+	    self._cellars_name = value
+	
+	
 	
 
 	def Print(self):
@@ -68,7 +96,10 @@ class Salesman(BaseModel):
 			"email":self.email,
 			"password":self.password,
 			"permissions":self.permissions,
-			"salesman_id":self.salesman_id
+			"salesman_id":self.salesman_id,
+			"permissions_name":self.permissions_name,
+			"cellars":self.cellars,
+			"cellars_name":self.cellars_name
 		}
 
 	def Remove(self):
@@ -125,7 +156,7 @@ class Salesman(BaseModel):
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		q = '''select * from "User" where email = %(email)s limit 1'''
+		q = '''select u.*, STRING_AGG(distinct p.name, ',') as permissions_name, STRING_AGG(distinct c.name, ',') as cellars_name from "User" u left join "Permission" p on p.id = any(u.permissions) left join "Cellar" c on c.id = any(u.cellar_permissions) where u.email = %(email)s group by u.id limit 1'''
 		p = {
 		"email":email
 		}
@@ -133,17 +164,11 @@ class Salesman(BaseModel):
 			cur.execute(q,p)
 			usuario = cur.fetchone()
 			if usuario:
-				self.name = usuario['name']
-				self.password = usuario['password']
-				self.email = usuario['email']
-				self.id = usuario['id']
-				self.permissions = usuario['permissions']
-				self.user_type = usuario['user_type']
-				return self.ShowSuccessMessage("user initialized")
+				return usuario
 			else:
-				return self.ShowError("user : " + idd + " not found")
+				return self.ShowError("user : " + email + " not found")
 		except:
-			return self.ShowError("user : " + idd + " not found")
+			return self.ShowError("user : " + email + " not found")
 
 	def InitById(self, idd):
 
@@ -165,7 +190,7 @@ class Salesman(BaseModel):
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		q = '''select * from "User" where id = %(id)s limit 1'''
+		q = '''select u.*, STRING_AGG(distinct p.name, ',') as permissions_name, STRING_AGG(distinct c.name, ',') as cellars_name from "User" u left join "Permission" p on p.id = any(u.permissions) left join "Cellar" c on c.id = any(u.cellar_permissions) where u.id = %(id)s group by u.id limit 1'''
 		p = {
 		"id":idd
 		}
@@ -173,13 +198,7 @@ class Salesman(BaseModel):
 			cur.execute(q,p)
 			usuario = cur.fetchone()
 			if usuario:
-				self.name = usuario['name']
-				self.password = usuario['password']
-				self.email = usuario['email']
-				self.id = usuario['id']
-				self.permissions = usuario['permissions']
-				self.user_type = usuario['user_type']
-				return self.ShowSuccessMessage("user initialized")
+				return usuario
 			else:
 				return self.ShowError("user : " + idd + " not found")
 		except:
@@ -254,7 +273,7 @@ class Salesman(BaseModel):
 				"name":self.name,
 				"email":self.email,
 				"permissions":self.permissions,
-				"password":self.password
+				"password":self.password,
 				"id":self.id
 				}
 				cur.execute(q,p)
@@ -275,3 +294,23 @@ class Salesman(BaseModel):
 				return self.ShowSuccessMessage(str(object_id))
 		except Exception,e:
 			return self.ShowError("failed to save user {}, error:{}".format(self.email,str(e)))
+
+	def GetList(self, page, items):
+
+		page = int(page)
+		items = int(items)
+		offset = (page-1)*items
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+		try:
+			q = '''select u.*, STRING_AGG(distinct p.name, ',') as permissions_name, STRING_AGG(distinct c.name, ',') as cellars_name from "User" u left join "Permission" p on p.id = any(u.permissions) left join "Cellar" c on c.id = any(u.cellar_permissions) group by u.id limit %(limit)s offset %(offset)s'''
+			p = {
+			"limit":items,
+			"offset":offset
+			}
+			cur.execute(q,p)
+
+			lista = cur.fetchall()
+			return lista
+		except Exception,e:
+			print str(e)
+			return {}

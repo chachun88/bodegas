@@ -24,7 +24,7 @@ class CellarAddHandler(BaseHandler):
 
 		cellar.name = self.get_argument("name", "")
 		cellar.description = self.get_argument("description", "")
-		cellar.identifier = self.get_argument("id", "")
+		cellar.id = self.get_argument("id", "")
 
 		self.write(json_util.dumps((cellar.Save())))
 
@@ -122,18 +122,20 @@ class CellarProductsAddHandler(BaseHandler):
 
 		cellar_id = self.get_argument("cellar_id", "")
 		product_sku = self.get_argument("product_sku", "")
-		quantity = self.get_argument("quantity", "0")
+		quantity = self.get_argument("quantity", 0)
 		operation = self.get_argument("operation", Kardex.OPERATION_BUY)
-		price = self.get_argument("price", "0")
+		price = self.get_argument("price", 0)
 		size = self.get_argument("size", "")
 		color = self.get_argument("color", "")
 		user = self.get_argument("user", "")
+
+		# self.write(quantity)
 
 		kardex = Kardex()
 
 		kardex.product_sku = product_sku
 		kardex.cellar_identifier = cellar_id
-		kardex.date = str(datetime.datetime.now().time().isoformat())
+		kardex.date = str(datetime.datetime.now().isoformat())
 
 		kardex.operation_type = operation
 		kardex.units = float(quantity)

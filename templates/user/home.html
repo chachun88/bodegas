@@ -49,9 +49,9 @@
 					<tr>
 						<td>{{ u["name"] }}</td>
 						<td>{{ u["email"] }}</td>
-						<td>{{ ", ".join(u["permissions"]) }}</td>
+						<td>{{ u["permissions_name"] }}</td>
 						<td>
-						{% if "administrar usuarios" in ",".join(current_user.permissions) %}
+						{% if "5" in current_user.permissions %}
 							<a class="btn btn-success" href="/user/edit?id={{ u["_id"] }}">
 								Editar
 							</a>

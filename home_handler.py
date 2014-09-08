@@ -189,7 +189,7 @@ class ProductLoadHandler(BaseHandler):
 										if j == 0:
 											prod.category = matriz[i][j].encode('utf-8')
 										elif j == 1:
-											prod.sku = matriz[i][j].encode('utf-8')
+											prod.sku = str(matriz[i][j]).encode('utf-8')
 										elif j == 2:
 											prod.name = matriz[i][j].encode('utf-8')
 										elif j == 3:
@@ -208,7 +208,7 @@ class ProductLoadHandler(BaseHandler):
 										elif j == 10:
 											try:
 												q = k +j
-												quantity=str(int(matriz[i][q]))
+												quantity=matriz[i][q]
 				
 												prod.Save("masive")		
 												# prod.InitWithSku(prod.sku)
@@ -224,11 +224,11 @@ class ProductLoadHandler(BaseHandler):
 													if error_name not in warnings:
 														warnings.append( error_name )
 											except Exception, e:
-												print str(e)
+												print "aqui se cae, error:{}".format(str(e))
 												pass	
 
 								except Exception, e:
-									# print "jjjjjjjjjj "+str(j)+" "+str(e)
+									print "Error:{}".format(str(e))
 									dn="t3"
 									self.redirect("/product?dn="+dn + "&w=" + ",".join(warnings))
 									return
@@ -256,7 +256,6 @@ class ProductRemoveHandler(BaseHandler):
 
 		prod = Product()
 		prod.InitWithId(self.get_argument("id", ""))
-		print "skuuuuuuuuuuuuuu " + prod.sku 
 
 		cellar_id="remove"
 		size="remove"
@@ -264,14 +263,16 @@ class ProductRemoveHandler(BaseHandler):
 		cellar = Cellar()		
 		product_find =cellar.ProductKardex(prod.sku, cellar_id, size)
 
+
+
 		buy=0
 		sell=0
 
 		for p in product_find:
-			if p["_id"] == "buy":
+			if p["id"] == "buy":
 				buy=p["total"]	
 
-			if p["_id"] == "sell":
+			if p["id"] == "sell":
 				sell=p["total"]
 
 		units=buy-sell	
@@ -279,6 +280,7 @@ class ProductRemoveHandler(BaseHandler):
 		if units > 0:
 			self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=prod.get_product_list())	
 		else:
+			
 			prod.Remove()	
 
 			self.render("product/list.html", dn="bpt", side_menu=self.side_menu, product_list=prod.get_product_list())

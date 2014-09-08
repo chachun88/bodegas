@@ -2,15 +2,18 @@
 # -*- coding: UTF-8 -*-
 
 from basemodel import BaseModel
-from bson.objectid import ObjectId
+import psycopg2
+import psycopg2.extras
+# from bson.objectid import ObjectId
 
 class Category(BaseModel):
 	def __init__(self):
 		BaseModel.__init__(self)
 		self._name = ''
-		self._parent = ''
+		self._parent = None
 
-		self.collection = db.category
+		# self.collection = db.category
+		self.table = 'Category'
 
 	@property
 	def name(self):
@@ -30,7 +33,7 @@ class Category(BaseModel):
 		return {
 				"name":self.name,
 				"parent":self.parent,
-				"_id":ObjectId(self.identifier)}
+				"id":self.id}
 
 	def InitByName(self, name):
 
@@ -44,7 +47,7 @@ class Category(BaseModel):
 
 		if category:
 			self.name = category["name"]
-			self.parent = category["parent"]
+			self.parent = category["parent_id"]
 			self.id = category["id"]
 			return self.ShowSuccessMessage("category correctly initialized")
 		else:
@@ -85,7 +88,7 @@ class Category(BaseModel):
 
 		if category:
 			self.name = category["name"]
-			self.parent = category["parent"]
+			self.parent = category["parent_id"]
 			self.id = category["id"]
 			return self.ShowSuccessMessage("category correctly initialized")
 		else:
@@ -127,7 +130,7 @@ class Category(BaseModel):
 		category = cur.fetchone()
 
 		if category:
-			query = '''update "Category" set parent = %(parent)s where name = %(name)s'''
+			query = '''update "Category" set parent_id = %(parent)s where name = %(name)s'''
 
 			parameters = {
 			"name": self.name,
@@ -140,7 +143,7 @@ class Category(BaseModel):
 
 		else:
 
-			query = '''insert into "Category" (name,parent) values (%(name)s,%(parent)s) RETURNING id;'''
+			query = '''insert into "Category" (name,parent_id) values (%(name)s,%(parent)s) RETURNING id;'''
 
 			parameters = {
 			"name": self.name,

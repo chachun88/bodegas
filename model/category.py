@@ -52,7 +52,7 @@ class Category(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.identifier = str(data["_id"])
+		self.identifier = str(data["id"])
 		self.name = data["name"]
 		self.name = data["parent"]
 
@@ -65,7 +65,7 @@ class Category(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.identifier = str(data["_id"])
+		self.identifier = str(data["id"])
 		self.name = data["name"]
 		self.name = data["parent"]		
 

@@ -80,7 +80,7 @@ class Cellar(BaseModel):
 
 		# print "{}".format(json_string)
 
-		self.identifier = str(json_data["_id"])
+		self.identifier = str(json_data["id"])
 		self.name = json_data["name"]
 		self.description = json_data["description"]
 
@@ -92,7 +92,7 @@ class Cellar(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		json_data = json_util.loads(json_string)
 
-		self.identifier = str(json_data["_id"])
+		self.identifier = str(json_data["id"])
 		self.name = json_data["name"]
 		self.description = json_data["description"]		
 
@@ -118,8 +118,8 @@ class Cellar(BaseModel):
 		url += "&cellar_id=" + self.identifier
 		url += "&product_sku=" + product_sku 
 		url += "&operation=buy"
-		url += "&quantity=" + quantity
-		url += "&price=" + price
+		url += "&quantity={}".format(quantity)
+		url += "&price={}".format(price.strip())
 		url += "&size=" + size
 		url += "&color=" + col
 		url += "&user=" + user

@@ -2,10 +2,11 @@
 # -*- coding: UTF-8 -*-
 
 from basemodel import BaseModel, db
-from bson.objectid import ObjectId
+# from bson.objectid import ObjectId
 from brand import Brand
 from category import Category
-
+import psycopg2
+import psycopg2.extras
 import re
 import sys
 
@@ -31,7 +32,9 @@ class Product(BaseModel):
 		self._upc = '' #articulo
 		self._price='' #precio compra
 
-		self.collection = db.product
+		# self.collection = db.product
+
+		self.table = 'Product'
 
 	@property
 	def upc(self):
@@ -189,7 +192,7 @@ class Product(BaseModel):
 
 			return rtn_data
 		except Exception, e:
-			return self.ShowError("id: " + self.identifier + " not found")
+			return self.ShowError("id: " + self.id + " not found")
 
 	def Save(self):
  
@@ -371,19 +374,19 @@ class Product(BaseModel):
 			if sku_count >= 1:
 				for i in range(0,len(sizes)):
 					try:
-						q = '''update "Product" set size = array_append(size ,%(size)s) WHERE NOT (upvotes_ids @>array[%(size)s])'''
+						q = '''update "Product" set size = array_append(size ,%(size)s) WHERE NOT (size @>array[%(size)s])'''
 						p = {
 						"size":sizes[i]
 						}
 						cur.execute(q,p)
 						self.connection.commit()
-					except:
-						print " except "+str(e)+ " i "	+ str(i)
+					except Exception,e:
+						print "except error {}, i:{}".format(str(e),str(i))
 						pass
 
 				for i in range(0,len(colors)):
 					try:
-						q = '''update "Product" set color = array_append(color ,%(color)s) WHERE NOT (upvotes_ids @>array[%(color)s])'''
+						q = '''update "Product" set color = array_append(color ,%(color)s) WHERE NOT (color @>array[%(color)s])'''
 						p = {
 						"color":colors[i]
 						}
@@ -393,24 +396,29 @@ class Product(BaseModel):
 						print " except "+str(e)+ " i "	+ str(i)
 						pass
 
+				# brand = Brand()
+				# brand.InitByName(self.brand)
+
 				q = '''update "Product" set 
-				name=%(name)s 
-				and description = %(description)s 
-				and brand = %(brand)s 
-				and manufacturer = %(manufacturer)s 
-				and material = %(material)s 
-				and bullet_point_1 = %(bullet_point_1)s 
-				and bullet_point_2 = %(bullet_point_2)s 
-				and image = %(image)s 
-				and image_2 = %(image_2)s 
-				and image_3 = %(image_3)s 
-				and category_id = %(category_id)s 
-				and price = %(price)s 
-				and upc = %(upc)s 
+				name = %(name)s 
+				,description = %(description)s 
+				,brand = %(brand)s 
+				,manufacturer = %(manufacturer)s 
+				,material = %(material)s 
+				,bullet_point_1 = %(bullet_point_1)s 
+				,bullet_point_2 = %(bullet_point_2)s 
+				,image = %(image)s 
+				,image_2 = %(image_2)s 
+				,image_3 = %(image_3)s 
+				,category_id = %(category_id)s 
+				,price = %(price)s 
+				,upc = %(upc)s 
 				where sku = %(sku)s returning id'''
 
 				category = Category()
 				category.InitByName(self.category)
+
+				# print category.id
 
 				p = {
 						"name":self.name,
@@ -429,10 +437,13 @@ class Product(BaseModel):
 						# "currency":self.currency,
 						"category_id":category.id,
 						"price":self.price,
-						"upc":self.upc
+						"upc":self.upc,
+						"sku":self.sku
 					}
 
+				print "llllleggggga"
 				cur.execute(q,p)
+				print "query:{}".format(cur.query)
 				self.connection.commit()
 				self.id = cur.fetchone()[0]
 
@@ -464,19 +475,19 @@ class Product(BaseModel):
 
 				q = '''update "Product" set 
 				name=%(name)s 
-				and description = %(description)s 
-				and brand = %(brand)s 
-				and manufacturer = %(manufacturer)s 
-				and material = %(material)s 
-				and bullet_point_1 = %(bullet_point_1)s 
-				and bullet_point_2 = %(bullet_point_2)s 
-				and image = %(image)s 
-				and image_2 = %(image_2)s 
-				and image_3 = %(image_3)s 
-				and category_id = %(category_id)s 
-				and price = %(price)s 
-				and upc = %(upc)s
-				and sku = %(sku)s
+				, description = %(description)s 
+				, brand = %(brand)s 
+				, manufacturer = %(manufacturer)s 
+				, material = %(material)s 
+				, bullet_point_1 = %(bullet_point_1)s 
+				, bullet_point_2 = %(bullet_point_2)s 
+				, image = %(image)s 
+				, image_2 = %(image_2)s 
+				, image_3 = %(image_3)s 
+				, category_id = %(category_id)s 
+				, price = %(price)s 
+				, upc = %(upc)s
+				, sku = %(sku)s
 				where id = %(id)s'''
 
 				category = Category()
@@ -496,24 +507,29 @@ class Product(BaseModel):
 						"image":self.image,
 						"image_2":self.image_2,
 						"image_3":self.image_3,
-						"sku":self.sku
+						"sku":self.sku,
 						"category_id":category.id,
 						"price":self.price,
-						"upc":self.upc
+						"upc":self.upc,
 						"id":self.id
 					}
 
 				cur.execute(q,p)
+				print "query:{}".format(cur.query)
 				self.connection.commit()
 				self.id = cur.fetchone()[0]
 
 			else:
 
-				q = '''insert into "Product" (name,description,sku,brand,manufacturer,material,bullet_point_1,bullet_point_2,bullet_point_3,image,image_2,image_3, category_id, price, upc)
-				values (%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_point_1)s,%(bullet_point_2)s,%(bullet_point_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s)'''
+
+
+				q = '''insert into "Product" (name,description,sku,brand,manufacturer,material,bullet_point_1,bullet_point_2,bullet_point_3,image,image_2,image_3, category_id, price, upc,size,color)
+				values (%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_point_1)s,%(bullet_point_2)s,%(bullet_point_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s)'''
 
 				category = Category()
-				category.InitByName(self.name)
+				category.InitByName(self.category)
+
+				return self.ShowError("product could not be saved, error:{}".format(self.price))
 
 				p = {
 						"name":self.name,
@@ -521,8 +537,8 @@ class Product(BaseModel):
 						"sku":self.sku,
 						"brand":self.brand,
 						"manufacturer":self.manufacturer,
-						# "size":self.size,
-						# "color":self.color,
+						"size":sizes,
+						"color":colors,
 						"material":self.material,
 						"bullet_point_1":self.bullet_point_1,
 						"bullet_point_2":self.bullet_point_2,
@@ -536,25 +552,26 @@ class Product(BaseModel):
 					}
 
 				cur.execute(q,p)
+				print cur.query
 				self.connection.commit()
 
-				for i in range(count):
+				# for i in range(count):
 
-					q = '''update "Product" set size = array_append(size ,%(size)s) WHERE NOT (upvotes_ids @>array[%(size)s]) and color = array_append(color ,%(color)s) WHERE NOT (upvotes_ids @>array[%(color)s])
-					where sku = %(sku)s'''
-					p = {
-					"sku":self.sku,
-					"size":sizes[i],
-					"color":colors[i]
-					}
-					cur.execute(q,p)
-					self.connection.commit()
+				# 	q = '''update "Product" set size = array_append(size ,%(size)s) WHERE NOT (upvotes_ids @>array[%(size)s]), color = array_append(color ,%(color)s) WHERE NOT (upvotes_ids @>array[%(color)s])
+				# 	where sku = %(sku)s'''
+				# 	p = {
+				# 	"sku":self.sku,
+				# 	"size":sizes[i],
+				# 	"color":colors[i]
+				# 	}
+				# 	cur.execute(q,p)
+				# 	self.connection.commit()
 
 
 			return self.ShowSuccessMessage("product correctly saved")
 
-		except:
-			return self.ShowError("product could not be saved")
+		except Exception,e:
+			return self.ShowError("product could not be saved, error:{}".format(str(e)))
 
 
 
@@ -587,7 +604,7 @@ class Product(BaseModel):
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		q = '''select * from "Product" where sku = %(sku)s limit 1'''
+		q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id where p.sku = %(sku)s limit 1'''
 		p = {
 		"sku":sku
 		}
@@ -610,7 +627,7 @@ class Product(BaseModel):
 				self.image = producto['image']
 				self.image_2 = producto['image_2']
 				self.image_3 = producto['image_3']
-				self.category = producto['category_id']
+				self.category = producto['category']
 				self.sku = producto['sku']
 				self.price = producto['price']
 				self.upc = producto['upc']
@@ -649,7 +666,7 @@ class Product(BaseModel):
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		q = '''select * from "Product" where id = %(id)s limit 1'''
+		q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id where p.id = %(id)s limit 1'''
 		p = {
 		"id":identifier
 		}
@@ -672,7 +689,7 @@ class Product(BaseModel):
 				self.image = producto['image']
 				self.image_2 = producto['image_2']
 				self.image_3 = producto['image_3']
-				self.category = producto['category_id']
+				self.category = producto['category']
 				self.sku = producto['sku']
 				self.price = producto['price']
 				self.upc = producto['upc']
@@ -728,4 +745,24 @@ class Product(BaseModel):
 			else:
 				return {}
 		except:
+			return {}
+
+
+	def GetList(self, page, items):
+
+		page = int(page)
+		items = int(items)
+		offset = (page-1)*items
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+		try:
+			q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id  limit %(items)s offset %(offset)s'''
+			p = {
+				"items":items,
+				"offset":offset
+				}
+			cur.execute(q,p)
+			lista = cur.fetchall()
+			return lista
+		except Exception,e:
+			print str(e)
 			return {}

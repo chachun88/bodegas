@@ -35,6 +35,9 @@ class AddProductHandler(BaseHandler):
 		product.image_2			= self.get_argument("image_2", "")
 		product.image_3 		= self.get_argument("image_3", "")
 
+		# self.write(product.sku)
+		# return
+
 		# saving current product
 		oid = json_util.dumps(product.Save())
 		

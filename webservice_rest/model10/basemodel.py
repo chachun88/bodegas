@@ -48,7 +48,7 @@ class BaseModel(object):
 		offset = (page-1)*items
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		try:
-			cur.execute("select from \"{tabla}\" limit {items} offset {offset}".format(tabla=self.table,items=items,offset=offset))
+			cur.execute("select * from \"{tabla}\" limit {items} offset {offset}".format(tabla=self.table,items=items,offset=offset))
 			lista = cur.fetchall()
 			return lista
 		except Exception,e:
@@ -88,10 +88,10 @@ class BaseModel(object):
 
 			cur = self.connection.cursor()
 			cur.execute("delete from \"{tabla}\" where id = {id}".format(tabla=self.table,id=self.id))
-
-			return self.ShowSuccessMessage("object: " + self.id + " has been deleted")
+			self.connection.commit()
+			return self.ShowSuccessMessage("object: {} has been deleted".format(self.id))
 		except Exception, e:
-			return self.ShowError("object: not found")
+			return self.ShowError("object: not found, error:{}".format(str(e)))
 
 	#@return json object
 	def ShowError(self, error_text):

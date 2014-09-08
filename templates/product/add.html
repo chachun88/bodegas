@@ -10,7 +10,7 @@
 {% end %}
 
 {% block caption %}
-	{% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+	{% if int(2) in current_user.permissions %}
 		{% if tit == "edit" %}
 			permite editar un producto en el maestro de productos 
 		{% elif tit == "add" %}
@@ -21,7 +21,7 @@
 	{% end %}
 {% end %}			
 {% block body %}
-{% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+{% if int(2) in current_user.permissions %}
 {% if dn == "bpf" %}
 <div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -49,7 +49,8 @@
 						<div class="controls form-group">
 							<div class="col-sm-8">
 							{% if tit == "edit" %}
-							<input placeholder="SKU" id="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}" disabled>
+							<input placeholder="SKU" id="sku" name="sku_edit" required="required" type="text" class="form-control" value="{{ product.sku }}" disabled>
+							<input name="sku" type="hidden" class="form-control" value="{{ product.sku }}">
 							{% else %}
 							<input placeholder="SKU" id="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}" required>
 							{% end %}

@@ -193,7 +193,7 @@ class Product(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.identifier = str(data["_id"])
+		self.identifier = data["id"]
 		self.category = data["category"]
 		self.sku = data["sku"]
 		self.name = data["name"] 
@@ -222,7 +222,7 @@ class Product(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.identifier = str(data["_id"])
+		self.identifier = str(data["id"])
 		self.category = data["category"]
 		self.sku = data["sku"]
 		self.name = data["name"] 
@@ -247,9 +247,8 @@ class Product(BaseModel):
 		if self.identifier!="":
 			url=self.wsurl() + "/product/remove"
 			url+="?token=" + self.token()
-			url+="&id=" + self.identifier
-
-			urllib.urlopen(url)
+			url+="&id={}".format(self.identifier)
+			print urllib.urlopen(url).read()
 
 	def Save(self, typee="other"):
 		#siz={ 'size':[self.size] }
