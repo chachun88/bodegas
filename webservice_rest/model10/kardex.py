@@ -275,6 +275,7 @@ class Kardex(BaseModel):
 		self.total = float(self.total)
 		self.balance_price = float(self.balance_price)
 		self.balance_total = float(self.balance_total)
+		self.units = float(self.units)
 
 		## doing maths...
 		if self.operation_type == Kardex.OPERATION_SELL:

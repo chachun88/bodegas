@@ -9,6 +9,7 @@ import psycopg2
 import psycopg2.extras
 import re
 import sys
+import json
 
 class Product(BaseModel):
 	def __init__(self):
@@ -21,9 +22,9 @@ class Product(BaseModel):
 		self._size = [] #tallas
 		self._color = [] #color
 		self._material = '' #material
-		self._bullet_point_1 = '' #viñeta 1
-		self._bullet_point_2 = '' #viñeta 2
-		self._bullet_point_3 = '' #viñeta 3
+		self._bullet_1 = '' #viñeta 1
+		self._bullet_2 = '' #viñeta 2
+		self._bullet_3 = '' #viñeta 3
 		self._currency = '' #divisa
 		self._image = '' #imagen 1
 		self._image_2 = '' #imagen 2
@@ -31,6 +32,7 @@ class Product(BaseModel):
 		self._category = '' #categoria
 		self._upc = '' #articulo
 		self._price='' #precio compra
+		self._sell_price = 0 #precio venta
 
 		# self.collection = db.product
 
@@ -100,25 +102,25 @@ class Product(BaseModel):
 		self._material = value
 
 	@property
-	def bullet_point_1(self):
-		return self._bullet_point_1
-	@bullet_point_1.setter
-	def bullet_point_1(self, value):
-		self._bullet_point_1 = value
+	def bullet_1(self):
+		return self._bullet_1
+	@bullet_1.setter
+	def bullet_1(self, value):
+		self._bullet_1 = value
 
 	@property
-	def bullet_point_2(self):
-		return self._bullet_point_2
-	@bullet_point_2.setter
-	def bullet_point_2(self, value):
-		self._bullet_point_2 = value
+	def bullet_2(self):
+		return self._bullet_2
+	@bullet_2.setter
+	def bullet_2(self, value):
+		self._bullet_2 = value
 
 	@property
-	def bullet_point_3(self):
-		return self._bullet_point_3
-	@bullet_point_3.setter
-	def bullet_point_3(self, value):
-		self._bullet_point_3 = value
+	def bullet_3(self):
+		return self._bullet_3
+	@bullet_3.setter
+	def bullet_3(self, value):
+		self._bullet_3 = value
 
 	@property
 	def currency(self):
@@ -161,6 +163,14 @@ class Product(BaseModel):
 	@price.setter
 	def price(self, value):
 	    self._price = value
+
+	@property
+	def sell_price(self):
+	    return self._sell_price
+	@sell_price.setter
+	def sell_price(self, value):
+	    self._sell_price = value
+	
 		
 
 	def GetCellars(self):
@@ -178,16 +188,17 @@ class Product(BaseModel):
 				"size":self.size,
 				"color":self.color,
 				"material":self.material,
-				"bullet_1":self.bullet_point_1,
-				"bullet_2":self.bullet_point_2,
-				"bullet_3":self.bullet_point_3,
+				"bullet_1":self.bullet_1,
+				"bullet_2":self.bullet_2,
+				"bullet_3":self.bullet_3,
 				"image":self.image,
 				"image_2":self.image_2,
 				"image_3":self.image_3,
 				# "currency":self.currency,
 				"category":self.category,
 				"upc":self.upc,
-				"price":self.price
+				"price":self.price,
+				"sell_price":self.sell_price
 			}
 
 			return rtn_data
@@ -249,9 +260,9 @@ class Product(BaseModel):
 		# 					# "size":self.sizes,
 		# 					# "color":self.colors,
 		# 					"material":self.material,
-		# 					"bullet_point_1":self.bullet_point_1,
-		# 					"bullet_point_2":self.bullet_point_2,
-		# 					"bullet_point_3":self.bullet_point_3,
+		# 					"bullet_1":self.bullet_1,
+		# 					"bullet_2":self.bullet_2,
+		# 					"bullet_3":self.bullet_3,
 		# 					"image":self.image,
 		# 					"image_2":self.image_2,
 		# 					"image_3":self.image_3,
@@ -305,9 +316,9 @@ class Product(BaseModel):
 		# 				# "size":self.sizes,
 		# 				# "color":self.colors,
 		# 				"material":self.material,
-		# 				"bullet_point_1":self.bullet_point_1,
-		# 				"bullet_point_2":self.bullet_point_2,
-		# 				"bullet_point_3":self.bullet_point_3,
+		# 				"bullet_1":self.bullet_1,
+		# 				"bullet_2":self.bullet_2,
+		# 				"bullet_3":self.bullet_3,
 		# 				"image":self.image,
 		# 				"image_2":self.image_2,
 		# 				"image_3":self.image_3,
@@ -328,9 +339,9 @@ class Product(BaseModel):
 		# 				# "size":self.size,
 		# 				# "color":self.color,
 		# 				"material":self.material,
-		# 				"bullet_point_1":self.bullet_point_1,
-		# 				"bullet_point_2":self.bullet_point_2,
-		# 				"bullet_point_3":self.bullet_point_3,
+		# 				"bullet_1":self.bullet_1,
+		# 				"bullet_2":self.bullet_2,
+		# 				"bullet_3":self.bullet_3,
 		# 				"image":self.image,
 		# 				"image_2":self.image_2,
 		# 				"image_3":self.image_3,
@@ -358,11 +369,7 @@ class Product(BaseModel):
 			cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 			sizes=self.size.split(',')
-			colors=self.color.split(',')
-			if len(sizes) > len(colors):
-				count=len(sizes)
-			else:
-				count=len(colors)
+			count = len(sizes)
 
 			q = '''select count(*) from "Product" where sku = %(sku)s'''
 			p = {
@@ -384,18 +391,6 @@ class Product(BaseModel):
 						print "except error {}, i:{}".format(str(e),str(i))
 						pass
 
-				for i in range(0,len(colors)):
-					try:
-						q = '''update "Product" set color = array_append(color ,%(color)s) WHERE NOT (color @>array[%(color)s])'''
-						p = {
-						"color":colors[i]
-						}
-						cur.execute(q,p)
-						self.connection.commit()
-					except:
-						print " except "+str(e)+ " i "	+ str(i)
-						pass
-
 				# brand = Brand()
 				# brand.InitByName(self.brand)
 
@@ -405,14 +400,16 @@ class Product(BaseModel):
 				,brand = %(brand)s 
 				,manufacturer = %(manufacturer)s 
 				,material = %(material)s 
-				,bullet_point_1 = %(bullet_point_1)s 
-				,bullet_point_2 = %(bullet_point_2)s 
+				,bullet_1 = %(bullet_1)s 
+				,bullet_2 = %(bullet_2)s 
 				,image = %(image)s 
 				,image_2 = %(image_2)s 
 				,image_3 = %(image_3)s 
 				,category_id = %(category_id)s 
 				,price = %(price)s 
-				,upc = %(upc)s 
+				,upc = %(upc)s
+				,color = %(color)s
+				,sell_price = %(sell_price)s
 				where sku = %(sku)s returning id'''
 
 				category = Category()
@@ -426,24 +423,23 @@ class Product(BaseModel):
 						"brand":self.brand,
 						"manufacturer":self.manufacturer,
 						# "size":self.sizes,
-						# "color":self.colors,
+						"color":self.color,
 						"material":self.material,
-						"bullet_point_1":self.bullet_point_1,
-						"bullet_point_2":self.bullet_point_2,
-						"bullet_point_3":self.bullet_point_3,
+						"bullet_1":self.bullet_1,
+						"bullet_2":self.bullet_2,
+						"bullet_3":self.bullet_3,
 						"image":self.image,
 						"image_2":self.image_2,
 						"image_3":self.image_3,
 						# "currency":self.currency,
 						"category_id":category.id,
-						"price":self.price,
+						"price":float(self.price),
 						"upc":self.upc,
-						"sku":self.sku
+						"sku":self.sku,
+						"sell_price":self.sell_price
 					}
 
-				print "llllleggggga"
 				cur.execute(q,p)
-				print "query:{}".format(cur.query)
 				self.connection.commit()
 				self.id = cur.fetchone()[0]
 
@@ -461,26 +457,14 @@ class Product(BaseModel):
 						print " except "+str(e)+ " i "	+ str(i)
 						pass
 
-				for i in range(0,len(colors)):
-					try:
-						q = '''update "Product" set color = array_append(color ,%(color)s) WHERE NOT (upvotes_ids @>array[%(color)s])'''
-						p = {
-						"color":colors[i]
-						}
-						cur.execute(q,p)
-						self.connection.commit()
-					except:
-						print " except "+str(e)+ " i "	+ str(i)
-						pass
-
 				q = '''update "Product" set 
 				name=%(name)s 
 				, description = %(description)s 
 				, brand = %(brand)s 
 				, manufacturer = %(manufacturer)s 
 				, material = %(material)s 
-				, bullet_point_1 = %(bullet_point_1)s 
-				, bullet_point_2 = %(bullet_point_2)s 
+				, bullet_1 = %(bullet_1)s 
+				, bullet_2 = %(bullet_2)s 
 				, image = %(image)s 
 				, image_2 = %(image_2)s 
 				, image_3 = %(image_3)s 
@@ -488,6 +472,8 @@ class Product(BaseModel):
 				, price = %(price)s 
 				, upc = %(upc)s
 				, sku = %(sku)s
+				, color = %(color)s
+				, sell_price = %(sell_price)s
 				where id = %(id)s'''
 
 				category = Category()
@@ -499,23 +485,23 @@ class Product(BaseModel):
 						"brand":self.brand,
 						"manufacturer":self.manufacturer,
 						# "size":self.sizes,
-						# "color":self.colors,
+						"color":self.color,
 						"material":self.material,
-						"bullet_point_1":self.bullet_point_1,
-						"bullet_point_2":self.bullet_point_2,
-						"bullet_point_3":self.bullet_point_3,
+						"bullet_1":self.bullet_1,
+						"bullet_2":self.bullet_2,
+						"bullet_3":self.bullet_3,
 						"image":self.image,
 						"image_2":self.image_2,
 						"image_3":self.image_3,
 						"sku":self.sku,
 						"category_id":category.id,
-						"price":self.price,
+						"price":float(self.price),
 						"upc":self.upc,
-						"id":self.id
+						"id":self.id,
+						"sell_price":self.sell_price
 					}
 
 				cur.execute(q,p)
-				print "query:{}".format(cur.query)
 				self.connection.commit()
 				self.id = cur.fetchone()[0]
 
@@ -523,13 +509,11 @@ class Product(BaseModel):
 
 
 
-				q = '''insert into "Product" (name,description,sku,brand,manufacturer,material,bullet_point_1,bullet_point_2,bullet_point_3,image,image_2,image_3, category_id, price, upc,size,color)
-				values (%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_point_1)s,%(bullet_point_2)s,%(bullet_point_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s)'''
+				q = '''insert into "Product" (name,description,sku,brand,manufacturer,material,bullet_1,bullet_2,bullet_3,image,image_2,image_3, category_id, price, upc,size,color,sell_price)
+				values (%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_1)s,%(bullet_2)s,%(bullet_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s,%(sell_price)s)'''
 
 				category = Category()
 				category.InitByName(self.category)
-
-				return self.ShowError("product could not be saved, error:{}".format(self.price))
 
 				p = {
 						"name":self.name,
@@ -538,21 +522,23 @@ class Product(BaseModel):
 						"brand":self.brand,
 						"manufacturer":self.manufacturer,
 						"size":sizes,
-						"color":colors,
+						"color":self.color,
 						"material":self.material,
-						"bullet_point_1":self.bullet_point_1,
-						"bullet_point_2":self.bullet_point_2,
-						"bullet_point_3":self.bullet_point_3,
+						"bullet_1":self.bullet_1,
+						"bullet_2":self.bullet_2,
+						"bullet_3":self.bullet_3,
 						"image":self.image,
 						"image_2":self.image_2,
 						"image_3":self.image_3,
 						"category_id":category.id,
-						"price":self.price,
-						"upc":self.upc
+						"price":int(float(self.price)),
+						"upc":self.upc,
+						"sell_price":self.sell_price
 					}
 
+				print cur.mogrify(q.strip(),p)
 				cur.execute(q,p)
-				print cur.query
+
 				self.connection.commit()
 
 				# for i in range(count):
@@ -576,6 +562,7 @@ class Product(BaseModel):
 
 
 	def InitBySku(self, sku):
+
 		# data = self.collection.find({"sku":sku})
 
 		# if data.count() >= 1:
@@ -587,9 +574,9 @@ class Product(BaseModel):
 		# 	self.size = data[0]["size"]
 		# 	self.color = data[0]["color"]
 		# 	self.material = data[0]["material"]
-		# 	self.bullet_point_1 = data[0]["bullet_point_1"]
-		# 	self.bullet_point_2 = data[0]["bullet_point_2"]
-		# 	self.bullet_point_3 = data[0]["bullet_point_3"]
+		# 	self.bullet_1 = data[0]["bullet_1"]
+		# 	self.bullet_2 = data[0]["bullet_2"]
+		# 	self.bullet_3 = data[0]["bullet_3"]
 		# 	self.image = data[0]["image"]
 		# 	self.image_2 = data[0]["image_2"]
 		# 	self.image_3 = data[0]["image_3"]
@@ -602,7 +589,9 @@ class Product(BaseModel):
 		# 	return self.ShowSuccessMessage("product initialized")
 		# return self.ShowError("product can not be initialized")
 
-		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 		q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id where p.sku = %(sku)s limit 1'''
 		p = {
@@ -612,28 +601,13 @@ class Product(BaseModel):
 			cur.execute(q,p)
 			producto = cur.fetchone()
 
-			if producto:
-				self.id = producto['id']
-				self.name = producto['name']
-				self.description = producto['description']
-				self.brand = producto['brand']
-				self.manufacturer = producto['manufacturer']
-				self.size = producto['size']
-				self.color = producto['color']
-				self.material = producto['material']
-				self.bullet_point_1 = producto['bullet_point_1']
-				self.bullet_point_2 = producto['bullet_point_2']
-				self.bullet_point_3 = producto['bullet_point_3']
-				self.image = producto['image']
-				self.image_2 = producto['image_2']
-				self.image_3 = producto['image_3']
-				self.category = producto['category']
-				self.sku = producto['sku']
-				self.price = producto['price']
-				self.upc = producto['upc']
-				return self.ShowSuccessMessage("product initialized")
+			if cur.rowcount > 0:
+				return json.dumps(producto)
+			else:
+				return self.ShowError("product cannot be initialized")
 		except:
-			return self.ShowSuccessMessage("product cannot be initialized")
+			return self.ShowError("product cannot be initialized")
+		
 
 	def InitById(self, identifier):
 		# data = self.collection.find({"_id":ObjectId(identifier)})
@@ -647,9 +621,9 @@ class Product(BaseModel):
 		# 	self.size = data[0]["size"]
 		# 	self.color = data[0]["color"]
 		# 	self.material = data[0]["material"]
-		# 	self.bullet_point_1 = data[0]["bullet_point_1"]
-		# 	self.bullet_point_2 = data[0]["bullet_point_2"]
-		# 	self.bullet_point_3 = data[0]["bullet_point_3"]
+		# 	self.bullet_1 = data[0]["bullet_1"]
+		# 	self.bullet_2 = data[0]["bullet_2"]
+		# 	self.bullet_3 = data[0]["bullet_3"]
 		# 	self.image = data[0]["image"]
 		# 	self.image_2 = data[0]["image_2"]
 		# 	self.image_3 = data[0]["image_3"]
@@ -664,7 +638,7 @@ class Product(BaseModel):
 		# 	return self.ShowSuccessMessage("product initialized")
 		# return self.ShowError("product can not be initialized")
 
-		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 		q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id where p.id = %(id)s limit 1'''
 		p = {
@@ -674,28 +648,12 @@ class Product(BaseModel):
 			cur.execute(q,p)
 			producto = cur.fetchone()
 
-			if producto:
-				self.id = producto['id']
-				self.name = producto['name']
-				self.description = producto['description']
-				self.brand = producto['brand']
-				self.manufacturer = producto['manufacturer']
-				self.size = producto['size']
-				self.color = producto['color']
-				self.material = producto['material']
-				self.bullet_point_1 = producto['bullet_point_1']
-				self.bullet_point_2 = producto['bullet_point_2']
-				self.bullet_point_3 = producto['bullet_point_3']
-				self.image = producto['image']
-				self.image_2 = producto['image_2']
-				self.image_3 = producto['image_3']
-				self.category = producto['category']
-				self.sku = producto['sku']
-				self.price = producto['price']
-				self.upc = producto['upc']
-				return self.ShowSuccessMessage("product initialized")
-		except:
-			return self.ShowSuccessMessage("product cannot be initialized")
+			if cur.rowcount > 0:
+				return json.dumps(producto)
+			else:
+				return self.ShowError("product cannot be initialized")
+		except Exception,e:
+			return self.ShowError("product cannot be initialized, error: {}".format(str(e)))
 
 	def Exist(self, name):
 		# if self.collection.find({"name":name}).count() >= 1:
@@ -732,15 +690,16 @@ class Product(BaseModel):
 	
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		q = '''select * from "Product" where name like '%%(name)s%' limit 5'''
+		q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id where lower(p.name) like %(name)s limit 5'''
 		p = {
-		"name":name
+		"name":"%{}%".format(query.lower())
 		}
+		print cur.mogrify(q,p)
 		try:
 			cur.execute(q,p)
 			products = cur.fetchall()
 
-			if product:
+			if cur.rowcount > 0:
 				return products
 			else:
 				return {}

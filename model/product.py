@@ -39,7 +39,8 @@ class Product(BaseModel):
 		self._price=""
 		self._image=""
 		self._image_2=""
-		self._image_3=""		
+		self._image_3=""
+		self._sell_price = 0	
 		
 
 	####################
@@ -179,6 +180,14 @@ class Product(BaseModel):
 	def image_3(self, value):
 	    self._image_3 = value
 
+	@property
+	def sell_price(self):
+	    return self._sell_price
+	@sell_price.setter
+	def sell_price(self, value):
+	    self._sell_price = value
+	
+
 	
 	#################
 	#### Methods ####
@@ -212,6 +221,7 @@ class Product(BaseModel):
 		self.image = data ["image"]
 		self.image_2 = data ["image_2"]
 		self.image_3 = data ["image_3"]
+		self.sell_price = data["sell_price"]
 
 	def InitWithSku(self, sku):
 		url = self.wsurl() + "/product/find"
@@ -241,6 +251,7 @@ class Product(BaseModel):
 		self.image = data ["image"]
 		self.image_2 = data ["image_2"]
 		self.image_3 = data ["image_3"]	
+		self.sell_price = data["sell_price"]
 
 
 	def Remove(self):
@@ -270,10 +281,10 @@ class Product(BaseModel):
 			name = self.name
 
 		try:
-			color =  ",".join(v for v in self.color)
+			color =  self.color.encode("utf-8")
 			# color =unicode(color, errors="ignore")
 		except:
-			color = ",".join(v.encode('utf-8') for v in self.color)				
+			color = self.color
 
 		try:
 			brand = self.brand.encode("utf-8")
@@ -297,10 +308,11 @@ class Product(BaseModel):
 			url += "&bullet_2=" + unicode(self.bullet_2, errors="ignore")
 			url += "&bullet_3=" + unicode(self.bullet_3, errors="ignore")
 			# url += "&currency=" + self.currency
-			url += "&price=" + unicode(self.price, errors="ignore")
+			url += "&price={}".format(int(self.price))
 			url += "&image=" + unicode(self.image, errors="ignore")
 			url += "&image_2=" + unicode(self.image_2, errors="ignore")
 			url += "&image_3=" + unicode(self.image_3, errors="ignore")
+			url += "&sell_price={}".format(self.sell_price)
 
 			url += "&id=" + self.identifier
 
@@ -322,17 +334,17 @@ class Product(BaseModel):
 			url += "&brand=" + brand
 			url += "&manufacturer=" + self.manufacturer
 			url += "&size=" + size
-			url += "&color=" + color
+			url += "&color=" + color.decode('utf-8')
 			#url += "&material=" + self.material
 			url += "&bullet_1=" + self.bullet_1
 			url += "&bullet_2=" + self.bullet_2
 			url += "&bullet_3=" + self.bullet_3
 			# url += "&currency=" + self.currency
-			url += "&price=" + self.price
+			url += "&price={}".format(self.price)
 			url += "&image=" + self.image.decode('utf-8')
 			url += "&image_2=" + self.image_2.decode('utf-8')
 			url += "&image_3=" + self.image_3.decode('utf-8')
-
+			url += "&sell_price={}".format(self.sell_price)
 			url += "&id=" + self.identifier
 
 			return urllib.urlopen(url.encode('utf-8')).read()

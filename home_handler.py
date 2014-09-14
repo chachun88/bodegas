@@ -195,10 +195,11 @@ class ProductLoadHandler(BaseHandler):
 										elif j == 3:
 											prod.description = matriz[i][j].encode('utf-8')
 										elif j == 4:										
-											prod.color=matriz[i][j].encode('utf-8').split(",")
+											prod.color=matriz[i][j].encode('utf-8')
 											color=matriz[i][j].encode('utf-8')
 										elif j == 5:
-											price = str(int(matriz[i][j]))
+											price = matriz[i][j]
+											prod.price = price
 										elif j == 6:
 											prod.manufacturer = matriz[i][j].encode('utf-8')
 										elif j == 7:
@@ -208,7 +209,7 @@ class ProductLoadHandler(BaseHandler):
 										elif j == 10:
 											try:
 												q = k +j
-												quantity=matriz[i][q]
+												quantity=int(matriz[i][q])
 				
 												prod.Save("masive")		
 												# prod.InitWithSku(prod.sku)
@@ -269,10 +270,10 @@ class ProductRemoveHandler(BaseHandler):
 		sell=0
 
 		for p in product_find:
-			if p["id"] == "buy":
+			if p["operation_type"] == "buy":
 				buy=p["total"]	
 
-			if p["id"] == "sell":
+			if p["operation_type"] == "sell":
 				sell=p["total"]
 
 		units=buy-sell	

@@ -87,7 +87,7 @@ class BaseHandler(tornado.web.RequestHandler):
         # global vars
         kwargs["MoneyFormat"] = MoneyFormat
         kwargs["side_menu"] = self.side_menu
-        kwargs["current_user"] = user
+        # kwargs["current_user"] = user
 
         ## overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)

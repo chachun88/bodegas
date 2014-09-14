@@ -133,6 +133,8 @@ class ProductAddHandler(BaseHandler):
 		try:
 			prod.InitWithSku(self.get_argument("sku", ""))
 
+			print "SKU:{}".format(prod.sku)
+
 			if prod.sku and load=="old":
 
 				prod.category 	= self.get_argument("category", "")
@@ -143,16 +145,17 @@ class ProductAddHandler(BaseHandler):
 				prod.brand 		= self.get_argument("brand", "")
 				prod.manufacturer= self.get_argument("manufacturer", "")
 				prod.size 		= self.get_argument("size", "").split(",").encode('utf-8')
-				prod.color 		= self.get_argument("color", "").split(",").encode('utf-8')
+				prod.color 		= self.get_argument("color", "")
 				prod.material 	= self.get_argument("material", "")
 				prod.bullet_1 	= self.get_argument("bullet_1", "")
-				prod.bullet_2 	= self.get_argument("bullet_2", "")
+				prod.bullet_2 	= self.get_argument("bullet_2", "") 
 				prod.bullet_3 	= self.get_argument("bullet_3", "")
 				prod.currency 	= self.get_argument("currency", "")
 				prod.price		= self.get_argument("price", "")
 				prod.image 		= img1
 				prod.image_2 	= img2
 				prod.image_3 	= img3
+				prod.sell_price = self.get_argument("sell_price",0)
 
 				prod.Save("one")
 				self.redirect("/product/list")	
@@ -160,7 +163,9 @@ class ProductAddHandler(BaseHandler):
 				self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="add")
 
 
-		except:
+		except Exception,e:
+
+			print str(e)
 			
 			prod.category 	= self.get_argument("category", "")
 			prod.sku 		= self.get_argument("sku", "")
@@ -170,7 +175,7 @@ class ProductAddHandler(BaseHandler):
 			prod.brand 		= self.get_argument("brand", "")
 			prod.manufacturer= self.get_argument("manufacturer", "")
 			prod.size 		= self.get_argument("size", "").split(",")
-			prod.color 		= self.get_argument("color", "").split(",")
+			prod.color 		= self.get_argument("color", "")
 			prod.material 	= self.get_argument("material", "")
 			prod.bullet_1 	= self.get_argument("bullet_1", "")
 			prod.bullet_2 	= self.get_argument("bullet_2", "")
@@ -180,6 +185,7 @@ class ProductAddHandler(BaseHandler):
 			prod.image 		= img1
 			prod.image_2 	= img2
 			prod.image_3 	= img3
+			prod.sell_price = self.get_argument("sell_price",0)
 
 			prod.Save("one")
 			

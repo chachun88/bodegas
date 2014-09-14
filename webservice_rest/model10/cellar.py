@@ -650,7 +650,7 @@ class Cellar(BaseModel):
 
         if cellar_identifier == "remove" and size == "remove":
             
-            query = '''select sum(units), operation_type from "Kardex" where product_sku = %(product_sku)s group by operation_type'''
+            query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s group by operation_type'''
             parametros = {
             "product_sku":product_sku
             }
@@ -659,7 +659,7 @@ class Cellar(BaseModel):
             return result
         else:
 
-            query = '''select sum(units), operation_type from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s group by operation_type'''
+            query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s group by operation_type'''
             parametros = {
             "product_sku":product_sku
             }

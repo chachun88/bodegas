@@ -138,8 +138,8 @@ class CellarProductsAddHandler(BaseHandler):
 		kardex.date = str(datetime.datetime.now().isoformat())
 
 		kardex.operation_type = operation
-		kardex.units = float(quantity)
-		kardex.price = float(price)
+		kardex.units = quantity
+		kardex.price = price
 		kardex.size = size
 		kardex.color= color
 		kardex.user = user

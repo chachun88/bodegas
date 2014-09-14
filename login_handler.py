@@ -7,6 +7,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
+# import json
 
 from lp_email_tool import lpEmailTool
 
@@ -27,16 +28,16 @@ class LoginHandler(BaseHandler):
 
 		## validate user and password
 		usr = User()
-		usr.InitWithEmail(username)
+		user = usr.InitWithEmail(username)
 
-		self.write(username)
-		self.write(password)
+		print username
+		print password
 		
-		if username == usr.email and password == usr.password:
+		if username == user["email"] and password == user["password"]:
 			auth = True
 
 		if auth:
-			self.set_current_user(username)
+			self.set_current_user(user)
 			self.redirect(self.get_argument("next", u"/"))
 		else:
 			error_msg = tornado.escape.url_escape("t")

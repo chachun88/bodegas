@@ -257,6 +257,21 @@ class Salesman(BaseModel):
 		# 	return self.ShowError("failed to save user " + self.email)
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		q = '''select id from "Permission" where name = any(%(permissions)s)'''
+		p = {
+		"permissions":self.permissions
+		}
+		cur.execute(q,p)
+		permisos = cur.fetchall()
+
+		q = '''select id from "User_Types" where name = %(name)s'''
+		p = {
+		"name":"Vendedor"
+		}
+		cur.execute(q,p)
+		tipo_usuario = cur.fetchone()[0]
+
 		q = '''select * from "User" where email = %(email)s limit 1'''
 		p = {
 		"email":self.email
@@ -266,32 +281,34 @@ class Salesman(BaseModel):
 
 		try:
 
-			if usuario:
+			if cur.rowcount > 0:
 				self.id = usuario['id']
-				q = '''update "User" set name = %(name)s and password = %(password)s and email = %(email)s and permissions = %(permissions)s where id = %(id)s'''
+				q = '''update "User" set name = %(name)s, password = %(password)s, email = %(email)s, permissions = %(permissions)s, type_id = %(type_id)s where id = %(id)s'''
 				p = {
 				"name":self.name,
 				"email":self.email,
-				"permissions":self.permissions,
+				"permissions":permisos,
 				"password":self.password,
-				"id":self.id
+				"id":self.id,
+				"type_id":tipo_usuario
 				}
 				cur.execute(q,p)
 				self.connection.commit()
 				return self.ShowSuccessMessage(str(self.id))
 			else:
-				q = '''insert into "User" (name,password,email,permissions) values (%(name)s,%(password)s,%(email)s,%(permissions)s) returning id'''
+				q = '''insert into "User" (name,password,email,permissions,type_id) values (%(name)s,%(password)s,%(email)s,%(permissions)s,%(type_id)s) returning id'''
 				p = {
 				"name":self.name,
 				"email":self.email,
-				"permissions":self.permissions,
-				"password":self.password
+				"permissions":permisos,
+				"password":self.password,
+				"type_id":tipo_usuario
 				}
 				cur.execute(q,p)
 				self.connection.commit()
 				self.id = cur.fetchone()[0]
 
-				return self.ShowSuccessMessage(str(object_id))
+				return self.ShowSuccessMessage(str(self.id))
 		except Exception,e:
 			return self.ShowError("failed to save user {}, error:{}".format(self.email,str(e)))
 

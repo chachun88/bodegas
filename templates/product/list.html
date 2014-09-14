@@ -38,7 +38,8 @@
 						<th class="hidden-xs">Viñeta 2</th>
 						<th class="hidden-xs">Viñeta 3</th>
 						<th class="hidden-xs " >Moneda</th> -->
-						<th class="hidden-xs-portrait ">Precio</th>
+						<th class="hidden-xs-portrait ">Precio de compra</th>
+						<th class="hidden-xs-portrait ">Precio de venta</th>
 						<!-- <th class="hidden-xs " >Cantidad</th> -->
 						
 						
@@ -64,16 +65,17 @@
 						<td>{{ p["brand"] }}</td>
 						<td>{{ p["manufacturer"] }}</td>
 						<td>{{ ", ".join(p["size"]) }}</td>	
-						<td>{{ ", ".join(p["color"]) }}</td>	
+						<td>{{ p["color"] }}</td>	
 						<!-- <td>{{ p["material"] }}</td>
-						<td>{{ p["bullet_point_1"] }}</td>	
-						<td>{{ p["bullet_point_2"] }}</td>	
-						<td>{{ p["bullet_point_3"] }}</td> -->
+						<td>{{ p["bullet_1"] }}</td>	
+						<td>{{ p["bullet_2"] }}</td>	
+						<td>{{ p["bullet_3"] }}</td> -->
 						{% if "price" in p %}
 						<td class="hidden-xs">{{ p["price"] }}</td>
 						{% else %}
 						<td></td>
 						{% end %} 
+						<td>{{p['sell_price']}}</td>
 						<!--<td></td>
 						<td class="hidden-xs"></td>	-->					
 						<td>

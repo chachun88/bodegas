@@ -3,6 +3,8 @@
 from bson import json_util
 from bson.objectid import ObjectId
 from basemodel import BaseModel, db
+import psycopg2
+import psycopg2.extras
 
 class OrderDetail(BaseModel):
 
@@ -43,7 +45,7 @@ class OrderDetail(BaseModel):
 	
 
 	def __init__(self):
-		self.collection = db.order_detail
+		BaseModel.__init__(self)
 		self._id	= ""
 		self._order_id 	= ""
 		self._quantity	= ""

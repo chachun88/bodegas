@@ -83,13 +83,19 @@ class BaseModel(object):
 	def Remove(self):
 		try:
 			## raise exception if identifier is empty
-			if self.id == "":
-				raise
+			if self.id != "":
 
-			cur = self.connection.cursor()
-			cur.execute("delete from \"{tabla}\" where id = {id}".format(tabla=self.table,id=self.id))
-			self.connection.commit()
-			return self.ShowSuccessMessage("object: {} has been deleted".format(self.id))
+				cur = self.connection.cursor()
+				q = '''delete from "{tabla}" where id = %(id)s'''.format(tabla=self.table)
+				p = {
+				"id":self.id
+				}
+				print cur.mogrify(q,p)
+				cur.execute(q,p)
+				self.connection.commit()
+				return self.ShowSuccessMessage("object: {} has been deleted".format(self.id))
+			else:
+				return self.ShowError("identifier not found")	
 		except Exception, e:
 			return self.ShowError("object: not found, error:{}".format(str(e)))
 

@@ -102,7 +102,7 @@ class CellarEasyInputHandler(BaseHandler):
 		product.InitWithSku(product_sku)
 
 		product.size=size.split(",")
-		product.color=color.split(",")
+		product.color=color
 		product.Save()
 
 		if "success" in cellar.AddProducts(product_sku, quantity, price, size, color, operation, self.get_user_email() ):

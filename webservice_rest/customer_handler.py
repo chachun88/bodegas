@@ -134,6 +134,9 @@ class ListHandler(BaseHandler):
         
         self.write(json_util.dumps(customer.List(current_page, items_per_page)))
 
+    def get(self):
+        self.post()
+
 class ChangeStateHandler(BaseHandler):
 
     def post(self):

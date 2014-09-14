@@ -5,6 +5,8 @@ from bson import json_util
 from bson.objectid import ObjectId
 from basemodel import BaseModel, db
 from contact import Contact
+import psycopg2
+import psycopg2.extras
 
 from datetime import datetime
 
@@ -112,7 +114,7 @@ class Customer(BaseModel):
         self._password = value
 
     def __init__(self):
-        self.collection = db.customer
+        BaseModel.__init__(self)
         self._id = ""
         self._name = ""
         self._lastname = ""

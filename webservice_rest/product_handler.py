@@ -34,6 +34,7 @@ class AddProductHandler(BaseHandler):
 		product.image 			= self.get_argument("image", "")
 		product.image_2			= self.get_argument("image_2", "")
 		product.image_3 		= self.get_argument("image_3", "")
+		product.sell_price      = self.get_argument("sell_price",0)
 
 		# self.write(product.sku)
 		# return
@@ -57,10 +58,10 @@ class RemoveProductHandler(BaseHandler):
 		product = Product()
 
 		if idd != "":
-			product.InitById(idd)
+			product.id = idd
 		else:
-			product.InitBySku(sku)
-
+			product.sku = sku
+			
 		self.write(json_util.dumps(product.Remove()))
 
 class GetProductHandler(BaseHandler):
@@ -77,11 +78,11 @@ class GetProductHandler(BaseHandler):
 		product = Product()
 
 		if idd != "":
-			product.InitById(idd)
-			self.write(json_util.dumps(product.Print()))
+			self.write(product.InitById(idd))
+			# json_util.dumps(product.Print()))
 		else:
-			product.InitBySku(sku)
-			self.write(json_util.dumps(product.Print()))
+			self.write(product.InitBySku(sku))
+			#self.write(json_util.dumps(product.Print()))
 
 
 class ListProductsHandler(BaseHandler):

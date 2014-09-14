@@ -89,6 +89,21 @@ class User(BaseModel):
 	@cellars.setter
 	def cellars(self, value):
 	    self._cellars = value
+
+	@property
+	def permissions_name(self):
+	    return self._permissions_name
+	@permissions_name.setter
+	def permissions_name(self, value):
+	    self._permissions_name = value
+	
+	@property
+	def cellars_name(self):
+	    return self._cellars_name
+	@cellars_name.setter
+	def cellars_name(self, value):
+	    self._cellars_name = value
+	
 	
 
 	#################
@@ -116,14 +131,9 @@ class User(BaseModel):
 
 		try:
 			data = json_util.loads(json_string)
-			self.SplitName(data["name"]) ##name and surname
-			self.identifier = str(data["id"])
-			self.password = data["password"]
-			self.permissions = data["permissions"]
-			self.email = data["email"]
-			self.salesman_id = data["salesman_id"]
-			self.cellars = data["cellar_permissions"]
+			return data
 		except:
+			return {}
 			pass
 
 
@@ -143,6 +153,8 @@ class User(BaseModel):
 		self.email = data["email"]
 		self.salesman_id = data["salesman_id"]
 		self.cellars = data["cellar_permissions"]
+		self.cellars_name = data["cellars_name"]
+		self.permissions_name = data["permissions_name"]
 
 	def Remove(self):
 
