@@ -109,6 +109,7 @@ class Customer(BaseModel):
     
 
     def __init__(self):
+        BaseModel.__init__(self)
         self._id = ""
         self._name = ""
         self._lastname = ""
@@ -129,7 +130,7 @@ class Customer(BaseModel):
         url = self.wsurl() + "/customer/save"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "name":self.name,
         "type":self.type,
         "rut":self.rut,
@@ -154,7 +155,7 @@ class Customer(BaseModel):
     def Remove(self, _id):
         url = self.wsurl() + "/customer/remove"
         data = {
-        "token":self.token(),
+        "token":self.token,
         "ids":_id
         }
 
@@ -168,7 +169,7 @@ class Customer(BaseModel):
         url = self.wsurl() + "/customer/initbyid"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "id":idd
         }
 
@@ -199,7 +200,7 @@ class Customer(BaseModel):
         url = self.wsurl() + "/customer"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "page":page,
         "items":items
         }
@@ -216,7 +217,7 @@ class Customer(BaseModel):
         url = self.wsurl() + "/customer/changestate"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "ids":ids,
         "state":state
         }

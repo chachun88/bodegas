@@ -7,7 +7,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 import os
-import pymongo
+# import pymongo
 
 import access_token
 import product_handler
@@ -133,41 +133,41 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, **settings) 
 
-        ''' configure database '''
-        connection  = pymongo.Connection("localhost", 27017)
+        # ''' configure database '''
+        # connection  = pymongo.Connection("localhost", 27017)
 
-        if debugMode:
-            self.db = connection.dev_market_tab
-            print "database : dev_market_tab"
-        else:
-            self.db = connection.market_tab
-            print "database : market_tab"
+        # if debugMode:
+        #     self.db = connection.dev_market_tab
+        #     print "database : dev_market_tab"
+        # else:
+        #     self.db = connection.market_tab
+        #     print "database : market_tab"
 
 
-        ''' repair script for user permissions '''
-        users_list = self.db.salesman.find()
-        for user in users_list:
-            user_id = user["_id"]
+        # ''' repair script for user permissions '''
+        # users_list = self.db.salesman.find()
+        # for user in users_list:
+        #     user_id = user["_id"]
 
-            try:
-                permissions = user["permissions"]
-            except Exception, e:
-                ## adding empty permissions
+        #     try:
+        #         permissions = user["permissions"]
+        #     except Exception, e:
+        #         ## adding empty permissions
 
-                self.db.salesman.update( { "_id": ObjectId(user_id) }, { "$set": { "permissions": [] } } )
-                print "user updated"
+        #         self.db.salesman.update( { "_id": ObjectId(user_id) }, { "$set": { "permissions": [] } } )
+        #         print "user updated"
 
-                pass
+        #         pass
 
-        product_list = self.db.product.find()
-        for product in product_list:
-            product_id = product["_id"]
+        # product_list = self.db.product.find()
+        # for product in product_list:
+        #     product_id = product["_id"]
 
-            try:
-                upc = product["upc"]
-            except Exception, e:
-                self.db.product.update( { "_id": ObjectId(product_id) }, { "$set": {"upc": ""} })
-                pass
+        #     try:
+        #         upc = product["upc"]
+        #     except Exception, e:
+        #         self.db.product.update( { "_id": ObjectId(product_id) }, { "$set": {"upc": ""} })
+        #         pass
 
 def main():
     tornado.options.parse_command_line()

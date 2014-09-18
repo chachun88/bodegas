@@ -10,6 +10,7 @@ class Cellar(BaseModel):
 
 	""" docstring for Cellar """
 	def __init__(self):
+		BaseModel.__init__(self)
 		self._name = ""
 		self._description = ""
 		self._identifier = ""
@@ -17,7 +18,7 @@ class Cellar(BaseModel):
 
 	def Save(self):
 		url = self.wsurl() + "/cellar/add"
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&name=" + self.name
 		url += "&description=" + self.description
 
@@ -25,7 +26,7 @@ class Cellar(BaseModel):
 
 	def Remove(self):
 		url = self.wsurl() + "/cellar/remove"
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&id=" + self.identifier
 
 		return urllib.urlopen(url).read()
@@ -34,7 +35,7 @@ class Cellar(BaseModel):
 
 		url = self.wsurl() + "/cellar/products/list"
 
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&id=" + self.identifier
 		url += "&page=1"
 		url += "&items=100"
@@ -46,7 +47,7 @@ class Cellar(BaseModel):
 
 		url = self.wsurl() + "/cellar/products/kardex"
 
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&page=1"
 		url += "&items=1"
 		url += "&day="+ day
@@ -60,7 +61,7 @@ class Cellar(BaseModel):
 
 		url = self.wsurl() + "/cellar/products/find"
 
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&product_sku="+ sku
 		url += "&cellar_id="+ idd
 		url += "&size="+ size
@@ -72,7 +73,7 @@ class Cellar(BaseModel):
 
 	def InitWithId(self, idd):
 		url = self.wsurl() + "/cellar/find"
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&id=" + idd
 
 		json_string = urllib.urlopen(url).read()
@@ -86,7 +87,7 @@ class Cellar(BaseModel):
 
 	def InitWithName(self, name):
 		url = self.wsurl() + "/cellar/find"
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&name=" + name
 
 		json_string = urllib.urlopen(url).read()
@@ -98,7 +99,7 @@ class Cellar(BaseModel):
 
 	def List(self, page, items):
 		url = self.wsurl() + "/cellar/list"
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&page={}".format(page)
 		url += "&items={}".format(items)
 
@@ -114,7 +115,7 @@ class Cellar(BaseModel):
 		except:
 			col = color
 
-		url = self.wsurl() + "/cellar/products/add?token=" + self.token()
+		url = self.wsurl() + "/cellar/products/add?token=" + self.token
 		url += "&cellar_id=" + self.identifier
 		url += "&product_sku=" + product_sku 
 		url += "&operation=buy"
@@ -129,7 +130,7 @@ class Cellar(BaseModel):
 		return json_util.loads(json_string)
 
 	def RemoveProducts(self, product_sku, quantity, price, size, color, operation, user):
-		url = self.wsurl() + "/cellar/products/remove?token=" + self.token()
+		url = self.wsurl() + "/cellar/products/remove?token=" + self.token
 
 		url += "&cellar_id=" + self.identifier
 		url += "&product_sku=" + product_sku
@@ -147,7 +148,7 @@ class Cellar(BaseModel):
 		return json_util.loads(json_string)
 
 	def CellarExist( self, cellar_name ):
-		url = self.wsurl() + "/cellar/exists?token=" + self.token()
+		url = self.wsurl() + "/cellar/exists?token=" + self.token
 
 		url += "&cellar_name=" + cellar_name
 

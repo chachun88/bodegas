@@ -14,7 +14,7 @@ import tornado.web
 from tornado.options import define, options
 
 from basehandler import BaseHandler
-from globals import port, debugMode, carpeta_img, userMode, Menu, token, webservice_url
+from globals import port, debugMode, carpeta_img, userMode, Menu, webservice_url
 
 from home_handler import HomeHandler
 from home_handler import ProductRemoveHandler
@@ -164,13 +164,6 @@ class Application(tornado.web.Application):
                                         {"class":"", "name":Menu.USUARIOS_AGREGAR, "link":"/user/add"}
                                         ]},
                         {"class":"panel", "name":Menu.SALIR, "icon":"sign-out", "link":"/auth/login"},]
-
-
-        ## initializing token
-        url = webservice_url + "/access_token?appid=100"
-        token = urllib.urlopen(url).read()
-        print token
-
 
 
 def main():

@@ -54,6 +54,7 @@ class OrderDetail(BaseModel):
     
 
     def __init__(self):
+        BaseModel.__init__(self)
         self._id    = ""
         self._order_id  = ""
         self._quantity  = ""
@@ -63,7 +64,7 @@ class OrderDetail(BaseModel):
 
     def Save(self):
         url = self.wsurl() + "/order-detail/save"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&order_id=" + self.order_id
         url += "&quantity=" + self.quantity
         url += "&total=" + self.total
@@ -73,14 +74,14 @@ class OrderDetail(BaseModel):
 
     def Remove(self):
         url = self.wsurl() + "/order/remove"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&id=" + self.identifier
 
         return urllib.urlopen(url).read()
 
     def InitWithId(self, idd):
         url = self.wsurl() + "/order-detail/find"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&id={}".format(idd)
 
         json_string = urllib.urlopen(url).read()
@@ -100,7 +101,7 @@ class OrderDetail(BaseModel):
 
     def ListByOrderId(self, order_id, page=1, items=20):
         url = self.wsurl() + "/order-detail/listbyorderid"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&page={}".format(page)
         url += "&items={}".format(items)
         url += "&order_id={}".format(order_id)
@@ -111,7 +112,7 @@ class OrderDetail(BaseModel):
 
     def List(self, page=1, items=20):
         url = self.wsurl() + "/order/list"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&page={}".format(page)
         url += "&items={}".format(items)
 

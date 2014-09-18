@@ -59,7 +59,7 @@ class Contact(BaseModel):
     
     
     def __init__(self):
-
+        BaseModel.__init__(self)
         self._id = ""
         self._name = ""
         self._email = ""
@@ -67,13 +67,14 @@ class Contact(BaseModel):
         self._telephone = ""
         self._customer_id = ""
         self._type = ""
+        
 
     def Save(self):
 
         url = self.wsurl() + "/contact/save"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "name":self.name,
         "email":self.email,
         "address":self.address,
@@ -91,7 +92,7 @@ class Contact(BaseModel):
         url = self.wsurl() + "/contact/edit"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "name":self.name,
         "email":self.email,
         "address":self.address,
@@ -110,7 +111,7 @@ class Contact(BaseModel):
         url = self.wsurl() + "/contact/listbycustomerid"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "customer_id":customer_id
         }
 
@@ -121,7 +122,7 @@ class Contact(BaseModel):
     def Remove(self, _id):
         url = self.wsurl() + "/contact/remove"
         data = {
-        "token":self.token(),
+        "token":self.token,
         "ids":_id
         }
 
@@ -135,7 +136,7 @@ class Contact(BaseModel):
         url = self.wsurl() + "/contact/changestate"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "ids":ids,
         "state":state
         }
@@ -148,7 +149,7 @@ class Contact(BaseModel):
         url = self.wsurl() + "/contact/initbyid"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "id":_id
         }
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from basemodel import BaseModel, db
+from basemodel import BaseModel
 import psycopg2
 import psycopg2.extras
 # from bson.objectid import ObjectId

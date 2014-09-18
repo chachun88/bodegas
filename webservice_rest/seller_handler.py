@@ -16,11 +16,11 @@ class AddSellerHandler(BaseHandler):
 		# isntantitate product
 		salesman = Salesman()
 
-		salesman.id = self.TryGetParam("id", "")
-		salesman.name 		= self.TryGetParam("name", "")
-		salesman.password 	= self.TryGetParam("password", "")
-		salesman.email		= self.TryGetParam("email", "")
-		salesman.permissions = self.TryGetParam("permissions", "").split(",")
+		salesman.id = self.get_argument("id", "")
+		salesman.name 		= self.get_argument("name", "")
+		salesman.password 	= self.get_argument("password", "")
+		salesman.email		= self.get_argument("email", "")
+		salesman.permissions = self.get_argument("permissions", "").split(",")
 
 		# saving current seller
 		oid = salesman.Save()
@@ -56,8 +56,8 @@ class GetSalesmanHandler(BaseHandler):
 		if not self.ValidateToken():
 			return
 
-		idd = self.TryGetParam("id", "")
-		email = self.TryGetParam("email", "")
+		idd = self.get_argument("id", "")
+		email = self.get_argument("email", "")
 
 		salesman = Salesman()
 
@@ -83,8 +83,8 @@ class ListSalesmanHandler(BaseHandler):
 		salesman 		= Salesman()
 
 		try:
-			current_page 	= int(self.TryGetParam("page", "1"))
-			items_per_page 	= int(self.TryGetParam("items", "10"))
+			current_page 	= int(self.get_argument("page", "1"))
+			items_per_page 	= int(self.get_argument("items", "10"))
 		except Exception, e:
 			print str(e)
 		

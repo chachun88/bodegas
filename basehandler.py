@@ -50,9 +50,11 @@ class BaseHandler(tornado.web.RequestHandler):
     
     ''' @return current user email '''
     def get_current_user(self):
-        user_json = self.get_secure_cookie("user")        
-        if not user_json: return None
-        return tornado.escape.json_decode(user_json)
+        user_json = self.get_secure_cookie("user_bodega")        
+        if user_json: 
+            return tornado.escape.json_decode(user_json)
+        else:
+            return None
     
     def get_usuarios(self):
         return self.db.user.find({"picture":{"$exists":True}}).limit(24)
@@ -62,18 +64,18 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def set_current_user(self, user):
         if user:
-            self.set_secure_cookie("user", tornado.escape.json_encode(user))
+            self.set_secure_cookie("user_bodega", tornado.escape.json_encode(user))
         else:
-            self.clear_cookie("user")
+            self.clear_cookie("user_bodega")
 
     def get_user_email(self):
         try:
-            json_data = json_util.loads( self.get_secure_cookie("user") )
+            json_data = json_util.loads( self.get_secure_cookie("user_bodega") )
 
             return json_data["email"]
         except:
             pass
-        return self.get_secure_cookie("user")
+        return self.get_secure_cookie("user_bodega")
 
     def render(self, template_name ,**kwargs):
 

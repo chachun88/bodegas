@@ -21,6 +21,7 @@ class Product(BaseModel):
 #		return [{"name":"p1"},{"name":"p2"},{"name":"p3"}]
 
 	def __init__(self):
+		BaseModel.__init__(self)
 		self._identifier=""
 		self._category=""
 		self._sku=""
@@ -196,7 +197,7 @@ class Product(BaseModel):
 	def InitWithId(self, idd):
 		url = self.wsurl() + "/product/find"
 
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&id=" + idd
 
 		json_string = urllib.urlopen(url).read()
@@ -226,7 +227,7 @@ class Product(BaseModel):
 	def InitWithSku(self, sku):
 		url = self.wsurl() + "/product/find"
 
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&sku=" + sku
 
 		json_string = urllib.urlopen(url).read()
@@ -257,7 +258,7 @@ class Product(BaseModel):
 	def Remove(self):
 		if self.identifier!="":
 			url=self.wsurl() + "/product/remove"
-			url+="?token=" + self.token()
+			url+="?token=" + self.token
 			url+="&id={}".format(self.identifier)
 			print urllib.urlopen(url).read()
 
@@ -291,7 +292,7 @@ class Product(BaseModel):
 		except:
 			brand = self.brand
 
-		url = self.wsurl()+"/product/add?token=" + self.token()
+		url = self.wsurl()+"/product/add?token=" + self.token
 
 		if typee == "masive":
 			url += "&category=" + unicode(self.category, errors="ignore")
@@ -351,7 +352,7 @@ class Product(BaseModel):
 
 	def get_product_list(self):
 			
-		url = self.wsurl()+"/product/list?token=" + self.token() + "&items=100"
+		url = self.wsurl()+"/product/list?token=" + self.token + "&items=100"
 		content = urllib2.urlopen(url).read()
 
 		# parse content to array data
@@ -363,7 +364,7 @@ class Product(BaseModel):
 		return data
 
 	def Search(self, query):
-		url = self.wsurl() + "/product/search?token=" + self.token()
+		url = self.wsurl() + "/product/search?token=" + self.token
 		url += "&q=" + query
 		# return urllib.urlopen(url).read()
 
@@ -376,7 +377,7 @@ class Product(BaseModel):
 		return data
 
 	# def ProductExist( self, product_sku ):
-	# 	url = self.wsurl() + "/product/exists?token=" + self.token()
+	# 	url = self.wsurl() + "/product/exists?token=" + self.token
 
 	# 	url += "&sku=" + product_sku
 

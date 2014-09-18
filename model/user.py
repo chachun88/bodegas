@@ -19,6 +19,7 @@ from model.base_model import BaseModel
 class User(BaseModel):
 
 	def __init__(self):
+		BaseModel.__init__(self)
 		self._name = ""
 		self._surname = ""
 		self._email = ""
@@ -124,7 +125,7 @@ class User(BaseModel):
 
 	def InitWithEmail(self, email):
 		url = self.wsurl() + "/salesman/find"
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&email=" + email
 
 		json_string = urllib.urlopen(url).read()
@@ -140,7 +141,7 @@ class User(BaseModel):
 	def InitWithId(self, idd):
 		url = self.wsurl() + "/salesman/find"
 
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&id=" + idd
 
 		json_string = urllib.urlopen(url).read()
@@ -160,7 +161,7 @@ class User(BaseModel):
 
 		if self.identifier != "":
 			url  =self.wsurl() + "/salesman/delete"
-			url += "?token=" + self.token()
+			url += "?token=" + self.token
 			url += "&id=" + self.identifier
 
 			urllib.urlopen(url)
@@ -168,7 +169,7 @@ class User(BaseModel):
 			print "url : {}".format( url )
 
 	def Save(self):
-		url = self.wsurl() + "/salesman/add?token=" + self.token()
+		url = self.wsurl() + "/salesman/add?token=" + self.token
 
 		url += "&name=" + self.name + "%20" + self.surname
 		url += "&password=" + self.password
@@ -187,7 +188,7 @@ class User(BaseModel):
 	def get_users_list(self):
 
 		# getting content from url
-		url = self.wsurl() + "/salesman/list?token=" + self.token() + "&items=100"
+		url = self.wsurl() + "/salesman/list?token=" + self.token + "&items=100"
 		content = urllib2.urlopen(url).read()
 
 		# parse content to array data

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from basemodel import BaseModel, db
+from basemodel import BaseModel
 
 class SalesmanPermission(BaseModel):
 	def __init__(self):

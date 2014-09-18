@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from basemodel import BaseModel, db
+from basemodel import BaseModel
 # from bson.objectid import ObjectId
 
 from kardex import Kardex
 from product import Product
-# from bson import json_util
+from bson import json_util
 
 import psycopg2
 import psycopg2.extras
@@ -23,7 +23,6 @@ class Cellar(BaseModel):
         BaseModel.__init__(self)
         self._name = ''
         self._description = ''
-        self.collection = db.cellar
         self.table = 'Cellar'
 
     @property
@@ -365,16 +364,7 @@ class Cellar(BaseModel):
         cur.execute(query,parametros)
         cellars = cur.fetchall()
 
-        data_rtn = []
-
-        for c in cellars:
-            cellar = Cellar()
-            cellar.id = c['id']
-            cellar.name = c['name']
-            cellar.description = c['description']
-            data_rtn.append(cellar.Print())
-
-        return data_rtn
+        return json_util.dumps(cellars)
 
     ### WARNING: this method is not opmitimized
     #@return direct database collection

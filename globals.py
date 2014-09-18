@@ -8,50 +8,34 @@ Jueves 12 dic 2012
 reutilizado por chinostroza en tellmecuando
 reutilizado por estefy en bodegas
 '''
-debugMode = False
+debugMode = True
 
-token = "5334d6c29ec9a710f56d9ab5"
+BODEGA_PORT=9007
+WS_PORT=8890
+BODEGA_DEBUG_PORT=9008
+DEBUG_WS_PORT=8891
+
+appid = 100
+
 webservice_url = "http://localhost"
 port = 0
 ws_port = 0
 
 
-### reading config file
-config_file = open("CONFIG.txt", "r")
-config_data = config_file.read()
-
-config = {}
-
-for x in config_data.split("\n"):
-
-    sp = x.split("=")
-    key = sp[0]
-    val = sp[1]
-
-    config[key] = val
-
-
-### setting config values
-if config["DEBUG"] == "True":
-    debugMode = True
-
 ### setting vars
 if (debugMode):
     userMode="test"
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
+    port = BODEGA_DEBUG_PORT
+    ws_port = DEBUG_WS_PORT
 else:
     userMode="prod"
     carpeta_img = '/var/www/tellmecuando/static/img'
+    port = BODEGA_PORT
+    ws_port = WS_PORT
+    
 
-
-if (debugMode):
-    port = config["DEBUG_PORT"]
-    ws_port = config["DEBUG_WS_PORT"]
-else:
-    port = config["PORT"]
-    ws_port = config["WS_PORT"]
-
-webservice_url += ":" + ws_port
+webservice_url += ":{}".format(ws_port)
 
 
 #### menu #####

@@ -3,7 +3,7 @@
 
 from bson import json_util
 from bson.objectid import ObjectId
-from basemodel import BaseModel, db
+from basemodel import BaseModel
 from contact import Contact
 import psycopg2
 import psycopg2.extras

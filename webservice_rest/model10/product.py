@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from basemodel import BaseModel, db
+from basemodel import BaseModel
 # from bson.objectid import ObjectId
 from brand import Brand
 from category import Category
@@ -9,7 +9,7 @@ import psycopg2
 import psycopg2.extras
 import re
 import sys
-import json
+from bson import json_util
 
 class Product(BaseModel):
 	def __init__(self):
@@ -602,7 +602,7 @@ class Product(BaseModel):
 			producto = cur.fetchone()
 
 			if cur.rowcount > 0:
-				return json.dumps(producto)
+				return json_util.dumps(producto)
 			else:
 				return self.ShowError("product cannot be initialized")
 		except:
@@ -649,7 +649,7 @@ class Product(BaseModel):
 			producto = cur.fetchone()
 
 			if cur.rowcount > 0:
-				return json.dumps(producto)
+				return json_util.dumps(producto)
 			else:
 				return self.ShowError("product cannot be initialized")
 		except Exception,e:

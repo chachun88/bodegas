@@ -19,59 +19,29 @@ webservice_url = "http://localhost"
 port = 0
 ws_port = 0
 
-db = None
+BODEGA_PORT=9007
+WS_PORT=8890
+BODEGA_DEBUG_PORT=9008
+DEBUG_WS_PORT=8891
 
 
-### reading config file
-if os.name == "posix":
-    config_file = open("../CONFIG.txt", "r")
-else:
-    config_file = open("C:\\Users\\YiChun\\Documents\\bodegas\\CONFIG.txt", "r")
+print "debug mode enabled : {}".format(debugMode)
 
-config_data = config_file.read()
-
-config = {}
-
-for x in config_data.split("\n"):
-
-    sp = x.split("=")
-    key = sp[0]
-    val = sp[1]
-
-    config[key] = val
-
-
-print "debug mode enabled : " + config["DEBUG"] 
-
-### setting config values
-if config["DEBUG"] == "True":
-    debugMode = True
 
 ### setting vars
 if (debugMode):
     userMode="test"
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
+    port = BODEGA_DEBUG_PORT
+    ws_port = DEBUG_WS_PORT
 else:
     userMode="prod"
     carpeta_img = '/var/www/tellmecuando/static/img'
+    port = BODEGA_PORT
+    ws_port = WS_PORT
 
 
-if (debugMode):
-    port = config["DEBUG_PORT"]
-    ws_port = config["DEBUG_WS_PORT"]
-else:
-    port = config["PORT"]
-    ws_port = config["WS_PORT"]
-
-
-if debugMode:
-    connection  = pymongo.Connection("loadingplay.com", 27017)
-    db = connection.dev_market_tab
-else:
-    connection  = pymongo.Connection("localhost", 27017)
-    db = connection.market_tab
-
-webservice_url += ":" + ws_port
+webservice_url += ":{}".format(ws_port)
 
 
 #### menu #####

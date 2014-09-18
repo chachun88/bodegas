@@ -6,9 +6,10 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from pymongo import Connection
+# from pymongo import Connection
 from datetime import date
 from base_handler import BaseHandler
+from model10.basemodel import BaseModel
 
 import datetime
 
@@ -34,10 +35,10 @@ class AccessTokenHandler(BaseHandler):
 
 		# TODO: must validate appid and permissions on database
 
-		# returning access token
-		now = datetime.datetime.now()
-		token = self.db.access_token.insert({
-										"time" : now.strftime('%Y-%m-%d %H:%M:%S'), 
-										"appid" : appid
-									});
-		self.write(str(token))
+		bm = BaseModel()
+		response_obj = bm.GetAccessToken(appid)
+
+		if "success" in response_obj:
+			self.write("{}".format(response_obj["success"]))
+		else:
+			self.write("{}".format(response_obj["error"]))

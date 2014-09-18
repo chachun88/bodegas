@@ -133,6 +133,7 @@ class Order(BaseModel):
         self._state = value
 
     def __init__(self):
+        BaseModel.__init__(self)
         self._id                     = ""
         self._date                   = ""
         self._type                   = ""
@@ -153,7 +154,7 @@ class Order(BaseModel):
 
     def Save(self):
         url = self.wsurl() + "/order/add"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&date=" + self.date.isoformat()
         url += "&type=" + self.type
         url += "&salesman=" + self.salesman
@@ -177,14 +178,14 @@ class Order(BaseModel):
 
     def Remove(self, _id):
         url = self.wsurl() + "/order/remove"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&id=" + _id
 
         return urllib.urlopen(url).read()
 
     def InitWithId(self, idd):
         url = self.wsurl() + "/order/find"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&id=" + idd
 
         json_string = urllib.urlopen(url).read()
@@ -211,7 +212,7 @@ class Order(BaseModel):
 
     def List(self, page=1, items=20):
         url = self.wsurl() + "/order/list"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&page={}".format(page)
         url += "&items={}".format(items)
 
@@ -222,7 +223,7 @@ class Order(BaseModel):
     def ChangeStateOrders(self,ids,state):
 
         url = self.wsurl() + "/order/changestate"
-        url += "?token=" + self.token()
+        url += "?token=" + self.token
         url += "&ids={}".format(ids)
         url += "&state={}".format(state)
         urllib.urlopen(url).read()
