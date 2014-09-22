@@ -144,7 +144,7 @@ class ProductAddHandler(BaseHandler):
 				prod.description= self.get_argument("description", "")
 				prod.brand 		= self.get_argument("brand", "")
 				prod.manufacturer= self.get_argument("manufacturer", "")
-				prod.size 		= self.get_argument("size", "").split(",").encode('utf-8')
+				prod.size 		= self.get_argument("size", "").split(",")
 				prod.color 		= self.get_argument("color", "")
 				prod.material 	= self.get_argument("material", "")
 				prod.bullet_1 	= self.get_argument("bullet_1", "")
