@@ -73,7 +73,7 @@ def getIamgeBuffer(handler, image_name):
 
 			except:
 				pass
-			pass
+			
 
 	## set image name to default_image
 	image_name = DEFAULT_IMAGE
