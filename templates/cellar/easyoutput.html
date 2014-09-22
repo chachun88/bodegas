@@ -89,7 +89,7 @@
 											<button type="submit" class="btn btn-primary">Sacar</button>
 										</div>
 									</fieldset>
-									<input type="hidden" name="product_id" value="{{ p["_id"] }}" />
+									<input type="hidden" name="product_id" value="{{ p['id'] }}" />
 									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
@@ -138,7 +138,7 @@
 												<div class="col-sm-12">
 													<select name="new_cellar" class="form-control">
 													{% for c in cellarList %}
-													<option value="{{ c["_id"] }}"> {{ c["name"] }}</option>
+													<option value="{{ c['id'] }}"> {{ c["name"] }}</option>
 													{{ cellar_name=c["name"] }}
 													{% end %}
 													</select>
@@ -150,7 +150,7 @@
 										</div>
 									</fieldset>
 									<input type="hidden" name="balance_price" value="{{ p["balance_price"] }}" />
-									<input type="hidden" name="product_id" value="{{ p["_id"] }}" />
+									<input type="hidden" name="product_id" value="{{ p['id'] }}" />
 									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar_name }}" />
