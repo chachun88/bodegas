@@ -39,7 +39,7 @@
 	var animation_duration = 300;
 
 	setTimeout( function(){
-		console.log("close alert");
+		//console.log("close alert");
 		$(".alert").hide(animation_duration);
 	}, 5000 )
 

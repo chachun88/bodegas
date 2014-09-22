@@ -714,7 +714,7 @@ class Product(BaseModel):
 		offset = (page-1)*items
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		try:
-			q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id  limit %(items)s offset %(offset)s'''
+			q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id order by p.sku limit %(items)s offset %(offset)s'''
 			p = {
 				"items":items,
 				"offset":offset

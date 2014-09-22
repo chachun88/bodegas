@@ -34,7 +34,7 @@ class ReportHandler(BaseHandler):
 		cellar = Cellar().List(1, 100)
 		data = Cellar().ListKardex(day, fromm, until)
 		product = Product().get_product_list()
-		self.render("report/home.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar)
+		self.render("report/home.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar,data_str=json_util.dumps(data))
 
 	@tornado.web.authenticated
 	def post(self):
@@ -46,7 +46,7 @@ class ReportHandler(BaseHandler):
 		cellar = Cellar().List(1, 100)
 		data = Cellar().ListKardex(day, fromm, until)
 		product = Product().get_product_list()
-		self.render("report/period.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar)
+		self.render("report/period.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar,data_str=json_util.dumps(data))
 		# self.redirect("/")
 
 	def check_xsrf_cookie(self):
@@ -60,13 +60,17 @@ class ReportUploadHandler(BaseHandler):
 	@tornado.web.authenticated
 	def post(self):
 
-		load = self.get_argument("load", "")
+		data_str = self.get_argument("load", "")
+
+		
+		data = json_util.loads(data_str)
+
 		cellar = Cellar().List(1, 100)
 		# data = json_util.dumps(len(data))
 
 		tit=["SKU", "Talla", "Precio U. Compra", "Precio U. Venta", "Cantidad", "Total", "Usuario", "Bodega"]
 
-		item_length = int(json_util.dumps(len(data)))
+		item_length = len(data)
 
 		matriz=[]
 
@@ -87,8 +91,10 @@ class ReportUploadHandler(BaseHandler):
 				matriz[i].append(total)
 			if "user" in data[i]:
 				matriz[i].append(data[i]["user"])
+
 			for c in cellar:
-				if data[i]["cellar_identifier"] == str(c["_id"]):
+				# print "DATA:{}".format(data[i])
+				if data[i]["cellar_id"] == str(c["id"]):
 					matriz[i].append(c["name"])
 
 		tras=zip(*matriz)

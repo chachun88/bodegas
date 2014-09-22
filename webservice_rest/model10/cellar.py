@@ -119,27 +119,7 @@ class Cellar(BaseModel):
 
     def GetTotalUnits(self):
 
-        # data = db.kardex.find({"cellar_identifier":self.identifier})
-
-        # data = db.kardex.aggregate([
-        #   {"$match":
-        #       {"cellar_identifier":self.identifier}
-        #   },{
-        #   "$group":
-        #   {"_id":{ "product_sku":"$product_sku"}}
-        #   }])
-
-        # kardex = Kardex()
-
-        # total_units = 0
-
-        # for x in data["result"]:
-        #   product = x["_id"]["product_sku"]
-        #   kardex.FindKardex(product, self.identifier)
-
-        #   total_units += kardex.balance_units
         
-        # return int(total_units)
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -166,27 +146,7 @@ class Cellar(BaseModel):
         return int(total_units)
 
     def GetTotalPrice(self):
-        # data = db.kardex.find({"cellar_identifier":self.identifier})
-
-        # data = db.kardex.aggregate([
-        #   {"$match":
-        #       {"cellar_identifier":self.identifier}
-        #   },{
-        #   "$group":
-        #   {"_id":{ "product_sku":"$product_sku"}}
-        #   }])
-
-        # kardex = Kardex()
-
-        # total_price = 0
-
-        # for x in data["result"]:
-        #   product = x["_id"]["product_sku"]
-        #   kardex.FindKardex(product, self.identifier)
-
-        #   total_price += kardex.balance_total
         
-        # return int(total_price)
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -387,7 +347,7 @@ class Cellar(BaseModel):
 
           data_rtn.append(cellar.Print())
 
-        return json_util.dumps(data_rtn)
+        return data_rtn
 
         # return json_util.dumps(cellars)
 
