@@ -2,7 +2,7 @@
 
 {% block title %}Agregar {% end %}
 {% block caption %}
-	{% if int(5) in current_user.permissions %}
+	{% if int(5) in current_user["permissions"] %}
 	agrega un nuevo usuario
 	{% else %}
 	sección no autorizada
@@ -12,7 +12,7 @@
 
 {% block body %}
 
-{% if int(5) in current_user.permissions %}
+{% if int(5) in current_user["permissions"] %}
 <div class="col-md-7">
 	<section class="widget">
 		<form action="/user/add" class="form-horizontal label-left" method="post" id="user-form" enctype="multipart/form-data">

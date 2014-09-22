@@ -2,7 +2,7 @@
 
 {% block title %}Agregar {% end %}
 {% block caption %}
-{% if int(4) in current_user.permissions %}
+{% if int(4) in current_user["permissions"] %}
 	agrega una nueva bodega
 {% else %}
 	sección no autorizada
@@ -10,7 +10,7 @@
 {% end %}
 
 {% block body %}
-{% if int(4) in current_user.permissions %}
+{% if int(4) in current_user["permissions"] %}
 <div class="col-md-7">
 	<section class="widget">
 		<form action="" class="form-horizontal label-left" method="post" action="/cellar/add" enctype="multipart/form-data">
