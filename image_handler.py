@@ -107,7 +107,7 @@ class ImageHandler(BaseHandler):
 		self.write(getIamgeBuffer(self, image_name))
 		omillis = int(round(time.time() * 1000))
 
-		print "dif : {}".format(omillis - millis)
+		# print "dif : {}".format(omillis - millis)
 
 		self.finish()
 
