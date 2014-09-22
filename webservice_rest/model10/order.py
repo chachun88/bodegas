@@ -144,6 +144,25 @@ class Order(BaseModel):
         self._product_quantity       = ""
         self._state                  = ""
 
+    def GetList(self, page, items):
+
+        page = int(page)
+        items = int(items)
+        offset = (page-1)*items
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        try:
+            query = '''select o.*,u.name as customer from "Order" o left join "User" u on u.id = o.user_id limit %(items)s offset %(offset)s'''
+            parametros = {
+            "items":items,
+            "offset":offset
+            }
+            cur.execute(query,parametros)
+            lista = cur.fetchall()
+            return lista
+        except Exception,e:
+            print str(e)
+            return {}
+
     def GetOrderById(self, _id):
 
         # order = self.collection.find_one({"id":int(_id)})

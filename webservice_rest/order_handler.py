@@ -132,5 +132,5 @@ class ListOrderHandler(BaseHandler):
         except Exception, e:
             print str(e)
         
-        print json_util.dumps(order.GetList(current_page, items_per_page))
+        self.write(json_util.dumps(order.GetList(current_page, items_per_page)))
         # self.write(json_util.dumps())
