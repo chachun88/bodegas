@@ -79,7 +79,12 @@
 						<!--<td></td>
 						<td class="hidden-xs"></td>	-->					
 						<td>
-							{{current_user}}
+							<a class="btn btn-sm btn-primary" href="/product/edit?id={{p['id']}}">
+								Editar
+							</a>
+							<a class="btn btn-sm btn-danger" href="/product/remove?id={{p['id']}}" onclick="return confirm('¿Está seguro que desea eliminar el producto?');">
+								Eliminar
+							</a>
 						</td>
 					</tr>
 					{% end %}

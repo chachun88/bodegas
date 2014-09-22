@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 
-{% block title %}Listado de productos {% end %}
-{% block caption %}se muestra una lista general de todos los productos{% end %}
+{% block title %}Listado de pedidos {% end %}
+{% block caption %}se muestra una lista general de todos los pedidos{% end %}
 {% block javascript %}
 <script type="text/javascript" src="/static/js/order_list.js"></script>
 {% end %}
@@ -10,12 +10,12 @@
 {% if dn == "bpf" %}
 <div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Problema al eliminar producto!</strong> aún quedan productos en bodega.
+	<strong><i class="fa fa-check"></i> Problema al eliminar el pedido!</strong> aún quedan pedidos.
 </div>
 {% elif dn == "bpt" %}
 <div class="alert alert-success alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado producto.
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado el pedido.
 </div>
 {% end %}
 

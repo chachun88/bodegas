@@ -160,7 +160,7 @@ class Kardex(BaseModel):
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s order by id desc limit 1'''
+		query = '''select * from "Kardex" where product_sku = any(%(product_sku)s) and cellar_id = %(cellar_id)s order by id desc limit 1'''
 
 		parametros = {
 		"product_sku":product_sku,
@@ -187,8 +187,10 @@ class Kardex(BaseModel):
 			self.user = kardex["user"]
 			self.cellar_identifier = kardex["cellar_id"]
 
-		except:
-			return self.ShowError("kardex not found")
+			return self.ShowSuccessMessage("ok")
+
+		except Exception,e:
+			return self.ShowError(str(e))
 
 
 	#take care of an infinite loop

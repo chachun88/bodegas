@@ -3,7 +3,7 @@
 {% block title %}Entradas Masivas {% end %}
 
 {% block caption %} 
-	{% if int(2) in current_user.permissions %}
+	{% if int(2) in current_user["permissions"] %}
 	 permite cargar un archivo excel
 	{% else %}
 	 sección no autorizada
@@ -11,7 +11,7 @@
 {% end %}
 
 {% block body %}
-{% if int(2) in current_user.permissions %}
+{% if int(2) in current_user["permissions"] %}
 <div class="loader animated fadeIn">
 	<span class="spinner" style="top:30%; font-size: 40px;">
 		<i id="load" class="fa-spinner fa-spin"></i>

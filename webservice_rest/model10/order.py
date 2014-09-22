@@ -125,6 +125,7 @@ class Order(BaseModel):
 
     def __init__(self):
         BaseModel.__init__(self)
+        self.table = "Order"
         self._id                     = ""
         self._date                   = ""
         self._type                   = ""

@@ -47,9 +47,9 @@ class SaveHandler(BaseHandler):
 
         #saving the current customer
         if customer.id == "":
-            oid = customer.Save()
+            self.write(json_util.dumps(customer.Save()))
         else:
-            oid = customer.Edit()
+            self.write(json_util.dumps(customer.Edit()))
 
         # contact.name = self.get_argument("contact_name","")
         # contact.type = self.get_argument("contact_type","")
@@ -59,7 +59,7 @@ class SaveHandler(BaseHandler):
 
         # contact.Save()
 
-        self.write(oid)
+        # self.write(oid)
 
 
 class EditHandler(BaseHandler):
@@ -100,7 +100,9 @@ class RemoveHandler(BaseHandler):
             return
 
         customer = Customer()
-        customer.Remove(self.get_argument("ids", ""))
+        response = customer.Remove(self.get_argument("ids", ""))
+
+        self.write(json_util.dumps(response))
 
 
 class GetOrderHandler(BaseHandler):
@@ -152,4 +154,14 @@ class ChangeStateHandler(BaseHandler):
             return
 
         customer = Customer()
-        customer.ChangeState(ids,state)
+        self.write(json_util.dumps(customer.ChangeState(ids,state)))
+
+class GetTypesHandler(BaseHandler):
+
+    def post(self):
+
+        if not self.ValidateToken():
+            return
+
+        customer = Customer()
+        self.write(json_util.dumps(customer.GetTypes()))

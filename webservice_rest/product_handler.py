@@ -97,8 +97,8 @@ class ListProductsHandler(BaseHandler):
 		product 		= Product()
 
 		try:
-			current_page 	= int(self.TryGetParam("page", "1"))
-			items_per_page 	= int(self.TryGetParam("items", "10"))
+			current_page 	= int(self.get_argument("page", "1"))
+			items_per_page 	= int(self.get_argument("items", "10"))
 		except Exception, e:
 			print str(e)
 
@@ -125,8 +125,8 @@ class UploadPictureHandler(BaseHandler):
 			output_file = open("uploads/" + image['filename'], 'w')
 			output_file.write(image['body'])
 
-			image_number	= self.TryGetParam("number")
-			product_id		= self.TryGetParam("id")
+			image_number	= self.get_argument("number")
+			product_id		= self.get_argument("id")
 
 			self.finish('se ha subido la imagen')
 		except Exception, e:

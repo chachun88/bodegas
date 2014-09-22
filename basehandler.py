@@ -62,11 +62,11 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_login_url(self):
         return u"/auth/login"
 
-    def set_current_user(self, user):
-        if user:
-            self.set_secure_cookie("user_bodega", tornado.escape.json_encode(user))
-        else:
-            self.clear_cookie("user_bodega")
+    # def set_current_user(self, user):
+    #     if user:
+    #         self.set_secure_cookie("user_bodega", tornado.escape.json_encode(user))
+    #     else:
+    #         self.clear_cookie("user_bodega")
 
     def get_user_email(self):
         try:

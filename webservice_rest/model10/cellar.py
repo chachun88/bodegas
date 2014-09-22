@@ -143,7 +143,7 @@ class Cellar(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select distinct product_sku from "Kardex" where id = %(id)s'''
+        query = '''select distinct product_sku from "Kardex" where cellar_id = %(id)s'''
         parametros = {
         "id":self.id
         }
@@ -154,8 +154,14 @@ class Cellar(BaseModel):
         total_units = 0
 
         for p in psku:
-            kardex.FindKardex(p,self.id)
-            total_units += kardex.balance_units
+
+            response = kardex.FindKardex(p,self.id)
+
+            if "success" in response:
+                total_units += kardex.balance_units
+            else:
+                print response["error"]
+            
 
         return int(total_units)
 
@@ -195,8 +201,13 @@ class Cellar(BaseModel):
         total_price = 0
 
         for p in psku:
-            kardex.FindKardex(p,self.id)
-            total_price += kardex.balance_total
+
+            response = kardex.FindKardex(p,self.id)
+
+            if "success" in response:
+                total_price += kardex.balance_total
+            # else:
+            #     print response["error"]
 
         return int(total_price)
 
@@ -211,7 +222,8 @@ class Cellar(BaseModel):
 
             return me
         except Exception,e:
-            return self.ShowError("failed to print cellar, error:{}".format(e))
+            # return self.ShowError("failed to print cellar, error:{}".format(e))
+            pass
 
     @staticmethod
     def CellarExists( cellar_name ):
@@ -364,7 +376,20 @@ class Cellar(BaseModel):
         cur.execute(query,parametros)
         cellars = cur.fetchall()
 
-        return json_util.dumps(cellars)
+        data_rtn = [] ## return this data
+
+        for d in cellars:
+
+          cellar = Cellar()
+          cellar.id = d["id"]
+          cellar.name = d["name"]
+          cellar.description = d["description"]
+
+          data_rtn.append(cellar.Print())
+
+        return json_util.dumps(data_rtn)
+
+        # return json_util.dumps(cellars)
 
     ### WARNING: this method is not opmitimized
     #@return direct database collection

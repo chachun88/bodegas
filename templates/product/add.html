@@ -10,7 +10,7 @@
 {% end %}
 
 {% block caption %}
-	{% if int(2) in current_user.permissions %}
+	{% if int(2) in current_user["permissions"] %}
 		{% if tit == "edit" %}
 			permite editar un producto en el maestro de productos 
 		{% elif tit == "add" %}
@@ -21,7 +21,7 @@
 	{% end %}
 {% end %}			
 {% block body %}
-{% if int(2) in current_user.permissions %}
+{% if int(2) in current_user["permissions"] %}
 {% if dn == "bpf" %}
 <div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -84,7 +84,7 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">Combinación</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Escriba los colores separados por coma (,)" id="colors" name="color" type="text" class="form-control" value="{{ product.color }}" required></div>
+							<div class="col-sm-8"><input placeholder="Color" id="colors" name="color" type="text" class="form-control" value="{{ product.color }}" required></div>
 						</div>
 					</div>
 					{% try %}

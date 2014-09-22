@@ -31,7 +31,7 @@ class Product(BaseModel):
 		self._brand=""
 		self._manufacturer=""
 		self._size=[]
-		self._color=[]
+		self._color=""
 		self._material=""
 		self._bullet_1=""
 		self._bullet_2=""

@@ -44,11 +44,11 @@ class Contact(BaseModel):
         self._email = value
     
     @property
-    def customer_id(self):
-        return self._customer_id
-    @customer_id.setter
-    def customer_id(self, value):
-        self._customer_id = value
+    def user_id(self):
+        return self._user_id
+    @user_id.setter
+    def user_id(self, value):
+        self._user_id = value
 
     @property
     def address(self):
@@ -65,7 +65,7 @@ class Contact(BaseModel):
         self._email = ""
         self._address = ""
         self._telephone = ""
-        self._customer_id = ""
+        self._user_id = ""
         self._type = ""
         
 
@@ -79,13 +79,17 @@ class Contact(BaseModel):
         "email":self.email,
         "address":self.address,
         "telephone":self.telephone,
-        "customer_id":self.customer_id,
-        "type":self.type
+        "user_id":self.user_id,
+        "type_id":self.type
         }
 
         post_data = urllib.urlencode(data)
 
-        return urllib.urlopen(url, post_data).read()
+        response_str = urllib.urlopen(url, post_data).read()
+
+        response_obj = json_util.loads(response_str)
+
+        return response_obj
 
     def Edit(self):
 
@@ -97,27 +101,33 @@ class Contact(BaseModel):
         "email":self.email,
         "address":self.address,
         "telephone":self.telephone,
-        "customer_id":self.customer_id,
-        "type":self.type,
+        "user_id":self.user_id,
+        "type_id":self.type,
         "id":self.id
         }
 
         post_data = urllib.urlencode(data)
 
-        return urllib.urlopen(url, post_data).read()
+        response_str = urllib.urlopen(url, post_data).read()
 
-    def ListByCustomerId(self,customer_id):
+        response_obj = json_util.loads(response_str)
+
+        return response_obj
+
+    def ListByCustomerId(self,user_id):
 
         url = self.wsurl() + "/contact/listbycustomerid"
 
         data = {
         "token":self.token,
-        "customer_id":customer_id
+        "user_id":user_id
         }
 
         post_data = urllib.urlencode(data)
 
-        return urllib.urlopen(url, post_data).read()
+        response_str =  urllib.urlopen(url, post_data).read()
+        response_obj = json_util.loads(response_str)
+        return response_obj
 
     def Remove(self, _id):
         url = self.wsurl() + "/contact/remove"
@@ -129,7 +139,7 @@ class Contact(BaseModel):
         post_data = urllib.urlencode(data)
         json_string = urllib.urlopen(url, post_data).read()
 
-        print json_string
+        return json_util.loads(json_string)
 
     def ChangeState(self,ids,state):
 
@@ -163,6 +173,22 @@ class Contact(BaseModel):
         self.email = json_obj["email"]
         self.address = json_obj["address"]
         self.telephone = json_obj["telephone"]
-        self.customer_id = json_obj["customer_id"]
+        self.user_id = json_obj["user_id"]
         self.type = json_obj["type"]
+
+    def GetTypes(self):
+
+        url = self.wsurl() + "/contact/gettypes"
+
+        data = {
+        "token":self.token
+        }
+
+        post_data = urllib.urlencode(data)
+
+        json_string = urllib.urlopen(url, post_data).read()
+        json_obj = json_util.loads(json_string)
+
+        return json_obj
+
         

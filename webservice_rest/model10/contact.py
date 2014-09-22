@@ -2,8 +2,9 @@
 # -*- coding: UTF-8 -*-
 
 from bson import json_util
-from bson.objectid import ObjectId
 from basemodel import BaseModel
+import psycopg2
+import psycopg2.extras
 
 class Contact(BaseModel):
 
@@ -15,11 +16,11 @@ class Contact(BaseModel):
 		self._id = value
 
 	@property
-	def customer_id(self):
-		return self._customer_id
-	@customer_id.setter
-	def customer_id(self, value):
-		self._customer_id = value
+	def user_id(self):
+		return self._user_id
+	@user_id.setter
+	def user_id(self, value):
+		self._user_id = value
 
 	@property
 	def name(self):
@@ -29,11 +30,11 @@ class Contact(BaseModel):
 		self._name = value
 	
 	@property
-	def type(self):
-		return self._type
-	@type.setter
-	def type(self, value):
-		self._type = value
+	def type_id(self):
+		return self._type_id
+	@type_id.setter
+	def type_id(self, value):
+		self._type_id = value
 	
 	@property
 	def address(self):
@@ -56,15 +57,24 @@ class Contact(BaseModel):
 	def email(self, value):
 		self._email = value
 
+	@property
+	def type(self):
+	    return self._type
+	@type.setter
+	def type(self, value):
+	    self._type = value
+	
+
 	def __init__(self):
-		self.collection = db.contact
+		BaseModel.__init__(self)
 		self._id = ""
 		self._name = ""
-		self._type = ""
+		self._type_id = ""
 		self._telephone = ""
 		self._email = ""
 		self._address = ""
-		self._customer_id = ""
+		self._user_id = ""
+		self._type = ""
 
 	def InitById(self, _id):
 
@@ -77,7 +87,7 @@ class Contact(BaseModel):
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		query = '''select * from "Contact" where id = %(id)s limit 1'''
+		query = '''select c.*,ct.name as type from "Contact" c left join "Contact_Types" ct on ct.id = c.type_id where c.id = %(id)s limit 1'''
 
 		parametros = {
 		"id":_id
@@ -96,10 +106,10 @@ class Contact(BaseModel):
 
 		contact = {
 		"name": self.name,
-		"type": self.type,
+		"type_id": self.type_id,
 		"telephone": self.telephone,
 		"email": self.email,
-		"customer_id": self.customer_id,
+		"user_id": self.user_id,
 		"address": self.address
 		}
 
@@ -107,16 +117,17 @@ class Contact(BaseModel):
 
 			# self.collection.insert(contact)
 			cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-			query = '''insert into "Contact" (name,type,telephone,email,customer_id,address)
-			values (%(name)s,%(type)s,%(telephone)s,%(email)s,%(customer_id)s,%(address)s) returning id'''
+			query = '''insert into "Contact" (name,type_id,telephone,email,user_id,address)
+			values (%(name)s,%(type_id)s,%(telephone)s,%(email)s,%(user_id)s,%(address)s) returning id'''
+			print cur.mogrify(query,contact)
 			cur.execute(query,contact)
 			self.connection.commit()
 			new_id = cur.fetchone()[0]
-			return new_id
+			return self.ShowSuccessMessage("{}".format(new_id))
 
 		except Exception, e:
 
-			return str(e)
+			return self.ShowError(str(e))
 
 	def Edit(self):
 
@@ -124,10 +135,10 @@ class Contact(BaseModel):
 
 		contact = {
 		"name": self.name,
-		"type": self.type,
+		"type_id": self.type_id,
 		"telephone": self.telephone,
 		"email": self.email,
-		"customer_id": self.customer_id,
+		"user_id": self.user_id,
 		"address":self.address,
 		"id":self.id
 		}
@@ -143,19 +154,19 @@ class Contact(BaseModel):
 
 			# self.collection.insert(contact)
 			cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-			query = '''update "Contact" set name = %(name)s and type = %(type)s and telephone = %(telephone)s and email = %(email)s and customer_id = %(customer_id)s
-			and address = %(address)s where id = %(id)s'''
+			query = '''update "Contact" set name = %(name)s, type_id = %(type_id)s, telephone = %(telephone)s, email = %(email)s, user_id = %(user_id)s, address = %(address)s where id = %(id)s'''
 			cur.execute(query,contact)
 			self.connection.commit()
-			return self.id
+			
+			return self.ShowSuccessMessage(self.id)
 
 		except Exception, e:
 
-			return str(e)
+			return self.ShowError(str(e))
 
-	def ListByCustomerId(self, _customer_id):
+	def ListByCustomerId(self, _user_id):
 
-		# contacts = self.collection.find({"customer_id":_customer_id})
+		# contacts = self.collection.find({"user_id":_user_id})
 
 		# if contacts:
 		# 	return contacts
@@ -166,21 +177,18 @@ class Contact(BaseModel):
 
 		try:
 
-			query = '''select * from "Contact" where customer_id = %(customer_id)s'''
+			query = '''select c.*,ct.name as type from "Contact" c left join "Contact_Types" ct on ct.id = c.type_id where user_id = %(user_id)s'''
 			parametros = {
-			"customer_id":_customer_id
+			"user_id":_user_id
 			}
 			cur.execute(query,parametros)
 			contactos = cur.fetchall()
 
-			if contactos:
-				return contactos
-			else:
-				return []
+			return self.ShowSuccessMessage(contactos)
+			
+		except Exception,e:
 
-		except:
-
-			return []
+			return self.ShowError(str(e))
 
 	def Remove(self,ids):
 		print ids
@@ -188,7 +196,7 @@ class Contact(BaseModel):
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		query = '''delete from "Contact" where id in %(id)s'''
+		query = '''delete from "Contact" where id = ANY(%(id)s)'''
 
 		parametros = {
 		"id":[int(n) for n in ids.split(",")]
@@ -197,5 +205,19 @@ class Contact(BaseModel):
 		try:
 			cur.execute(query,parametros)
 			self.connection.commit()
-		except:
-			pass
+			return self.ShowSuccessMessage("ok")
+		except Exception,e:
+			return self.ShowError(str(e))
+
+	def GetTypes(self):
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		query = '''select * from "Contact_Types"'''
+
+		try:
+			cur.execute(query)
+			tipos = cur.fetchall()
+			return self.ShowSuccessMessage(tipos)
+		except Exception,e:
+			return self.ShowError(str(e))

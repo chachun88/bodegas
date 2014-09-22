@@ -7,7 +7,7 @@
     {% end %}
 {% end %}
 {% block caption %}
-    {% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+    {% if int(5) in current_user["permissions"] %}
         {% if mode == "edit" %}
             permite editar un contacto para un cliente
         {% elif mode == "add" %}
@@ -18,7 +18,7 @@
     {% end %}
 {% end %}           
 {% block body %}
-    {% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+    {% if int(5) in current_user["permissions"] %}
         {% if dn == "bpf" %}
         <div class="alert alert-warning alert-success-nohidden">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -56,16 +56,28 @@
                                     <div class="col-sm-8"><input placeholder="telephone" name="telephone" type="text" class="form-control" value="{{contact.telephone}}"></div>
                                 </div>
                             </div>
-                            <div class="control-group">
+<!--                             <div class="control-group">
                                 <label class="control-label" for="prefix">ID Cliente</label>
                                 <div class="controls form-group">
-                                    <div class="col-sm-8"><input placeholder="customer_id" name="customer_id" type="text" class="form-control" value="{{contact.customer_id}}"></div>
+                                    <div class="col-sm-8"></div>
                                 </div>
-                            </div>
+                            </div> -->
+                            <input placeholder="user_id" name="user_id" type="hidden" class="form-control" value="{{contact.user_id}}">
                             <div class="control-group">
                                 <label class="control-label" for="prefix">Tipo</label>
                                 <div class="controls form-group">
-                                    <div class="col-sm-8"><input placeholder="type" name="type" type="text" class="form-control" value="{{contact.type}}"></div>
+                                    <div class="col-sm-8">
+                                        <!-- <input placeholder="type" name="type" type="text" class="form-control" value="{{contact.type}}"> -->
+                                        <select name="type">
+                                            {% for t in types %}
+                                                {% if t["name"] == contact.type %}
+                                                <option value="{{t['id']}}" selected>{{t["name"]}}</option>
+                                                {% else %}
+                                                <option value="{{t['id']}}">{{t["name"]}}</option>
+                                                {% end %}
+                                            {% end %}
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
@@ -75,7 +87,7 @@
                         {% elif mode == "add"  %}
                             <button type="submit" class="btn btn-primary">Validar y agregar</button>
                         {% end %}
-                            <a href="/customer/view_contact?customer_id={{contact.customer_id}}" class="btn btn-default">Cancelar</a>
+                            <a href="/customer/view_contact?user_id={{contact.user_id}}" class="btn btn-default">Cancelar</a>
                         </div>
                         {% raw xsrf_form_html() %}
                     </form>

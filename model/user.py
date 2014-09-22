@@ -131,8 +131,7 @@ class User(BaseModel):
 		json_string = urllib.urlopen(url).read()
 
 		try:
-			data = json_util.loads(json_string)
-			return data
+			return json_string
 		except:
 			return {}
 			pass

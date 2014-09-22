@@ -28,35 +28,51 @@ class CustomerViewContactHandler(BaseHandler):
 
     def get(self):
 
-        customer_id = self.get_argument("customer_id","")
+        user_id = self.get_argument("user_id","")
 
         contact = Contact()
 
-        if customer_id == "":
+        if user_id == "":
             self.write("Debe ingresar el id de cliente")
         else:
-            self.render("customer/view_contact.html",contactos = json_util.loads(contact.ListByCustomerId(customer_id)), dn="")
+            response = contact.ListByCustomerId(user_id)
+            if "success" in response:
+                self.render("customer/view_contact.html",contactos = response["success"], dn="")
+            else:
+                self.write(response["error"])
 
 
 class CustomerAddContactHandler(BaseHandler):
 
     def get(self):
-        customer_id = self.get_argument("customer_id","")
+        user_id = self.get_argument("user_id","")
         contact = Contact()
-        contact.customer_id = customer_id
-        self.render("customer/add_contact.html",contact=contact,mode="add",dn="")
+        contact.user_id = user_id
+        
+        types = {}
+
+        response = contact.GetTypes()
+
+        if "success" in response:
+            types = response["success"]
+
+        self.render("customer/add_contact.html",contact=contact,mode="add",dn="",types=types)
 
     def post(self):
         contact = Contact()
-        contact.customer_id = self.get_argument("customer_id","")
-        contact.name = self.get_argument("name","")
-        contact.email = self.get_argument("email","")
-        contact.address = self.get_argument("address","")
-        contact.telephone = self.get_argument("telephone","")
+        contact.user_id = self.get_argument("user_id","")
+        contact.name = self.get_argument("name","").encode("utf-8")
+        contact.email = self.get_argument("email","").encode("utf-8")
+        contact.address = self.get_argument("address","").encode("utf-8")
+        contact.telephone = self.get_argument("telephone","").encode("utf-8")
         contact.type = self.get_argument("type","")
 
-        if contact.Save().isdigit():
+        response = contact.Save()
+
+        if "success" in response:
             self.redirect("/customer")
+        else:
+            self.write(response["error"])
 
 class CustomerHandler(BaseHandler):
     @tornado.web.authenticated
@@ -74,12 +90,21 @@ class CustomerSaveHandler(BaseHandler):
     def get(self):
 
         customer = Customer()
-        customer_id = self.get_argument("id","")
-        if customer_id == "":
-            self.render("customer/save.html",dn="",mode="add", customer=customer)
+        user_id = self.get_argument("id","")
+
+        response = customer.GetTypes()
+
+        if "success" in response:
+            types = response["success"]
+
+        if user_id == "":
+            self.render("customer/save.html",dn="",mode="add", customer=customer,types=types)
         else:
-            customer.InitById(customer_id)
-            self.render("customer/save.html",dn="",mode="edit", customer=customer)
+            response = customer.InitById(user_id)
+            if response == "ok":
+                self.render("customer/save.html",dn="",mode="edit", customer=customer,types=types)
+            else:
+                self.write(response)
 
     @tornado.web.authenticated
     def post(self):
@@ -105,10 +130,12 @@ class CustomerSaveHandler(BaseHandler):
         customer.password = self.get_argument("password","")
         customer.contact = Contact()
 
-        oid = customer.Save()
+        response = customer.Save()
 
-        if oid:
+        if "success" in response:
             self.redirect("/customer")
+        else:
+            self.write(response["error"])
 
 class CustomerActionsHandler(BaseHandler):
 
@@ -127,7 +154,7 @@ class CustomerActionsHandler(BaseHandler):
         accion = int(accion)
 
         if valores == "":
-            self.write("Debe seleccionar al menos un pedido")
+            self.write("Debe seleccionar al menos un cliente")
             return
 
         if accion == ACCIONES_ACEPTAR:
@@ -143,11 +170,13 @@ class CustomerActionsHandler(BaseHandler):
             except Exception,e:
                 self.write(str(e))
         elif accion == ACCIONES_ELIMINAR:
-            try:
-                customer.Remove(valores)
+
+            response_obj = customer.Remove(valores)
+            
+            if "success" in response_obj:
                 self.write("ok")
-            except Exception,e:
-                self.write(str(e))
+            else:
+                self.write(response_obj["error"])
         
 
     def check_xsrf_cookie(self):
@@ -170,25 +199,39 @@ class ContactActionsHandler(BaseHandler):
         accion = int(accion)
 
         if valores == "":
-            self.write("Debe seleccionar al menos un pedido")
+            self.write("Debe seleccionar al menos un contacto")
             return
 
         if accion == ACCIONES_ACEPTAR:
+
             try:
-                contact.ChangeState(valores,ESTADO_ACEPTADO)
-                self.write("ok")
+                response = contact.ChangeState(valores,ESTADO_ACEPTADO)
+                if "success" in response:
+                    self.write("ok")
+                else:
+                    self.write(response["error"])
             except Exception,e:
                 self.write(str(e))
+
         elif accion == ACCIONES_PENDIENTE:
+
             try:
-                contact.ChangeState(valores,ESTADO_PENDIENTE)
-                self.write("ok")
+                response = contact.ChangeState(valores,ESTADO_PENDIENTE)
+                if "success" in response:
+                    self.write("ok")
+                else:
+                    self.write(response["error"])
             except Exception,e:
                 self.write(str(e))
+
         elif accion == ACCIONES_ELIMINAR:
+
             try:
-                contact.Remove(valores)
-                self.write("ok")
+                response = contact.Remove(valores)
+                if "success" in response:
+                    self.write("ok")
+                else:
+                    self.write(response["error"])
             except Exception,e:
                 self.write(str(e))
         
@@ -202,17 +245,35 @@ class EditContactHandler(BaseHandler):
         contact_id = self.get_argument("id","")
         contact = Contact()
         contact.InitById(contact_id)
-        self.render("customer/edit_contact.html",contact=contact,mode="edit",dn="")
+
+        types = {}
+
+        response = contact.GetTypes()
+
+        if "success" in response:
+            types = response["success"]
+
+        self.render("customer/edit_contact.html",contact=contact,mode="edit",dn="",types=types)
 
     def post(self):
         contact = Contact()
-        contact.customer_id = self.get_argument("customer_id","")
+        contact.user_id = self.get_argument("user_id","")
         contact.name = self.get_argument("name","").encode("utf-8")
-        contact.email = self.get_argument("email","")
+        contact.email = self.get_argument("email","").encode("utf-8")
         contact.address = self.get_argument("address","").encode("utf-8")
-        contact.telephone = self.get_argument("telephone","")
+        contact.telephone = self.get_argument("telephone","").encode("utf-8")
         contact.type = self.get_argument("type","")
         contact.id = self.get_argument("id","")
 
-        if contact.Edit().isdigit():
-            self.render("customer/edit_contact.html",contact=contact,mode="edit",dn="")
+        response = contact.GetTypes()
+
+        if "success" in response:
+            types = response["success"]
+
+        response = contact.Edit()
+
+        if "success" in response:
+            self.redirect("/customer/view_contact?user_id={}".format(contact.user_id))
+        else:
+            self.write(response["error"])
+            
