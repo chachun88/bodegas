@@ -26,7 +26,7 @@ def getIamgeBuffer(handler, image_name):
 		### show full image
 		try:
 			image_path = "uploads/images/" + image_name
-			f = open(image_path, "r")
+			f = open(image_path, "rb")
 			buff = f.read()
 			f.close()
 
@@ -39,7 +39,7 @@ def getIamgeBuffer(handler, image_name):
 		## show scaled image
 		try: # detect if image exist
 
-			f = open("uploads/images/{}{}".format(wwidth, image_name), "r")
+			f = open("uploads/images/{}{}".format(wwidth, image_name), "rb")
 			buff = f.read()
 			f.close()
 
