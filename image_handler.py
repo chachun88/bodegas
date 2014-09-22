@@ -72,7 +72,7 @@ def getIamgeBuffer(handler, image_name):
 				return jpeg
 
 			except Exception,e:
-				print str(e)
+				# print str(e)
 				pass
 			
 
