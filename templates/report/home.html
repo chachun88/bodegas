@@ -91,7 +91,7 @@
 							{% if "user" in p %}{{ p["user"] }}{% end %}
 						</td>
 						{% for c in cellar %}
-						{% if p["cellar_id"] == str(c["_id"]) %}	
+						{% if p["cellar_id"] == str(c["id"]) %}	
 						<td>{{ c["name"] }}</td>
 						{% end %}
 						{% end %}							
