@@ -47,7 +47,7 @@ def getIamgeBuffer(handler, image_name):
 
 			return buff
 		except Exception, ex:
-			print str(ex)
+			
 			try:
 				##image doesnt exist so i create it
 				image_path = "uploads/images/{}{}".format(wwidth, image_name)
@@ -71,7 +71,8 @@ def getIamgeBuffer(handler, image_name):
 
 				return jpeg
 
-			except:
+			except Exception,e:
+				print str(e)
 				pass
 			
 
