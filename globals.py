@@ -8,7 +8,7 @@ Jueves 12 dic 2012
 reutilizado por chinostroza en tellmecuando
 reutilizado por estefy en bodegas
 '''
-debugMode = True
+debugMode = False
 
 BODEGA_PORT=9007
 WS_PORT=8890
@@ -28,14 +28,16 @@ if (debugMode):
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
     port = BODEGA_DEBUG_PORT
     ws_port = DEBUG_WS_PORT
+    webservice_url += ":{}".format(ws_port)
 else:
     userMode="prod"
     carpeta_img = '/var/www/tellmecuando/static/img'
     port = BODEGA_PORT
     ws_port = WS_PORT
+    webservice_url = "http://wgiani.ondev.today"
     
 
-webservice_url += ":{}".format(ws_port)
+
 
 
 #### menu #####
