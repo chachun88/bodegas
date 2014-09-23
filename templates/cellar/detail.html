@@ -25,7 +25,7 @@
 						<td>{{ p["sku"]}}</td>
 						<td>{{ p["name"] }}</td>
 						<td>{{ ", ".join(p["size"]) }}</td>
-						<td>{{ ", ".join(p["color"]) }}</td>
+						<td>{{ p["color"] }}</td>
 						<td>{{ int(p["balance_units"]) }}</td>
 						<td>{{ MoneyFormat(p["balance_total"]) }}</td>	
 					</tr>

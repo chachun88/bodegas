@@ -154,10 +154,10 @@ class CellarEasyOutputHandler(BaseHandler):
 		sell=0
 
 		for p in product_find:
-			if p["_id"] == "buy":
+			if p["operation_type"] == "buy":
 				buy=p["total"]	
 
-			if p["_id"] == "sell":
+			if p["operation_type"] == "sell":
 				sell=p["total"]
 
 		units=buy-sell		
@@ -219,26 +219,37 @@ class CellarInputHandler(BaseHandler):
 		operation= "buy"
 
 		cellar = Cellar()
-		cellar.InitWithId(cellar_id)
+		response = cellar.InitWithId(cellar_id)
 
-		product = Product()
-		product.InitWithId(product_id)
-		product_sku=product.sku
+		if "success" in response:
 
-		product.size=size.split(",")
-		product.color=color.split(",")
-		product.Save()
+			product = Product()
+			response = product.InitWithId(product_id)
 
-		redirect = "t"
+			if response == "ok":
 
-		if "success" in cellar.AddProducts(product_sku, units, price, size, color, operation, self.get_user_email()):
-			self.write("ok")
-			redirect = "bpt"
+				product_sku=product.sku
+
+				product.size=size.split(",")
+				product.color=color
+				product.Save()
+
+				redirect = "t"
+
+				if "success" in cellar.AddProducts(product_sku, units, price, size, color, operation, self.get_user_email()):
+					self.write("ok")
+					redirect = "bpt"
+				else:
+					self.write("no")
+					redirect = "bpf"
+
+				self.redirect("/cellar?dn=" + redirect)
+
+			else:
+				self.write(response)
+
 		else:
-			self.write("no")
-			redirect = "bpf"
-
-		self.redirect("/cellar?dn=" + redirect)
+			self.write(response["error"])
 
 class CellarDetailHandler(BaseHandler):
 	@tornado.web.authenticated

@@ -2,6 +2,8 @@ $(function(){
 $(".btn-default").click(function(){
     $(".btn-perm-bot").css("display", "inline");
     $(".btn-perm").css("display", "none");
+    $(".btn-cellars-bot").css("display", "inline");
+    $(".btn-cellars").css("display", "none");
 });
 
 });
@@ -39,6 +41,7 @@ function addElement(texto){
     text=texto;*/
     $("#perm_"+texto).css("display", "none");
     $("#perm_top"+texto).css("display", "inline");
+    
 
 }
 
@@ -46,6 +49,30 @@ function addElementBot(texto){
 
     $("#perm_"+texto).css("display", "inline");
     $("#perm_top"+texto).css("display", "none");
+
+
+    //alert('blah'); 
+/*        var perm = document.getElementById("perm_bot");
+        var a = document.createElement("a");
+        a.id="perm_"+texto;
+        a.className="btn-sm btn-primary";
+        a.innerHTML = texto;
+        perm.appendChild(a);
+
+        var elem = document.getElementById("perm_top"+texto);
+        elem.parentNode.removeChild(elem);
+        text=texto;*/
+}
+
+function addElementCellars(texto){
+    $("#cellars_"+texto).css("display", "none");
+    $("#cellars_top"+texto).css("display", "inline");
+}
+
+function removeElementCellars(texto){
+
+    $("#cellars_"+texto).css("display", "inline");
+    $("#cellars_top"+texto).css("display", "none");
 
 
     //alert('blah'); 

@@ -7,7 +7,7 @@ th{
   min-height: 30px;
 }
 
-.btn-perm{
+.btn-perm,.btn-cellars{
   display:none;
 }
 
@@ -51,7 +51,7 @@ th{
 	cursor: pointer;
 }
 
-.btn-perm-bot, .btn-perm
+.btn-perm-bot, .btn-perm, .btn-cellars-bot, .btn-cellars
 {
 	cursor: pointer;
 }

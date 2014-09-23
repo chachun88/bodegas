@@ -78,10 +78,10 @@ class GetProductHandler(BaseHandler):
 		product = Product()
 
 		if idd != "":
-			self.write(product.InitById(idd))
+			self.write(json_util.dumps(product.InitById(idd)))
 			# json_util.dumps(product.Print()))
 		else:
-			self.write(product.InitBySku(sku))
+			self.write(json_util.dumps(product.InitBySku(sku)))
 			#self.write(json_util.dumps(product.Print()))
 
 

@@ -78,20 +78,11 @@
 											</div>
 										</div>
 										<input type="hidden" name="color" id="color" value="{{p['color']}}">
-										<!--<div class="control-group">
-											<label for="" class="control-label">Color</label>
+										<div class="control-group">
+											<label for="" class="control-label"></label>
 											<div class="controls form-group">
-												<div class="col-sm-12">
-													<select name="color" id="color" class="selectpicker" data-style="btn-default" tabindex="-1" >
-														{% for c in p["color"] %}
-														<option value="{{ c }}">{{ c }}</option>
-														{% end %}
-													</select>
-												</div>
+												<button type="submit" class="btn btn-primary">Agregar</button>
 											</div>
-										</div> -->
-										<div class="form-actions">
-											<button type="submit" class="btn btn-primary">Agregar</button>
 										</div>
 									</fieldset>
 									<input type="hidden" name="product_sku" value="{{ p["sku"] }}" />

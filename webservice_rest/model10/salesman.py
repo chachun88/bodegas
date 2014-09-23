@@ -263,7 +263,20 @@ class Salesman(BaseModel):
 		"permissions":self.permissions
 		}
 		cur.execute(q,p)
-		permisos = cur.fetchall()
+		permisos = []
+
+		for i in cur.fetchall():
+			permisos.append(i["id"])
+
+		q = '''select id from "Cellar" where name = any(%(cellars)s)'''
+		p = {
+		"cellars":self.cellars
+		}
+		cur.execute(q,p)
+		bodegas = []
+
+		for i in cur.fetchall():
+			bodegas.append(i["id"])
 
 		q = '''select id from "User_Types" where name = %(name)s'''
 		p = {
@@ -283,26 +296,28 @@ class Salesman(BaseModel):
 
 			if cur.rowcount > 0:
 				self.id = usuario['id']
-				q = '''update "User" set name = %(name)s, password = %(password)s, email = %(email)s, permissions = %(permissions)s, type_id = %(type_id)s where id = %(id)s'''
+				q = '''update "User" set name = %(name)s, password = %(password)s, email = %(email)s, permissions = %(permissions)s, type_id = %(type_id)s, cellar_permissions = %(cellar_permissions)s where id = %(id)s'''
 				p = {
 				"name":self.name,
 				"email":self.email,
 				"permissions":permisos,
 				"password":self.password,
 				"id":self.id,
-				"type_id":tipo_usuario
+				"type_id":tipo_usuario,
+				"cellar_permissions":bodegas
 				}
 				cur.execute(q,p)
 				self.connection.commit()
 				return self.ShowSuccessMessage(str(self.id))
 			else:
-				q = '''insert into "User" (name,password,email,permissions,type_id) values (%(name)s,%(password)s,%(email)s,%(permissions)s,%(type_id)s) returning id'''
+				q = '''insert into "User" (name,password,email,permissions,type_id,cellar_permissions) values (%(name)s,%(password)s,%(email)s,%(permissions)s,%(type_id)s,%(cellar_permissions)s) returning id'''
 				p = {
 				"name":self.name,
 				"email":self.email,
 				"permissions":permisos,
 				"password":self.password,
-				"type_id":tipo_usuario
+				"type_id":tipo_usuario,
+				"cellar_permissions":bodegas
 				}
 				cur.execute(q,p)
 				self.connection.commit()

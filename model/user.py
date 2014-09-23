@@ -151,7 +151,7 @@ class User(BaseModel):
 		self.password = data["password"]
 		self.permissions = data["permissions"]
 		self.email = data["email"]
-		self.salesman_id = data["salesman_id"]
+		# self.salesman_id = data["salesman_id"]
 		self.cellars = data["cellar_permissions"]
 		self.cellars_name = data["cellars_name"]
 		self.permissions_name = data["permissions_name"]
@@ -163,9 +163,11 @@ class User(BaseModel):
 			url += "?token=" + self.token
 			url += "&id=" + self.identifier
 
-			urllib.urlopen(url)
+			response = urllib.urlopen(url).read()
 
-			print "url : {}".format( url )
+			print response
+
+			# print "url : {}".format( url )
 
 	def Save(self):
 		url = self.wsurl() + "/salesman/add?token=" + self.token
@@ -179,6 +181,12 @@ class User(BaseModel):
 			url += "&permissions=" + urllib.quote ( ",".join(self.permissions).encode("utf8") )
 		else:
 			url += "&permissions=" + urllib.quote ( self.permissions.encode("utf8") )
+		
+
+		if type(self.cellars) == list:
+			url += "&cellars=" + urllib.quote ( ",".join(self.cellars).encode("utf8") )
+		else:
+			url += "&cellars=" + urllib.quote ( self.cellars.encode("utf8") )
 		url += "&id=" + self.identifier
 
 		#url = urllib.urlencode(url)

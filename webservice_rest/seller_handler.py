@@ -21,11 +21,12 @@ class AddSellerHandler(BaseHandler):
 		salesman.password 	= self.get_argument("password", "")
 		salesman.email		= self.get_argument("email", "")
 		salesman.permissions = self.get_argument("permissions", "").split(",")
+		salesman.cellars     = self.get_argument("cellars","").split(",")
 
 		# saving current seller
-		oid = salesman.Save()
+		response = salesman.Save()
 
-		self.write(json_util.dumps(oid))
+		self.write(json_util.dumps(response))
 
 
 class RemoveSellerHandler(BaseHandler):
@@ -42,9 +43,9 @@ class RemoveSellerHandler(BaseHandler):
 		salesman = Salesman()
 
 		if idd != "":
-			salesman.InitById(idd)
+			salesman.id = idd
 		else:
-			salesman.InitByEmail(email)
+			salesman.email = email
 
 		self.write(json_util.dumps(salesman.Remove()))
 

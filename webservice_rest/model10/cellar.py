@@ -135,7 +135,7 @@ class Cellar(BaseModel):
 
         for p in psku:
 
-            response = kardex.FindKardex(p,self.id)
+            response = kardex.FindKardex(p["product_sku"],self.id)
 
             if "success" in response:
                 total_units += kardex.balance_units
@@ -162,7 +162,7 @@ class Cellar(BaseModel):
 
         for p in psku:
 
-            response = kardex.FindKardex(p,self.id)
+            response = kardex.FindKardex(p["product_sku"],self.id)
 
             if "success" in response:
                 total_price += kardex.balance_total
@@ -495,7 +495,7 @@ class Cellar(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select distinct product_sku from "Kardex" where id = %(id)s'''
+        query = '''select distinct product_sku from "Kardex" where cellar_id = %(id)s'''
         parametros = {
         "id":self.id
         }
@@ -506,16 +506,30 @@ class Cellar(BaseModel):
 
         for p in psku:
             product = Product()
-            product.InitBySku(p)
-            prod_print = product.Print()
+            # print "SKU:{}".format(p["product_sku"])
+            response_obj = product.InitBySku(p["product_sku"])
 
-            if "error" not in prod_print:
-                kardex.FindKardex(str(prod_print["sku"]), self.id)
-                prod_print["balance_units"] = kardex.balance_units
-                prod_print["balance_price"] = kardex.balance_price
-                prod_print["balance_total"] = kardex.balance_total
+            if "error" not in response_obj:
 
-                rtn_data.append(prod_print)
+                prod_print = response_obj["success"]
+
+                response_obj = kardex.FindKardex(str(prod_print["sku"]), self.id)
+
+                if "success" in response_obj:
+
+                    prod_print["balance_units"] = kardex.balance_units
+                    prod_print["balance_price"] = kardex.balance_price
+                    prod_print["balance_total"] = kardex.balance_total
+
+                    rtn_data.append(prod_print)
+
+                else:
+                    print "error en findkardex"
+                    return response_obj
+
+            else:
+                print response_obj["error"]
+                # return response_obj
         
         return rtn_data
 
@@ -636,7 +650,9 @@ class Cellar(BaseModel):
 
             query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s group by operation_type'''
             parametros = {
-            "product_sku":product_sku
+            "product_sku":product_sku,
+            "cellar_id":cellar_identifier,
+            "size":size
             }
             cur.execute(query, parametros)
             result = cur.fetchall()

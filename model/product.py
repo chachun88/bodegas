@@ -203,26 +203,36 @@ class Product(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.identifier = data["id"]
-		self.category = data["category"]
-		self.sku = data["sku"]
-		self.name = data["name"] 
-		self.upc= data["upc"]
-		self.description = data["description"]
-		self.brand = data["brand"]
-		self.manufacturer= data["manufacturer"]
-		self.size=data["size"]
-		self.color= data["color"]
-		self.material = data["material"] 
-		self.bullet_1=data ["bullet_1"]
-		self.bullet_2=data ["bullet_2"]
-		self.bullet_3=data ["bullet_3"]
-		# self.currency=data ["currency"]
-		self.price =data["price"]
-		self.image = data ["image"]
-		self.image_2 = data ["image_2"]
-		self.image_3 = data ["image_3"]
-		self.sell_price = data["sell_price"]
+		if "success" in data:
+
+			self.identifier = data["id"]
+			self.category = data["category"]
+			self.sku = data["sku"]
+			self.name = data["name"] 
+			self.upc= data["upc"]
+			self.description = data["description"]
+			self.brand = data["brand"]
+			self.manufacturer= data["manufacturer"]
+			self.size=data["size"]
+			self.color= data["color"]
+			self.material = data["material"] 
+			self.bullet_1=data ["bullet_1"]
+			self.bullet_2=data ["bullet_2"]
+			self.bullet_3=data ["bullet_3"]
+			# self.currency=data ["currency"]
+			self.price =data["price"]
+			self.image = data ["image"]
+			self.image_2 = data ["image_2"]
+			self.image_3 = data ["image_3"]
+			self.sell_price = data["sell_price"]
+
+			return "ok"
+
+		else:
+
+			return "{}".format(data["error"])
+
+
 
 	def InitWithSku(self, sku):
 		url = self.wsurl() + "/product/find"
@@ -233,26 +243,36 @@ class Product(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.identifier = str(data["id"])
-		self.category = data["category"]
-		self.sku = data["sku"]
-		self.name = data["name"] 
-		self.upc= data["upc"]
-		self.description = data["description"]
-		self.brand = data["brand"]
-		self.manufacturer= data["manufacturer"]
-		self.size=data["size"]
-		self.color= data["color"]
-		self.material = data ["material"] 
-		self.bullet_1=data ["bullet_1"]
-		self.bullet_2=data ["bullet_2"]
-		self.bullet_3=data ["bullet_3"]
-		# self.currency=data ["currency"]
-		self.price=data["price"]
-		self.image = data ["image"]
-		self.image_2 = data ["image_2"]
-		self.image_3 = data ["image_3"]	
-		self.sell_price = data["sell_price"]
+		if "success" in data:
+
+			producto = data["success"]
+
+			self.identifier = producto["id"]
+			self.category = producto["category"]
+			self.sku = producto["sku"]
+			self.name = producto["name"] 
+			self.upc= producto["upc"]
+			self.description = producto["description"]
+			self.brand = producto["brand"]
+			self.manufacturer= producto["manufacturer"]
+			self.size=producto["size"]
+			self.color= producto["color"]
+			self.material = producto ["material"] 
+			self.bullet_1=producto ["bullet_1"]
+			self.bullet_2=producto ["bullet_2"]
+			self.bullet_3=producto ["bullet_3"]
+			# self.currency=producto ["currency"]
+			self.price=producto["price"]
+			self.image = producto ["image"]
+			self.image_2 = producto ["image_2"]
+			self.image_3 = producto ["image_3"]	
+			self.sell_price = producto["sell_price"]
+
+			return "ok"
+
+		else:
+
+			return data["error"]
 
 
 	def Remove(self):
@@ -346,7 +366,7 @@ class Product(BaseModel):
 			url += "&image_2=" + self.image_2.decode('utf-8')
 			url += "&image_3=" + self.image_3.decode('utf-8')
 			url += "&sell_price={}".format(self.sell_price)
-			url += "&id=" + self.identifier
+			url += "&id={}".format(self.identifier)
 
 			return urllib.urlopen(url.encode('utf-8')).read()
 

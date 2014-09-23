@@ -134,33 +134,11 @@ class Kardex(BaseModel):
 		return ''
 		
 	def FindKardex(self, product_sku, cellar_identifier):
-		# try:
-		# 	data = self.collection.find({
-		# 						"product_sku":product_sku,
-		# 						"cellar_identifier":cellar_identifier
-		# 						}).sort("_id",-1)
 
-		# 	self.identifier = str(data[0]["_id"])
-		# 	self.product_sku = str(data[0]["product_sku"])
-		# 	self.operation_type = data[0]["operation_type"]
-		# 	self.units = data[0]["units"]
-		# 	self.price = data[0]["price"]
-		# 	self.sell_price = data[0]["sell_price"]
-		# 	self.size =data[0]["size"]
-		# 	self.color = data[0]["color"]
-		# 	self.total = data[0]["total"]
-		# 	self.balance_units = data[0]["balance_units"]
-		# 	self.balance_price = data[0]["balance_price"]
-		# 	self.balance_total = data[0]["balance_total"]
-		# 	self.date = data[0]["date"]
-		# 	if "user" in data[0]:
-		# 		self.user = data[0]["user"]
-		# except:
-		# 	return self.ShowError("kardex not found")
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		query = '''select * from "Kardex" where product_sku = any(%(product_sku)s) and cellar_id = %(cellar_id)s order by id desc limit 1'''
+		query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s order by id desc limit 1'''
 
 		parametros = {
 		"product_sku":product_sku,
@@ -196,37 +174,7 @@ class Kardex(BaseModel):
 	#take care of an infinite loop
 	# return last kardex in the database
 	def GetPrevKardex(self):
-		
-		# new_kardex = Kardex()
 
-		# new_kardex.product_sku = self.product_sku
-		# new_kardex.cellar_identifier = self.cellar_identifier
-
-		# try:
-		# 	data = self.collection.find({
-		# 								"product_sku":self.product_sku,
-		# 								"cellar_identifier":self.cellar_identifier
-		# 								}).sort("_id",-1)
-
-		# 	if data.count() >= 1:
-		# 		new_kardex.identifier = str(data[0]["_id"])
-		# 		new_kardex.operation_type = data[0]["operation_type"]
-		# 		new_kardex.units = data[0]["units"]
-		# 		new_kardex.price = data[0]["price"]
-		# 		new_kardex.sell_price = data[0]["sell_price"]
-		# 		new_kardex.size =data[0]["size"]
-		# 		new_kardex.color = data[0]["color"]
-		# 		new_kardex.total = data[0]["total"]
-		# 		new_kardex.balance_units = data[0]["balance_units"]
-		# 		new_kardex.balance_price = data[0]["balance_price"]
-		# 		new_kardex.balance_total = data[0]["balance_total"]
-		# 		new_kardex.date = data[0]["date"]
-		# 		if "user" in data[0]:
-		# 			new_kardex.user = data[0]["user"]
-		# except Exception, e:
-		# 	pass
-
-		# return new_kardex
 
 		new_kardex = Kardex()
 
@@ -245,7 +193,7 @@ class Kardex(BaseModel):
 			"cellar_id":self.cellar_identifier
 			}
 			cur.execute(query,parametros)
-			print "QUERY:{}".format(cur.query)
+			# print "QUERY:{}".format(cur.query)
 			kardex = cur.fetchone()
 
 			if kardex:
@@ -305,17 +253,6 @@ class Kardex(BaseModel):
 		self.balance_price = float(int(self.balance_price * 100)) / 100.0
 		self.balance_total = round(float(int(self.balance_total * 100)) / 100.0)
 
-		'''
-		## detect if product exists
-		product_data = db.products.find({"_id":ObjectId(self.product_sku)}).count()
-		## detect if cellar exists
-		cellar_data = db.cellar.find({"_id":ObjectId(self.cellar_identifier)}).count()
-
-		print "product_data:" + product_data
-		
-		if cellar_data == 0 or product_data == 0:
-			return self.ShowError("the cellar does not exist")
-		'''
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -347,22 +284,6 @@ class Kardex(BaseModel):
 		except Exception,e:
 			return self.ShowError("an error ocurred, error:{}".format(str(e)))
 
-		# self.collection.save({
-		# 		"product_sku":self.product_sku,
-		# 		"cellar_identifier":self.cellar_identifier,
-		# 		"operation_type":self.operation_type,
-		# 		"units":self.units,
-		# 		"price":self.price,
-		# 		"sell_price":self.sell_price,
-		# 		"size":self.size,
-		# 		"color":self.color,
-		# 		"total":self.total,
-		# 		"balance_units":self.balance_units,
-		# 		"balance_price":self.balance_price,
-		# 		"balance_total":self.balance_total,
-		# 		"date":self.date,
-		# 		"user":self.user
-		# 	})
 
 		
 

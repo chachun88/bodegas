@@ -12,6 +12,8 @@ from globals import Menu
 from model.user import User
 from model.cellar import Cellar
 
+from bson import json_util
+
 class UserAddHandler(BaseHandler):
 
 	@tornado.web.authenticated
@@ -34,13 +36,16 @@ class UserAddHandler(BaseHandler):
 		usr.password 	= self.get_argument("password", "")
 		usr.permissions = self.get_argument("permissions", "")
 		usr.identifier	= self.get_argument("id", "")
+		usr.cellars     = self.get_argument("cellars","")
 
 		if usr.permissions == "":
 			self.redirect("/user?dn=t3")
 		else:
-			usr.Save()
-			
-		self.redirect("/user?dn=t")
+			response = json_util.loads(usr.Save())
+			if "success" in response:
+				self.redirect("/user?dn=t")
+			else:
+				self.write(response["error"])
 
 
 class UserEditHandler(BaseHandler):

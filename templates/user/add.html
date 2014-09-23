@@ -61,23 +61,35 @@
 								{% set permiso = ["acceso a api","cargar productos nuevos","vender","modificar bodegas","administrar usuarios","ver informes"] %}
 								{% set cnt = 0 %}
 								{% for i in range(0,len(permiso)) %} 
-									<a id="perm_top{{ i }}" class="btn-sm btn-primary btn-perm" onclick="addElementBot({{ i }})">{{ permiso[i] }}</a>
+									<a id="perm_top{{ i + 1 }}" class="btn-sm btn-primary btn-perm" onclick="addElementBot({{ i + 1 }})">{{ permiso[i] }}</a>
 									{% set cnt = i %}
-								{% end %}
-								{% set cnt += 1 %}
-								{% for i in range(0, len(cellars)) %}
-									<a id="perm_top{{ i + cnt }}" class="btn-sm btn-primary btn-perm" onclick="addElementBot({{ i + cnt }})">{{ cellars[i]["name"] }}</a>
 								{% end %}
 							</div>
 							<div id="perm_bot">
 								{% set cnt = 0 %}
 								{% for i in range(0,len(permiso)) %} 
-									<a id="perm_{{ i }}" class="btn-sm btn-primary btn-perm-bot" onclick="addElement({{ i }})">{{ permiso[i] }}</a>
+									<a id="perm_{{ i + 1 }}" class="btn-sm btn-primary btn-perm-bot" onclick="addElement({{ i + 1 }})">{{ permiso[i] }}</a>
 									{% set cnt = i %}
 								{% end %}
-								{% set cnt += 1 %}
-								{% for i in range(0, len(cellars)) %}
-									<a id="perm_{{ i + cnt }}" class="btn-sm btn-primary btn-perm-bot" onclick="addElement({{ i + cnt }})">{{ cellars[i]["name"] }}</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label for="" class="control-label">Bodegas</label>
+
+					<input type="hidden" name="cellars" >
+					<div class="controls form-group">
+						<div class="col-sm-8">
+							<div id="cellars" name="cellars" type="" class="form-control" >
+								{% for c in cellars %}
+									<a id="cellars_top{{ c['id'] }}" class="btn-sm btn-primary btn-cellars" onclick="removeElementCellars({{ c['id'] }})">{{ c["name"] }}</a>
+								{% end %}
+							</div>
+							<div id="cellars_bot">
+								{% for c in cellars %}
+									<a id="cellars_{{ c['id'] }}" class="btn-sm btn-primary btn-cellars-bot" onclick="addElementCellars({{ c['id'] }})">{{ c["name"] }}</a>
 								{% end %}
 							</div>
 						</div>
@@ -101,25 +113,49 @@ $(document).ready(function(){
 	function exist_permission( permission )
 	{
 		$(".btn-perm").each(function(){
-			if ($(this).html() == permission ) {
+			if ($(this).attr("id") == "perm_top" + permission ) {
 				$(this).css("display", "inline");
 			};
 		});
 
 		$(".btn-perm-bot").each(function(){
-			if ($(this).html() == permission) {
+			if ($(this).attr("id") == "perm_top" + permission) {
 				$(this).css("display", "none");
 			}
 		});
 	}
 
 	// loading user current permissions
-	var current_permissions = [{{user.permissions }}];
+	var current_permissions = {{user.permissions }};
 
 	for (var i = 0; i <= current_permissions.length - 1; i++) {
 		console.log(current_permissions[i]);
 
 		exist_permission(current_permissions[i]);
+	};
+
+	function exist_cellar( permission )
+	{
+		$(".btn-cellars").each(function(){
+			if ($(this).attr("id") == "cellars_top" + permission ) {
+				$(this).css("display", "inline");
+			};
+		});
+
+		$(".btn-cellars-bot").each(function(){
+			if ($(this).attr("id") == "cellars_" + permission) {
+				$(this).css("display", "none");
+			}
+		});
+	}
+
+	
+	var current_cellars = {{user.cellars }};
+
+	for (var i = 0; i <= current_cellars.length - 1; i++) {
+		console.log(current_cellars[i]);
+
+		exist_cellar(current_cellars[i]);
 	};
 
 
@@ -145,6 +181,31 @@ $(document).ready(function(){
 				}
 				else{
 					hidden_permissions.val( hidden_permissions.val() + "," + $(this).html() );
+				}
+
+			}
+			console.log($(this).css("display"));
+		});	
+
+		// setting vars
+		var hidden_cellars = $("input[name=cellars]");
+		is_first = true;
+
+
+		// clear
+		hidden_cellars.val("");
+
+		$(".btn-cellars").each(function(){
+
+			if ($(this).css("display") != "none") 
+			{
+				// refill separated by comma
+				if (is_first){
+					hidden_cellars.val( hidden_cellars.val() + $(this).html() );
+					is_first = false;
+				}
+				else{
+					hidden_cellars.val( hidden_cellars.val() + "," + $(this).html() );
 				}
 
 			}

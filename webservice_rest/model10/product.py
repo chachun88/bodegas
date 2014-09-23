@@ -598,45 +598,22 @@ class Product(BaseModel):
 		"sku":sku
 		}
 		try:
+
+			# print cur.mogrify(q,p)
+
 			cur.execute(q,p)
 			producto = cur.fetchone()
 
 			if cur.rowcount > 0:
-				return json_util.dumps(producto)
+				return self.ShowSuccessMessage(producto)
 			else:
-				return self.ShowError("product cannot be initialized")
+				return self.ShowError("product with sku {} not found".format(sku))
 		except:
 			return self.ShowError("product cannot be initialized")
 		
 
 	def InitById(self, identifier):
-		# data = self.collection.find({"_id":ObjectId(identifier)})
-
-		# if data.count() >= 1:
-		# 	self.identifier = str(data[0]["_id"])
-		# 	self.name = data[0]["name"]
-		# 	self.description = data[0]["description"]
-		# 	self.brand = data[0]["brand"]
-		# 	self.manufacturer = data[0]["manufacturer"]
-		# 	self.size = data[0]["size"]
-		# 	self.color = data[0]["color"]
-		# 	self.material = data[0]["material"]
-		# 	self.bullet_1 = data[0]["bullet_1"]
-		# 	self.bullet_2 = data[0]["bullet_2"]
-		# 	self.bullet_3 = data[0]["bullet_3"]
-		# 	self.image = data[0]["image"]
-		# 	self.image_2 = data[0]["image_2"]
-		# 	self.image_3 = data[0]["image_3"]
-		# 	# self.currency=data[0]["currency"]
-		# 	self.category = data[0]["category"]
-		# 	self.upc = data[0]["upc"]
-		# 	self.sku = data[0]["sku"]
-		# 	try:
-		# 		self.price = data[0]["price"]
-		# 	except:
-		# 		self.price = 0
-		# 	return self.ShowSuccessMessage("product initialized")
-		# return self.ShowError("product can not be initialized")
+		
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -649,7 +626,7 @@ class Product(BaseModel):
 			producto = cur.fetchone()
 
 			if cur.rowcount > 0:
-				return json_util.dumps(producto)
+				return self.ShowSuccessMessage(producto)
 			else:
 				return self.ShowError("product cannot be initialized")
 		except Exception,e:

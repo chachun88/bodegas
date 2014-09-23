@@ -92,9 +92,12 @@ class CellarProductsListHandler(BaseHandler):
 		items = self.get_argument("items", 10)
 
 		cellar = Cellar()
-		cellar.InitById(idd)
-		self.write(json_util.dumps(cellar.ListProducts(page, items)))
-		pass
+		response_obj = cellar.InitById(idd)
+
+		if "success" in response_obj:
+			self.write(json_util.dumps(cellar.ListProducts(page, items)))
+		else:
+			self.write(response_obj["error"])
 
 class CellarProductsKardex(BaseHandler):
 	"""docstring for CellarProductsListHandler"""
