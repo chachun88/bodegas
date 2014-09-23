@@ -33,7 +33,7 @@ class UserAddHandler(BaseHandler):
 		usr.name 		= self.get_argument("name", "").encode("utf-8")
 		usr.surname 	= self.get_argument("surname", "").encode("utf-8")
 		usr.email 		= self.get_argument("email", "")
-		usr.password 	= self.get_argument("password", "")
+		usr.password 	= self.get_argument("password", "").encode("utf-8")
 		usr.permissions = self.get_argument("permissions", "").encode("utf-8")
 		usr.identifier	= self.get_argument("id", "")
 		usr.cellars     = self.get_argument("cellars","").encode("utf-8")
