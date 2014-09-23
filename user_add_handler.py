@@ -30,13 +30,13 @@ class UserAddHandler(BaseHandler):
 
 		usr = User()
 
-		usr.name 		= self.get_argument("name", "")
-		usr.surname 	= self.get_argument("surname", "")
+		usr.name 		= self.get_argument("name", "").encode("utf-8")
+		usr.surname 	= self.get_argument("surname", "").encode("utf-8")
 		usr.email 		= self.get_argument("email", "")
 		usr.password 	= self.get_argument("password", "")
-		usr.permissions = self.get_argument("permissions", "")
+		usr.permissions = self.get_argument("permissions", "").encode("utf-8")
 		usr.identifier	= self.get_argument("id", "")
-		usr.cellars     = self.get_argument("cellars","")
+		usr.cellars     = self.get_argument("cellars","").encode("utf-8")
 
 		if usr.permissions == "":
 			self.redirect("/user?dn=t3")
