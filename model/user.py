@@ -130,11 +130,24 @@ class User(BaseModel):
 
 		json_string = urllib.urlopen(url).read()
 
-		try:
-			return json_string
-		except:
-			return {}
-			pass
+		data_obj = json_util.loads(json_string)
+
+		if "success" in data_obj:
+
+			data = data_obj["success"]
+
+			self.name = data["name"]
+			self.surname = data["lastname"]
+			self.identifier = idd
+			self.password = data["password"]
+			self.permissions = data["permissions"]
+			self.email = data["email"]
+			self.identifier = data["id"]
+			self.cellars = data["cellar_permissions"]
+			self.cellars_name = data["cellars_name"]
+			self.permissions_name = data["permissions_name"]
+
+		return data_obj
 
 
 	def InitWithId(self, idd):
@@ -144,18 +157,24 @@ class User(BaseModel):
 		url += "&id=" + idd
 
 		json_string = urllib.urlopen(url).read()
-		data = json_util.loads(json_string)
+		data_obj = json_util.loads(json_string)
 
-		self.name = data["name"]
-		self.surname = data["lastname"]
-		self.identifier = idd
-		self.password = data["password"]
-		self.permissions = data["permissions"]
-		self.email = data["email"]
-		# self.salesman_id = data["salesman_id"]
-		self.cellars = data["cellar_permissions"]
-		self.cellars_name = data["cellars_name"]
-		self.permissions_name = data["permissions_name"]
+		if "success" in data_obj:
+
+			data = data_obj["success"]
+
+			self.name = data["name"]
+			self.surname = data["lastname"]
+			self.identifier = idd
+			self.password = data["password"]
+			self.permissions = data["permissions"]
+			self.email = data["email"]
+			self.identifier = data["id"]
+			self.cellars = data["cellar_permissions"]
+			self.cellars_name = data["cellars_name"]
+			self.permissions_name = data["permissions_name"]
+
+		return data_obj
 
 	def Remove(self):
 

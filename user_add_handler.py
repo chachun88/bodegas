@@ -55,9 +55,13 @@ class UserEditHandler(BaseHandler):
 		self.set_active(Menu.USUARIOS_AGREGAR)
 		
 		usr = User()
-		usr.InitWithId(self.get_argument("id", ""))
-		cellar = Cellar()
+		response = usr.InitWithId(self.get_argument("id", ""))
 
-		self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
+		if "success" in response:
+			cellar = Cellar()
+
+			self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
+		else:
+			self.write(response["error"])
 
 		

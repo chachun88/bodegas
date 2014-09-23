@@ -148,22 +148,6 @@ class Salesman(BaseModel):
 
 	def InitByEmail(self, email):
 
-		# try:
-		# 	data = self.collection.find({"email":email})
-		# 	if data.count() >= 1:
-		# 		self.name 		= data[0]["name"]
-		# 		self.password 	= data[0]["password"]
-		# 		self.email 		= email
-		# 		self.identifier = str(data[0]["_id"])
-		# 		self.permissions= data[0]["permissions"]
-		# 		self.id         = data[0]["salesman_id"]
-
-		# 		return self.ShowSuccessMessage("user initialized")
-		# 	else:
-		# 		raise
-		# except Exception, e:
-		# 	return self.ShowError("user : " + email + " not found")
-
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 		q = '''select u.*, STRING_AGG(distinct p.name, ',') as permissions_name, STRING_AGG(distinct c.name, ',') as cellars_name from "User" u left join "Permission" p on p.id = any(u.permissions) left join "Cellar" c on c.id = any(u.cellar_permissions) where u.email = %(email)s group by u.id limit 1'''
@@ -173,30 +157,14 @@ class Salesman(BaseModel):
 		try:
 			cur.execute(q,p)
 			usuario = cur.fetchone()
-			if usuario:
-				return usuario
+			if cur.rowcount > 0:
+				return self.ShowSuccessMessage(usuario)
 			else:
 				return self.ShowError("user : " + email + " not found")
 		except:
 			return self.ShowError("user : " + email + " not found")
 
 	def InitById(self, idd):
-
-		# try:
-		# 	data = self.collection.find({"_id":ObjectId(idd)})
-		# 	if data.count() >= 1:
-		# 		self.name 		= data[0]["name"]
-		# 		self.password 	= data[0]["password"]
-		# 		self.email 		= data[0]["email"]
-		# 		self.identifier = str(data[0]["_id"])
-		# 		self.permissions=  data[0]["permissions"]
-		# 		self.id         = data[0]["salesman_id"]
-
-		# 		return self.ShowSuccessMessage("user initialized")
-		# 	else:
-		# 		raise
-		# except Exception, e:
-		# 	return self.ShowError("user : " + idd + " not found")
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -207,8 +175,8 @@ class Salesman(BaseModel):
 		try:
 			cur.execute(q,p)
 			usuario = cur.fetchone()
-			if usuario:
-				return usuario
+			if cur.rowcount > 0:
+				return self.ShowSuccessMessage(usuario)
 			else:
 				return self.ShowError("user : " + idd + " not found")
 		except:
@@ -231,41 +199,7 @@ class Salesman(BaseModel):
 		return self._permissions.RemovePermission()
 
 	def Save(self):
-		# try:
-		# 	# validate identifier
-		# 	data = self.collection.find({"email" : self.email})
-
-		# 	new_id = db.seq.find_and_modify(query={'seq_name':'salesman_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True)["id"]
-
-		# 	if data.count() >= 1:
-
-		# 		self.identifier = str(self.collection.update(
-		# 			{"_id" : data[0]["_id"]},
-		# 			{"$set" : {
-		# 				"name" 		: self.name,
-		# 				"password"  : self.password,
-		# 				"email" 	: self.email,
-		# 				"permissions": self.permissions
-		# 			}}))
-
-		# 		return self.ShowSuccessMessage(str(data[0]["_id"]))
-
-		# 	#save the object and return the id
-		# 	object_id = self.collection.insert(
-		# 		{
-		# 		"salesman_id": new_id,
-		# 		"name" 		: self.name,
-		# 		"password"  : self.password,
-		# 		"email"  	: self.email,
-		# 		"permissions": self.permissions
-		# 		})
-
-		# 	self.identifier = str(object_id)
-
-		# 	return self.ShowSuccessMessage(str(object_id))
-		# except Exception, e:
-		# 	return self.ShowError("failed to save user " + self.email)
-
+		
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 		q = '''select id from "Permission" where name = any(%(permissions)s)'''
