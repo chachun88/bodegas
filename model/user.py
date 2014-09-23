@@ -111,17 +111,17 @@ class User(BaseModel):
 	#### Methods ####
 	#################
 
-	def SplitName(self, name):
+	# def SplitName(self, name):
 
-		try:
-			nm = name.split(" ")
+	# 	try:
+	# 		nm = name.split(" ")
 
-			self.name = nm[0]
+	# 		self.name = nm[0]
 
-			if len(nm) > 1:
-				self.surname = nm[1]
-		except Exception, e:
-			raise
+	# 		if len(nm) > 1:
+	# 			self.surname = nm[1]
+	# 	except Exception, e:
+	# 		raise
 
 	def InitWithEmail(self, email):
 		url = self.wsurl() + "/salesman/find"
@@ -146,7 +146,8 @@ class User(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.SplitName(data["name"]) ## name and surname
+		self.name = data["name"]
+		self.surname = data["lastname"]
 		self.identifier = idd
 		self.password = data["password"]
 		self.permissions = data["permissions"]
@@ -172,7 +173,8 @@ class User(BaseModel):
 	def Save(self):
 		url = self.wsurl() + "/salesman/add?token=" + self.token
 
-		url += "&name=" + self.name + "%20" + self.surname
+		url += "&name=" + self.name 
+		url += "&lastname=" self.surname
 		url += "&password=" + self.password
 		url += "&email=" + self.email
 

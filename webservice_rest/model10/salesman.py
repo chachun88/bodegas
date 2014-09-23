@@ -21,6 +21,15 @@ class Salesman(BaseModel):
 		self._cellars = []
 		self._permissions_name = []
 		self._cellars_name = []
+		self._lastname = ""
+
+	@property
+	def lastname(self):
+	    return self._lastname
+	@lastname.setter
+	def lastname(self, value):
+	    self._lastname = value
+	
 
 	@property
 	def salesman_id(self):
@@ -99,7 +108,8 @@ class Salesman(BaseModel):
 			"salesman_id":self.salesman_id,
 			"permissions_name":self.permissions_name,
 			"cellars":self.cellars,
-			"cellars_name":self.cellars_name
+			"cellars_name":self.cellars_name,
+			"lastname":self.lastname
 		}
 
 	def Remove(self):
@@ -296,7 +306,7 @@ class Salesman(BaseModel):
 
 			if cur.rowcount > 0:
 				self.id = usuario['id']
-				q = '''update "User" set name = %(name)s, password = %(password)s, email = %(email)s, permissions = %(permissions)s, type_id = %(type_id)s, cellar_permissions = %(cellar_permissions)s where id = %(id)s'''
+				q = '''update "User" set name = %(name)s, lastname = %(lastname)s, password = %(password)s, email = %(email)s, permissions = %(permissions)s, type_id = %(type_id)s, cellar_permissions = %(cellar_permissions)s where id = %(id)s'''
 				p = {
 				"name":self.name,
 				"email":self.email,
@@ -304,15 +314,17 @@ class Salesman(BaseModel):
 				"password":self.password,
 				"id":self.id,
 				"type_id":tipo_usuario,
-				"cellar_permissions":bodegas
+				"cellar_permissions":bodegas,
+				"lastname":self.lastname
 				}
 				cur.execute(q,p)
 				self.connection.commit()
 				return self.ShowSuccessMessage(str(self.id))
 			else:
-				q = '''insert into "User" (name,password,email,permissions,type_id,cellar_permissions) values (%(name)s,%(password)s,%(email)s,%(permissions)s,%(type_id)s,%(cellar_permissions)s) returning id'''
+				q = '''insert into "User" (name,password,email,permissions,type_id,cellar_permissions,lastname) values (%(name)s,%(password)s,%(email)s,%(permissions)s,%(type_id)s,%(cellar_permissions)s,%(lastname)s) returning id'''
 				p = {
 				"name":self.name,
+				"lastname":self.lastname,
 				"email":self.email,
 				"permissions":permisos,
 				"password":self.password,

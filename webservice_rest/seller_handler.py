@@ -22,6 +22,7 @@ class AddSellerHandler(BaseHandler):
 		salesman.email		= self.get_argument("email", "")
 		salesman.permissions = self.get_argument("permissions", "").split(",")
 		salesman.cellars     = self.get_argument("cellars","").split(",")
+		salesman.lastname    = self.get_argument("lastname","")
 
 		# saving current seller
 		response = salesman.Save()
