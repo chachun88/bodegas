@@ -174,7 +174,7 @@ class User(BaseModel):
 		url = self.wsurl() + "/salesman/add?token=" + self.token
 
 		url += "&name=" + self.name 
-		url += "&lastname=" self.surname
+		url += "&lastname=" + self.surname
 		url += "&password=" + self.password
 		url += "&email=" + self.email
 
