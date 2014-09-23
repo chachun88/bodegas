@@ -62,6 +62,6 @@ class UserEditHandler(BaseHandler):
 
 			self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
 		else:
-			self.write(response["error"])
+			self.write(response)
 
 		

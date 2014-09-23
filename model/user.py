@@ -138,7 +138,7 @@ class User(BaseModel):
 
 			self.name = data["name"]
 			self.surname = data["lastname"]
-			self.identifier = idd
+			self.identifier = data["id"]
 			self.password = data["password"]
 			self.permissions = data["permissions"]
 			self.email = data["email"]
