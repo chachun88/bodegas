@@ -30,16 +30,18 @@ class LoginHandler(BaseHandler):
 		usr = User()
 		response = usr.InitWithEmail(username)
 
-		user = json_util.loads(response)
+		if "error" in response:
+			self.redirect(u"/auth/login?e=" + response["error"])
+			
 
 		# print username
 		# print password
 		
-		if username == user["email"] and password == user["password"]:
+		if username == usr.email and password == usr.password:
 			auth = True
 
 		if auth:
-			self.set_secure_cookie("user_bodega",response)
+			self.set_secure_cookie("user_bodega",json_util.dumps(response["success"]))
 			self.redirect(self.get_argument("next", u"/"))
 		else:
 			error_msg = tornado.escape.url_escape("t")
