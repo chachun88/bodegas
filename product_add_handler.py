@@ -48,14 +48,40 @@ class ProductAddHandler(BaseHandler):
 
 		try:
 			fn = imagedata["filename"]
+
+			print "filename:{}".format(fn)
+
 			file_path = 'uploads/images/' + final_name
 
+			self.deleteOtherImages( final_name )
+
 			open(file_path, 'wb').write(imagedata["body"])
+
 		except Exception, e:
 			print str(e)
 			pass
 
 		return final_name
+
+	def deleteOtherImages(self, image_name):
+		
+		identificador = self.get_argument("id","")
+
+		print "files {}".format( image_name )
+		if image_name != "":
+			os.chdir( "uploads/images" )
+			for file in glob.glob("*" + image_name):
+				try:
+					os.remove( file )
+				except Exception, e:
+					print "no se elimino : {}".format( str(e) )
+					pass
+
+			os.chdir("../../")
+
+			self.write("imagen eliminada")
+		else:
+			self.write( "imagen no existe " )
 
 
 	@tornado.web.authenticated
