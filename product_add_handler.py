@@ -19,6 +19,7 @@ import cgi, cgitb
 import cgi, os
 import cgitb; cgitb.enable()
 import sys
+import glob
 
 from basehandler import BaseHandler
 from globals import port, debugMode, carpeta_img, userMode, Menu
@@ -49,7 +50,7 @@ class ProductAddHandler(BaseHandler):
 		try:
 			fn = imagedata["filename"]
 
-			print "filename:{}".format(fn)
+			# print "filename:{}".format(fn)
 
 			file_path = 'uploads/images/' + final_name
 
@@ -67,7 +68,8 @@ class ProductAddHandler(BaseHandler):
 		
 		identificador = self.get_argument("id","")
 
-		print "files {}".format( image_name )
+		# print "files {}".format( image_name )
+		
 		if image_name != "":
 			os.chdir( "uploads/images" )
 			for file in glob.glob("*" + image_name):
@@ -159,7 +161,7 @@ class ProductAddHandler(BaseHandler):
 		try:
 			prod.InitWithSku(self.get_argument("sku", ""))
 
-			print "SKU:{}".format(prod.sku)
+			# print "SKU:{}".format(prod.sku)
 
 			if prod.sku and load=="old":
 
