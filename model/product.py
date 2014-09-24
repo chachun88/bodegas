@@ -201,9 +201,11 @@ class Product(BaseModel):
 		url += "&id=" + idd
 
 		json_string = urllib.urlopen(url).read()
-		data = json_util.loads(json_string)
+		data_obj = json_util.loads(json_string)
 
-		if "success" in data:
+		if "success" in data_obj:
+
+			data = data_obj["success"]
 
 			self.identifier = data["id"]
 			self.category = data["category"]

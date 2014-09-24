@@ -266,7 +266,7 @@
 				$.get("/imageremove?image_name=" + image_name)
 				.done(function(data)
 					{
-						img_display.attr("src", "/image/"+ image_name +"?mw=60");
+						img_display.attr("src", "/image/default_image.png?mw=60");
 						file.val("");
 					});
 			});

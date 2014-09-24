@@ -134,7 +134,7 @@ class ImageDeleteHandler(BaseHandler):
 			try:
 				os.remove( file )
 			except Exception, e:
-				print "no se elimino : {}".format( str(e) )
+				print "no se elimino la imagen {}: {}".format( image_naeme, str(e) )
 				pass
 
 		os.chdir("../../")
