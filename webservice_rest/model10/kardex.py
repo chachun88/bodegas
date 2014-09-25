@@ -186,11 +186,12 @@ class Kardex(BaseModel):
 
 			cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-			query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s order by id desc limit 1'''
+			query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s order by id desc limit 1'''
 
 			parametros = {
 			"product_sku":self.product_sku,
-			"cellar_id":self.cellar_identifier
+			"cellar_id":self.cellar_identifier,
+			"size":self.size
 			}
 			cur.execute(query,parametros)
 			# print "QUERY:{}".format(cur.query)
