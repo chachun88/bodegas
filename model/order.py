@@ -225,7 +225,7 @@ class Order(BaseModel):
         url += "&items={}".format(items)
 
         json_string = urllib.urlopen(url).read()
-        print json_string
+        # print json_string
         return json_util.loads(json_string)
 
     def ChangeStateOrders(self,ids,state):
