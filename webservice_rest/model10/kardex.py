@@ -215,11 +215,18 @@ class Kardex(BaseModel):
 		except:
 			return self.ShowError("kardex not found")
 
-		return new_kardex
+		return self.ShowSuccessMessage(new_kardex)
 
 	def Insert(self):
 
-		prev_kardex = self.GetPrevKardex()
+		response_prevkardex = self.GetPrevKardex()
+
+		prev_kardex = Kardex()
+
+		if "success" in response_prevkardex:
+			prev_kardex = response_prevkardex["success"]
+		else:
+			return self.ShowError("error al obtener kardex {}".format(response_prevkardex["error"]))
 
 		##parsing all to float
 		self.price = float(self.price)
