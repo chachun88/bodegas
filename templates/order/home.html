@@ -67,10 +67,10 @@
 					{% for p in pedidos %}
 					<tr>
 						<td>
-							<input type="checkbox" name="pedidos" class="iCheck" value="{{p['id']}}">
+							<input type="checkbox" name="pedidos" class="iCheck" value="{{p['order_id']}}">
 						</td>
 						<td>
-							{{p["id"]}}
+							{{p["order_id"]}}
 						</td>
 						<td>
 							{{p["date"]}}
@@ -100,7 +100,7 @@
 							{{p["items_quantity"]}}
 						</td>
 						<td>
-							{{p["product_quantity"]}}
+							{{p["products_quantity"]}}
 						</td>
 						<td>
 							{{p["total"]}}
@@ -110,12 +110,12 @@
 								PENDIENTE
 							{% elif int(p["state"]) == 1 %}
 								ACEPTADO
-							{% elif int(p["state"]) == 1 %}
+							{% elif int(p["state"]) == 2 %}
 								DESPACHADO
 							{% end %}
 						</td>
 						<td>
-							<button type="button" class="btn btn-primary" onclick="location.href='/order-detail/list?order_id={{p['id']}}'">Ver Detalle</button>
+							<button type="button" class="btn btn-primary" onclick="location.href='/order-detail/list?order_id={{p['order_id']}}'">Ver Detalle</button>
 						</td>
 					</tr>
 					{% end %}

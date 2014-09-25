@@ -246,7 +246,7 @@ class Customer(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         try:
-            query = '''select u.*,ut.name as type from "User" u left join "User_Types" ut on ut.id = u.type_id where u.type_id = 4 and u.deleted = 0 limit %(limit)s offset %(offset)s'''
+            query = '''select u.*,ut.name as type from "User" u left join "User_Types" ut on ut.id = u.type_id where (u.type_id = 4 or u.type_id = 3) and u.email <> '' and u.deleted = 0 limit %(limit)s offset %(offset)s'''
             parametros = {
             "limit":items_per_page,
             "offset":skip

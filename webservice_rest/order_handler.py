@@ -29,7 +29,9 @@ class ChangeStateHandler(BaseHandler):
             _v.append(int(v))
 
         order = Order()
-        order.ChangeStateOrders(_v,state)
+        response = order.ChangeStateOrders(_v,state)
+
+        self.write(json_util.dumps(response))
 
 
 class AddOrderHandler(BaseHandler):
@@ -100,7 +102,8 @@ class RemoveOrderHandler(BaseHandler):
             return
 
         order = Order()
-        order.DeleteOrders(self.get_argument("id", ""))
+        response = order.DeleteOrders(self.get_argument("id", ""))
+        self.write(json_util.dumps(response))
 
 
 class GetOrderHandler(BaseHandler):
@@ -113,8 +116,8 @@ class GetOrderHandler(BaseHandler):
         id = self.get_argument("id","")
 
         order = Order()
-        orden = order.GetOrderById(id)
-        self.write(orden)
+        response = order.GetOrderById(id)
+        self.write(json_util.dumps(response))
 
 
 class ListOrderHandler(BaseHandler):

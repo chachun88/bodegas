@@ -94,30 +94,28 @@ class OrderActionsHandler(BaseHandler):
             return
 
         if accion == ACCIONES_ACEPTAR:
-            try:
-                order.ChangeStateOrders(valores,ESTADO_ACEPTADO)
-                self.write("ok")
-            except Exception,e:
-                self.write(str(e))
+            
+            response = order.ChangeStateOrders(valores,ESTADO_ACEPTADO)
+            
+            self.write(json_util.dumps(response))
 
         elif accion == ACCIONES_ELIMINAR:
-            try:
-                order.Remove(valores)
-                self.write("ok")
-            except Exception,e:
-                self.write(str(e))
+
+            response = order.Remove(valores)
+
+            self.write(json_util.dumps(response))
+
         elif accion == ACCIONES_DESPACHADO:
-            try:
-                order.ChangeStateOrders(valores,ESTADO_DESPACHADO)
-                self.write("ok")
-            except Exception,e:
-                self.write(str(e))
+
+            response = order.ChangeStateOrders(valores,ESTADO_DESPACHADO)
+
+            self.write(json_util.dumps(response))
+
         elif accion == ACCIONES_PENDIENTE:
-            try:
-                order.ChangeStateOrders(valores,ESTADO_PENDIENTE)
-                self.write("ok")
-            except Exception,e:
-                self.write(str(e))
+
+            response = order.ChangeStateOrders(valores,ESTADO_PENDIENTE)
+
+            self.write(json_util.dumps(response))
 
     def check_xsrf_cookie(self):
         pass

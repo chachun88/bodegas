@@ -5,24 +5,26 @@
 
 {% block body %}
 
-{% if dn == "bpf" %}
+{% if dn != "" %}
 <div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Problema al eliminar producto!</strong> {{error}}
-</div>
-{% elif dn == "bpt" %}
-<div class="alert alert-success alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado producto.
+	<strong><i class="fa fa-check"></i>{{dn}}</strong>
 </div>
 {% end %}
 
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
+			<div class="col-md-11">
+				<h3>Pedido N&deg; {{order.id}}</h3>
+			</div>
+			<div class="col-md-1">
+				<p>
+					<a href="/order/list" class="btn btn-primary">Volver</a>
+				</p>
+			</div>
 			<table class="table table-bordered">
 				<thead>
-					<th>Nº Pedido</th>
 					<th>Cliente</th>
 					<th>Direcci&oacute;n</th>
 					<th>Comuna</th>
@@ -30,7 +32,6 @@
 					<th>Pa&iacute;s</th>
 				</thead>
 				<tbody>
-					<td>{{order.id}}</td>
 					<td>{{order.customer}}</td>
 					<td>{{order.address}}</td>
 					<td>{{order.town}}</td>
@@ -50,13 +51,13 @@
 					{% for o in order_detail %}
 					<tr>
 						<td>
-							{{o.product.name}}
+							{{o["name"]}}
 						</td>
 						<td>
-							{{o.quantity}}
+							{{o["quantity"]}}
 						</td>
 						<td class="text-align-right">
-							{{o.total}}
+							{{o["subtotal"]}}
 						</td>
 					</tr>
 					{% end %}
@@ -64,11 +65,6 @@
 						<td></td>
 						<td class="text-align-right">Subtotal</td>
 						<td class="text-align-right">{{order.subtotal}}</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td class="text-align-right">Descuento</td>
-						<td class="text-align-right">{{order.discount}}</td>
 					</tr>
 					<tr>
 						<td></td>

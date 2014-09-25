@@ -20,24 +20,31 @@ class ListOrderDetailHandler(BaseHandler):
 
 	@tornado.web.authenticated
 	def get(self):
-		order_detail = OrderDetail()
-		order = Order()
-		product = Product()
-		od_list = []
+
 		order_id = self.get_argument("order_id","")
+
+		od_list = []
+
+		order = Order()
+		response = order.InitWithId(order_id)
+
+		order_detail = OrderDetail()
+		
+		product = Product()
+
+		if "error" in response:
+			self.render("order_detail/list.html",dn=response["error"],order_detail=od_list,order=order)
+
 		if order_id == "":
-			self.render("order_detail/list.html",dn="Detalle de pedido no encontrado",order_detail=od_list,order=order)
+			self.render("order_detail/list.html",dn="Pedido solicitado no existe",order_detail=od_list,order=order)
 		else:
 			try:
-				order.InitWithId(order_id)
-
-
-				for od in order_detail.ListByOrderId(order_id):
-					obj = OrderDetail()
-					obj.InitWithId(od["id"])
-					od_list.append(obj)
-
-				self.render("order_detail/list.html",dn="Detalle de pedido no encontrado",order_detail=od_list,order=order)
+				response = order_detail.ListByOrderId(order_id)
+				if "success" in response:
+					od_list = response["success"]
+					self.render("order_detail/list.html",dn="",order_detail=od_list,order=order)
+				else:
+					self.render("order_detail/list.html",dn=response["error"],order_detail=od_list,order=order)
 			except Exception, e:
 				self.render("order_detail/list.html",dn="bpf",error=str(e),order_detail=od_list,order=order)
 

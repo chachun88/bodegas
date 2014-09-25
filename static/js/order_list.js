@@ -17,10 +17,16 @@ $(document).ready(function(){
             data: "values=" + valores_checkbox + "&action=" + action,
             type: "post",
             success: function(html){
-                if(html=="ok"){
+                /*if(html=="ok"){
                     location.reload();
                 } else {
                     alert(html);
+                }*/
+                obj = $.parseJSON(html);
+                if(obj.success){
+                    location.reload()
+                } else {
+                    alert(obj.error);
                 }
             }
         });

@@ -98,7 +98,7 @@ class OrderDetail(BaseModel):
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 		try:
-			query = '''select * from "Order_Detail" where order_id = %(order_id)s limit %(limit)s offset %(offset)s'''
+			query = '''select od.*, p.* from "Order_Detail" od left join "Product" p on od.product_id = p.id where od.order_id = %(order_id)s limit %(limit)s offset %(offset)s'''
 			parameters = {
 			"order_id":order_id,
 			"limit":int(limit),
@@ -106,9 +106,9 @@ class OrderDetail(BaseModel):
 			}
 			cur.execute(query,parameters)
 			order_detail = cur.fetchall()
-			return order_detail
-		except:
-			return {}
+			return self.ShowSuccessMessage(order_detail)
+		except Exception, e:
+			return self.ShowError("Error getting list, {}".format(str(e)))
 
 	def GetDetail(self, _id):
 

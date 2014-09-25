@@ -107,7 +107,7 @@ class OrderDetail(BaseModel):
         url += "&order_id={}".format(order_id)
 
         json_string = urllib.urlopen(url).read()
-        print json_string
+        
         return json_util.loads(json_string)
 
     def List(self, page=1, items=20):

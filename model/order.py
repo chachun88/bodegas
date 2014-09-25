@@ -181,7 +181,9 @@ class Order(BaseModel):
         url += "?token=" + self.token
         url += "&id=" + _id
 
-        return urllib.urlopen(url).read()
+        response = urllib.urlopen(url).read()
+
+        return json_util.loads(response)
 
     def InitWithId(self, idd):
         url = self.wsurl() + "/order/find"
@@ -191,23 +193,29 @@ class Order(BaseModel):
         json_string = urllib.urlopen(url).read()
         json_data = json_util.loads(json_string)
 
-        self._id                     = json_data["id"]
-        self._date                   = json_data["date"]
-        self._type                   = json_data["type"]
-        self._salesman               = json_data["salesman"]
-        self._customer               = json_data["customer"]
-        self._subtotal               = json_data["subtotal"]
-        self._discount               = json_data["discount"]
-        self._tax                    = json_data["tax"]
-        self._total                  = json_data["total"]
-        self._address                = json_data["address"]
-        self._town                   = json_data["town"]
-        self._city                   = json_data["city"]
-        self._source                 = json_data["source"]
-        self._country                = json_data["country"]
-        self._items_quantity         = json_data["items_quantity"]
-        self._product_quantity       = json_data["product_quantity"]
-        self._state                  = json_data["state"]
+        if "success" in json_data:
+
+            data = json_data["success"]
+
+            self.id                     = data["id"]
+            self.date                   = data["date"]
+            self.type                   = data["type"]
+            # self.salesman               = data["salesman"]
+            self.customer               = data["customer"]
+            self.subtotal               = data["subtotal"]
+            self.discount               = data["discount"]
+            self.tax                    = data["tax"]
+            self.total                  = data["total"]
+            self.address                = data["address"]
+            self.town                   = data["town"]
+            self.city                   = data["city"]
+            self.source                 = data["source"]
+            self.country                = data["country"]
+            self.items_quantity         = data["items_quantity"]
+            self.product_quantity       = data["products_quantity"]
+            self.state                  = data["state"]
+
+        return json_data
 
 
     def List(self, page=1, items=20):
@@ -226,6 +234,7 @@ class Order(BaseModel):
         url += "?token=" + self.token
         url += "&ids={}".format(ids)
         url += "&state={}".format(state)
-        urllib.urlopen(url).read()
+        response = urllib.urlopen(url).read()
+        return json_util.loads(response)
 
     

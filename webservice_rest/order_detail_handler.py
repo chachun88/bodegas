@@ -3,6 +3,8 @@
 from model10.order_detail import OrderDetail
 from base_handler import BaseHandler
 
+from bson import json_util
+
 class ListDetailByOrderIdHandler(BaseHandler):
 
 	def get(self):
@@ -15,7 +17,8 @@ class ListDetailByOrderIdHandler(BaseHandler):
 		order_id = self.get_argument("order_id","")
 
 		order_detail = OrderDetail()
-		self.write(order_detail.ListByOrderId(order_id, page, limit))
+		detail_list = order_detail.ListByOrderId(order_id, page, limit)
+		self.write(json_util.dumps(detail_list))
 
 
 class AddOrderDetailHandler(BaseHandler):

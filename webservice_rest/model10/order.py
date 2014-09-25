@@ -151,7 +151,7 @@ class Order(BaseModel):
         offset = (page-1)*items
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
-            query = '''select o.*,u.name as customer from "Order" o left join "User" u on u.id = o.user_id limit %(items)s offset %(offset)s'''
+            query = '''select o.*,u.name as customer,c.*,o.id as order_id from "Order" o left join "User" u on u.id = o.user_id left join "Contact" c on c.id = o.billing_id limit %(items)s offset %(offset)s'''
             parametros = {
             "items":items,
             "offset":offset
@@ -174,55 +174,127 @@ class Order(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select * from "Order" where id = %(id)s limit 1'''
+        query = '''select o.*,u.name as customer,c.*,o.id as order_id from "Order" o left join "User" u on u.id = o.user_id left join "Contact" c on c.id = o.billing_id where o.id = %(id)s limit 1'''
 
         parametros = {
         "id":_id
         }
 
-        cur.execute(query,parametros)
+        try:
+            cur.execute(query,parametros)
+            order = cur.fetchone()
 
-        order = cur.fetchone()
+            if cur.rowcount > 0:
+                return self.ShowSuccessMessage(order)
+            else:
+                return self.ShowError("Pedido no encontrado")
 
-        if order:
-            return order
-        else:
-            return {}
+        except Exception,e:
+            return self.ShowError("Error al obtener el pedido, {}".format(str(e)))
+
 
     def Save(self):
 
-        new_id = db.seq.find_and_modify(query={'seq_name':'order_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
+        # new_id = db.seq.find_and_modify(query={'seq_name':'order_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
         
-        # validate contrains
-        object_id = self.collection.insert({
-            "id": new_id,
+        # # validate contrains
+        # object_id = self.collection.insert({
+        #     "id": new_id,
+        #     "date": self.date,
+        #     "source": self.source,
+        #     "country": self.country,
+        #     "items_quantity": self.items_quantity,
+        #     "product_quantity": self.product_quantity,
+        #     "state": self.state,
+        #     "salesman" : self.salesman,
+        #     "customer" : self.customer,
+        #     "subtotal" : self.subtotal,
+        #     "discount" : self.discount,
+        #     "tax" : self.tax,
+        #     "total" : self.total,
+        #     "address" : self.address,
+        #     "town" : self.town,
+        #     "city" : self.city,
+        #     "type" : self.type
+        #     })
+
+        # return str(object_id)
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''insert into "Order" (date,source,items_quantity,state,user_id,subtotal,discount,tax,total,type,products_quantity)'''
+        query += ''' values(%(date)s,%(source)s,%(items_quantity)s,%(state)s,%(user_id)s,%(subtotal)s,%(discount)s,%(tax)s,%(total)s,%(type)s,%(products_quantity)s)'''
+        query += ''' returning id'''
+
+        parametros = {
             "date": self.date,
             "source": self.source,
-            "country": self.country,
             "items_quantity": self.items_quantity,
-            "product_quantity": self.product_quantity,
+            "products_quantity": self.product_quantity,
             "state": self.state,
-            "salesman" : self.salesman,
-            "customer" : self.customer,
             "subtotal" : self.subtotal,
             "discount" : self.discount,
             "tax" : self.tax,
             "total" : self.total,
-            "address" : self.address,
-            "town" : self.town,
-            "city" : self.city,
+            "user_id" : self.customer,
             "type" : self.type
-            })
+        }
 
-        return str(object_id)
+        cur.execute(query,parametros)
+
+        self.id = cur.fetchone()["id"]
+
+        return str(self.id)
 
     def DeleteOrders(self,ids):
-        self.collection.remove({"id":{"$in":ids}})
-        od = OrderDetail()
-        for i in ids:
-            od.Remove(i)
+        # self.collection.remove({"id":{"$in":ids}})
+        # od = OrderDetail()
+        # for i in ids:
+        #     od.Remove(i)
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        if not ids.isdigit():
+            query = '''delete from "Order_Detail" where order_id = any(%(order_id)s)'''
+        else:
+            query = '''delete from "Order_Detail" where order_id = %(order_id)s'''
+
+        parameters = {"order_id":ids}
+
+        try:
+            cur.execute(query,parameters)
+        except Exception,e:
+            self.connection.rollback()
+            return self.ShowError("Error eliminando detalles de la orden {}".format(str(e)))
+
+        if not ids.isdigit():
+            query = '''delete from "Order" where id = any(%(id)s)'''
+        else:
+            query = '''delete from "Order" where id = %(id)s'''
+        parameters = {"id":ids}
+
+        try:
+            cur.execute(query,parameters)
+            self.connection.commit()
+            return self.ShowSuccessMessage("ordenes eliminados correctamente")
+        except Exception,e:
+            self.connection.rollback()
+            return self.ShowError("Error eliminando la orden {}".format(str(e)))
 
     def ChangeStateOrders(self,ids,state):
-        print ids
-        self.collection.update({"id":{"$in":ids}},{"$set":{"state":state}},multi=True)
+        # print ids
+        # self.collection.update({"id":{"$in":ids}},{"$set":{"state":state}},multi=True)
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''update "Order" set state = %(state)s where id = any(%(id)s)'''
+        parameters = {"id":ids, "state":state}
+
+        try:
+            cur.execute(query,parameters)
+            self.connection.commit()
+            return self.ShowSuccessMessage("state changed")
+        except Exception,e:
+            self.connection.rollback()
+            return self.ShowError(str(e))
         
