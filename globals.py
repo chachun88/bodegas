@@ -8,7 +8,7 @@ Jueves 12 dic 2012
 reutilizado por chinostroza en tellmecuando
 reutilizado por estefy en bodegas
 '''
-debugMode = True
+debugMode = False
 
 BODEGA_PORT=9007
 WS_PORT=8890
