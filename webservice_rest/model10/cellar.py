@@ -162,7 +162,7 @@ class Cellar(BaseModel):
 
         for p in psku:
 
-            response = kardex.FindKardex(p["product_sku"],self.id)
+            response = kardex.FindKardex(p["product_sku"],self.id,p["size"])
 
             if "success" in response:
                 total_price += kardex.balance_total

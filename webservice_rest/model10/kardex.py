@@ -133,16 +133,17 @@ class Kardex(BaseModel):
 	def InitById(self, idd):
 		return ''
 		
-	def FindKardex(self, product_sku, cellar_identifier):
+	def FindKardex(self, product_sku, cellar_identifier,size):
 
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s order by id desc limit 1'''
+		query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s order by id desc limit 1'''
 
 		parametros = {
 		"product_sku":product_sku,
-		"cellar_id":cellar_identifier
+		"cellar_id":cellar_identifier,
+		"size":size
 		}
 
 		try:
