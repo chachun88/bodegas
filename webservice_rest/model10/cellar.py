@@ -641,9 +641,10 @@ class Cellar(BaseModel):
 
         if cellar_identifier == "remove" and size == "remove":
             
-            query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s group by operation_type'''
+            query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and size = %(size)s group by operation_type'''
             parametros = {
-            "product_sku":product_sku
+            "product_sku":product_sku,
+            "size":size
             }
             cur.execute(query, parametros)
             result = cur.fetchall()
