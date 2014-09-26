@@ -238,7 +238,7 @@ class Kardex(BaseModel):
 
 		## doing maths...
 		if self.operation_type == Kardex.OPERATION_SELL:
-			self.sell_price = self.price
+			self.sell_price = self.sell_price
 			self.price = prev_kardex.balance_price ## calculate price
 		if self.price == "0":
 			self.price = prev_kardex.balance_price
