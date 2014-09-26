@@ -514,7 +514,7 @@ class Cellar(BaseModel):
 
                 prod_print = response_obj["success"]
 
-                response_obj = kardex.FindKardex(str(prod_print["product_sku"]), self.id, prod_print["size"])
+                response_obj = kardex.FindKardex(p["product_sku"], self.id, p["size"])
 
                 if "success" in response_obj:
 
