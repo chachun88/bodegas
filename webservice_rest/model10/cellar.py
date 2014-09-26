@@ -521,6 +521,7 @@ class Cellar(BaseModel):
                     prod_print["balance_units"] = kardex.balance_units
                     prod_print["balance_price"] = kardex.balance_price
                     prod_print["balance_total"] = kardex.balance_total
+                    prod_print["size"]          = kardex.size
 
                     rtn_data.append(prod_print)
 
