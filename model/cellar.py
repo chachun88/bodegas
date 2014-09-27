@@ -120,7 +120,7 @@ class Cellar(BaseModel):
 		url += "&product_sku=" + product_sku 
 		url += "&operation=buy"
 		url += "&quantity={}".format(quantity)
-		url += "&price={}".format(price.strip())
+		url += "&price={}".format(price)
 		url += "&size=" + size
 		url += "&color=" + col
 		url += "&user=" + user

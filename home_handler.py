@@ -178,7 +178,7 @@ class ProductLoadHandler(BaseHandler):
 					for i in range(nrows):	
 						matriz.append([])
 						for k in range(len(tallas)):
-							for j in range(ncols):	
+							for j in range(ncols):
 
 								matriz[i].append(sheet.cell_value(i,j))
 								
@@ -199,7 +199,7 @@ class ProductLoadHandler(BaseHandler):
 											color=matriz[i][j].encode('utf-8')
 										elif j == 5:
 											price = matriz[i][j]
-											prod.price = price
+											prod.price = str(price).strip()
 										elif j == 6:
 											prod.manufacturer = matriz[i][j].encode('utf-8')
 										elif j == 7:
@@ -209,23 +209,32 @@ class ProductLoadHandler(BaseHandler):
 										elif j == 10:
 											try:
 												q = k +j
-												quantity=int(matriz[i][q])
+
+												quantity=str(matriz[i][q])
 				
-												prod.Save("masive")		
-												# prod.InitWithSku(prod.sku)
-												# product_id=prod.identifier
+
+												try:
+													prod.Save("masive")
+												except Exception, e:
+													print "prod.Save('masive'): {}".format(str(e))
+
 												operation="buy"
 
 												#products stored for cellar
 												if cellar.CellarExist( cellar_name ):
 													cellar.InitWithName(cellar_name)
-													cellar.AddProducts(prod.sku, quantity, price, size, color, operation, self.get_user_email() )
+
+													try:
+														cellar.AddProducts(prod.sku, quantity, price, size, color, operation, self.get_user_email() )
+													except Exception, e:
+														print "cellar.AddProducts: {}".format(str(e))
+														
 												else:
 													error_name = "No existe la bodega \"" + cellar_name + "\""
 													if error_name not in warnings:
 														warnings.append( error_name )
 											except Exception, e:
-												print "aqui se cae, error:{}".format(str(e))
+												print "se cae al guardar, error:{}".format(str(e))
 												pass	
 
 								except Exception, e:
@@ -430,7 +439,7 @@ class ProductMassiveOutputHandler(BaseHandler):
 								#	except:
 								#		price = 0
 								elif j == 5:
-									price_sell = str(int(matriz[i][j]))										
+									price_sell = str(matriz[i][j])									
 								elif j == 6:
 									prod.manufacturer = matriz[i][j].encode('utf-8')	
 								elif j == 8:
@@ -440,7 +449,7 @@ class ProductMassiveOutputHandler(BaseHandler):
 								elif j == 11:
 									try:
 										q = k + j
-										quantity=str(int(matriz[i][q]))
+										quantity=str(matriz[i][q])
 										#recovering identified
 
 										prod.InitWithSku(prod.sku)

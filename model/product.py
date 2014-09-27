@@ -331,7 +331,7 @@ class Product(BaseModel):
 			url += "&bullet_2=" + unicode(self.bullet_2, errors="ignore")
 			url += "&bullet_3=" + unicode(self.bullet_3, errors="ignore")
 			# url += "&currency=" + self.currency
-			url += "&price={}".format(int(self.price))
+			url += "&price={}".format(self.price)
 			url += "&image=" + unicode(self.image, errors="ignore")
 			url += "&image_2=" + unicode(self.image_2, errors="ignore")
 			url += "&image_3=" + unicode(self.image_3, errors="ignore")
