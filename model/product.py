@@ -41,7 +41,8 @@ class Product(BaseModel):
 		self._image=""
 		self._image_2=""
 		self._image_3=""
-		self._sell_price = 0	
+		self._sell_price = 0
+		self._tags = ""
 		
 
 	####################
@@ -188,7 +189,13 @@ class Product(BaseModel):
 	def sell_price(self, value):
 	    self._sell_price = value
 	
-
+	@property
+	def tags(self):
+	    return self._tags
+	@tags.setter
+	def tags(self, value):
+	    self._tags = value
+	
 	
 	#################
 	#### Methods ####
@@ -227,12 +234,13 @@ class Product(BaseModel):
 			self.image_2 = data ["image_2"]
 			self.image_3 = data ["image_3"]
 			self.sell_price = data["sell_price"]
+			self.tags = data["tags"]
 
 			return "ok"
 
 		else:
 
-			return "{}".format(data["error"])
+			return "{}".format(data_obj["error"])
 
 
 
@@ -269,7 +277,7 @@ class Product(BaseModel):
 			self.image_2 = producto ["image_2"]
 			self.image_3 = producto ["image_3"]	
 			self.sell_price = producto["sell_price"]
-
+			self.tags = data["tags"]
 			return "ok"
 
 		else:
@@ -336,6 +344,7 @@ class Product(BaseModel):
 			url += "&image_2=" + unicode(self.image_2, errors="ignore")
 			url += "&image_3=" + unicode(self.image_3, errors="ignore")
 			url += "&sell_price={}".format(self.sell_price)
+			url += "&tags={}".format(self.tags) # se envia como string
 
 			url += "&id=" + self.identifier
 
@@ -369,6 +378,7 @@ class Product(BaseModel):
 			url += "&image_3=" + self.image_3.decode('utf-8')
 			url += "&sell_price={}".format(self.sell_price)
 			url += "&id={}".format(self.identifier)
+			url += "&tags={}".format(self.tags)
 
 			return urllib.urlopen(url.encode('utf-8')).read()
 

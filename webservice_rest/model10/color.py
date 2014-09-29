@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from basemodel import BaseModel
-from bson.objectid import ObjectId
+# from bson.objectid import ObjectId
 
 class Color(BaseModel):
     def __init__(self):

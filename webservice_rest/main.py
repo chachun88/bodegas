@@ -20,6 +20,7 @@ import category_handler
 import color_handler
 import customer_handler
 import contact_handler
+import tag_handler
 
 import doc_handler
 from bson.objectid import ObjectId
@@ -118,7 +119,10 @@ class Application(tornado.web.Application):
             (r"/contact/changestate",               contact_handler.ChangeStateHandler),
             (r"/contact/remove",                    contact_handler.RemoveHandler),
             (r"/contact/initbyid",                  contact_handler.InitByIdHandler),
-            (r"/contact/gettypes",                  contact_handler.GetTypesHandler)
+            (r"/contact/gettypes",                  contact_handler.GetTypesHandler),
+
+            (r"/tag/save",                       tag_handler.SaveHandler),
+            (r"/tag/addtagproduct",              tag_handler.AddTagProductHandler)
             
             ]
 
