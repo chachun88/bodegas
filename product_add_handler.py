@@ -89,7 +89,6 @@ class ProductAddHandler(BaseHandler):
 	@tornado.web.authenticated
 	def post(self):
 
-		
 
 		try: # Windows needs stdio set for binary mode.
 		    import msvcrt
@@ -184,7 +183,15 @@ class ProductAddHandler(BaseHandler):
 				prod.image_2 	= img2
 				prod.image_3 	= img3
 				prod.sell_price = self.get_argument("sell_price",0)
-				prod.tags       = self.get_argument("tags","").encode("utf-8") # entra como string
+				
+
+				tags = self.get_argument("tags","").split(",")
+				tags = [t.encode("utf-8") for t in tags]
+				
+
+				prod.tags       = ",".join(tags) # entra como string
+
+
 
 				prod.Save("one")
 				self.redirect("/product/list")	
@@ -196,28 +203,39 @@ class ProductAddHandler(BaseHandler):
 
 			print str(e)
 			
-			prod.category 	= self.get_argument("category", "")
-			prod.sku 		= self.get_argument("sku", "")
-			prod.name		= self.get_argument("name", "")
-			prod.upc		= self.get_argument("upc", "")
-			prod.description= self.get_argument("description", "")
-			prod.brand 		= self.get_argument("brand", "")
-			prod.manufacturer= self.get_argument("manufacturer", "")
-			prod.size 		= self.get_argument("size", "").split(",")
-			prod.color 		= self.get_argument("color", "")
-			prod.material 	= self.get_argument("material", "")
-			prod.bullet_1 	= self.get_argument("bullet_1", "")
-			prod.bullet_2 	= self.get_argument("bullet_2", "")
-			prod.bullet_3 	= self.get_argument("bullet_3", "")
-			prod.currency 	= self.get_argument("currency", "")
-			prod.price		= self.get_argument("price", "")
-			prod.image 		= img1
-			prod.image_2 	= img2
-			prod.image_3 	= img3
-			prod.tags       = self.get_argument("tags","").encode("utf-8") # entra como string
-			prod.sell_price = self.get_argument("sell_price",0)
+			prod.category 	= self.get_argument("category", "").encode("utf-8")
+			prod.sku 		= self.get_argument("sku", "").encode("utf-8")
+			prod.name		= self.get_argument("name", "").encode("utf-8")
+			prod.upc		= self.get_argument("upc", "").encode("utf-8")
+			prod.description= self.get_argument("description", "").encode("utf-8")
+			prod.brand 		= self.get_argument("brand", "").encode("utf-8")
+			prod.manufacturer= self.get_argument("manufacturer", "").encode("utf-8")
+			
+			prod.color 		= self.get_argument("color", "").encode("utf-8")
+			prod.material 	= self.get_argument("material", "").encode("utf-8")
+			prod.bullet_1 	= self.get_argument("bullet_1", "").encode("utf-8")
+			prod.bullet_2 	= self.get_argument("bullet_2", "").encode("utf-8")
+			prod.bullet_3 	= self.get_argument("bullet_3", "").encode("utf-8")
+			prod.currency 	= self.get_argument("currency", "").encode("utf-8")
+			prod.price		= self.get_argument("price", "").encode("utf-8")
+			prod.image 		= img1.encode("utf-8")
+			prod.image_2 	= img2.encode("utf-8")
+			prod.image_3 	= img3.encode("utf-8")
+			prod.sell_price = self.get_argument("sell_price",0).encode("utf-8")
 
-			prod.Save("one")
+
+			size_arr = self.get_argument("size", "").split(",")
+			size_arr = [s.encode("utf-8") for s in size_arr]
+
+			tags_arr = self.get_argument("tags", "").split(",")
+			tags_arr = [s.encode("utf-8") for s in tags_arr]
+
+			prod.size 		= ",".join(size_arr)
+			prod.tags       = ",".join(tags_arr) # entra como string
+
+			respose = prod.Save("one")
+
+			# print respose
 			
 			self.redirect("/product/list")
 

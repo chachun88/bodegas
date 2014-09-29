@@ -351,36 +351,28 @@ class Product(BaseModel):
 			return urllib.urlopen(url).read()
 		else:	
 
-			try:
-				size =  ",".join(v for v in self.size)
-				# color =unicode(color, errors="ignore")
-			except:
-				size = ",".join(v.encode('utf-8') for v in self.size)	
-
-			#color= unicode(color, errors="ignore")
-			url += "&category=" + self.category.decode('utf-8')
-			url += "&sku=" + self.sku.decode('utf-8')
-			url += "&name=" + name.decode('utf-8')
-			url += "&upc=" + self.upc
-			url += "&description=" + descripcion.decode('utf-8')
-			url += "&brand=" + brand
-			url += "&manufacturer=" + self.manufacturer
-			url += "&size=" + size
-			url += "&color=" + color.decode('utf-8')
-			#url += "&material=" + self.material
-			url += "&bullet_1=" + self.bullet_1
-			url += "&bullet_2=" + self.bullet_2
-			url += "&bullet_3=" + self.bullet_3
-			# url += "&currency=" + self.currency
+			
+			url += "&category={}".format(self.category)
+			url += "&sku={}".format(self.sku)
+			url += "&name={}".format(self.name)
+			url += "&upc={}".format(self.upc)
+			url += "&description={}".format(self.description)
+			url += "&brand={}".format(self.brand)
+			url += "&manufacturer={}".format(self.manufacturer)
+			url += "&size={}".format(self.size)
+			url += "&color={}".format(self.color)
+			url += "&bullet_1={}".format(self.bullet_1)
+			url += "&bullet_2={}".format(self.bullet_2)
+			url += "&bullet_3={}".format(self.bullet_3)
 			url += "&price={}".format(self.price)
-			url += "&image=" + self.image.decode('utf-8')
-			url += "&image_2=" + self.image_2.decode('utf-8')
-			url += "&image_3=" + self.image_3.decode('utf-8')
+			url += "&image={}".format(self.image)
+			url += "&image_2={}".format(self.image_2)
+			url += "&image_3={}".format(self.image_3)
 			url += "&sell_price={}".format(self.sell_price)
 			url += "&id={}".format(self.identifier)
 			url += "&tags={}".format(self.tags)
 
-			return urllib.urlopen(url.encode('utf-8')).read()
+			return urllib.urlopen(url).read()
 
 	def get_product_list(self):
 			
