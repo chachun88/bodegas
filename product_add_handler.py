@@ -184,7 +184,7 @@ class ProductAddHandler(BaseHandler):
 				prod.image_2 	= img2
 				prod.image_3 	= img3
 				prod.sell_price = self.get_argument("sell_price",0)
-				prod.tags       = self.get_argument("tags","") # entra como string
+				prod.tags       = self.get_argument("tags","").encode("utf-8") # entra como string
 
 				prod.Save("one")
 				self.redirect("/product/list")	
@@ -214,7 +214,7 @@ class ProductAddHandler(BaseHandler):
 			prod.image 		= img1
 			prod.image_2 	= img2
 			prod.image_3 	= img3
-			prod.tags       = self.get_argument("tags","") # entra como string
+			prod.tags       = self.get_argument("tags","").encode("utf-8") # entra como string
 			prod.sell_price = self.get_argument("sell_price",0)
 
 			prod.Save("one")
