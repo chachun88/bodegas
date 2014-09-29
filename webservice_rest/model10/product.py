@@ -448,7 +448,7 @@ class Product(BaseModel):
 
                 for t in self.tags.split(","):
                     tag = Tag()
-                    tag.name = t
+                    tag.name = t.strip()
                     response = tag.Save()
 
                     if "success" in response:
@@ -525,7 +525,7 @@ class Product(BaseModel):
                 tag = Tag()
 
                 for t in self.tags.split(","):
-                    tag.name = t
+                    tag.name = t.strip()
                     response = tag.Save()
                     if "success" in response:
                         res = tag.AddTagProduct(response["success"],self.id)
@@ -572,7 +572,7 @@ class Product(BaseModel):
                 tag = Tag()
 
                 for t in self.tags.split(","):
-                    tag.name = t
+                    tag.name = t.strip()
                     response = tag.Save()
                     if "success" in response:
                         res = tag.AddTagProduct(response["success"],self.id)
