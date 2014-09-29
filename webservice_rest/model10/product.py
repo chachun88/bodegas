@@ -446,16 +446,24 @@ class Product(BaseModel):
                 except Exception,e:
                     return self.ShowError("Error updating product, {}".format(str(e)))
 
+                _tag = Tag()
+                remover_asociacion = _tag.RemoveTagsAsociation(self.id)
+
+                if "error" in remover_asociacion:
+                    return self.ShowError(remover_asociacion["error"])
+
                 for t in self.tags.split(","):
                     tag = Tag()
                     tag.name = t.strip()
-                    response = tag.Save()
+                    if tag.name != "":
+                        response = tag.Save()
 
-                    if "success" in response:
-                        res = tag.AddTagProduct(response["success"],self.id)
-                        # print res
-                    else:
-                        print response["error"]
+                        if "success" in response:
+                            res = tag.AddTagProduct(response["success"],self.id)
+                            if "error" in res:
+                                return self.ShowError(res["error"])
+                        else:
+                            print response["error"]
 
                 
 
@@ -522,17 +530,23 @@ class Product(BaseModel):
                 self.connection.commit()
                 # self.id = cur.fetchone()[0]
 
-                tag = Tag()
+                _tag = Tag()
+                remover_asociacion = _tag.RemoveTagsAsociation(self.id)
+
+                if "error" in remover_asociacion:
+                    return self.ShowError(remover_asociacion["error"])
 
                 for t in self.tags.split(","):
+                    tag = Tag()
                     tag.name = t.strip()
-                    response = tag.Save()
-                    if "success" in response:
-                        res = tag.AddTagProduct(response["success"],self.id)
-                        # if "error" in res:
-                            # print res["error"]
-                    # else:
-                    #   print response["success"]
+                    if tag.name != "":
+                        response = tag.Save()
+                        if "success" in response:
+                            res = tag.AddTagProduct(response["success"],self.id)
+                            if "error" in res:
+                                return self.ShowError(res["error"])
+                        else:
+                            print response["error"]
 
             else:
 
@@ -569,18 +583,23 @@ class Product(BaseModel):
 
                 self.id = cur.fetchone()["id"]
 
-                tag = Tag()
+                _tag = Tag()
+                remover_asociacion = _tag.RemoveTagsAsociation(self.id)
+
+                if "error" in remover_asociacion:
+                    return self.ShowError(remover_asociacion["error"])
 
                 for t in self.tags.split(","):
+                    tag = Tag()
                     tag.name = t.strip()
-                    response = tag.Save()
-                    if "success" in response:
-                        res = tag.AddTagProduct(response["success"],self.id)
-                        if "error" in res:
-                            print res["error"]
-                    else:
-                        print response["error"]
-                
+                    if tag.name != "":
+                        response = tag.Save()
+                        if "success" in response:
+                            res = tag.AddTagProduct(response["success"],self.id)
+                            if "error" in res:
+                                return self.ShowError(res["error"])
+                        else:
+                            print response["error"]
 
                 self.connection.commit()
 
@@ -646,14 +665,23 @@ class Product(BaseModel):
 
             cur.execute(q,p)
             producto = cur.fetchone()
-            producto["tags"] = "algo,mas algo"
+            
+            producto["tags"] = []
+
+            tag = Tag()
+            response = tag.GetTagsByProductId(producto["id"])
+
+            if "success" in response:
+                tags = response["success"]
+                for t in tags:
+                    producto["tags"].append(t["name"])
 
             if cur.rowcount > 0:
                 return self.ShowSuccessMessage(producto)
             else:
                 return self.ShowError("product with sku {} not found".format(sku))
-        except:
-            return self.ShowError("product cannot be initialized")
+        except Exception,e:
+            return self.ShowError("product cannot be initialized, {}".format(str(e)))
         
 
     def InitById(self, identifier):

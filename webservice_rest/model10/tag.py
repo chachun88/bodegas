@@ -126,7 +126,7 @@ class Tag(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''select id from "Tag_Product" where tag_id = %(tag_id)s and product_id = %(product_id)s'''
+        query = '''insert into "Tag_Product" (tag_id,product_id) values (%(tag_id)s,%(product_id)s) returning id'''
         parameters = {
         "tag_id":tag_id,
         "product_id":product_id
@@ -134,32 +134,32 @@ class Tag(BaseModel):
 
         try:
             cur.execute(query,parameters)
-
-            if cur.rowcount > 0:
-                identifier = cur.fetchone()["id"]
-                return self.ShowSuccessMessage(str(identifier))
-            else:
-
-                query = '''insert into "Tag_Product" (tag_id,product_id) values (%(tag_id)s,%(product_id)s) returning id'''
-
-                try:
-                    cur.execute(query,parameters)
-                    identifier = cur.fetchone()["id"]
-                    self.connection.commit()
-                    return self.ShowSuccessMessage(str(identifier))
-                except Exception,e:
-                    return self.ShowError("Error agregando relacion tag y producto, {}".format(str(e)))
-                finally:
-                    cur.close()
-                    self.connection.close()
-
+            identifier = cur.fetchone()["id"]
+            self.connection.commit()
+            return self.ShowSuccessMessage(str(identifier))
         except Exception,e:
-            self.connection.close()
+            return self.ShowError("Error agregando relacion tag y producto, {}".format(str(e)))
+        finally:
             cur.close()
-            return self.ShowError("Error al buscar relacion tag y producto, {}".format(str(e)))
+            self.connection.close()
 
         
+    def RemoveTagsAsociation(self,product_id):
 
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''delete from "Tag_Product" where product_id = %(product_id)s'''
+        parameters = {"product_id":product_id}
+
+        try:
+            cur.execute(query,parameters)
+            self.connection.commit()
+            return self.ShowSuccessMessage("Asociaciones al producto {} se han borrado correctamente".format(product_id))
+        except Exception,e:
+            return self.ShowError("Error agregando relacion tag y producto, {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
         
 
 
