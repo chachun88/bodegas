@@ -438,7 +438,7 @@ class Product(BaseModel):
                     # print cur.mogrify(q,p)
                     cur.execute(q,p)
 
-                    # self.connection.commit()
+                    self.connection.commit()
                     self.id = cur.fetchone()["id"]
 
                     # print self.id
@@ -463,23 +463,13 @@ class Product(BaseModel):
                             if "error" in res:
                                 return self.ShowError(res["error"])
                         else:
-                            print response["error"]
+                            return self.ShowError(response["error"])
 
-                
+                return self.ShowSuccessMessage("product correctly updated by sku")
 
             elif self.id.strip() != "":
 
-                for i in range(0,len(sizes)):
-                    try:
-                        q = '''update "Product" set size = array_append(size ,%(size)s) WHERE NOT (upvotes_ids @>array[%(size)s])'''
-                        p = {
-                        "size":sizes[i]
-                        }
-                        cur.execute(q,p)
-                        self.connection.commit()
-                    except:
-                        print " except "+str(e)+ " i "  + str(i)
-                        pass
+                sizes=self.size.split(',')
 
                 q = '''update "Product" set 
                 name=%(name)s 
@@ -508,7 +498,7 @@ class Product(BaseModel):
                         "description":self.description,
                         "brand":self.brand,
                         "manufacturer":self.manufacturer,
-                        # "size":self.sizes,
+                        "size":sizes,
                         "color":self.color,
                         "material":self.material,
                         "bullet_1":self.bullet_1,
@@ -546,7 +536,9 @@ class Product(BaseModel):
                             if "error" in res:
                                 return self.ShowError(res["error"])
                         else:
-                            print response["error"]
+                            return self.ShowError(response["error"])
+
+                return self.ShowSuccessMessage("product correctly updated by id")
 
             else:
 
@@ -580,6 +572,7 @@ class Product(BaseModel):
                 # print cur.mogrify(q.strip(),p)
 
                 cur.execute(q,p)
+                self.connection.commit()
 
                 self.id = cur.fetchone()["id"]
 
@@ -599,24 +592,14 @@ class Product(BaseModel):
                             if "error" in res:
                                 return self.ShowError(res["error"])
                         else:
-                            print response["error"]
+                            return self.ShowError(response["error"])
 
-                self.connection.commit()
+                
 
-                # for i in range(count):
-
-                #   q = '''update "Product" set size = array_append(size ,%(size)s) WHERE NOT (upvotes_ids @>array[%(size)s]), color = array_append(color ,%(color)s) WHERE NOT (upvotes_ids @>array[%(color)s])
-                #   where sku = %(sku)s'''
-                #   p = {
-                #   "sku":self.sku,
-                #   "size":sizes[i],
-                #   "color":colors[i]
-                #   }
-                #   cur.execute(q,p)
-                #   self.connection.commit()
+                return self.ShowSuccessMessage("product correctly inserted")
 
 
-            return self.ShowSuccessMessage("product correctly saved")
+            
 
         except Exception,e:
             return self.ShowError("product could not be saved, error:{}".format(str(e)))
