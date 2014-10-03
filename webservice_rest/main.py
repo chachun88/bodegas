@@ -122,7 +122,10 @@ class Application(tornado.web.Application):
             (r"/contact/gettypes",                  contact_handler.GetTypesHandler),
 
             (r"/tag/save",                       tag_handler.SaveHandler),
-            (r"/tag/addtagproduct",              tag_handler.AddTagProductHandler)
+            (r"/tag/addtagproduct",              tag_handler.AddTagProductHandler),
+            (r"/tag/list",                       tag_handler.ListHandler),
+            (r"/tag/initbyid",                   tag_handler.InitByIdHandler),
+            (r"/tag/productsbytagid",            tag_handler.GetProductsByTagIdHandler)
             
             ]
 

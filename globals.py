@@ -8,7 +8,7 @@ Jueves 12 dic 2012
 reutilizado por chinostroza en tellmecuando
 reutilizado por estefy en bodegas
 '''
-debugMode = False
+debugMode = True
 
 BODEGA_PORT=9007
 WS_PORT=8890
@@ -84,6 +84,9 @@ class Menu:
     # sub_menu 
     CLIENTES_LISTAR = "Lista de clientes"
     # end sub_menu
+
+    TAGS = "Tags"
+    TAGS_LISTAR = "Lista de Tags"
 
     SALIR = "Salir"
 

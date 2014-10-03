@@ -374,9 +374,9 @@ class Product(BaseModel):
 
 			return urllib.urlopen(url).read()
 
-	def get_product_list(self):
+	def get_product_list(self,items=100):
 			
-		url = self.wsurl()+"/product/list?token=" + self.token + "&items=100"
+		url = self.wsurl()+"/product/list?token=" + self.token + "&items={}".format(items)
 		content = urllib2.urlopen(url).read()
 
 		# parse content to array data

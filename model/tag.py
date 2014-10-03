@@ -54,3 +54,42 @@ class Tag(BaseModel):
         json_obj = urllib.urlopen(url).read()
 
         return json_util.loads(json_obj)
+
+    def List(self,page,items):
+
+        url = self.wsurl() + "/tag/list?token={}".format(self.token)
+        url += "&page={}".format(page)
+        url += "&items={}".format(items)
+
+        json_str = urllib.urlopen(url).read()
+
+        return json_util.loads(json_str)
+
+    def InitById(self,identificador):
+
+        url = self.wsurl() + "/tag/initbyid?token={}".format(self.token)
+        url += "&id={}".format(identificador)
+
+        json_str = urllib.urlopen(url).read()
+
+        respuesta = json_util.loads(json_str)
+
+        if "success" in respuesta:
+
+            data = respuesta["success"]
+
+            self.identifier = data["id"]
+            self.name       = data["name"]
+
+        return respuesta
+
+    def GetProductsByTagId(self,identificador):
+
+        url = self.wsurl() + "/tag/productsbytagid?token={}".format(self.token)
+        url += "&id={}".format(identificador)
+
+        json_str = urllib.urlopen(url).read()
+
+        respuesta = json_util.loads(json_str)
+
+        return respuesta

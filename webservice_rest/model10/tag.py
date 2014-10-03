@@ -156,34 +156,86 @@ class Tag(BaseModel):
             self.connection.commit()
             return self.ShowSuccessMessage("Asociaciones al producto {} se han borrado correctamente".format(product_id))
         except Exception,e:
-            return self.ShowError("Error agregando relacion tag y producto, {}".format(str(e)))
+            return self.ShowError("Error eliminando relacion tag y producto, {}".format(str(e)))
         finally:
             cur.close()
             self.connection.close()
         
+    def List(self,page=1,items=20):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        limit = int(items)
+        page = int(page)
+        offset = (page-1) * limit
+
+        query = '''select * from "Tag" limit %(limit)s offset %(offset)s'''
+        parameters = {
+        "limit":limit,
+        "offset":offset
+        }
+
+        try:
+            cur.execute(query,parameters)
+            lista = cur.fetchall()
+            return self.ShowSuccessMessage(lista)
+        except Exception,e:
+            return self.ShowError("Error al obtener lista de tags, {}".format(str(e)))
+
+    def RemoveTagsAsociationByTagId(self,tag_id):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''delete from "Tag_Product" where tag_id = %(tag_id)s'''
+        parameters = {"tag_id":tag_id}
+
+        try:
+            cur.execute(query,parameters)
+            self.connection.commit()
+            return self.ShowSuccessMessage("Asociaciones al tag {} se han borrado correctamente".format(product_id))
+        except Exception,e:
+            return self.ShowError("Error eliminando relacion tag y producto, {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
+
+    def InitById(self,identificador=""):
+
+        if identificador != "":
+
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            query = '''select * from "Tag" where id = %(identificador)s'''
+            parameters = {"identificador":identificador}
+
+            try:
+                cur.execute(query,parameters)
+                tag = cur.fetchone()
+                return self.ShowSuccessMessage(tag)
+            except Exception,e:
+                return self.ShowError("Error al inicializar tag por id, {}".format(str(e)))
+
+        else:
+
+            return self.ShowError("Identificador viene vacío")
 
 
+    def GetProductsByTagId(self,_id):
 
-    # def Exists(self,name):
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-    #   cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = '''select product_id from "Tag" t left join "Tag_Product" tp on tp.tag_id = t.id where tp.tag_id = %(id)s'''
+        parameters = {
+        "id":_id
+        }
 
-    #   query = '''select count(*) cantidad from "Tags" where name = %(name)s'''
-    #   parameters = {
-    #   "name":name
-    #   }
-
-    #   try:
-    #       cur.execute(query,parameters)
-    #       cantidad = cur.fetchone()["cantidad"]
-
-    #       if cantidad > 0:
-    #           return self.ShowSuccessMessage(True)
-    #       else:
-    #           return self.ShowSuccessMessage(False)
-
-    #   except Exception,e:
-    #       return self.ShowError("Error al buscar tags por nombre: {}".format(str(e)))
-    #   finally:
-    #       self.connection.close()
-    #       cur.close()
+        try:
+            cur.execute(query,parameters)
+            tags = cur.fetchall()
+            return self.ShowSuccessMessage(tags)
+        except Exception,e:
+            return self.ShowError("Error al buscar tags por tag_id: {}".format(str(e)))
+        finally:
+            self.connection.close()
+            cur.close()
+    

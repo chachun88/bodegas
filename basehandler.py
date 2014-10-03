@@ -77,6 +77,10 @@ class BaseHandler(tornado.web.RequestHandler):
             pass
         return self.get_secure_cookie("user_bodega")
 
+    def CustomDateFormat(self,date):
+
+        return date.strftime('%d/%m/%Y %H:%M')
+
     def render(self, template_name ,**kwargs):
 
         ## loading current_user
@@ -89,7 +93,7 @@ class BaseHandler(tornado.web.RequestHandler):
         # global vars
         kwargs["MoneyFormat"] = MoneyFormat
         kwargs["side_menu"] = self.side_menu
-        # kwargs["current_user"] = user
+        kwargs["CustomDateFormat"] = self.CustomDateFormat
 
         ## overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)

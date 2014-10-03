@@ -26,9 +26,7 @@
 						<th>Imagen</th>
 						<th class="hidden-xs " >Categor&iacutea</th>
 						<th class="hidden-xs " >SKU</th>
-						<th class="" >Artículo</th>
 						<th class="" >Nombre</th>
-						<th class="" >Descripción</th>
 						<th class="hidden-xs " >Marca</th>
 						<th class="hidden-xs">Proveedor</th>
 						<th class="hidden-xs">Tallas</th>
@@ -55,13 +53,7 @@
 						</td>
 						<td class="hidden-xs-portrait">{{ p["category"] }}</td>
 						<td class="hidden-xs-portrait">{{ p["sku"] }}</td>
-						<td>
-							{% if "upc" in p %}
-							{{ p["upc"] }}
-							{% end %}
-						</td>
 						<td class="hidden-xs-portrait">{{ p["name"] }}</td> 
-						<td class="hidden-xs-portrait">{{ p["description"] }}</td>
 						<td>{{ p["brand"] }}</td>
 						<td>{{ p["manufacturer"] }}</td>
 						<td>{{ ", ".join(p["size"]) }}</td>	

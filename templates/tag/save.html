@@ -1,0 +1,124 @@
+{% extends "../base.html" %}
+
+
+{% block title %}
+	{% if mode == "edit" %}
+		Editar Producto 
+	{% elif mode == "add" %}
+		Agregar Producto
+	{% end %}
+{% end %}
+
+{% block caption %}
+	{% if mode == "edit" %}
+		permite editar un tag
+	{% elif mode == "add" %}
+		permite agregar un tag
+	{% end %}
+{% end %}
+
+{% block body %}
+{% if dn == "error" %}
+<div class="alert alert-warning alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Error!</strong> {{mensaje}}
+</div>
+{% end %}
+<div class="col-md-7">
+	<section class="widget">
+		<div class="body">
+			<form action="/product/add" id="product-form" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+				<fieldset>
+				{% if mode == "edit" %}
+					<legend class="section">Editar Tag</legend>
+				{% elif mode == "add"  %}
+					<legend class="section">Agregar Tag</legend>
+				{% end %}
+					<div class="control-group">
+						<label class="control-label" for="prefix">Nombre</label>
+						<div class="controls form-group">
+							<div class="col-sm-8"><input placeholder="Nombre" name="name" type="text" class="form-control" value="{{ tag.name }}"></div>
+						</div>
+					</div>
+					<div class="control-group">
+                        <label class="control-label" for="multiple">
+                            Productos
+                        </label>
+                        <div class="controls form-group">
+                            <select data-placeholder="Productos Asociados"
+                                class="chzn-select select-block-level" tabindex="-1"
+                                multiple="multiple"
+                                name="products" 
+                                id="multiple">
+                                {% for p in product_list %}
+                                    {% if p['sku'] in asociados %}
+                                        <option value="{{p['sku']}}" selected="selected">{{p['name']}} {{p['color'][0]}}</option>
+                                    {% else %}
+                                        <option value="{{p['sku']}}">{{p['name']}} {{p['color'][0]}}</option>
+                                    {% end %}
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+				</fieldset>
+				<div class="form-actions">
+					
+				{% if mode == "edit" %}
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				{% elif mode == "add"  %}
+					<button type="submit" class="btn btn-primary">Validar y agregar</button>
+				{% end %}
+					<a href="/product/list" class="btn btn-default">Cancelar</a>
+				</div>
+				{% raw xsrf_form_html() %}
+			</form>
+		</div>
+	</section>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function()
+		{
+			// load image from client
+			$(".image-item-fille").on("change", function(ev)
+			{
+				var f = ev.target.files[0];
+				var fr = new FileReader();
+				var img = $( "img", $(this).parent());
+
+				fr.onload = function(ev2)
+				{
+					console.dir(ev2);
+					img.attr("src", ev2.target.result);
+
+				};
+
+				fr.readAsDataURL(f);
+			});
+
+			// click input from image
+			$(".image-list img").click(function()
+			{
+				$("input", $(this).parent()).click();
+			});
+
+			// remove an image
+			$(".close-image-list").click(function()
+			{
+				var image_name = $(this).attr("image-name");
+				var element = $(this);
+				var img_display = $("img", element.parent());
+				var file = $("input", element.parent());
+
+				$.get("/imageremove?image_name=" + image_name)
+				.done(function(data)
+					{
+						img_display.attr("src", "/image/default_image.png?mw=60");
+						file.val("");
+					});
+			});
+
+
+		});
+</script>
+{% end %}

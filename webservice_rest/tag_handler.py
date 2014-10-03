@@ -47,3 +47,72 @@ class AddTagProductHandler(BaseHandler):
 			response = tag.AddTagProduct(tag_id,product_id)
 			return json_util.dumps(response)
 
+class ListHandler(BaseHandler):
+
+	def get(self):
+
+		page = self.get_argument("page",0)
+		items = self.get_argument("items",20)
+
+		tag = Tag()
+		res = tag.List(page,items)
+
+		self.write(json_util.dumps(res))
+
+class RemoveHandler(BaseHandler):
+
+	def get(self):
+
+		identificador = self.get_argument("id","")
+
+		if identificador != "":
+
+			tag = Tag()
+			eliminar_asociaciones = tag.RemoveTagsAsociationByTagId(identificador)
+
+			if "success" in eliminar_asociaciones:
+
+				eliminar_tag = tag.Remove(identificador)
+
+				self.write(json_util.dumps(eliminar_tag))
+				
+			else:
+				self.write(json_util.dumps(eliminar_asociaciones))
+
+		else:
+
+			self.write(json_util.dumps({"error":"identificador del tag no debe estar vacío"}))
+
+class InitByIdHandler(BaseHandler):
+
+	def get(self):
+
+		identificador = self.get_argument("id","")
+
+		if identificador != "":
+
+			tag = Tag()
+			res = tag.InitById(identificador)
+
+			self.write(json_util.dumps(res))
+
+		else:
+
+			self.write(json_util.dumps({"error":"Identificador del tag viene vacío"}))
+
+class GetProductsByTagIdHandler(BaseHandler):
+
+	def get(self):
+
+		identificador = self.get_argument("id","")
+
+		if identificador != "":
+
+			tag = Tag()
+			res = tag.GetProductsByTagId(identificador)
+
+			self.write(json_util.dumps(res))
+
+		else:
+
+			self.write(json_util.dumps({"error":"Identificador del tag viene vacío"}))

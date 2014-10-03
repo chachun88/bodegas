@@ -74,10 +74,10 @@
 							{{c["bussiness"]}}
 						</td>
 						<td>
-							{{c["registration_date"]}}
+							{{CustomDateFormat(c["registration_date"])}}
 						</td>
 						<td>
-							{{c["last_view"]}}
+							{{CustomDateFormat(c["last_view"])}}
 						</td>
 						<td>
 							<a class="btn btn-sm btn-primary" href="/customer/save?id={{c['id']}}">Editar</a><br/>
