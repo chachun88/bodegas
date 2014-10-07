@@ -39,7 +39,7 @@ class CellarListHandler(BaseHandler):
 		page = self.get_argument("page", 1)
 		items = self.get_argument("items", 10)
 
-		self.write(json_util.dumps(Cellar().GetList(int(page), int(items))))
+		self.write(Cellar().GetList(int(page), int(items)))
 		
 
 class CellarRemoveHandler(BaseHandler):
