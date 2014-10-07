@@ -337,20 +337,20 @@ class Cellar(BaseModel):
         cur.execute(query,parametros)
         cellars = cur.fetchall()
 
-        # data_rtn = [] ## return this data
+        data_rtn = [] ## return this data
 
-        # for d in cellars:
+        for d in cellars:
 
-        #   cellar = Cellar()
-        #   cellar.id = d["id"]
-        #   cellar.name = d["name"]
-        #   cellar.description = d["description"]
+          cellar = Cellar()
+          cellar.id = d["id"]
+          cellar.name = d["name"]
+          cellar.description = d["description"]
 
-        #   data_rtn.append(cellar.Print())
+          data_rtn.append(cellar.Print())
 
-        # return data_rtn
+        return json_util.dumps(data_rtn)
 
-        return json_util.dumps(cellars)
+        # return json_util.dumps(cellars)
 
     ### WARNING: this method is not opmitimized
     #@return direct database collection
