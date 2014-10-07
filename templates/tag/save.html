@@ -27,13 +27,14 @@
 <div class="col-md-7">
 	<section class="widget">
 		<div class="body">
-			<form action="/product/add" id="product-form" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+			<form action="/tag/add" id="tag-form" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 				<fieldset>
 				{% if mode == "edit" %}
 					<legend class="section">Editar Tag</legend>
 				{% elif mode == "add"  %}
 					<legend class="section">Agregar Tag</legend>
 				{% end %}
+					<input type="hidden" name="id" value="{{ tag.identifier }}">
 					<div class="control-group">
 						<label class="control-label" for="prefix">Nombre</label>
 						<div class="controls form-group">
@@ -48,13 +49,13 @@
                             <select data-placeholder="Productos Asociados"
                                 class="chzn-select select-block-level" tabindex="-1"
                                 multiple="multiple"
-                                name="products" 
+                                name="asociados" 
                                 id="multiple">
                                 {% for p in product_list %}
-                                    {% if p['sku'] in asociados %}
-                                        <option value="{{p['sku']}}" selected="selected">{{p['name']}} {{p['color'][0]}}</option>
+                                    {% if p['id'] in asociados %}
+                                        <option value="{{p['id']}}" selected="selected">{{p['name']}} {{p['color']}}</option>
                                     {% else %}
-                                        <option value="{{p['sku']}}">{{p['name']}} {{p['color'][0]}}</option>
+                                        <option value="{{p['id']}}">{{p['name']}} {{p['color']}}</option>
                                     {% end %}
                                 {% end %}
                             </select>
@@ -68,7 +69,7 @@
 				{% elif mode == "add"  %}
 					<button type="submit" class="btn btn-primary">Validar y agregar</button>
 				{% end %}
-					<a href="/product/list" class="btn btn-default">Cancelar</a>
+					<a href="/tag/list" class="btn btn-default">Cancelar</a>
 				</div>
 				{% raw xsrf_form_html() %}
 			</form>

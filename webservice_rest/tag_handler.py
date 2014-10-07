@@ -11,7 +11,7 @@ class SaveHandler(BaseHandler):
 	def get(self):
 				
 		if not self.ValidateToken():
-			return json_util.dumps({"error":"invalid token"})
+			self.write(json_util.dumps({"error":"invalid token"}))
 
 		name = self.get_argument("name","")
 		identifier = self.get_argument("identifier","")
@@ -19,7 +19,7 @@ class SaveHandler(BaseHandler):
 		tag = Tag()
 
 		if name.strip() == "":
-			return json_util.dumps({"error":"name is empty"})
+			self.write(json_util.dumps({"error":"name is empty"}))
 		else:
 			tag.name = name
 
@@ -28,24 +28,24 @@ class SaveHandler(BaseHandler):
 
 		response = tag.Save()
 
-		return json_util.dumps(response)
+		self.write(json_util.dumps(response))
 
 class AddTagProductHandler(BaseHandler):
 
 	def get(self):
 
 		if not self.ValidateToken():
-			return json_util.dumps({"error":"invalid token"})
+			self.write(json_util.dumps({"error":"invalid token"}))
 
 		product_id = self.get_argument("product_id","")
 		tag_id = self.get_argument("tag_id","")
 
 		if product_id == "" or tag_id == "":
-			return json_util.dumps({"error":"falta product_id o tag_id"})
+			self.write(json_util.dumps({"error":"falta product_id o tag_id"}))
 		else:
 			tag = Tag()
 			response = tag.AddTagProduct(tag_id,product_id)
-			return json_util.dumps(response)
+			self.write(json_util.dumps(response))
 
 class ListHandler(BaseHandler):
 
@@ -72,7 +72,9 @@ class RemoveHandler(BaseHandler):
 
 			if "success" in eliminar_asociaciones:
 
-				eliminar_tag = tag.Remove(identificador)
+				tag.id = identificador
+
+				eliminar_tag = tag.Remove()
 
 				self.write(json_util.dumps(eliminar_tag))
 				
@@ -116,3 +118,37 @@ class GetProductsByTagIdHandler(BaseHandler):
 		else:
 
 			self.write(json_util.dumps({"error":"Identificador del tag viene vacío"}))
+
+class RemoveTagsAsociationByTagIdHandler(BaseHandler):
+
+	def get(self):
+		
+		tag_id = self.get_argument("tag_id","")
+
+		if tag_id != "":
+
+			tag = Tag()
+			res = tag.RemoveTagsAsociationByTagId(tag_id)
+
+			self.write(json_util.dumps(res))
+
+		else:
+
+			self.write(json_util.dumps({"error":"Identificador del tag viene vacío"}))
+
+class HideShowHandler(BaseHandler):
+
+	def get(self):
+		
+		tag_id = self.get_argument("tag_id","")
+		visible = self.get_argument("visible",0)
+
+		if tag_id != "":
+
+			tag = Tag()
+			res = tag.HideShow(tag_id,int(visible))
+			self.write(json_util.dumps(res))
+
+		else:
+
+			self.write(json_util.dumps({"error":"Identificador de tag viene vacío"}))

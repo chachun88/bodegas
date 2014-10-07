@@ -39,7 +39,7 @@ class Tag(BaseModel):
         url = self.wsurl() + "/tag/save"
         url += "?token={}".format(self.token)
         url += "&identifier={}".format(self.identifier)
-        url += "&name={}".format(name)
+        url += "&name={}".format(self.name)
 
         json_obj = urllib.urlopen(url).read()
 
@@ -93,3 +93,38 @@ class Tag(BaseModel):
         respuesta = json_util.loads(json_str)
 
         return respuesta
+
+    def RemoveTagsAsociationByTagId(self,tag_id):
+
+        url = self.wsurl() + "/tag/removeasociationbytagid?token={}".format(self.token)
+        url += "&tag_id={}".format(tag_id)
+
+        json_str = urllib.urlopen(url).read()
+
+        respuesta = json_util.loads(json_str)
+
+        return respuesta
+
+    def HideShow(self,tag_id,visible=0):
+
+        url = self.wsurl() + "/tag/hideshow?token={}".format(self.token)
+        url += "&tag_id={}".format(tag_id)
+        url += "&visible={}".format(visible)
+
+        json_str = urllib.urlopen(url).read()
+
+        respuesta = json_util.loads(json_str)
+
+        return respuesta
+
+    def Remove(self,tag_id):
+
+        url = self.wsurl() + "/tag/remove?token={}".format(self.token)
+        url += "&id={}".format(tag_id)
+
+        json_str = urllib.urlopen(url).read()
+
+        respuesta = json_util.loads(json_str)
+
+        return respuesta
+

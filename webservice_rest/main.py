@@ -125,7 +125,10 @@ class Application(tornado.web.Application):
             (r"/tag/addtagproduct",              tag_handler.AddTagProductHandler),
             (r"/tag/list",                       tag_handler.ListHandler),
             (r"/tag/initbyid",                   tag_handler.InitByIdHandler),
-            (r"/tag/productsbytagid",            tag_handler.GetProductsByTagIdHandler)
+            (r"/tag/productsbytagid",            tag_handler.GetProductsByTagIdHandler),
+            (r"/tag/removeasociationbytagid",    tag_handler.RemoveTagsAsociationByTagIdHandler),
+            (r"/tag/hideshow",                   tag_handler.HideShowHandler),
+            (r"/tag/remove",                     tag_handler.RemoveHandler)
             
             ]
 

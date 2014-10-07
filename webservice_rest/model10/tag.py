@@ -192,7 +192,7 @@ class Tag(BaseModel):
         try:
             cur.execute(query,parameters)
             self.connection.commit()
-            return self.ShowSuccessMessage("Asociaciones al tag {} se han borrado correctamente".format(product_id))
+            return self.ShowSuccessMessage("Asociaciones al tag {} se han borrado correctamente".format(tag_id))
         except Exception,e:
             return self.ShowError("Error eliminando relacion tag y producto, {}".format(str(e)))
         finally:
@@ -229,13 +229,37 @@ class Tag(BaseModel):
         "id":_id
         }
 
+        lista_product_id = []
+
         try:
             cur.execute(query,parameters)
             tags = cur.fetchall()
-            return self.ShowSuccessMessage(tags)
+
+            for t in tags:
+                lista_product_id.append(t["product_id"])
+
+            return self.ShowSuccessMessage(lista_product_id)
         except Exception,e:
             return self.ShowError("Error al buscar tags por tag_id: {}".format(str(e)))
         finally:
             self.connection.close()
             cur.close()
+
+    def HideShow(self,tag_id,visible):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''update "Tag" set visible = %(visible)s where id = %(id)s'''
+        parameters = {
+        "visible":visible,
+        "id":tag_id
+        }
+
+        try:
+            cur.execute(query,parameters)
+            self.connection.commit()
+            return self.ShowSuccessMessage(tag_id)
+        except Exception,e:
+            return self.ShowError(str(e))
+
     

@@ -43,7 +43,7 @@ class RemoveHandler(BaseHandler):
 			res = tag.Remove(identificador)
 
 			if "success" in res:
-				self.redirect("/tags")
+				self.redirect("/tag/list")
 			else:
 				self.write(res["error"])
 		else:
@@ -54,7 +54,7 @@ class HideShowHandler(BaseHandler):
 	def get(self):
 
 		identificador = self.get_argument("id","")
-		tipo = self.get_argument("type","")
+		tipo = self.get_argument("visible",0)
 
 		if identificador != "" and tipo != "":
 			
@@ -62,7 +62,7 @@ class HideShowHandler(BaseHandler):
 			res = tag.HideShow(identificador,tipo)
 
 			if "success" in res:
-				self.redirect("/tags")
+				self.redirect("/tag/list")
 			else:
 				self.write(res["error"])
 		else:
@@ -96,4 +96,48 @@ class EditHandler(BaseHandler):
 				self.write(res["error"])
 		else:
 			self.write("identificador del tag está vacío")
+
+class AddHandler(BaseHandler):
+
+	def post(self):
+
+		nombre = self.get_argument("name","")
+		asociados_obj = self.get_arguments("asociados","")
+		asociados_str = json_util.dumps(asociados_obj)
+		identificador = self.get_argument("id","")
+
+
+
+		if nombre == "" or asociados_str == "[]":
+			self.write("Debe llenar todos los campos del formulario")
+		else:
+			tag = Tag()
+			tag.name = nombre
+			tag.identifier = identificador
+
+			save = tag.Save()
+
+			if "success" in save:
+
+				remove_asociation = tag.RemoveTagsAsociationByTagId(tag.identifier)
+
+				if "success" in remove_asociation:
+
+					for product_id in asociados_obj:
+						response = tag.AddTagProduct(product_id,tag.identifier)
+
+						#self.write(json_util.dumps(response))
+
+					self.write("ok")
+
+				else:
+
+					self.write(remove_asociation["error"])
+
+			else:
+
+				self.write(save["error"])
+
+			#self.write("nombre:{} asociados:{} identificador:{}".format(nombre,asociados,identificador))
+
 

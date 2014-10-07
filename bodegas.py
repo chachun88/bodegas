@@ -134,7 +134,8 @@ class Application(tornado.web.Application):
             (r"/tag/list",              tag_handler.TagHandler),
             (r"/tag/remove",            tag_handler.RemoveHandler),
             (r"/tag/edit",              tag_handler.EditHandler),
-            (r"/tag/hideshow",          tag_handler.HideShowHandler)
+            (r"/tag/hideshow",          tag_handler.HideShowHandler),
+            (r"/tag/add",               tag_handler.AddHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 

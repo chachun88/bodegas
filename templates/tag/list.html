@@ -27,15 +27,21 @@
 					{% for tag in lista %}
 					<tr>
 						<th>{{tag["name"]}}</th>
-						<th>{{tag["visible"]}}</th>
 						<th>
-							<a class="btn btn-primary" href="/tag/remove?id={{tag['id']}}">Eliminar</a>
-							<a class="btn btn-success" href="/tag/edit?id={{tag['id']}}">Editar</a>
 							{% if int(tag["visible"]) == 0 %}
-							<a class="btn btn-info" href="/tag/hideshow?id={{tag['id']}}&type=show">Mostrar</a>
+								<i class="fa fa-times"></i>
 							{% else %}
-							<a class="btn btn-info" href="/tag/hideshow?id={{tag['id']}}&type=hide">Ocultar</a>
+								<i class="fa fa-check"></i>
 							{% end %}
+						</th>
+						<th>
+							{% if int(tag["visible"]) == 0 %}
+							<a class="btn btn-success" href="/tag/hideshow?id={{tag['id']}}&visible=1">Mostrar</a>
+							{% else %}
+							<a class="btn btn-success" href="/tag/hideshow?id={{tag['id']}}&visible=0">Ocultar</a>
+							{% end %}
+							<a class="btn btn-primary" href="/tag/edit?id={{tag['id']}}">Editar</a>
+							<a class="btn btn-danger" href="/tag/remove?id={{tag['id']}}">Eliminar</a>
 						</th>
 					</tr>
 					{% end %}
