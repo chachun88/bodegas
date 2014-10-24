@@ -21,6 +21,8 @@ import cgitb; cgitb.enable()
 import sys
 import glob
 
+from bson import json_util
+
 from basehandler import BaseHandler
 from globals import port, debugMode, carpeta_img, userMode, Menu
 from model.product import Product
@@ -259,5 +261,44 @@ class ProductEditHandler(BaseHandler):
 			self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="edit")
 
  		 
-		
+class FastEditHandler(BaseHandler):
+
+	@tornado.web.authenticated
+	def post(self):
+
+		prod = Product()
+
+		res = prod.InitWithId(self.get_argument("id", ""))
+
+		if res == "ok":
+
+			prod.name		= self.get_argument("name", "").encode('utf-8')
+			prod.description= self.get_argument("description", "").encode('utf-8')
+			prod.color 		= self.get_argument("color", "").encode('utf-8')
+			prod.price= self.get_argument("price", "").encode('utf-8')
+			prod.sell_price 	= self.get_argument("sell_price", "").encode('utf-8')
+			prod.category = self.get_argument("category","").encode("utf-8")
+			prod.sku = self.get_argument("sku","").encode("utf-8")
+			prod.manufacturer = self.get_argument("manufacturer","").encode("utf-8")
+			prod.brand = self.get_argument("brand","").encode("utf-8")
+
+			prod.upc = prod.upc.encode("utf-8")
+			prod.size = ",".join(prod.size).encode("utf-8")
+			prod.material = prod.material.encode("utf-8")
+			prod.bullet_1 = prod.bullet_1.encode("utf-8")
+			prod.bullet_2 = prod.bullet_2.encode("utf-8")
+			prod.bullet_3 = prod.bullet_3.encode("utf-8")
+			prod.currency = prod.currency.encode("utf-8")
+			prod.image = prod.image.encode("utf-8")
+			prod.image_2 = prod.image_2.encode("utf-8")
+			prod.image_3 = prod.image_3.encode("utf-8")
+			prod.tags = ",".join(prod.tags).encode("utf-8")
+			
+			respuesta = prod.Save()
+
+			self.write(respuesta)
+				
+
+		else:
+			self.write(res)
 
