@@ -1,0 +1,78 @@
+{% extends "../base.html" %}
+
+{% block title %}
+	Precios de despachos
+{% end %}
+
+{% block caption %}
+	Administrador de precios de despachos
+{% end %}			
+{% block body %}
+<div class="col-md-8">
+	<section class="widget">
+		<div class="body">
+			<form role="form" class="form-horizontal" action="/shipping/list" method="post">
+				<div class="control-group">
+					<label for="Nombre" class="col-md-3">Nombre</label>
+					<div class="col-md-5">
+						<input type="text" name="name" class="form-control" id="Nombre" placeholder="Nombre">
+					</div>
+				</div>
+
+				<div class="control-group body">
+					<div class="col-md-8 text-right">
+						<input type="submit" class="btn btn-primary" value="Guardar">
+					</div>
+				</div>
+
+				{% raw xsrf_form_html() %}
+			</form>
+			<form role="form" class="form-horizontal" action="/shipping/save" method="post">
+				<div class="control-group body">
+					<label for="Ciudad_From" class="col-md-3">Ciudad Origen</label>
+					<div class="col-md-5">
+						<select name="from_city_id" class="form-control">
+							{% for c in cities %}
+							<option value="{{c['id']}}">{{c['name']}}</option>
+							{% end %}
+						</select>
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="Ciudad_To" class="col-md-3">Ciudad Destino</label>
+					<div class="col-md-5">
+						<select name="to_city_id" class="form-control">
+							{% for c in cities %}
+							<option value="{{c['id']}}">{{c['name']}}</option>
+							{% end %}
+						</select>
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="PrecioCorreos" class="col-md-3">Precio Correos</label>
+					<div class="col-md-5">
+						<input type="text" name="correos_price" class="form-control">
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="PrecioChilexpress" class="col-md-3">Precio Chilexpress</label>
+					<div class="col-md-5">
+						<input type="text" name="chilexpress_price" class="form-control">
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="PrecioGiani" class="col-md-3">Precio Giani</label>
+					<div class="col-md-5">
+						<input type="text" name="price" class="form-control">
+					</div>
+				</div>
+				<div class="control-group body">
+					<div class="col-md-8 text-right">
+						<input type="submit" class="btn btn-primary" value="Guardar">
+					</div>
+				</div>
+			</form>
+		</div>
+	</section>
+</div>
+{% end %}

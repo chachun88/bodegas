@@ -21,6 +21,8 @@ import color_handler
 import customer_handler
 import contact_handler
 import tag_handler
+import city_handler
+import shipping_handler
 
 import doc_handler
 from bson.objectid import ObjectId
@@ -128,7 +130,12 @@ class Application(tornado.web.Application):
             (r"/tag/productsbytagid",            tag_handler.GetProductsByTagIdHandler),
             (r"/tag/removeasociationbytagid",    tag_handler.RemoveTagsAsociationByTagIdHandler),
             (r"/tag/hideshow",                   tag_handler.HideShowHandler),
-            (r"/tag/remove",                     tag_handler.RemoveHandler)
+            (r"/tag/remove",                     tag_handler.RemoveHandler),
+
+            (r"/city/save",                      city_handler.SaveHandler),
+            (r"/city/list",                      city_handler.ListHandler),
+
+            (r"/shipping/save",                      shipping_handler.SaveHandler)
             
             ]
 

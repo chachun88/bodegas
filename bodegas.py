@@ -50,6 +50,7 @@ from order_detail_handler import AddOrderDetailHandler, ListOrderDetailHandler
 from customer_handler import CustomerHandler, CustomerSaveHandler, CustomerActionsHandler, CustomerAddContactHandler, CustomerViewContactHandler, ContactActionsHandler, EditContactHandler
 
 import tag_handler
+import shipping_handler
 
 #something
 define("port", default=port, help="run on the given port", type=int)
@@ -136,7 +137,10 @@ class Application(tornado.web.Application):
             (r"/tag/remove",            tag_handler.RemoveHandler),
             (r"/tag/edit",              tag_handler.EditHandler),
             (r"/tag/hideshow",          tag_handler.HideShowHandler),
-            (r"/tag/add",               tag_handler.AddHandler)
+            (r"/tag/add",               tag_handler.AddHandler),
+
+            (r"/shipping/list",         shipping_handler.ListHandler),
+            (r"/shipping/save",         shipping_handler.SaveHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 
@@ -175,6 +179,10 @@ class Application(tornado.web.Application):
                         {"class":"panel", "name":Menu.TAGS, "icon":"tags", "link":"/",
                             "sub_menu":[
                                         {"class":"", "name":Menu.TAGS_LISTAR, "link":"/tag/list"}
+                                        ]},
+                        {"class":"panel", "name":Menu.SHIPPING, "icon":"tags", "link":"/",
+                            "sub_menu":[
+                                        {"class":"", "name":Menu.SHIPPING_LIST, "link":"/shipping/list"}
                                         ]},
                         {"class":"panel", "name":Menu.SALIR, "icon":"sign-out", "link":"/auth/login"},]
 
