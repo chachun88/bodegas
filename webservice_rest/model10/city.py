@@ -35,6 +35,23 @@ class City(BaseModel):
 
 	def Save(self):
 
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+		query = '''select id from "City" where lower(name) = lower(%(name)s)'''
+		parameters = {
+		"name":self.name
+		}
+
+		try:
+			cur.execute(query,parameters)
+			if cur.rowcount > 0:
+				self.id = cur.fetchone()["id"]
+				return self.ShowError("Ciudad ya existe en la lista")
+		except Exception,e:
+			return self.ShowError(str(e))
+		finally:
+			self.connection.close()
+			cur.close()
+
 		if self.id != "":
 
 			cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)

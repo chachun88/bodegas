@@ -1,0 +1,44 @@
+{% extends "../base.html" %}
+
+{% block title %}Listado de precios {% end %}
+{% block caption %}se muestra una lista de los costos de despacho{% end %}
+
+{% block body %}
+
+<div class="col-md-12">
+	<section class="widget">
+		<div class="body">
+			<table class="table table-striped table-images">
+				<thead>
+					<tr>
+						<th>Origen</th>
+						<th>Destino</th>
+						<th>Correos de Chile</th>
+						<th>Chilexpress</th>
+						<th>Giani Da Firenze</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for shipping in lista %}
+					<tr>
+						<th>{{shipping["origen"]}}</th>
+						<th>
+							{{shipping["destino"]}}
+						</th>
+						<th>{{shipping["correos_price"]}}</th>
+						<th>{{shipping["chilexpress_price"]}}</th>
+						<th>{{shipping["price"]}}</th>
+						<th>
+							<a class="btn btn-primary" href="/shipping/edit?id={{shipping['id']}}">Editar</a>
+							<a class="btn btn-danger" href="/shipping/remove?id={{shipping['id']}}">Eliminar</a>
+						</th>
+					</tr>
+					{% end %}
+				</tbody>
+			</table>
+		</div>
+	</section>
+</div>
+
+{% end %}

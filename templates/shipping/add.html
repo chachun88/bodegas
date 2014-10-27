@@ -11,9 +11,9 @@
 <div class="col-md-8">
 	<section class="widget">
 		<div class="body">
-			<form role="form" class="form-horizontal" action="/shipping/list" method="post">
+			<form role="form" class="form-horizontal" action="/shipping/savecity" method="post">
 				<div class="control-group">
-					<label for="Nombre" class="col-md-3">Nombre</label>
+					<label for="Nombre" class="col-md-3">Agregar una ciudad</label>
 					<div class="col-md-5">
 						<input type="text" name="name" class="form-control" id="Nombre" placeholder="Nombre">
 					</div>
@@ -33,7 +33,11 @@
 					<div class="col-md-5">
 						<select name="from_city_id" class="form-control">
 							{% for c in cities %}
-							<option value="{{c['id']}}">{{c['name']}}</option>
+								{% if c['name'] == "Santiago" %}
+								<option value="{{c['id']}}" selected>{{c['name']}}</option>
+								{% else %}
+								<option value="{{c['id']}}">{{c['name']}}</option>
+								{% end %}
 							{% end %}
 						</select>
 					</div>
@@ -71,6 +75,7 @@
 						<input type="submit" class="btn btn-primary" value="Guardar">
 					</div>
 				</div>
+				{% raw xsrf_form_html() %}
 			</form>
 		</div>
 	</section>

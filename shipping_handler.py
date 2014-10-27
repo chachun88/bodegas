@@ -6,23 +6,28 @@ from model.city import City
 from model.shipping import Shipping
 from bson import json_util
 
-class ListHandler(BaseHandler):
+class AddCityHandler(BaseHandler):
+
+	def post(self):
+
+		city = City()
+		city.name = self.get_argument("name","").encode("utf-8")
+		guardado = city.Save()
+		
+		if "success" in guardado:
+			self.redirect("/shipping/save")
+		else:
+			self.write(guardado["error"])
+
+class SaveHandler(BaseHandler):
 
 	def get(self):
 		city = City()
 		cities = city.List()
 		if "success" in cities:
-			self.render("shipping/addcity.html",cities=cities["success"])
+			self.render("shipping/add.html",cities=cities["success"])
 		else:
 			self.write(cities["error"])
-
-	def post(self):
-
-		city = City()
-		city.name = self.get_argument("name","")
-		self.write(json_util.dumps(city.Save()))
-
-class SaveHandler(BaseHandler):
 
 	def post(self):
 
@@ -33,6 +38,22 @@ class SaveHandler(BaseHandler):
 		shipping.correos_price = self.get_argument("correos_price",0)
 		shipping.chilexpress_price = self.get_argument("chilexpress_price",0)
 		shipping.price = self.get_argument("price",0)
-		shipping.edited = self.get_argument("edited",False)
-		self.write(json_util.dumps(shipping.Save()))
+		shipping.edited = self.get_argument("edited",0)
+		
+		guardado = shipping.Save()
+		
+		if "success" in guardado:
+			self.redirect("/shipping/save")
+		else:
+			self.write(guardado["error"])
 
+class ListHandler(BaseHandler):
+
+	def get(self):
+
+		shipping = Shipping()
+		res_lista = shipping.List()
+		if "success" in res_lista:
+			self.render("shipping/list.html",lista=res_lista["success"])
+		else:
+			self.write(res_lista["error"])

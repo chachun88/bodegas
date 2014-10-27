@@ -140,7 +140,8 @@ class Application(tornado.web.Application):
             (r"/tag/add",               tag_handler.AddHandler),
 
             (r"/shipping/list",         shipping_handler.ListHandler),
-            (r"/shipping/save",         shipping_handler.SaveHandler)
+            (r"/shipping/save",         shipping_handler.SaveHandler),
+            (r"/shipping/savecity",     shipping_handler.AddCityHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 
@@ -182,7 +183,8 @@ class Application(tornado.web.Application):
                                         ]},
                         {"class":"panel", "name":Menu.SHIPPING, "icon":"tags", "link":"/",
                             "sub_menu":[
-                                        {"class":"", "name":Menu.SHIPPING_LIST, "link":"/shipping/list"}
+                                        {"class":"", "name":Menu.SHIPPING_LIST, "link":"/shipping/list"},
+                                        {"class":"", "name":Menu.SHIPPING_SAVE, "link":"/shipping/save"}
                                         ]},
                         {"class":"panel", "name":Menu.SALIR, "icon":"sign-out", "link":"/auth/login"},]
 

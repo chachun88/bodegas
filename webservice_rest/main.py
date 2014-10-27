@@ -135,7 +135,8 @@ class Application(tornado.web.Application):
             (r"/city/save",                      city_handler.SaveHandler),
             (r"/city/list",                      city_handler.ListHandler),
 
-            (r"/shipping/save",                      shipping_handler.SaveHandler)
+            (r"/shipping/save",                      shipping_handler.SaveHandler),
+            (r"/shipping/list",                      shipping_handler.ListHandler)
             
             ]
 

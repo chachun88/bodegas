@@ -14,7 +14,7 @@ class SaveHandler(BaseHandler):
 			return
 
 		identifier = self.get_argument("identifier","")
-		name = self.get_argument("name","")
+		name = self.get_argument("name","").strip()
 
 		city = City()
 		city.id = identifier

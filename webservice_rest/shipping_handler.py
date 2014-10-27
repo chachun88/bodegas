@@ -20,5 +20,17 @@ class SaveHandler(BaseHandler):
 		shipping.correos_price = self.get_argument("correos_price",0)
 		shipping.chilexpress_price = self.get_argument("chilexpress_price",0)
 		shipping.price = self.get_argument("price",0)
-		shipping.edited = self.get_argument("edited",False)
+		shipping.edited = bool(self.get_argument("edited",0))
 		self.write(json_util.dumps(shipping.Save()))
+
+
+class ListHandler(BaseHandler):
+	
+	def post(self):
+
+		if not self.ValidateToken():
+			self.write(json_util.dumps({"error":"invalid token"}))
+
+		shipping = Shipping()
+		self.write(json_util.dumps(shipping.List()))
+		
