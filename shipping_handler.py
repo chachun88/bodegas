@@ -14,8 +14,13 @@ class AddCityHandler(BaseHandler):
 		city.name = self.get_argument("name","").encode("utf-8")
 		guardado = city.Save()
 		
+		identifier = int(self.get_argument("identifier",0))
+
 		if "success" in guardado:
-			self.redirect("/shipping/save")
+			if identifier == 0:
+				self.redirect("/shipping/save")
+			else:
+				self.redirect("/shipping/save?identifier={id}".format(id=identifier))
 		else:
 			self.write(guardado["error"])
 
@@ -24,15 +29,29 @@ class SaveHandler(BaseHandler):
 	def get(self):
 		city = City()
 		cities = city.List()
+
+		identifier = int(self.get_argument("identifier",0))
+
+		shipping = Shipping()
+
+		if identifier != 0:
+			
+			shipping.identifier = identifier
+			res = shipping.InitById()
+
+			if "error" in res:
+				self.write(res["error"])
+				return
+
 		if "success" in cities:
-			self.render("shipping/add.html",cities=cities["success"])
+			self.render("shipping/add.html",cities=cities["success"],shipping=shipping)
 		else:
 			self.write(cities["error"])
 
 	def post(self):
 
 		shipping = Shipping()
-		shipping.identifier = self.get_argument("identifier",0)
+		shipping.identifier = int(self.get_argument("identifier",0))
 		shipping.from_city_id = self.get_argument("from_city_id",0)
 		shipping.to_city_id = self.get_argument("to_city_id",0)
 		shipping.correos_price = self.get_argument("correos_price",0)
@@ -43,7 +62,10 @@ class SaveHandler(BaseHandler):
 		guardado = shipping.Save()
 		
 		if "success" in guardado:
-			self.redirect("/shipping/save")
+			if shipping.identifier == 0:
+				self.redirect("/shipping/list")
+			else:
+				self.redirect("/shipping/save?identifier={id}".format(id=shipping.identifier))
 		else:
 			self.write(guardado["error"])
 
@@ -68,8 +90,29 @@ class ActionHandler(BaseHandler):
 		if action == "":
 			self.write("Debe seleccionar una acción")
 		else:
+			
 			res = shipping.Action(action)
 			if "success" in res:
 				self.redirect("/shipping/list")
 			else:
 				self.write(res["error"])
+
+class RemoveHandler(BaseHandler):
+
+	def get(self):
+
+		identifier = int(self.get_argument("identifier",0))
+
+		if identifier != 0:
+			shipping = Shipping()
+			shipping.identifier = identifier
+			res = shipping.Remove()
+
+			if "success" in res:
+				self.redirect("/shipping/list")
+			else:
+				self.write(res["error"])
+
+		else:
+
+			self.write("Identificador no válido")

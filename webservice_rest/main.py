@@ -137,7 +137,9 @@ class Application(tornado.web.Application):
 
             (r"/shipping/save",                      shipping_handler.SaveHandler),
             (r"/shipping/list",                      shipping_handler.ListHandler),
-            (r"/shipping/action",                    shipping_handler.ActionHandler)
+            (r"/shipping/action",                    shipping_handler.ActionHandler),
+            (r"/shipping/initbyid",                  shipping_handler.InitByIdHandler),
+            (r"/shipping/remove",                    shipping_handler.RemoveHandler)
             
             ]
 

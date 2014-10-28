@@ -20,6 +20,8 @@
 								<option value="">Seleccione una acci&oacute;n</option>
 								<option value="chilexpress_price">Aplicar Chilexpress</option>
 								<option value="correos_price">Aplicar Correos de Chile</option>
+								<option value="correos_edited">Aplicar Correos Excepto Editados</option>
+								<option value="chilexpress_edited">Aplicar Chilexpress Excepto Editados</option>
 							</select>
 						</th>
 						<th>
@@ -37,6 +39,7 @@
 						<th>Correos de Chile</th>
 						<th>Chilexpress</th>
 						<th>Giani Da Firenze</th>
+						<th>Editado</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -51,8 +54,15 @@
 						<th>{{shipping["chilexpress_price"]}}</th>
 						<th>{{shipping["price"]}}</th>
 						<th>
-							<!-- <a class="btn btn-primary" href="/shipping/edit?id={{shipping['id']}}">Editar</a>
-							<a class="btn btn-danger" href="/shipping/remove?id={{shipping['id']}}">Eliminar</a> -->
+							{% if shipping["edited"] %}
+							<i class="fa fa-check"></i>
+							{% else %}
+							<i class="fa fa-times"></i>
+							{% end %}
+						</th>
+						<th>
+							<a class="btn btn-primary" href="/shipping/save?identifier={{shipping['id']}}">Editar</a>
+							<a class="btn btn-danger" href="/shipping/remove?identifier={{shipping['id']}}">Eliminar</a>
 						</th>
 					</tr>
 					{% end %}

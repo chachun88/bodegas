@@ -73,7 +73,7 @@ class Shipping(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         try:
-            cur.execute('''select s.id,c.name as origen, c2.name as destino, s.correos_price, s.chilexpress_price, s.price from "Shipping" s left join "City" c on c.id = s.from_city_id left join "City" c2 on c2.id = s.to_city_id''')
+            cur.execute('''select s.id,c.name as origen, c2.name as destino, s.correos_price, s.chilexpress_price, s.price, s.edited from "Shipping" s left join "City" c on c.id = s.from_city_id left join "City" c2 on c2.id = s.to_city_id''')
             lista = cur.fetchall()
             return self.ShowSuccessMessage(lista)
         except Exception,e:
@@ -84,12 +84,12 @@ class Shipping(BaseModel):
 
     def Save(self):
 
-        if int(self.identifier) != 0:
+        if self.identifier != 0:
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            query = '''update "Shipping" set from_city_id = %(from_city_id)s, to_city_id = %(from_city_id)s, correos_price = %(correos_price)s, chilexpress_price = %(chilexpress_price)s, price = %(price)s, edited = %(edited)s where id = %(id)s'''
+            query = '''update "Shipping" set from_city_id = %(from_city_id)s, to_city_id = %(to_city_id)s, correos_price = %(correos_price)s, chilexpress_price = %(chilexpress_price)s, price = %(price)s, edited = %(edited)s where id = %(id)s'''
             parameters = {
-            "id":self.id,
+            "id":self.identifier,
             "from_city_id":self.from_city_id,
             "to_city_id":self.to_city_id,
             "correos_price":self.correos_price,
@@ -136,24 +136,106 @@ class Shipping(BaseModel):
 
         if action != "":
 
+            if action == "correos_edited" or action == "chilexpress_edited":
+
+                if action == "correos_edited":
+
+                    cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                    query = '''update "Shipping" set price = correos_price where edited = false'''
+
+                    try:
+                        cur.execute(query)
+                        self.connection.commit()
+                        return self.ShowSuccessMessage("ok")
+                    except Exception,e:
+                        return self.ShowError(str(e))
+                    finally:
+                        self.connection.close()
+                        cur.close()
+
+                elif action == "chilexpress_edited":
+
+                    cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                    query = '''update "Shipping" set price = chilexpress_price where edited = false'''
+
+                    try:
+                        cur.execute(query)
+                        self.connection.commit()
+                        return self.ShowSuccessMessage("ok")
+                    except Exception,e:
+                        return self.ShowError(str(e))
+                    finally:
+                        self.connection.close()
+                        cur.close()
+
+                else:
+
+                    return self.ShowError("Acción seleccionada es inválida")
+
+            else:
+
+                cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                query = '''update "Shipping" set price = {action}'''.format(action=action)
+
+                try:
+                    cur.execute(query)
+                    self.connection.commit()
+                    return self.ShowSuccessMessage("ok")
+                except Exception,e:
+                    return self.ShowError(str(e))
+                finally:
+                    self.connection.close()
+                    cur.close()
+
+        else:
+
+            return self.ShowError("Acción seleccionada es inválida")
+
+    def InitById(self):
+
+        if self.identifier == 0:
+
+            return self.ShowError("Debe especificador un identificador válido")
+
+        else:
+
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            query = '''update "Shipping" set price = {action}'''.format(action=action)
+            query = '''select * from "Shipping" where id = %(id)s'''
+            parameters = {
+            "id":self.identifier
+            }
 
             try:
-                cur.execute(query)
-                self.connection.commit()
-                return self.ShowSuccessMessage("ok")
+                cur.execute(query,parameters)
+                shipping = cur.fetchone()
+                return self.ShowSuccessMessage(shipping)
             except Exception,e:
                 return self.ShowError(str(e))
             finally:
                 self.connection.close()
                 cur.close()
 
+
+    def Remove(self):
+
+        if self.identifier == 0:
+
+            return self.ShowError("Debe especificador un identificador válido")
+
         else:
 
-            return self.ShowError("Acción seleccionada es inválida")
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            query = '''delete from "Shipping" where id = %(id)s'''
+            parameters = {
+            "id":self.identifier
+            }
 
-
-
-
-
+            try:
+                cur.execute(query,parameters)
+                self.connection.commit()
+                return self.ShowSuccessMessage(self.identifier)
+            except Exception,e:
+                return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cur.close()

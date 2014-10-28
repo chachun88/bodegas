@@ -90,7 +90,7 @@ class Menu:
 
     SHIPPING = "Despacho"
     SHIPPING_LIST = "Lista de precios"
-    SHIPPING_SAVE = "Guardar precio"
+    SHIPPING_SAVE = "Agregar precio"
 
     SALIR = "Salir"
 

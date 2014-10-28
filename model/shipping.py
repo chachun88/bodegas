@@ -123,4 +123,50 @@ class Shipping(BaseModel):
         response_obj = json_util.loads(response_str)
 
         return response_obj
+
+    def InitById(self):
+
+        url = self.wsurl() + "/shipping/initbyid"
+
+        data = {
+        "token":self.token,
+        "identifier":self.identifier
+        }
+
+        post_data = urllib.urlencode(data)
+
+        response_str = urllib.urlopen(url, post_data).read()
+
+        response_obj = json_util.loads(response_str)
+
+        if "success" in response_obj:
+
+            data = response_obj["success"]
+
+            self.identifier = data["id"]
+            self.from_city_id = data["from_city_id"]
+            self.to_city_id = data["to_city_id"]
+            self.edited = data["edited"]
+            self.correos_price = data["correos_price"]
+            self.chilexpress_price = data["chilexpress_price"]
+            self.price = data["price"]
+
+        return response_obj
+
+    def Remove(self):
+
+        url = self.wsurl() + "/shipping/remove"
+
+        data = {
+        "token":self.token,
+        "identifier":self.identifier
+        }
+
+        post_data = urllib.urlencode(data)
+
+        response_str = urllib.urlopen(url, post_data).read()
+
+        response_obj = json_util.loads(response_str)
+
+        return response_obj
     

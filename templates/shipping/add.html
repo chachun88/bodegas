@@ -24,7 +24,7 @@
 						<input type="submit" class="btn btn-primary" value="Guardar">
 					</div>
 				</div>
-
+				<input type="hidden" name="identifier" value="{{shipping.identifier}}">
 				{% raw xsrf_form_html() %}
 			</form>
 			<form role="form" class="form-horizontal" action="/shipping/save" method="post">
@@ -33,10 +33,18 @@
 					<div class="col-md-5">
 						<select name="from_city_id" class="form-control">
 							{% for c in cities %}
-								{% if c['name'] == "Santiago" %}
-								<option value="{{c['id']}}" selected>{{c['name']}}</option>
+								{% if int(shipping.from_city_id) == 0 %}
+									{% if c['name'] == "Santiago" %}
+									<option value="{{c['id']}}" selected>{{c['name']}}</option>
+									{% else %}
+									<option value="{{c['id']}}">{{c['name']}}</option>
+									{% end %}
 								{% else %}
-								<option value="{{c['id']}}">{{c['name']}}</option>
+									{% if int(c['id']) == int(shipping.from_city_id) %}
+									<option value="{{c['id']}}" selected>{{c['name']}}</option>
+									{% else %}
+									<option value="{{c['id']}}">{{c['name']}}</option>
+									{% end %}
 								{% end %}
 							{% end %}
 						</select>
@@ -47,7 +55,15 @@
 					<div class="col-md-5">
 						<select name="to_city_id" class="form-control">
 							{% for c in cities %}
-							<option value="{{c['id']}}">{{c['name']}}</option>
+								{% if int(shipping.to_city_id) == 0 %}
+									<option value="{{c['id']}}">{{c['name']}}</option>
+								{% else %}
+									{% if int(c['id']) == int(shipping.to_city_id) %}
+									<option value="{{c['id']}}" selected>{{c['name']}}</option>
+									{% else %}
+									<option value="{{c['id']}}">{{c['name']}}</option>
+									{% end %}
+								{% end %}
 							{% end %}
 						</select>
 					</div>
@@ -55,19 +71,19 @@
 				<div class="control-group body">
 					<label for="PrecioCorreos" class="col-md-3">Precio Correos</label>
 					<div class="col-md-5">
-						<input type="text" name="correos_price" class="form-control">
+						<input type="text" name="correos_price" class="form-control" value="{{shipping.correos_price}}">
 					</div>
 				</div>
 				<div class="control-group body">
 					<label for="PrecioChilexpress" class="col-md-3">Precio Chilexpress</label>
 					<div class="col-md-5">
-						<input type="text" name="chilexpress_price" class="form-control">
+						<input type="text" name="chilexpress_price" class="form-control" value="{{shipping.chilexpress_price}}">
 					</div>
 				</div>
 				<div class="control-group body">
 					<label for="PrecioGiani" class="col-md-3">Precio Giani</label>
 					<div class="col-md-5">
-						<input type="text" name="price" class="form-control">
+						<input type="text" name="price" class="form-control" value="{{shipping.price}}">
 					</div>
 				</div>
 				<div class="control-group body">
@@ -75,6 +91,7 @@
 						<input type="submit" class="btn btn-primary" value="Guardar">
 					</div>
 				</div>
+				<input type="hidden" name="identifier" value="{{shipping.identifier}}">
 				{% raw xsrf_form_html() %}
 			</form>
 		</div>

@@ -14,13 +14,16 @@ class SaveHandler(BaseHandler):
 			self.write(json_util.dumps({"error":"invalid token"}))
 
 		shipping = Shipping()
-		shipping.identifier = self.get_argument("identifier",0)
+		shipping.identifier = int(self.get_argument("identifier",0))
 		shipping.from_city_id = self.get_argument("from_city_id",0)
 		shipping.to_city_id = self.get_argument("to_city_id",0)
 		shipping.correos_price = self.get_argument("correos_price",0)
 		shipping.chilexpress_price = self.get_argument("chilexpress_price",0)
 		shipping.price = self.get_argument("price",0)
-		shipping.edited = bool(self.get_argument("edited",0))
+		if shipping.identifier == 0:
+			shipping.edited = False
+		else:
+			shipping.edited = True
 		self.write(json_util.dumps(shipping.Save()))
 
 
@@ -45,4 +48,38 @@ class ActionHandler(BaseHandler):
 
 		shipping = Shipping()
 		self.write(json_util.dumps(shipping.Action(action)))
-		
+	
+class InitByIdHandler(BaseHandler):
+
+	def post(self):
+
+		if not self.ValidateToken():
+			self.write(json_util.dumps({"error":"invalid token"}))
+
+		identifier = int(self.get_argument("identifier",0))
+
+		shipping = Shipping()
+		shipping.identifier = identifier
+
+		if identifier == 0:
+			self.write(json_util.dumps({"error":"Debe especificar identificador"}))
+		else:
+			self.write(json_util.dumps(shipping.InitById()))
+
+class RemoveHandler(BaseHandler):
+
+	def post(self):
+
+		if not self.ValidateToken():
+			self.write(json_util.dumps({"error":"invalid token"}))
+
+		identifier = int(self.get_argument("identifier",0))
+
+		shipping = Shipping()
+		shipping.identifier = identifier
+
+
+		if identifier == 0:
+			self.write(json_util.dumps({"error":"Debe especificar identificador"}))
+		else:
+			self.write(json_util.dumps(shipping.Remove()))
