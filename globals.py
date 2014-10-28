@@ -8,7 +8,13 @@ Jueves 12 dic 2012
 reutilizado por chinostroza en tellmecuando
 reutilizado por estefy en bodegas
 '''
-debugMode = False
+
+import os
+
+if os.name = "nt":
+    debugMode = True
+else:
+    debugMode = False
 
 BODEGA_PORT=9007
 WS_PORT=8890

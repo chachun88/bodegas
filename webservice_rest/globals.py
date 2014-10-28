@@ -12,7 +12,10 @@ reutilizado por estefy en bodegas
 import os
 import pymongo
 
-debugMode = False
+if os.name = "nt":
+    debugMode = True
+else:
+    debugMode = False
 
 token = "5334d6c29ec9a710f56d9ab5"
 webservice_url = "http://localhost"
