@@ -57,3 +57,19 @@ class ListHandler(BaseHandler):
 			self.render("shipping/list.html",lista=res_lista["success"])
 		else:
 			self.write(res_lista["error"])
+
+class ActionHandler(BaseHandler):
+
+	def post(self):
+
+		action = self.get_argument("action","")
+		shipping = Shipping()
+
+		if action == "":
+			self.write("Debe seleccionar una acción")
+		else:
+			res = shipping.Action(action)
+			if "success" in res:
+				self.redirect("/shipping/list")
+			else:
+				self.write(res["error"])

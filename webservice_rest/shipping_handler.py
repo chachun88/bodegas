@@ -33,4 +33,16 @@ class ListHandler(BaseHandler):
 
 		shipping = Shipping()
 		self.write(json_util.dumps(shipping.List()))
+
+class ActionHandler(BaseHandler):
+
+	def post(self):
+
+		if not self.ValidateToken():
+			self.write(json_util.dumps({"error":"invalid token"}))
+
+		action = self.get_argument("action","")
+
+		shipping = Shipping()
+		self.write(json_util.dumps(shipping.Action(action)))
 		

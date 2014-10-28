@@ -107,5 +107,20 @@ class Shipping(BaseModel):
 
         return response_obj
     
-    
+    def Action(self,action):
+
+        url = self.wsurl() + "/shipping/action"
+
+        data = {
+        "token":self.token,
+        "action":action
+        }
+
+        post_data = urllib.urlencode(data)
+
+        response_str = urllib.urlopen(url, post_data).read()
+
+        response_obj = json_util.loads(response_str)
+
+        return response_obj
     

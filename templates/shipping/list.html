@@ -8,6 +8,27 @@
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
+			<form action="/shipping/action" method="post">
+				<table class="table table-condensed">
+					<tr>
+						<th colspan="5">Acciones</th>
+						<th></th>
+					</tr>
+					<tr>
+						<th colspan="5">
+							<select class="form-control" name="action">
+								<option value="">Seleccione una acci&oacute;n</option>
+								<option value="chilexpress_price">Aplicar Chilexpress</option>
+								<option value="correos_price">Aplicar Correos de Chile</option>
+							</select>
+						</th>
+						<th>
+							<input type="submit" class="btn btn-primary" value="Aplicar">
+						</th>
+					</tr>
+				</table>
+				{% raw xsrf_form_html() %}
+			</form>
 			<table class="table table-striped table-images">
 				<thead>
 					<tr>
@@ -30,8 +51,8 @@
 						<th>{{shipping["chilexpress_price"]}}</th>
 						<th>{{shipping["price"]}}</th>
 						<th>
-							<a class="btn btn-primary" href="/shipping/edit?id={{shipping['id']}}">Editar</a>
-							<a class="btn btn-danger" href="/shipping/remove?id={{shipping['id']}}">Eliminar</a>
+							<!-- <a class="btn btn-primary" href="/shipping/edit?id={{shipping['id']}}">Editar</a>
+							<a class="btn btn-danger" href="/shipping/remove?id={{shipping['id']}}">Eliminar</a> -->
 						</th>
 					</tr>
 					{% end %}

@@ -132,6 +132,28 @@ class Shipping(BaseModel):
                 self.connection.close()
                 cur.close()
 
+    def Action(self,action):
+
+        if action != "":
+
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            query = '''update "Shipping" set price = {action}'''.format(action=action)
+
+            try:
+                cur.execute(query)
+                self.connection.commit()
+                return self.ShowSuccessMessage("ok")
+            except Exception,e:
+                return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cur.close()
+
+        else:
+
+            return self.ShowError("Acción seleccionada es inválida")
+
+
 
 
 
