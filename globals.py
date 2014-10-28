@@ -11,7 +11,7 @@ reutilizado por estefy en bodegas
 
 import os
 
-if os.name = "nt":
+if os.name == "nt":
     debugMode = True
 else:
     debugMode = False

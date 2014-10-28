@@ -12,7 +12,7 @@ reutilizado por estefy en bodegas
 import os
 import pymongo
 
-if os.name = "nt":
+if os.name == "nt":
     debugMode = True
 else:
     debugMode = False
