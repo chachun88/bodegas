@@ -13,12 +13,15 @@ from basehandler import BaseHandler
 
 from model.cellar import Cellar
 from model.user import User
+from model.city import City
 
 class CellarAddHandler(BaseHandler):
 	@tornado.web.authenticated
 	def get(self):
 		self.set_active(Menu.BODEGAS_AGREGAR) #change menu active item
-		self.render("cellar/add.html", side_menu=self.side_menu)
+		city = City()
+		cities = city.List()
+		self.render("cellar/add.html", side_menu=self.side_menu,cities=cities)
 
 	@tornado.web.authenticated
 	def post(self):
