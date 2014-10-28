@@ -88,6 +88,10 @@ class Menu:
     TAGS = "Tags"
     TAGS_LISTAR = "Lista de Tags"
 
+    SHIPPING = "Despacho"
+    SHIPPING_LIST = "Lista de precios"
+    SHIPPING_SAVE = "Guardar precio"
+
     SALIR = "Salir"
 
 
