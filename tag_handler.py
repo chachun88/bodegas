@@ -99,7 +99,16 @@ class EditHandler(BaseHandler):
 
 class AddHandler(BaseHandler):
 
+	def get(self):
+
+		tag = Tag()
+		product = Product()
+		lista = product.get_product_list()
+		asociados = []
+		self.render("tag/save.html",tag=tag,mode="add",product_list=lista,dn="",asociados=asociados)
+
 	def post(self):
+
 
 		nombre = self.get_argument("name","")
 		asociados_obj = self.get_arguments("asociados","")
@@ -119,6 +128,8 @@ class AddHandler(BaseHandler):
 
 			if "success" in save:
 
+				tag.identifier = save["success"]
+
 				remove_asociation = tag.RemoveTagsAsociationByTagId(tag.identifier)
 
 				if "success" in remove_asociation:
@@ -128,7 +139,7 @@ class AddHandler(BaseHandler):
 
 						#self.write(json_util.dumps(response))
 
-					self.write("ok")
+					self.redirect("/tag/list")
 
 				else:
 

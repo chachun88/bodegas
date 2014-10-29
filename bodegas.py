@@ -181,7 +181,8 @@ class Application(tornado.web.Application):
                                         ]},
                         {"class":"panel", "name":Menu.TAGS, "icon":"tags", "link":"/",
                             "sub_menu":[
-                                        {"class":"", "name":Menu.TAGS_LISTAR, "link":"/tag/list"}
+                                        {"class":"", "name":Menu.TAGS_LISTAR, "link":"/tag/list"},
+                                        {"class":"", "name":Menu.TAGS_ADD, "link":"/tag/add"}
                                         ]},
                         {"class":"panel", "name":Menu.SHIPPING, "icon":"plane", "link":"/",
                             "sub_menu":[

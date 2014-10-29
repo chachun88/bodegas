@@ -22,6 +22,8 @@ class Tag(BaseModel):
 
     def Save(self):
 
+        
+
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         # existe = False
@@ -44,7 +46,6 @@ class Tag(BaseModel):
             cur.close()
             return self.ShowError("Error al comprobar existencia del tag, {}".format(str(e)))
 
-
         if self.id == "":
 
             query = '''insert into "Tag" (name) values (%(name)s) returning id'''
@@ -65,6 +66,8 @@ class Tag(BaseModel):
 
 
         else:
+
+            # print "AQQQQQQ"
 
             query = '''update "Tag" set name = %(name)s where id = %(id)s returning id'''
             parameters = {
