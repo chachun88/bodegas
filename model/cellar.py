@@ -14,6 +14,7 @@ class Cellar(BaseModel):
 		self._name = ""
 		self._description = ""
 		self._identifier = ""
+		self._city = 0
 		pass
 
 	def Save(self):
@@ -21,6 +22,7 @@ class Cellar(BaseModel):
 		url += "?token=" + self.token
 		url += "&name=" + self.name
 		url += "&description=" + self.description
+		url += "&city={}".format(self.city)
 
 		return urllib.urlopen(url).read()
 
@@ -175,4 +177,12 @@ class Cellar(BaseModel):
 	@identifier.setter
 	def identifier(self, value):
 	    self._identifier = value
+
+	@property
+	def city(self):
+	    return self._city
+	@city.setter
+	def city(self, value):
+	    self._city = value
+	
 	

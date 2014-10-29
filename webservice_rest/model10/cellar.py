@@ -24,6 +24,7 @@ class Cellar(BaseModel):
         self._name = ''
         self._description = ''
         self.table = 'Cellar'
+        self._city = 0
 
     @property
     def name(self):
@@ -38,6 +39,14 @@ class Cellar(BaseModel):
     @description.setter
     def description(self, value):
         self._description = value
+
+    @property
+    def city(self):
+        return self._city
+    @city.setter
+    def city(self, value):
+        self._city = value
+    
 
     ## override
     def Remove(self):
@@ -269,11 +278,12 @@ class Cellar(BaseModel):
         if cellar:
 
             try:
-                query = '''update "Cellar" set description = %(description)s and name = %(name)s where id = %(id)s returning id'''
+                query = '''update "Cellar" set description = %(description)s, name = %(name)s, city_id = %(city)s where id = %(id)s returning id'''
                 parametros = {
                 "description": self.description,
                 "name": self.name,
-                "id":cellar['id']
+                "id":cellar['id'],
+                "city":self.city
                 }
                 cur.execute(query,parametros)
                 self.connection.commit()
@@ -283,15 +293,16 @@ class Cellar(BaseModel):
                 return self.ShowSuccessMessage(self.id)
 
             except Exception,e:
-                return self.ShowError("failed to save cellar {}, error:{}".format(self.name,str(e)))
+                return self.ShowError("failed to update cellar {}, error:{}".format(self.name,str(e)))
 
         else:
 
             try:
-                query = '''insert into "Cellar" (description, name) values (%(description)s,%(name)s) returning id'''
+                query = '''insert into "Cellar" (description, name,city_id) values (%(description)s,%(name)s,%(city_id)s) returning id'''
                 parametros = {
                 "description": self.description,
-                "name": self.name
+                "name": self.name,
+                "city_id":self.city
                 }
                 cur.execute(query,parametros)
                 self.connection.commit()
@@ -345,6 +356,7 @@ class Cellar(BaseModel):
           cellar.id = d["id"]
           cellar.name = d["name"]
           cellar.description = d["description"]
+          cellar.city = d["city_id"]
 
           data_rtn.append(cellar.Print())
 
@@ -383,6 +395,7 @@ class Cellar(BaseModel):
             self.id = c['id']
             self.name = c['name']
             self.description = c['description']
+            self.city = d["city_id"]
 
             data_rtn.append(cellar.Print())
 
@@ -417,6 +430,7 @@ class Cellar(BaseModel):
             self.id = cellar['id']
             self.name = cellar['name']
             self.description = cellar['description']
+            self.city = d["city_id"]
 
             return self.ShowSuccessMessage("cellar initialized")
 
@@ -453,6 +467,7 @@ class Cellar(BaseModel):
             self.id = cellar['id']
             self.name = cellar['name']
             self.description = cellar['description']
+            self.city = cellar["city_id"]
 
             return self.ShowSuccessMessage("cellar initialized")
 

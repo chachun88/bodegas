@@ -25,6 +25,7 @@ class CellarAddHandler(BaseHandler):
 		cellar.name = self.get_argument("name", "")
 		cellar.description = self.get_argument("description", "")
 		cellar.id = self.get_argument("id", "")
+		cellar.city = self.get_argument("city",0)
 
 		self.write(json_util.dumps((cellar.Save())))
 

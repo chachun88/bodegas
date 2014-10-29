@@ -21,18 +21,19 @@ class CellarAddHandler(BaseHandler):
 		self.set_active(Menu.BODEGAS_AGREGAR) #change menu active item
 		city = City()
 		cities = city.List()
-		self.render("cellar/add.html", side_menu=self.side_menu,cities=cities)
+		self.render("cellar/add.html", side_menu=self.side_menu,cities=cities["success"])
 
 	@tornado.web.authenticated
 	def post(self):
 
 		name = self.get_argument("name", "bodega sin nombre").encode("UTF-8")
 		description = self.get_argument("description", "").encode("UTF-8")
-
+		city = self.get_argument("city",0)
 
 		cellar = Cellar()
 		cellar.name = name
 		cellar.description = description
+		cellar.city = city
 
 		bodega=cellar.CellarExist(name)
 
