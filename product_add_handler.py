@@ -162,43 +162,39 @@ class ProductAddHandler(BaseHandler):
 		try:
 			res = prod.InitWithSku(self.get_argument("sku", ""))
 
-			if res != "ok":
+			if res == "ok":
 
-				if prod.sku and load=="old":
-
-					prod.category 	= self.get_argument("category", "")
-					prod.sku 		= self.get_argument("sku", "")
-					prod.name		= self.get_argument("name", "").encode('utf-8')
-					prod.upc		= self.get_argument("upc", "")
-					prod.description= self.get_argument("description", "")
-					prod.brand 		= self.get_argument("brand", "")
-					prod.manufacturer= self.get_argument("manufacturer", "")
-					prod.size 		= self.get_argument("size", "").split(",")
-					prod.color 		= self.get_argument("color", "")
-					prod.material 	= self.get_argument("material", "")
-					prod.bullet_1 	= self.get_argument("bullet_1", "")
-					prod.bullet_2 	= self.get_argument("bullet_2", "") 
-					prod.bullet_3 	= self.get_argument("bullet_3", "")
-					prod.currency 	= self.get_argument("currency", "")
-					prod.price		= self.get_argument("price", "")
-					prod.image 		= img1
-					prod.image_2 	= img2
-					prod.image_3 	= img3
-					prod.sell_price = self.get_argument("sell_price",0)
-					
-
-					tags = self.get_argument("tags","").split(",")
-					tags = [t.encode("utf-8") for t in tags]
-					
-
-					prod.tags       = ",".join(tags) # entra como string
+				prod.category 	= self.get_argument("category", "")
+				prod.sku 		= self.get_argument("sku", "")
+				prod.name		= self.get_argument("name", "").encode('utf-8')
+				prod.upc		= self.get_argument("upc", "")
+				prod.description= self.get_argument("description", "").encode('utf-8')
+				prod.brand 		= self.get_argument("brand", "")
+				prod.manufacturer= self.get_argument("manufacturer", "")
+				prod.size 		= self.get_argument("size", "").encode("utf-8")
+				prod.color 		= self.get_argument("color", "")
+				prod.material 	= self.get_argument("material", "")
+				prod.bullet_1 	= self.get_argument("bullet_1", "")
+				prod.bullet_2 	= self.get_argument("bullet_2", "") 
+				prod.bullet_3 	= self.get_argument("bullet_3", "")
+				prod.currency 	= self.get_argument("currency", "")
+				prod.price		= self.get_argument("price", "")
+				prod.image 		= img1
+				prod.image_2 	= img2
+				prod.image_3 	= img3
+				prod.sell_price = self.get_argument("sell_price",0)
+				prod.delivery   = self.get_argument("delivery","")
+				prod.which_size = self.get_argument("which_size","")
+				prod.tags       = self.get_argument("tags","").encode("utf-8")
 
 
 
-					prod.Save("one")
-					self.redirect("/product/list")	
+				res = prod.Save("one")
+
+				if "success" in res:
+					self.redirect("/product/list")
 				else:
-					self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="add")
+					self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="edit")
 
 			else:
 
@@ -227,6 +223,8 @@ class ProductAddHandler(BaseHandler):
 			prod.image_2 	= img2.encode("utf-8")
 			prod.image_3 	= img3.encode("utf-8")
 			prod.sell_price = self.get_argument("sell_price",0).encode("utf-8")
+			prod.delivery   = self.get_argument("delivery","").encode("utf-8")
+			prod.which_size = self.get_argument("which_size","").encode("utf-8")
 
 
 			size_arr = self.get_argument("size", "").split(",")
@@ -281,6 +279,8 @@ class FastEditHandler(BaseHandler):
 			prod.sku = self.get_argument("sku","").encode("utf-8")
 			prod.manufacturer = self.get_argument("manufacturer","").encode("utf-8")
 			prod.brand = self.get_argument("brand","").encode("utf-8")
+			prod.delivery = self.get_argument("delivery","").encode("utf-8")
+			prod.which_size = self.get_argument("which_size","").encode("utf-8")
 
 			prod.upc = prod.upc.encode("utf-8")
 			prod.size = ",".join(prod.size).encode("utf-8")

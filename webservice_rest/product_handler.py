@@ -7,7 +7,7 @@ from bson import json_util
 
 
 class AddProductHandler(BaseHandler):
-	def get(self):
+	def post(self):
 		
 		# validate access token
 		if not self.ValidateToken():
@@ -36,6 +36,8 @@ class AddProductHandler(BaseHandler):
 		product.image_3 		= self.get_argument("image_3", "")
 		product.sell_price      = self.get_argument("sell_price",0)
 		product.tags            = self.get_argument("tags","") # se obtiene como string
+		product.delivery        = self.get_argument("delivery","")
+		product.which_size      = self.get_argument("which_size","")
 
 		# self.write(product.sku)
 		# return

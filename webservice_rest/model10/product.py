@@ -34,6 +34,8 @@ class Product(BaseModel):
         self._upc = '' #articulo
         self._price='' #precio compra
         self._sell_price = 0 #precio venta
+        self._delivery = "" #texto delivery detalle de producto
+        self._which_size = "" #texto cual es tu talla detalle de producto
 
         # self.collection = db.product
 
@@ -178,6 +180,20 @@ class Product(BaseModel):
     @tags.setter
     def tags(self, value):
         self._tags = value
+
+    @property
+    def delivery(self):
+        return self._delivery
+    @delivery.setter
+    def delivery(self, value):
+        self._delivery = value
+    
+    @property
+    def which_size(self):
+        return self._which_size
+    @which_size.setter
+    def which_size(self, value):
+        self._which_size = value
     
 
     def GetCellars(self):
@@ -206,7 +222,9 @@ class Product(BaseModel):
                 "upc":self.upc,
                 "price":self.price,
                 "tags":self.tags,
-                "sell_price":self.sell_price
+                "sell_price":self.sell_price,
+                "which_size":self.which_size,
+                "delivery":self.delivery
             }
 
             return rtn_data
@@ -403,8 +421,9 @@ class Product(BaseModel):
                 ,upc = %(upc)s
                 ,color = %(color)s
                 ,sell_price = %(sell_price)s
-                ,size = %(size)s 
-                where sku = %(sku)s returning id'''
+                ,size = %(size)s
+                ,which_size = %(which_size)s
+                ,delivery = %(delivery)s where sku = %(sku)s returning id'''
 
                 category = Category()
                 category.InitByName(self.category)
@@ -425,6 +444,8 @@ class Product(BaseModel):
                         "image":self.image,
                         "image_2":self.image_2,
                         "image_3":self.image_3,
+                        "delivery":self.delivery,
+                        "which_size":self.which_size,
                         # "currency":self.currency,
                         "category_id":category.id,
                         "price":float(self.price),
@@ -435,7 +456,7 @@ class Product(BaseModel):
 
                 try:
 
-                    # print cur.mogrify(q,p)
+                    # print "existe sku:{}".format(cur.mogrify(q,p))
                     cur.execute(q,p)
 
                     self.connection.commit()
@@ -488,7 +509,8 @@ class Product(BaseModel):
                 , sku = %(sku)s
                 , color = %(color)s
                 , sell_price = %(sell_price)s
-                where id = %(id)s'''
+                , which_size = %(which_size)s
+                , delivery = %(delivery)s where id = %(id)s'''
 
                 category = Category()
                 category.InitByName(self.category)
@@ -512,9 +534,12 @@ class Product(BaseModel):
                         "price":float(self.price),
                         "upc":self.upc,
                         "id":self.id,
-                        "sell_price":self.sell_price
+                        "sell_price":self.sell_price,
+                        "delivery":self.delivery,
+                        "which_size":self.which_size
                     }
 
+                # print "existe id:{}".format(cur.mogrify(q,p))
                 cur.execute(q,p)
 
                 self.connection.commit()
@@ -542,8 +567,8 @@ class Product(BaseModel):
 
             else:
 
-                q = '''insert into "Product" (name,description,sku,brand,manufacturer,material,bullet_1,bullet_2,bullet_3,image,image_2,image_3, category_id, price, upc,size,color,sell_price)
-                values (%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_1)s,%(bullet_2)s,%(bullet_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s,%(sell_price)s) returning id'''
+                q = '''insert into "Product" (delivery,which_size,name,description,sku,brand,manufacturer,material,bullet_1,bullet_2,bullet_3,image,image_2,image_3, category_id, price, upc,size,color,sell_price)
+                values (%(delivery)s,%(which_size)s,%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_1)s,%(bullet_2)s,%(bullet_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s,%(sell_price)s) returning id'''
 
                 category = Category()
                 category.InitByName(self.category)
@@ -566,7 +591,9 @@ class Product(BaseModel):
                         "category_id":category.id,
                         "price":int(float(self.price)),
                         "upc":self.upc,
-                        "sell_price":self.sell_price
+                        "sell_price":self.sell_price,
+                        "delivery":self.delivery,
+                        "which_size":self.which_size
                     }
 
                 # print cur.mogrify(q.strip(),p)
