@@ -355,7 +355,7 @@ class Product(BaseModel):
                 "description" : unicode(descripcion, errors="ignore"),
                 "brand" : unicode(brand, errors="ignore"),
                 "manufacturer" : unicode(self.manufacturer, errors="ignore"),
-                "size" : ",".join(str(v) for v in self.size),
+                "size" : unicode(self.size, errors="ignore"),
                 "color" : unicode(color, errors="ignore"),
                 "bullet_1" : unicode(self.bullet_1, errors="ignore"),
                 "bullet_2" : unicode(self.bullet_2, errors="ignore"),
