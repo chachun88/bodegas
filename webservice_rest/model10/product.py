@@ -429,7 +429,6 @@ class Product(BaseModel):
                 ,upc = %(upc)s
                 ,color = %(color)s
                 ,sell_price = %(sell_price)s
-                ,size = %(size)s
                 ,which_size = %(which_size)s
                 ,delivery = %(delivery)s where sku = %(sku)s returning id'''
 
@@ -474,6 +473,20 @@ class Product(BaseModel):
 
                 except Exception,e:
                     return self.ShowError("Error updating product, {}".format(str(e)))
+
+                q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where sku = %(sku)s'''
+
+                p = {
+                        "size":sizes,
+                        "sku":self.sku
+                    }
+
+                try:
+                    cur.execute(q,p)
+                    self.connection.commit()
+
+                except Exception,e:
+                    return self.ShowError("Error updating product size, {}".format(str(e)))
 
                 _tag = Tag()
                 remover_asociacion = _tag.RemoveTagsAsociation(self.id)
@@ -551,6 +564,20 @@ class Product(BaseModel):
                     self.connection.commit()
                 except Exception,e:
                     return self.ShowError("Error updating by id:{}".format(str(e)))
+
+                q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where id = %(id)s'''
+
+                p = {
+                        "size":sizes,
+                        "id":self.id
+                    }
+
+                try:
+                    cur.execute(q,p)
+                    self.connection.commit()
+
+                except Exception,e:
+                    return self.ShowError("Error updating product size, {}".format(str(e)))
 
                 
                 # self.id = cur.fetchone()[0]
