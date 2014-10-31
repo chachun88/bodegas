@@ -511,7 +511,7 @@ class Cellar(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select distinct product_sku, size from "Kardex" where cellar_id = %(id)s'''
+        query = '''select distinct product_sku, size from "Kardex" where cellar_id = %(id)s order by product_sku'''
         parametros = {
         "id":self.id
         }
