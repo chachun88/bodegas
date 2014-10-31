@@ -121,26 +121,34 @@ class Category(BaseModel):
 		# except:
 		# 	return self.ShowError("error saving category")
 
-		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-		query = '''select * from "Brand" where name = %(name)s'''
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+		query = '''select * from "Category" where name = %(name)s'''
 		parameters = {
 		"name":self.name
 		}
-		cur.execute(query,parameters)
-		category = cur.fetchone()
 
-		if category:
-			query = '''update "Category" set parent_id = %(parent)s where name = %(name)s'''
+		try:
+			cur.execute(query,parameters)
+		except Exception,e:
+			return self.ShowError(str(e))
+
+
+		if cur.rowcount > 0:
+
+			query = '''update "Category" set parent_id = %(parent)s where name = %(name)s returning id'''
 
 			parameters = {
 			"name": self.name,
 			"parent":self.parent
 			}
 
-			cur.execute(query,parameters)
-
-			self.connection.commit()
-
+			try:
+				cur.execute(query,parameters)
+				self.connection.commit()
+				self.id = cur.fetchone()["id"]
+				return self.ShowSuccessMessage(self.id)
+			except Exception,e:
+				return self.ShowError("Updating category {}".format(str(e)))
 		else:
 
 			query = '''insert into "Category" (name,parent_id) values (%(name)s,%(parent)s) RETURNING id;'''
@@ -153,16 +161,14 @@ class Category(BaseModel):
 			try:
 
 				cur.execute(query,parameters)
-
-				return self.ShowSuccessMessage("category saved correctly")
+				self.connection.commit()
+				self.id = cur.fetchone()["id"]
+				return self.ShowSuccessMessage(self.id)
 
 			except Exception, e:
 
 				return self.ShowError("error saving category:{}".format(str(e)))
 
-			self.id = cur.fetchone()[0]
-
-			self.connection.commit()
 
 
 	def GetAllCategories(self):

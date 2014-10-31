@@ -608,7 +608,11 @@ class Product(BaseModel):
                 values (%(delivery)s,%(which_size)s,%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_1)s,%(bullet_2)s,%(bullet_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s,%(sell_price)s) returning id'''
 
                 category = Category()
-                category.InitByName(self.category)
+                category.name = self.category
+                res = category.Save()
+
+                if "error" in res:
+                    return self.ShowError("Category can not be saved {}".format(res["error"]))
 
                 p = {
                         "name":self.name,
