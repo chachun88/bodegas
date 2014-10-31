@@ -411,8 +411,6 @@ class Product(BaseModel):
 
             if sku_count >= 1:
 
-                print "encontro sku"
-
                 q = '''update "Product" set 
                 name = %(name)s 
                 ,description = %(description)s 
@@ -433,9 +431,11 @@ class Product(BaseModel):
                 ,delivery = %(delivery)s where sku = %(sku)s returning id'''
 
                 category = Category()
-                category.InitByName(self.category)
+                category.name = self.category
+                res = category.Save()
 
-                # print category.id
+                if "error" in res:
+                    return self.ShowError("Category can not be saved {}".format(res["error"]))
 
                 p = {
                         "name":self.name,
@@ -532,7 +532,11 @@ class Product(BaseModel):
                 , delivery = %(delivery)s where id = %(id)s'''
 
                 category = Category()
-                category.InitByName(self.category)
+                category.name = self.category
+                res = category.Save()
+
+                if "error" in res:
+                    return self.ShowError("Category can not be saved {}".format(res["error"]))
 
                 p = {
                         "name":self.name,
