@@ -164,44 +164,47 @@ class ProductLoadHandler(BaseHandler):
 				#print ncols
 				#self.write("{}".format(ncols))
 
-				tallas=[]
-
-				
 				cellar=Cellar()
 
 				for i in range(nrows):
+
 					prod = Product()
 					cellar_name = ""
 					quantity = 0
 					size = ""
+					stock = []
+					tallas = []
+
 					for j in range(ncols):				
 						if i > 3:
 
 							if j == 0:
-								prod.category = sheet.cell_value(i,j).encode("iso-8859-1")
+								prod.category = sheet.cell_value(i,j).encode("utf-8")
 							elif j == 1:
-								prod.sku = sheet.cell_value(i,j).encode("iso-8859-1")
+								prod.sku = sheet.cell_value(i,j).encode("utf-8")
 							elif j == 2:
-								prod.name = sheet.cell_value(i,j).encode("iso-8859-1")
+								prod.name = sheet.cell_value(i,j).encode("utf-8")
 							elif j == 3:
-								prod.description = sheet.cell_value(i,j).encode("iso-8859-1")
+								prod.description = sheet.cell_value(i,j).encode("utf-8")
 							elif j == 4:										
-								prod.color = sheet.cell_value(i,j).encode("iso-8859-1")
+								# prod.color = sheet.cell_value(i,j).encode("utf-8")
+								prod.color = sheet.cell_value(i,j).encode("utf-8")
 							elif j == 5:
 								prod.price = int(sheet.cell_value(i,j))
 							elif j == 6:
-								prod.manufacturer = sheet.cell_value(i,j).encode("iso-8859-1")
+								prod.manufacturer = sheet.cell_value(i,j).encode("utf-8")
 							elif j == 7:
 								cellar_name = sheet.cell_value(i,j)
 							elif j == 8:
-								prod.brand = sheet.cell_value(i,j).encode("iso-8859-1")
+								prod.brand = sheet.cell_value(i,j).encode("utf-8")
 							elif j > 9:
 
-								size = sheet.cell_value(3,j)
+								size = str(sheet.cell_value(3,j))
 								quantity = sheet.cell_value(i,j)
 
-								if sheet.cell_value(i,j) != "":
-									tallas.append(str(sheet.cell_value(3,j)))
+								if quantity != "":
+									tallas.append(size)
+									stock.append({size:int(quantity)})
 
 							if j == ncols - 1:
 
@@ -222,11 +225,16 @@ class ProductLoadHandler(BaseHandler):
 												if error_name not in warnings:
 													warnings.append( error_name )
 												
+											for item in stock:
 
-											add_kardex = cellar.AddProducts(prod.sku, quantity, prod.price, size, prod.color, operation, self.get_user_email() )
+												for talla in item.keys():
 
-											if "error" in add_kardex:
-												print "Error al agregar {} a la kardex".format(prod.sku)
+													print "talla: {} cantidad: {}".format(talla,item[talla])
+
+													add_kardex = cellar.AddProducts(prod.sku, item[talla], prod.price, talla, prod.color, operation, self.get_user_email() )
+
+												if "error" in add_kardex:
+													print "Error al agregar {} a la kardex".format(prod.sku)
 										else:
 											error_name = "No existe la bodega {}".format(cellar_name)
 											if error_name not in warnings:

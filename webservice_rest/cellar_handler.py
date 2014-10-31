@@ -119,7 +119,7 @@ class CellarProductsKardex(BaseHandler):
 
 class CellarProductsAddHandler(BaseHandler):
 	"""docstring for CellarProductsAddHandler"""
-	def get(self):
+	def post(self):
 		# validate access token
 		if not self.ValidateToken():
 			return
@@ -145,8 +145,6 @@ class CellarProductsAddHandler(BaseHandler):
 		kardex.units = quantity
 		kardex.price = price
 		kardex.size = size
-
-		print color
 
 		kardex.color= color
 		kardex.user = user

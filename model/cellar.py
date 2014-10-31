@@ -110,22 +110,24 @@ class Cellar(BaseModel):
 	
 	def AddProducts(self, product_sku, quantity, price, size, color, operation, user):
 
-		print color
-
-
 		url = self.wsurl() + "/cellar/products/add?token=" + self.token
-		url += "&cellar_id=" + self.identifier
-		url += "&product_sku=" + product_sku 
-		url += "&operation=buy"
-		url += "&quantity={}".format(quantity)
-		url += "&price={}".format(price)
-		url += "&size=" + size
-		url += "&color=" + color
-		url += "&user=" + user
 
-		json_string = urllib.urlopen(url).read()
+		data = {
+			"cellar_id": self.identifier,
+			"product_sku": product_sku,
+			"operation": "buy",
+			"quantity": quantity,
+			"price": price,
+			"size": size,
+			"color": color,
+			"user": user
+		}
 
-		return json_util.loads(json_string)
+		post_data = urllib.urlencode(data)
+
+		response_str = urllib.urlopen(url, post_data).read()
+
+		return json_util.loads(response_str)
 
 	def RemoveProducts(self, product_sku, quantity, price, size, color, operation, user):
 		url = self.wsurl() + "/cellar/products/remove?token=" + self.token
@@ -155,30 +157,30 @@ class Cellar(BaseModel):
  
 	@property
 	def name(self):
-	    return self._name
+		return self._name
 	@name.setter
 	def name(self, value):
-	    self._name = value
+		self._name = value
 	
 	@property
 	def description(self):
-	    return self._description
+		return self._description
 	@description.setter
 	def description(self, value):
-	    self._description = value
+		self._description = value
 	
 	@property
 	def identifier(self):
-	    return self._identifier
+		return self._identifier
 	@identifier.setter
 	def identifier(self, value):
-	    self._identifier = value
+		self._identifier = value
 
 	@property
 	def city(self):
-	    return self._city
+		return self._city
 	@city.setter
 	def city(self, value):
-	    self._city = value
+		self._city = value
 	
 	
