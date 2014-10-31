@@ -15,7 +15,7 @@ import glob
 
 from basehandler import BaseHandler
 
-DEFAULT_IMAGE = "static/default_image.png"
+DEFAULT_IMAGE = "static/default_image.jpg"
 
 def getIamgeBuffer(handler, image_name):
 
