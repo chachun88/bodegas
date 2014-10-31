@@ -110,7 +110,7 @@ class AddHandler(BaseHandler):
 	def post(self):
 
 
-		nombre = self.get_argument("name","")
+		nombre = self.get_argument("name","").encode("utf-8")
 		asociados_obj = self.get_arguments("asociados","")
 		asociados_str = json_util.dumps(asociados_obj)
 		identificador = self.get_argument("id","")
