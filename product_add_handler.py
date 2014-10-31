@@ -169,10 +169,10 @@ class ProductAddHandler(BaseHandler):
 				prod.name		= self.get_argument("name", "").encode('utf-8')
 				prod.upc		= self.get_argument("upc", "")
 				prod.description= self.get_argument("description", "").encode('utf-8')
-				prod.brand 		= self.get_argument("brand", "")
+				prod.brand 		= self.get_argument("brand", "").encode('utf-8')
 				prod.manufacturer= self.get_argument("manufacturer", "")
 				prod.size 		= self.get_argument("size", "").encode("utf-8")
-				prod.color 		= self.get_argument("color", "")
+				prod.color 		= self.get_argument("color", "").encode('utf-8')
 				prod.material 	= self.get_argument("material", "")
 				prod.bullet_1 	= self.get_argument("bullet_1", "")
 				prod.bullet_2 	= self.get_argument("bullet_2", "") 
@@ -183,8 +183,8 @@ class ProductAddHandler(BaseHandler):
 				prod.image_2 	= img2
 				prod.image_3 	= img3
 				prod.sell_price = self.get_argument("sell_price",0)
-				prod.delivery   = self.get_argument("delivery","")
-				prod.which_size = self.get_argument("which_size","")
+				prod.delivery   = self.get_argument("delivery","").encode('utf-8')
+				prod.which_size = self.get_argument("which_size","").encode('utf-8')
 				prod.tags       = self.get_argument("tags","").encode("utf-8")
 
 

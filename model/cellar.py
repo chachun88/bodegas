@@ -109,13 +109,9 @@ class Cellar(BaseModel):
 		return json_util.loads(json_string)
 	
 	def AddProducts(self, product_sku, quantity, price, size, color, operation, user):
-		
-		col=""
-		
-		try:
-			col = col.encode('utf-8')
-		except:
-			col = color
+
+		print color
+
 
 		url = self.wsurl() + "/cellar/products/add?token=" + self.token
 		url += "&cellar_id=" + self.identifier
@@ -124,7 +120,7 @@ class Cellar(BaseModel):
 		url += "&quantity={}".format(quantity)
 		url += "&price={}".format(price)
 		url += "&size=" + size
-		url += "&color=" + col
+		url += "&color=" + color
 		url += "&user=" + user
 
 		json_string = urllib.urlopen(url).read()

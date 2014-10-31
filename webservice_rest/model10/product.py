@@ -400,10 +400,18 @@ class Product(BaseModel):
             p = {
             "sku":self.sku
             }
-            cur.execute(q,p)
-            sku_count = cur.fetchone()["cantidad"]
+
+            sku_count = 0
+
+            try:
+                cur.execute(q,p)
+                sku_count = cur.fetchone()["cantidad"]
+            except Exception,e:
+                return self.ShowError("Error checking if product exists, {}".format(str(e)))
 
             if sku_count >= 1:
+
+                print "encontro sku"
 
                 q = '''update "Product" set 
                 name = %(name)s 
@@ -448,7 +456,7 @@ class Product(BaseModel):
                         "which_size":self.which_size,
                         # "currency":self.currency,
                         "category_id":category.id,
-                        "price":float(self.price),
+                        "price":self.price,
                         "upc":self.upc,
                         "sku":self.sku,
                         "sell_price":self.sell_price
@@ -490,8 +498,6 @@ class Product(BaseModel):
 
             elif self.id.strip() != "":
 
-                sizes=self.size.split(',')
-
                 q = '''update "Product" set 
                 name=%(name)s 
                 , description = %(description)s 
@@ -531,7 +537,7 @@ class Product(BaseModel):
                         "image_3":self.image_3,
                         "sku":self.sku,
                         "category_id":category.id,
-                        "price":float(self.price),
+                        "price":self.price,
                         "upc":self.upc,
                         "id":self.id,
                         "sell_price":self.sell_price,
@@ -540,9 +546,13 @@ class Product(BaseModel):
                     }
 
                 # print "existe id:{}".format(cur.mogrify(q,p))
-                cur.execute(q,p)
+                try:
+                    cur.execute(q,p)
+                    self.connection.commit()
+                except Exception,e:
+                    return self.ShowError("Error updating by id:{}".format(str(e)))
 
-                self.connection.commit()
+                
                 # self.id = cur.fetchone()[0]
 
                 _tag = Tag()
@@ -565,7 +575,7 @@ class Product(BaseModel):
 
                 return self.ShowSuccessMessage("product correctly updated by id")
 
-            else:
+            elif self.sku != "":
 
                 q = '''insert into "Product" (delivery,which_size,name,description,sku,brand,manufacturer,material,bullet_1,bullet_2,bullet_3,image,image_2,image_3, category_id, price, upc,size,color,sell_price)
                 values (%(delivery)s,%(which_size)s,%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_1)s,%(bullet_2)s,%(bullet_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s,%(sell_price)s) returning id'''
@@ -589,7 +599,7 @@ class Product(BaseModel):
                         "image_2":self.image_2,
                         "image_3":self.image_3,
                         "category_id":category.id,
-                        "price":int(float(self.price)),
+                        "price":self.price,
                         "upc":self.upc,
                         "sell_price":self.sell_price,
                         "delivery":self.delivery,
@@ -598,8 +608,12 @@ class Product(BaseModel):
 
                 # print cur.mogrify(q.strip(),p)
 
-                cur.execute(q,p)
-                self.connection.commit()
+                try:
+                    cur.execute(q,p)
+                    self.connection.commit()
+                except Exception,e:
+                    return self.ShowError("Error inserting new product: {}".format(str(e)))
+                
 
                 self.id = cur.fetchone()["id"]
 
@@ -625,7 +639,9 @@ class Product(BaseModel):
 
                 return self.ShowSuccessMessage("product correctly inserted")
 
+            else:
 
+                return self.ShowError("No viene sku")
             
 
         except Exception,e:

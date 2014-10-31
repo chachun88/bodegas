@@ -26,6 +26,8 @@ from model.product import Product
 from model.cellar import Cellar
 from globals import port, debugMode, carpeta_img, userMode, Menu
 
+from bson import json_util
+
 class HomeHandler(BaseHandler):
 
 	fn =''
@@ -162,102 +164,97 @@ class ProductLoadHandler(BaseHandler):
 				#print ncols
 				#self.write("{}".format(ncols))
 
-				matriz=[]
 				tallas=[]
 
-				prod = Product()
+				
 				cellar=Cellar()
 
-				for i in range(nrows):	
-					matriz.append([])
+				for i in range(nrows):
+					prod = Product()
+					cellar_name = ""
+					quantity = 0
+					size = ""
 					for j in range(ncols):				
-						if i == 3 and j > 9:
-							tallas.append(sheet.cell_value(i,j))				
+						if i > 3:
 
-				try:			
-					for i in range(nrows):	
-						matriz.append([])
-						for k in range(len(tallas)):
-							for j in range(ncols):
+							if j == 0:
+								prod.category = sheet.cell_value(i,j).encode("iso-8859-1")
+							elif j == 1:
+								prod.sku = sheet.cell_value(i,j).encode("iso-8859-1")
+							elif j == 2:
+								prod.name = sheet.cell_value(i,j).encode("iso-8859-1")
+							elif j == 3:
+								prod.description = sheet.cell_value(i,j).encode("iso-8859-1")
+							elif j == 4:										
+								prod.color = sheet.cell_value(i,j).encode("iso-8859-1")
+							elif j == 5:
+								prod.price = int(sheet.cell_value(i,j))
+							elif j == 6:
+								prod.manufacturer = sheet.cell_value(i,j).encode("iso-8859-1")
+							elif j == 7:
+								cellar_name = sheet.cell_value(i,j)
+							elif j == 8:
+								prod.brand = sheet.cell_value(i,j).encode("iso-8859-1")
+							elif j > 9:
 
-								matriz[i].append(sheet.cell_value(i,j))
-								
-								try: 
-									if i > 3 and i < nrows:
-										prod.size=str(tallas[k]).split(",")
-										size=str(tallas[k])
-										if j == 0:
-											prod.category = matriz[i][j].encode('utf-8')
-										elif j == 1:
-											prod.sku = str(matriz[i][j]).encode('utf-8')
-										elif j == 2:
-											prod.name = matriz[i][j].encode('utf-8')
-										elif j == 3:
-											prod.description = matriz[i][j].encode('utf-8')
-										elif j == 4:										
-											prod.color=matriz[i][j].encode('utf-8')
-											color=matriz[i][j].encode('utf-8')
-										elif j == 5:
-											price = matriz[i][j]
-											prod.price = str(price).strip()
-										elif j == 6:
-											prod.manufacturer = matriz[i][j].encode('utf-8')
-										elif j == 7:
-											cellar_name= matriz[i][j].encode('utf-8')
-										elif j == 8:
-											prod.brand = matriz[i][j].encode('utf-8')
-										elif j == 10:
+								size = sheet.cell_value(3,j)
+								quantity = sheet.cell_value(i,j)
+
+								if sheet.cell_value(i,j) != "":
+									tallas.append(str(sheet.cell_value(3,j)))
+
+							if j == ncols - 1:
+
+								prod.size = ",".join(tallas)
+							
+								save = prod.Save("masive")
+
+								if "success" in save:
+
+									operation="buy"
+
+									if cellar_name != "":
+										if cellar.CellarExist( cellar_name ):
 											try:
-												q = k +j
+												cellar.InitWithName(cellar_name)
+											except Exception,e:
+												error_name = "Error al inicializar bodega {}".format(str(e))
+												if error_name not in warnings:
+													warnings.append( error_name )
+												
 
-												quantity=str(matriz[i][q])
-				
+											add_kardex = cellar.AddProducts(prod.sku, quantity, prod.price, size, prod.color, operation, self.get_user_email() )
 
-												try:
-													prod.Save("masive")
-												except Exception, e:
-													print "prod.Save('masive'): {}".format(str(e))
+											if "error" in add_kardex:
+												print "Error al agregar {} a la kardex".format(prod.sku)
+										else:
+											error_name = "No existe la bodega {}".format(cellar_name)
+											if error_name not in warnings:
+												warnings.append( error_name )
+									else:
+										error_name = "Bodega no especificada"
+										if error_name not in warnings:
+											warnings.append( error_name )
+								else:
 
-												operation="buy"
+									error_name = "Error al guardar producto {}".format(save["error"])
+									if error_name not in warnings:
+										warnings.append( error_name )
 
-												#products stored for cellar
-												if cellar.CellarExist( cellar_name ):
-													cellar.InitWithName(cellar_name)
+					#pasa a otra columna
+				#pasa a otra linea
 
-													try:
-														cellar.AddProducts(prod.sku, quantity, price, size, color, operation, self.get_user_email() )
-													except Exception, e:
-														print "cellar.AddProducts: {}".format(str(e))
-														
-												else:
-													error_name = "No existe la bodega \"" + cellar_name + "\""
-													if error_name not in warnings:
-														warnings.append( error_name )
-											except Exception, e:
-												print "se cae al guardar, error:{}".format(str(e))
-												pass	
+				if len(warnings) > 0:
+					self.redirect("/product?dn={dn}&w={warnings}".format(dn="t3",warnings=",".join(warnings)))
 
-								except Exception, e:
-									print "Error:{}".format(str(e))
-									dn="t3"
-									self.redirect("/product?dn="+dn + "&w=" + ",".join(warnings))
-									return
-				except Exception, e:
-					print "fiiiiiiinnnnnnn "+str(j)+" "+str(e)			#product is stored
-
-
-				dn="t"
-				#self.redirect("/product?dn="+dn)
-				#self.render("product/home.html", side_menu=self.side_menu, dn=dn)
-
+				else:
+					self.redirect("/product?dn={dn}&w={warnings}".format(dn="t",warnings=",".join(warnings)))
 
 			else:
-				dn="t2"
+				self.redirect("/product?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
 		else:
-			dn="t2"
+			self.redirect("/product?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
 		
-
-		self.redirect("/product?dn="+dn + "&w=" + ",".join(warnings))
 
 class ProductRemoveHandler(BaseHandler):
 	

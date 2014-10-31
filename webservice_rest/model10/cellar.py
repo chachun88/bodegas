@@ -430,7 +430,7 @@ class Cellar(BaseModel):
             self.id = cellar['id']
             self.name = cellar['name']
             self.description = cellar['description']
-            self.city = d["city_id"]
+            self.city = cellar["city_id"]
 
             return self.ShowSuccessMessage("cellar initialized")
 

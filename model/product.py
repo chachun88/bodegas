@@ -313,57 +313,28 @@ class Product(BaseModel):
             print urllib.urlopen(url).read()
 
     def Save(self, typee="other"):
-        #siz={ 'size':[self.size] }
-        #col={ 'color':[self.color] }
-
-        descripcion = ""
-        name = ""
-        color = ""
-        brand = ""
-
-        try:
-            descripcion = self.description.encode('utf-8')
-        except:
-            descripcion = self.description
-
-        try:
-            name = self.name.encode("utf-8")
-        except:
-            name = self.name
-
-        try:
-            color =  self.color.encode("utf-8")
-            # color =unicode(color, errors="ignore")
-        except:
-            color = self.color
-
-        try:
-            brand = self.brand.encode("utf-8")
-        except:
-            brand = self.brand
 
         url = self.wsurl()+"/product/add?token=" + self.token
 
-        if typee == "masive":
-            
+        if typee == "masive":          
 
             data = {
-                "category" : unicode(self.category, errors="ignore"),
-                "sku" : unicode(self.sku, errors="ignore"),
-                "name" : unicode(name, errors="ignore"),
-                "upc" : unicode(self.upc, errors="ignore"),
-                "description" : unicode(descripcion, errors="ignore"),
-                "brand" : unicode(brand, errors="ignore"),
-                "manufacturer" : unicode(self.manufacturer, errors="ignore"),
-                "size" : unicode(self.size, errors="ignore"),
-                "color" : unicode(color, errors="ignore"),
-                "bullet_1" : unicode(self.bullet_1, errors="ignore"),
-                "bullet_2" : unicode(self.bullet_2, errors="ignore"),
-                "bullet_3" : unicode(self.bullet_3, errors="ignore"),
+                "category" : self.category,
+                "sku" : self.sku,
+                "name" : self.name,
+                "upc" : self.upc,
+                "description" : self.description,
+                "brand" : self.brand,
+                "manufacturer" : self.manufacturer,
+                "size" : self.size,
+                "color" : self.color,
+                "bullet_1" : self.bullet_1,
+                "bullet_2" : self.bullet_2,
+                "bullet_3" : self.bullet_3,
                 "price" : self.price,
-                "image" : unicode(self.image, errors="ignore"),
-                "image_2" : unicode(self.image_2, errors="ignore"),
-                "image_3" : unicode(self.image_3, errors="ignore"),
+                "image" : self.image,
+                "image_2" : self.image_2,
+                "image_3" : self.image_3,
                 "sell_price" : self.sell_price,
                 "tags" : self.tags, # se envia como string
                 "delivery" : self.delivery,
@@ -371,13 +342,14 @@ class Product(BaseModel):
                 "id" : self.identifier
             }
 
+
             post_data = urllib.urlencode(data)
 
             response_str = urllib.urlopen(url, post_data).read()
 
-            print "masive:{}".format(response_str)
+            # print "masive:{}".format(response_str)
 
-            return response_str
+            return json_util.loads(response_str)
 
         else:   
 

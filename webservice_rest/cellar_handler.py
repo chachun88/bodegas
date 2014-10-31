@@ -145,6 +145,9 @@ class CellarProductsAddHandler(BaseHandler):
 		kardex.units = quantity
 		kardex.price = price
 		kardex.size = size
+
+		print color
+
 		kardex.color= color
 		kardex.user = user
 
