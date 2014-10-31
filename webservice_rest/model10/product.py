@@ -639,7 +639,7 @@ class Product(BaseModel):
                     cur.execute(q,p)
                     self.connection.commit()
                 except Exception,e:
-                    return self.ShowError("Error inserting new product: {}".format(str(e)))
+                    return self.ShowError("Error inserting new product: {} query: {}".format(str(e),cur.mogrify(q.strip(),p)))
                 
 
                 self.id = cur.fetchone()["id"]
