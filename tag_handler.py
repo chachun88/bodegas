@@ -20,6 +20,8 @@ class TagHandler(BaseHandler):
 
 	def get(self):
 
+		self.set_active(Menu.TAGS_LISTAR)
+
 		page = self.get_argument("page",1)
 		items = self.get_argument("items",20)
 
@@ -100,6 +102,8 @@ class EditHandler(BaseHandler):
 class AddHandler(BaseHandler):
 
 	def get(self):
+
+		self.set_active(Menu.TAGS_ADD)
 
 		tag = Tag()
 		product = Product()

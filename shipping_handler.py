@@ -27,6 +27,9 @@ class AddCityHandler(BaseHandler):
 class SaveHandler(BaseHandler):
 
 	def get(self):
+
+		self.set_active(Menu.SHIPPING_SAVE)
+
 		city = City()
 		cities = city.List()
 
@@ -72,6 +75,8 @@ class SaveHandler(BaseHandler):
 class ListHandler(BaseHandler):
 
 	def get(self):
+
+		self.set_active(Menu.SHIPPING_LIST)
 
 		shipping = Shipping()
 		res_lista = shipping.List()
