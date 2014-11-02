@@ -7,6 +7,8 @@ import tornado.web
 from lputils import MoneyFormat
 from bson import json_util
 from model.user import User
+import locale
+import os
 #from loadingplay.multilang.lang import lpautoSelectCurrentLang
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -81,6 +83,14 @@ class BaseHandler(tornado.web.RequestHandler):
 
         return date.strftime('%d/%m/%Y %H:%M')
 
+    def money_format(self, value):
+
+        if os.name != "nt":
+            locale.setlocale( locale.LC_NUMERIC, 'es_ES.utf8' )
+        else:
+            locale.setlocale( locale.LC_NUMERIC, 'Spanish_Spain.1252' )
+        return "${}".format(locale.format('%d', value, True))
+
     def render(self, template_name ,**kwargs):
 
         ## loading current_user
@@ -94,6 +104,7 @@ class BaseHandler(tornado.web.RequestHandler):
         kwargs["MoneyFormat"] = MoneyFormat
         kwargs["side_menu"] = self.side_menu
         kwargs["CustomDateFormat"] = self.CustomDateFormat
+        kwargs["money_format"] = money_format
 
         ## overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)

@@ -62,27 +62,27 @@
 							{{o["quantity"]}}
 						</td>
 						<td>
-							{{o["sell_price"]}}
+							{{money_format(o["sell_price"])}}
 						</td>
 						<td class="text-align-right">
-							{{o["subtotal"]}}
+							{{money_format(o["subtotal"])}}
 						</td>
 					</tr>
 					{% end %}
 					<tr>
-						<td></td>
+						<td colspan="3"></td>
 						<td class="text-align-right">Subtotal</td>
-						<td class="text-align-right">{{order.subtotal}}</td>
+						<td class="text-align-right">{{money_format(order.subtotal)}}</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td colspan="3"></td>
 						<td class="text-align-right">Costo de Env&iacute;o</td>
-						<td class="text-align-right">{{order.shipping}}</td>
+						<td class="text-align-right">{{money_format(order.shipping)}}</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td colspan="3"></td>
 						<td class="text-align-right">Total</td>
-						<td class="text-align-right">{{order.total}}</td>
+						<td class="text-align-right">{{money_format(order.total)}}</td>
 					</tr>
 				</tbody>
 			</table>
