@@ -33,11 +33,11 @@ class Order(BaseModel):
         self._subtotal = value
 
     @property
-    def discount(self):
-        return self._discount
-    @discount.setter
-    def discount(self, value):
-        self._discount = value
+    def shipping(self):
+        return self._shipping
+    @shipping.setter
+    def shipping(self, value):
+        self._shipping = value
     
     @property
     def tax(self):
@@ -132,7 +132,7 @@ class Order(BaseModel):
         self._salesman               = ""
         self._customer               = ""
         self._subtotal               = ""
-        self._discount               = ""
+        self._shipping               = ""
         self._tax                    = ""
         self._total                  = ""
         self._address                = ""
@@ -209,7 +209,7 @@ class Order(BaseModel):
         #     "salesman" : self.salesman,
         #     "customer" : self.customer,
         #     "subtotal" : self.subtotal,
-        #     "discount" : self.discount,
+        #     "shipping" : self.shipping,
         #     "tax" : self.tax,
         #     "total" : self.total,
         #     "address" : self.address,
@@ -222,8 +222,8 @@ class Order(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''insert into "Order" (date,source,items_quantity,state,user_id,subtotal,discount,tax,total,type,products_quantity)'''
-        query += ''' values(%(date)s,%(source)s,%(items_quantity)s,%(state)s,%(user_id)s,%(subtotal)s,%(discount)s,%(tax)s,%(total)s,%(type)s,%(products_quantity)s)'''
+        query = '''insert into "Order" (date,source,items_quantity,state,user_id,subtotal,shipping,tax,total,type,products_quantity)'''
+        query += ''' values(%(date)s,%(source)s,%(items_quantity)s,%(state)s,%(user_id)s,%(subtotal)s,%(shipping)s,%(tax)s,%(total)s,%(type)s,%(products_quantity)s)'''
         query += ''' returning id'''
 
         parametros = {
@@ -233,7 +233,7 @@ class Order(BaseModel):
             "products_quantity": self.product_quantity,
             "state": self.state,
             "subtotal" : self.subtotal,
-            "discount" : self.discount,
+            "shipping" : self.shipping,
             "tax" : self.tax,
             "total" : self.total,
             "user_id" : self.customer,
