@@ -45,6 +45,7 @@
 						<th>Producto</th>
 						<th>Talla</th>
 						<th>Cantidad</th>
+						<th>Precio Unitario</th>
 						<th class="text-align-right">Total</th>
 					</tr>
 				</thead>
@@ -60,6 +61,9 @@
 						<td>
 							{{o["quantity"]}}
 						</td>
+						<td>
+							{{o["sell_price"]}}
+						</td>
 						<td class="text-align-right">
 							{{o["subtotal"]}}
 						</td>
@@ -72,8 +76,8 @@
 					</tr>
 					<tr>
 						<td></td>
-						<td class="text-align-right">Impuesto</td>
-						<td class="text-align-right">{{order.tax}}</td>
+						<td class="text-align-right">Costo de Env&iacute;o</td>
+						<td class="text-align-right">{{order.shipping}}</td>
 					</tr>
 					<tr>
 						<td></td>
