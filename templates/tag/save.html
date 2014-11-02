@@ -3,9 +3,9 @@
 
 {% block title %}
 	{% if mode == "edit" %}
-		Editar Producto 
+		Editar Tag 
 	{% elif mode == "add" %}
-		Agregar Producto
+		Agregar Tag
 	{% end %}
 {% end %}
 
@@ -43,10 +43,10 @@
 					</div>
 					<div class="control-group">
                         <label class="control-label" for="multiple">
-                            Productos
+                            Tags
                         </label>
                         <div class="controls form-group">
-                            <select data-placeholder="Productos Asociados"
+                            <select data-placeholder="Tags Asociados"
                                 class="chzn-select select-block-level" tabindex="-1"
                                 multiple="multiple"
                                 name="asociados" 

@@ -6,6 +6,8 @@ from model.city import City
 from model.shipping import Shipping
 from bson import json_util
 
+from globals import Menu
+
 class AddCityHandler(BaseHandler):
 
 	def post(self):
