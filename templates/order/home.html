@@ -103,7 +103,7 @@
 							{{p["products_quantity"]}}
 						</td>
 						<td>
-							{{p["total"]}}
+							{{money_format(p["total"])}}
 						</td>
 						<td>
 							{% if int(p["state"]) == 0 %}
