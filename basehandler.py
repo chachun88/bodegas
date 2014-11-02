@@ -104,7 +104,7 @@ class BaseHandler(tornado.web.RequestHandler):
         kwargs["MoneyFormat"] = MoneyFormat
         kwargs["side_menu"] = self.side_menu
         kwargs["CustomDateFormat"] = self.CustomDateFormat
-        kwargs["money_format"] = money_format
+        kwargs["money_format"] = self.money_format
 
         ## overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)
