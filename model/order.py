@@ -42,11 +42,11 @@ class Order(BaseModel):
         self._subtotal = value
 
     @property
-    def discount(self):
-        return self._discount
-    @discount.setter
-    def discount(self, value):
-        self._discount = value
+    def city_id(self):
+        return self._city_id
+    @city_id.setter
+    def city_id(self, value):
+        self._city_id = value
     
     @property
     def tax(self):
@@ -140,7 +140,7 @@ class Order(BaseModel):
         self._salesman               = ""
         self._customer               = ""
         self._subtotal               = ""
-        self._discount               = ""
+        self._city_id               = ""
         self._tax                    = ""
         self._total                  = ""
         self._address                = ""
@@ -160,7 +160,7 @@ class Order(BaseModel):
         url += "&salesman=" + self.salesman
         url += "&customer=" + self.customer
         url += "&subtotal=" + self.subtotal
-        url += "&discount=" + self.discount
+        url += "&city_id=" + self.city_id
         url += "&tax=" + self.tax
         url += "&total=" + self.total
         url += "&address=" + self.address
@@ -203,7 +203,7 @@ class Order(BaseModel):
             # self.salesman               = data["salesman"]
             self.customer               = data["customer"]
             self.subtotal               = data["subtotal"]
-            self.discount               = data["discount"]
+            self.city_id               = data["city_id"]
             self.tax                    = data["tax"]
             self.total                  = data["total"]
             self.address                = data["address"]
