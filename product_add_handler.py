@@ -309,9 +309,10 @@ class FastEditHandler(BaseHandler):
 			prod.image_2 = prod.image_2.encode("utf-8")
 			prod.image_3 = prod.image_3.encode("utf-8")
 
-			print "type:{} value:{}".format(type(prod.tags),prod.tags)
+			# print "type:{} value:{}".format(type(prod.tags),prod.tags)
 
-			prod.tags = ",".join(prod.tags).encode("utf-8")
+			prod.tags = ','.join(str(v) for v in prod.tags)
+			
 			
 			respuesta = prod.Save()
 
