@@ -24,7 +24,7 @@ class AddCityHandler(BaseHandler):
 			else:
 				self.redirect("/shipping/save?identifier={id}".format(id=identifier))
 		else:
-			self.write(guardado["error"])
+			self.redirect("/shipping/save?dn=error&mensaje="+guardado["error"])
 
 class SaveHandler(BaseHandler):
 
@@ -36,6 +36,8 @@ class SaveHandler(BaseHandler):
 		cities = city.List()
 
 		identifier = int(self.get_argument("identifier",0))
+		dn = self.get_argument("dn","")
+		mensaje = self.get_argument("mensaje","")
 
 		shipping = Shipping()
 
@@ -49,7 +51,7 @@ class SaveHandler(BaseHandler):
 				return
 
 		if "success" in cities:
-			self.render("shipping/add.html",cities=cities["success"],shipping=shipping)
+			self.render("shipping/add.html",cities=cities["success"],shipping=shipping,dn=dn,mensaje=mensaje)
 		else:
 			self.write(cities["error"])
 

@@ -8,6 +8,12 @@
 	Administrador de precios de despachos
 {% end %}			
 {% block body %}
+{% if dn == "error" %}
+<div class="alert alert-danger alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Error!</strong> {{mensaje}}
+</div>
+{% end %}
 <div class="col-md-8">
 	<section class="widget">
 		<div class="body">
