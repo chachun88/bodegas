@@ -284,7 +284,7 @@ class FastEditHandler(BaseHandler):
 
 		res = prod.InitWithId(self.get_argument("id", ""))
 
-		if res == "ok":
+		if "success" in res:
 
 			prod.name		= self.get_argument("name", "").encode('utf-8')
 			prod.description= self.get_argument("description", "").encode('utf-8')
@@ -308,6 +308,9 @@ class FastEditHandler(BaseHandler):
 			prod.image = prod.image.encode("utf-8")
 			prod.image_2 = prod.image_2.encode("utf-8")
 			prod.image_3 = prod.image_3.encode("utf-8")
+
+			print "type:{} value:{}".format(type(prod.tags),prod.tags)
+
 			prod.tags = ",".join(prod.tags).encode("utf-8")
 			
 			respuesta = prod.Save()
