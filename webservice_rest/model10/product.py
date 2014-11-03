@@ -498,9 +498,10 @@ class Product(BaseModel):
                 # print "type:{} value:{}".format(type(self.tags.split(",")),self.tags.split(","))
 
                 for t in self.tags.split(","):
-                    res = _tag.AddTagProduct(t,self.id)
-                    if "error" in res:
-                        return self.ShowError(res["error"])
+                    if t.strip() != "":
+                        res = _tag.AddTagProduct(t.strip(),self.id)
+                        if "error" in res:
+                            return self.ShowError(res["error"])
 
                 return self.ShowSuccessMessage("product correctly updated by sku")
 
@@ -589,10 +590,13 @@ class Product(BaseModel):
 
                 # print self.tags
 
+                # print "type:{} value:{}".format(type(self.tags.split(",")),self.tags.split(","))
+
                 for t in self.tags.split(","):
-                    res = _tag.AddTagProduct(t.strip(),self.id)
-                    if "error" in res:
-                        return self.ShowError(res["error"])
+                    if t.strip() != "":
+                        res = _tag.AddTagProduct(t.strip(),self.id)
+                        if "error" in res:
+                            return self.ShowError(res["error"])
 
                 return self.ShowSuccessMessage("product correctly updated by id")
 
@@ -648,12 +652,13 @@ class Product(BaseModel):
                 if "error" in remover_asociacion:
                     return self.ShowError(remover_asociacion["error"])
 
-                print "type:{} value:{}".format(type(self.tags.split(",")),self.tags.split(","))
+                # print "type:{} value:{}".format(type(self.tags),self.tags)
 
                 for t in self.tags.split(","):
-                    res = _tag.AddTagProduct(t.strip(),self.id)
-                    if "error" in res:
-                        return self.ShowError(res["error"])
+                    if t.strip() != "":
+                        res = _tag.AddTagProduct(t.strip(),self.id)
+                        if "error" in res:
+                            return self.ShowError(res["error"])
 
                 
 
