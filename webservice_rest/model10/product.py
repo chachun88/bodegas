@@ -36,6 +36,7 @@ class Product(BaseModel):
         self._sell_price = 0 #precio venta
         self._delivery = "" #texto delivery detalle de producto
         self._which_size = "" #texto cual es tu talla detalle de producto
+        self._tags = ''
 
         # self.collection = db.product
 
@@ -494,18 +495,12 @@ class Product(BaseModel):
                 if "error" in remover_asociacion:
                     return self.ShowError(remover_asociacion["error"])
 
-                for t in self.tags.split(","):
-                    tag = Tag()
-                    tag.name = t.strip()
-                    if tag.name != "":
-                        response = tag.Save()
+                # print "type:{} value:{}".format(type(self.tags.split(",")),self.tags.split(","))
 
-                        if "success" in response:
-                            res = tag.AddTagProduct(response["success"],self.id)
-                            if "error" in res:
-                                return self.ShowError(res["error"])
-                        else:
-                            return self.ShowError(response["error"])
+                for t in self.tags.split(","):
+                    res = _tag.AddTagProduct(t,self.id)
+                    if "error" in res:
+                        return self.ShowError(res["error"])
 
                 return self.ShowSuccessMessage("product correctly updated by sku")
 
@@ -592,17 +587,12 @@ class Product(BaseModel):
                 if "error" in remover_asociacion:
                     return self.ShowError(remover_asociacion["error"])
 
+                # print self.tags
+
                 for t in self.tags.split(","):
-                    tag = Tag()
-                    tag.name = t.strip()
-                    if tag.name != "":
-                        response = tag.Save()
-                        if "success" in response:
-                            res = tag.AddTagProduct(response["success"],self.id)
-                            if "error" in res:
-                                return self.ShowError(res["error"])
-                        else:
-                            return self.ShowError(response["error"])
+                    res = _tag.AddTagProduct(t.strip(),self.id)
+                    if "error" in res:
+                        return self.ShowError(res["error"])
 
                 return self.ShowSuccessMessage("product correctly updated by id")
 
@@ -658,17 +648,12 @@ class Product(BaseModel):
                 if "error" in remover_asociacion:
                     return self.ShowError(remover_asociacion["error"])
 
+                print "type:{} value:{}".format(type(self.tags.split(",")),self.tags.split(","))
+
                 for t in self.tags.split(","):
-                    tag = Tag()
-                    tag.name = t.strip()
-                    if tag.name != "":
-                        response = tag.Save()
-                        if "success" in response:
-                            res = tag.AddTagProduct(response["success"],self.id)
-                            if "error" in res:
-                                return self.ShowError(res["error"])
-                        else:
-                            return self.ShowError(response["error"])
+                    res = _tag.AddTagProduct(t.strip(),self.id)
+                    if "error" in res:
+                        return self.ShowError(res["error"])
 
                 
 
@@ -735,7 +720,7 @@ class Product(BaseModel):
             if "success" in response:
                 tags = response["success"]
                 for t in tags:
-                    producto["tags"].append(t["name"])
+                    producto["tags"].append(t["tag_id"])
 
             if cur.rowcount > 0:
                 return self.ShowSuccessMessage(producto)
@@ -768,7 +753,7 @@ class Product(BaseModel):
             if "success" in response:
                 tags = response["success"]
                 for t in tags:
-                    producto["tags"].append(t["name"])
+                    producto["tags"].append(t["tag_id"])
 
                 # print producto
 

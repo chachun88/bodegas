@@ -245,7 +245,7 @@ class ProductLoadHandler(BaseHandler):
 											warnings.append( error_name )
 								else:
 
-									error_name = "Error al guardar producto {}".format(save["error"].encode("utf-8"))
+									error_name = "Error al guardar producto, error:{}".format(save["error"].encode("utf-8"))
 									if error_name not in warnings:
 										warnings.append( error_name )
 

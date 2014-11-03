@@ -28,7 +28,7 @@ from globals import port, debugMode, carpeta_img, userMode, Menu
 from model.product import Product
 from model.category import Category
 from model.brand import Brand
-
+from model.tag import Tag
 from basehandler import BaseHandler
 
 class ProductAddHandler(BaseHandler):
@@ -41,8 +41,15 @@ class ProductAddHandler(BaseHandler):
 	def get(self):
 		self.set_active(Menu.PRODUCTOS_CARGA) #change menu active item
 
+		tags = []
+		tag = Tag()
+		res_tags = tag.List(1,100000)
+
+		if "success" in res_tags:
+			tags = res_tags["success"]
+
 		prod = Product()
-		self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="add")
+		self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="add", tags=tags)
 
 
 	def saveImage( self, imagedata, sku, image_number ):
@@ -158,51 +165,51 @@ class ProductAddHandler(BaseHandler):
 
 		prod = Product()
 
+		
 
-		try:
-			res = prod.InitWithSku(self.get_argument("sku", ""))
+		res = prod.InitWithSku(self.get_argument("sku", ""))
 
-			if res == "ok":
+		print "type:{} value:{}".format(type(res),res)
 
-				prod.category 	= self.get_argument("category", "")
-				prod.sku 		= self.get_argument("sku", "")
-				prod.name		= self.get_argument("name", "").encode('utf-8')
-				prod.upc		= self.get_argument("upc", "")
-				prod.description= self.get_argument("description", "").encode('utf-8')
-				prod.brand 		= self.get_argument("brand", "").encode('utf-8')
-				prod.manufacturer= self.get_argument("manufacturer", "")
-				prod.size 		= self.get_argument("size", "").encode("utf-8")
-				prod.color 		= self.get_argument("color", "").encode('utf-8')
-				prod.material 	= self.get_argument("material", "")
-				prod.bullet_1 	= self.get_argument("bullet_1", "")
-				prod.bullet_2 	= self.get_argument("bullet_2", "") 
-				prod.bullet_3 	= self.get_argument("bullet_3", "")
-				prod.currency 	= self.get_argument("currency", "")
-				prod.price		= self.get_argument("price", "")
-				prod.image 		= img1
-				prod.image_2 	= img2
-				prod.image_3 	= img3
-				prod.sell_price = self.get_argument("sell_price",0)
-				prod.delivery   = self.get_argument("delivery","").encode('utf-8')
-				prod.which_size = self.get_argument("which_size","").encode('utf-8')
-				prod.tags       = self.get_argument("tags","").encode("utf-8")
+		if "success" in res:
+
+			prod.category 	= self.get_argument("category", "")
+			prod.sku 		= self.get_argument("sku", "")
+			prod.name		= self.get_argument("name", "").encode('utf-8')
+			prod.upc		= self.get_argument("upc", "")
+			prod.description= self.get_argument("description", "").encode('utf-8')
+			prod.brand 		= self.get_argument("brand", "").encode('utf-8')
+			prod.manufacturer= self.get_argument("manufacturer", "")
+			prod.size 		= self.get_argument("size", "").encode("utf-8")
+			prod.color 		= self.get_argument("color", "").encode('utf-8')
+			prod.material 	= self.get_argument("material", "")
+			prod.bullet_1 	= self.get_argument("bullet_1", "")
+			prod.bullet_2 	= self.get_argument("bullet_2", "") 
+			prod.bullet_3 	= self.get_argument("bullet_3", "")
+			prod.currency 	= self.get_argument("currency", "")
+			prod.price		= self.get_argument("price", "")
+			prod.image 		= img1
+			prod.image_2 	= img2
+			prod.image_3 	= img3
+			prod.sell_price = self.get_argument("sell_price",0)
+			prod.delivery   = self.get_argument("delivery","").encode('utf-8')
+			prod.which_size = self.get_argument("which_size","").encode('utf-8')
+			prod.tags       = ",".join([t.encode("utf-8") for t in self.get_arguments("tags")])
 
 
+			# print self.get_arguments("tags")
 
-				res = prod.Save("one")
+			res_save = prod.Save("one")
 
-				if "success" in res:
-					self.redirect("/product/list")
-				else:
-					self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="edit")
-
+			if "success" in res_save:
+				self.redirect("/product/list")
 			else:
+				# self.redirect("/product/edit?id={}".format(prod.identifier))
+				self.write(res_save["error"])
 
-				self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="add")
+		else:
 
-		except Exception,e:
-
-			print str(e)
+			
 			
 			prod.category 	= self.get_argument("category", "").encode("utf-8")
 			prod.sku 		= self.get_argument("sku", "").encode("utf-8")
@@ -230,17 +237,18 @@ class ProductAddHandler(BaseHandler):
 			size_arr = self.get_argument("size", "").split(",")
 			size_arr = [s.encode("utf-8") for s in size_arr]
 
-			tags_arr = self.get_argument("tags", "").split(",")
-			tags_arr = [s.encode("utf-8") for s in tags_arr]
-
 			prod.size 		= ",".join(size_arr)
-			prod.tags       = ",".join(tags_arr) # entra como string
+			prod.tags       = ",".join([t.encode("utf-8") for t in self.get_arguments("tags","")])
 
 			respose = prod.Save("one")
 
 			# print respose
 			
-			self.redirect("/product/list")
+			if "success" in respose:
+				self.redirect("/product/list")
+			else:
+				self.write(respose["error"])
+
 
 class ProductEditHandler(BaseHandler):
  	"""docstring for ClassName"""
@@ -253,10 +261,18 @@ class ProductEditHandler(BaseHandler):
 
 		prod = Product()
 		res = prod.InitWithId(self.get_argument("id", ""))
+
+		tags = []
+		tag = Tag()
+		res_tags = tag.List(1,100000)
+
+		if "success" in res_tags:
+			tags = res_tags["success"]
+
 		if res == "ok":
-			self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="edit")
+			self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="edit", tags=tags)
 		else:
-			self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="edit")
+			self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="edit", tags=tags)
 
  		 
 class FastEditHandler(BaseHandler):

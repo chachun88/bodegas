@@ -254,11 +254,7 @@ class Product(BaseModel):
             self.which_size = data["which_size"]
             self.delivery = data["delivery"]
 
-            return "ok"
-
-        else:
-
-            return "{}".format(data_obj["error"])
+        return data_obj
 
 
 
@@ -298,11 +294,8 @@ class Product(BaseModel):
             self.tags = producto["tags"]
             self.which_size = producto["which_size"]
             self.delivery = producto["delivery"]
-            return "ok"
-
-        else:
-
-            return data["error"]
+        
+        return data
 
 
     def Remove(self):
@@ -384,7 +377,7 @@ class Product(BaseModel):
 
             # print "one:{}".format(response_str)
 
-            return response_str
+            return json_util.loads(response_str)
 
     def get_product_list(self,items=100):
             

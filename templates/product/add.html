@@ -60,7 +60,7 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">Artículo</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Artículo" id="upc" name="upc" type="text" class="form-control" value="{{ product.upc }}" required></div>
+							<div class="col-sm-8"><input placeholder="Artículo" id="upc" name="upc" type="text" class="form-control" value="{{ product.upc }}"></div>
 						</div>
 					</div>
 					<div class="control-group">
@@ -120,13 +120,43 @@
 							<div class="col-sm-8"><input placeholder="Marca" name="brand" type="text" class="form-control" value="{{ product.brand }}"></div>
 						</div>
 					</div>
+					{% if tit == "edit" %}
 					<div class="control-group">
 						<label class="control-label" for="prefix">Tags</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Tags" name="tags" type="text" class="form-control" value="{{ ','.join(product.tags) }}"></div>
+							<select data-placeholder="Tags Asociados"
+                                class="chzn-select select-block-level" tabindex="-1"
+                                multiple="multiple"
+                                name="tags" 
+                                id="multiple">
+                                {% for p in tags %}
+                                    {% if p['id'] in product.tags %}
+                                        <option value="{{p['id']}}" selected="selected">{{p['name']}}</option>
+                                    {% else %}
+                                        <option value="{{p['id']}}">{{p['name']}}</option>
+                                    {% end %}
+                                {% end %}
+                            </select>
+
 						</div>
 					</div>
-					
+					{% else %}
+					<div class="control-group">
+						<label class="control-label" for="prefix">Tags</label>
+						<div class="controls form-group">
+							<select data-placeholder="Tags Asociados"
+                                class="chzn-select select-block-level" tabindex="-1"
+                                multiple="multiple"
+                                name="tags" 
+                                id="multiple">
+                                {% for p in tags %}
+                                    <option value="{{p['id']}}">{{p['name']}}</option>
+                                {% end %}
+                            </select>
+
+						</div>
+					</div>
+					{% end %}
 					<div class="control-group">
 						<label class="control-label" for="prefix">Delivery</label>
 						<div class="controls form-group">
