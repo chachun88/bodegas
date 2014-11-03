@@ -331,8 +331,7 @@ var FastEdit = function(form_id,sku){
 		url:url,
 		data:data,
 		type:method,
-		success: function(html){
-			obj = $.parseJSON(html);
+		success: function(obj){
 
 			console.log(obj);
 
