@@ -12,6 +12,8 @@ from model.product import Product
 from basehandler import BaseHandler
 
 class ProductSearchHandler(BaseHandler):
+
+	@tornado.web.authenticated
 	def get(self):
 		query = self.get_argument("q", "")
 

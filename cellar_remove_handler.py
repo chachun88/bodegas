@@ -13,6 +13,8 @@ from model.cellar import Cellar
 from bson import json_util
 
 class CellarRemoveHandler(BaseHandler):
+
+	@tornado.web.authenticated
 	def get(self):
 
 		idd = self.get_argument("id", "")

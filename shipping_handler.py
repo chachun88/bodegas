@@ -10,6 +10,7 @@ from globals import Menu
 
 class AddCityHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def post(self):
 
 		city = City()
@@ -28,6 +29,7 @@ class AddCityHandler(BaseHandler):
 
 class SaveHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 
 		self.set_active(Menu.SHIPPING_SAVE)
@@ -55,6 +57,7 @@ class SaveHandler(BaseHandler):
 		else:
 			self.write(cities["error"])
 
+	@tornado.web.authenticated
 	def post(self):
 
 		shipping = Shipping()
@@ -78,6 +81,7 @@ class SaveHandler(BaseHandler):
 
 class ListHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 
 		self.set_active(Menu.SHIPPING_LIST)
@@ -91,6 +95,7 @@ class ListHandler(BaseHandler):
 
 class ActionHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def post(self):
 
 		action = self.get_argument("action","")
@@ -108,6 +113,7 @@ class ActionHandler(BaseHandler):
 
 class RemoveHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 
 		identifier = int(self.get_argument("identifier",0))

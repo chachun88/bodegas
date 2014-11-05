@@ -26,6 +26,7 @@ ESTADO_ACEPTADO = 2
 
 class CustomerViewContactHandler(BaseHandler):
 
+    @tornado.web.authenticated
     def get(self):
 
         user_id = self.get_argument("user_id","")
@@ -44,6 +45,7 @@ class CustomerViewContactHandler(BaseHandler):
 
 class CustomerAddContactHandler(BaseHandler):
 
+    @tornado.web.authenticated
     def get(self):
         user_id = self.get_argument("user_id","")
         contact = Contact()
@@ -58,6 +60,7 @@ class CustomerAddContactHandler(BaseHandler):
 
         self.render("customer/add_contact.html",contact=contact,mode="add",dn="",types=types)
 
+    @tornado.web.authenticated
     def post(self):
         contact = Contact()
         contact.user_id = self.get_argument("user_id","")
@@ -75,6 +78,7 @@ class CustomerAddContactHandler(BaseHandler):
             self.write(response["error"])
 
 class CustomerHandler(BaseHandler):
+
     @tornado.web.authenticated
     def get(self):
 
@@ -241,6 +245,7 @@ class ContactActionsHandler(BaseHandler):
 
 class EditContactHandler(BaseHandler):
 
+    @tornado.web.authenticated
     def get(self):
         contact_id = self.get_argument("id","")
         contact = Contact()
@@ -255,6 +260,7 @@ class EditContactHandler(BaseHandler):
 
         self.render("customer/edit_contact.html",contact=contact,mode="edit",dn="",types=types)
 
+    @tornado.web.authenticated
     def post(self):
         contact = Contact()
         contact.user_id = self.get_argument("user_id","")

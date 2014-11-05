@@ -251,7 +251,8 @@ class ProductAddHandler(BaseHandler):
 
 
 class ProductEditHandler(BaseHandler):
- 	"""docstring for ClassName"""
+ 	
+ 	@tornado.web.authenticated
  	def get(self):
  		self.set_active(Menu.PRODUCTOS_CARGA)
 

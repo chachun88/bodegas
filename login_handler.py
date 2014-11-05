@@ -16,7 +16,7 @@ from model.user import User
 class LoginHandler(BaseHandler):
 
 	def get(self):
-		self.clear_cookie("user")
+		self.clear_cookie("user_bodega")
 		self.render("login.html", next=self.get_argument("next", "/"), error=self.get_argument("e", ""))
 
 	def post(self):

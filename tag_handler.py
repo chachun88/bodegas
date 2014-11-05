@@ -18,6 +18,7 @@ from model.product import Product
 
 class TagHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 
 		self.set_active(Menu.TAGS_LISTAR)
@@ -35,6 +36,7 @@ class TagHandler(BaseHandler):
 
 class RemoveHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 
 		identificador = self.get_argument("id","")
@@ -53,6 +55,7 @@ class RemoveHandler(BaseHandler):
 
 class HideShowHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 
 		identificador = self.get_argument("id","")
@@ -72,6 +75,7 @@ class HideShowHandler(BaseHandler):
 
 class EditHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 
 		identifier = self.get_argument("id","")
@@ -101,6 +105,7 @@ class EditHandler(BaseHandler):
 
 class AddHandler(BaseHandler):
 
+	@tornado.web.authenticated
 	def get(self):
 
 		self.set_active(Menu.TAGS_ADD)
@@ -111,6 +116,7 @@ class AddHandler(BaseHandler):
 		asociados = []
 		self.render("tag/save.html",tag=tag,mode="add",product_list=lista,dn="",asociados=asociados)
 
+	@tornado.web.authenticated
 	def post(self):
 
 
