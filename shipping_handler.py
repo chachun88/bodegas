@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+import tornado.web
 from basehandler import BaseHandler
 from model.city import City
 from model.shipping import Shipping
