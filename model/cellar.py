@@ -171,6 +171,22 @@ class Cellar(BaseModel):
 		response_obj = json_util.loads(response_str)
 
 		return response_obj
+
+	def GetWebCellar(self):
+
+		url = self.wsurl() + "/cellar/getwebcellar"
+
+		data = {
+		"token":self.token
+		}
+
+		post_data = urllib.urlencode(data)
+
+		response_str = urllib.urlopen(url, post_data).read()
+
+		response_obj = json_util.loads(response_str)
+
+		return response_obj
  
 	@property
 	def name(self):

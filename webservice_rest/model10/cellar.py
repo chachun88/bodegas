@@ -58,33 +58,6 @@ class Cellar(BaseModel):
 
     ## override
     def Remove(self):
-        # #validate if cellar still has products
-        # data = self.db.kardex.find({ "cellar_identifier": self.identifier })
-        # is_empty = True
-
-        # for d in data:
-        #   #detect if product exists
-        #   product_data = self.db.kardex.find({"product_sku": d["product_sku"], "cellar_identifier": self.identifier}).sort("_id", -1).limit(1)
-
-        #   for dat in product_data:
-                
-        #       if int(dat["balance_units"]) >=1:
-        #           is_empty = False
-        #   # if ( product_data.count() >= 1 ):
-        #   #   ##validate
-        #   #   is_empty = False
-        # if (is_empty):
-
-        #   ## remove permissions from user
-        #   try:
-        #       self.db.salesman.update({"permissions":self.name},{"$pull": { "permissions": self.name} }, multi=True);
-
-        #   except Exception, e:
-        #       self.ShowError(str( e ))
-            
-        #   return BaseModel.Remove(self)
-        # else:
-        #   return self.ShowError("No se puede eliminar, aún contiene productos.")
 
         is_empty = True
 
@@ -207,12 +180,6 @@ class Cellar(BaseModel):
     @staticmethod
     def CellarExists( cellar_name ):
 
-        # data = db.cellar.find({"name" : cellar_name })
-        
-        # if data.count() >= 1:
-        #   return True
-        # return False
-
         bm = BaseModel()
 
         cur = bm.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -231,49 +198,6 @@ class Cellar(BaseModel):
 
     ## validates and save cellar, it could be validated by name
     def Save(self):
-
-        # try:
-
-        #   ## validate if already exists a cellar with this name
-        #   data_name = self.collection.find({"name": self.name})
-        #   if data_name.count() >= 1:
-        #       self.identifier = str(self.collection.update(
-        #           {"_id":data_name[0]["_id"]},
-        #           {"$set": {
-        #               "name" : self.name,
-        #               "description" : self.description
-        #           }}))
-
-        #       self.InitById(str(data_name[0]["_id"]))
-
-        #       return self.ShowSuccessMessage(data_name[0]["_id"])
-
-        #   ##validate if the identifier exists
-        #   if self.identifier == "":
-        #       self.identifier = str(self.collection.insert({
-        #           "name": self.name,
-        #           "description": self.description
-        #           }))
-
-        #       self.InitById(self.identifier)
-
-        #       return self.ShowSuccessMessage(self.identifier)
-
-        #   data = self.collection.find({"_id":ObjectId(self.identifier)})
-
-        #   if data.count() >= 1:
-        #       self.identifier = str(self.collection.update(
-        #           {"_id":data[0]["_id"]},
-        #           {"$set": {
-        #               "name" : self.name,
-        #               "description" : self.description
-        #           }}))
-        #       self.InitById(self.identifier)
-
-        #   return self.ShowSuccessMessage(str(object_id))
-        # except Exception, e:
-        #   print str(e)
-        #   return self.ShowError("failed to save cellar " + self.name)
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -325,22 +249,7 @@ class Cellar(BaseModel):
         
 
     def GetList(self, page, items):
-        # #validate inputs
-        # page = int(page)
-        # items = int(items)
-        # data = self.collection.find().skip((page-1)*items).limit(items)
-
-        # data_rtn = [] ## return this data
-
-        # for d in data:
-
-        #   cellar = Cellar()
-        #   cellar.identifier = str(d["_id"])
-        #   cellar.name = d["name"]
-        #   cellar.description = d["description"]
-
-        #   data_rtn.append(cellar.Print())
-        # return data_rtn
+        
 
         page = int(page)
         items = int(items)
@@ -378,19 +287,7 @@ class Cellar(BaseModel):
     #@return direct database collection
     @staticmethod
     def GetAllCellars():
-        # data = db.cellar.find()
-
-        # data_rtn = [] ## return this data
-
-        # for d in data:
-
-        #   cellar = Cellar()
-        #   cellar.identifier = str(d["_id"])
-        #   cellar.name = d["name"]
-        #   cellar.description = d["description"]
-
-        #   data_rtn.append(cellar.Print())
-        # return data_rtn
+        
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -413,20 +310,7 @@ class Cellar(BaseModel):
         return data_rtn
 
     def InitByName(self, name):
-        # try:
-        #   datas = self.collection.find({"name": name})
-
-        #   if datas >= 1:
-        #       data = datas[0]
-        #       self.identifier = str(data["_id"])
-        #       self.name = data["name"]
-        #       self.description = data["description"]
-
-        #       return self.ShowSuccessMessage("cellar initialized")
-        #   else:
-        #       raise
-        # except:
-        #   return self.ShowError("item not found")
+        
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -450,20 +334,7 @@ class Cellar(BaseModel):
             return self.ShowError("item not found")
 
     def InitById(self, idd):
-        # try:
-        #   datas = self.collection.find({"_id": ObjectId(idd)})
-
-        #   if datas >= 1:
-        #       data = datas[0]
-        #       self.identifier = str(data["_id"])
-        #       self.name = data["name"]
-        #       self.description = data["description"]
-
-        #       return self.ShowSuccessMessage("cellar initialized")
-        #   else:
-        #       raise
-        # except:
-        #   return self.ShowError("item not found")
+        
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -487,36 +358,7 @@ class Cellar(BaseModel):
             return self.ShowError("item not found")
 
     def ListProducts(self, page, items):
-        # data = db.kardex.find({"cellar_identifier":self.identifier})
-
-        # data = db.kardex.aggregate([
-        #   {"$match":
-        #       {"cellar_identifier":self.identifier}
-        #   },{
-        #       "$group":
-        #           {"_id":{ "product_sku":"$product_sku"}}
-        #   }])
-
-        # rtn_data = []
-
-        # kardex = Kardex()
-
-        # for x in data["result"]:
-        #   product = Product()
-        #   product.InitBySku(str(x["_id"]["product_sku"]))
-        #   #print "idddddddddd"+str(x["_id"]["product_sku"])
-        #   prod_print = product.Print()
-        #   #print "product print "+json_util.dumps(prod_print)
-
-        #   if "error" not in prod_print:
-        #       kardex.FindKardex(str(prod_print["sku"]), self.identifier)
-        #       prod_print["balance_units"] = kardex.balance_units
-        #       prod_print["balance_price"] = kardex.balance_price
-        #       prod_print["balance_total"] = kardex.balance_total
-
-        #       rtn_data.append(prod_print)
         
-        # return rtn_data
 
         rtn_data = []
 
@@ -627,41 +469,7 @@ class Cellar(BaseModel):
 
     def FindProductKardex(self, product_sku, cellar_identifier, size):
 
-        # try:
-
-        #   if cellar_identifier == "remove" and size == "remove":
-        #       str_query = [
-        #           {'$match':{'product_sku': product_sku}}
-        #           ,
-        #           {'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
-        #           ] 
-
-        #       eps = db.kardex.aggregate(pipeline=str_query)
-
-
-        #       return eps['result']
-
-        #   else:   
-        #       # str_query = '[{$match:{"product_sku":"%s", "cellar_identifier":"%s", "size":"%s.0" }},{$group:{"_id":"$operation_type", 
-                # total:{$sum:"$units"}}}]' % ( str(product_sku), str(cellar_identifier), size )
-        #       str_query = [
-        #           {'$match':{'product_sku': product_sku, 'cellar_identifier':cellar_identifier, 'size':size }}
-        #           ,
-        #           {'$group':{'_id':'$operation_type', 'total':{'$sum':'$units'}}}
-        #           ] 
-
-        #       eps = db.kardex.aggregate(pipeline=str_query)
-
-
-        #       return eps['result']
-
-        #       # str_query = '{"product_sku":"%s", "cellar_identifier": "%s", "size":"%s.0", "operation_type":"sell"}' % ( str(product_sku), str(cellar_identifier), size )
-        #       # data2 = db.kardex.find( json_util.loads(str_query)).sort("_id", -1)
-                
-        #       # return data2
-
-        # except Exception, e:          
-        #   print e 
+        
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)     
 
@@ -690,20 +498,7 @@ class Cellar(BaseModel):
 
 
     def Rename(self, new_name):
-        # try:
-
-        #   if new_name == "":
-        #       raise
-
-        #   self.collection.update({"_id":ObjectId(self.identifier)},
-        #       {"$set":{
-        #           "name":new_name
-        #       }})
-        #   self.name = new_name
-        #   self.ShowSuccessMessage("name changed correctly")
-        # except:
-        #   self.ShowError("error changing name")
-
+        
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         try:
@@ -732,13 +527,7 @@ class Cellar(BaseModel):
         try:
             query = '''update "Cellar" set for_sale = 0'''
             cur.execute(query)
-        except Exception,e:
-            return self.ShowError(str(e))
-        finally:
-            self.connection.close()
-            cur.close()
 
-        try:
             query = '''update "Cellar" set for_sale = 1 where id = %(id)s'''
             parameters = {
             "id":cellar_id
@@ -746,6 +535,21 @@ class Cellar(BaseModel):
             cur.execute(query,parameters)
             self.connection.commit()
             return self.ShowSuccessMessage(cellar_id)
+        except Exception,e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
+
+    def GetWebCellar(self):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        try:
+            query = '''select id from "Cellar" where for_sale = 1 limit 1'''
+            cur.execute(query)
+            cellar = cur.fetchone()["id"]
+            return self.ShowSuccessMessage(cellar)
         except Exception,e:
             return self.ShowError(str(e))
         finally:

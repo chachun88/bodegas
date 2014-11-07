@@ -70,6 +70,7 @@ class Menu:
     # sub_menu 
     BODEGAS_LISTAR = "Lista de bodegas"
     BODEGAS_AGREGAR = "Agregar bodega"
+    BODEGAS_FORSALE = "Seleccionar bodega web"
     # end sub_menu
 
     USUARIOS = "Usuarios"

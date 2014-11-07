@@ -208,3 +208,10 @@ class SelectForSaleHandler(BaseHandler):
 			self.write(json_util.dumps(res))
 		else:
 			self.write(json_util.dumps({"error":"Cellar id is not valid"}))
+
+class GetWebCellarHandler(BaseHandler):
+
+	def post(self):
+
+		cellar = Cellar()
+		self.write(json_util.dumps(cellar.GetWebCellar()))

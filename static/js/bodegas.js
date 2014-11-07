@@ -376,3 +376,28 @@ var for_sale = function(product_id){
 		}
 	});
 }
+
+var Send = function(form_id){
+
+	var id_formulario = "#"+form_id;
+	var formulario = $(id_formulario);
+	var accion = formulario.attr("action");
+	var tipo = formulario.attr("method");
+
+	$.ajax({
+		url: accion,
+		data: formulario.serialize(),
+		type: tipo,
+		success: function(html){
+
+			obj = $.parseJSON(html);
+
+			if(obj.error){
+				console.log(obj.error);
+				alert("Error al seleccionar bodega");
+			} else {
+				alert("Bodega seleccionada exitosamente");
+			}
+		}
+	});
+}

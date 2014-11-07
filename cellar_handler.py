@@ -299,6 +299,20 @@ class SelectForSaleHandler(BaseHandler):
 	@tornado.web.authenticated
 	def get(self):
 
+		cellar = Cellar()
+		selected = cellar.GetWebCellar()
+		data = Cellar().List(1, 100)
+
+		cellar_id = ""
+
+		if "success" in selected:
+			cellar_id = selected["success"]
+		
+		self.render("cellar/selectforsale.html",cellars=data,cellar_id=cellar_id)
+
+	@tornado.web.authenticated
+	def post(self):
+
 		cellar_id = self.get_argument("cellar_id","")
 
 		if cellar_id != "":
