@@ -67,9 +67,11 @@
 						<td>{{ MoneyFormat(p["total_price"]) }}</td>
 						<td>
 							{% if int(4) in current_user["permissions"] %}
+							{% if p["name"] != "Bodega Central" %}
 							<button type="button" cellar-id="{{ str(p['id']) }}" class="btn btn-danger btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-danger .btn-sm">
 								Eliminar
 							</button>
+							{% end %}
 							{% else %}
 							-
 							{% end %}

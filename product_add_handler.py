@@ -195,6 +195,7 @@ class ProductAddHandler(BaseHandler):
 			prod.delivery   = self.get_argument("delivery","").encode('utf-8')
 			prod.which_size = self.get_argument("which_size","").encode('utf-8')
 			prod.tags       = ",".join([t.encode("utf-8") for t in self.get_arguments("tags")])
+			prod.for_sale   = self.get_argument("for_sale",0)
 
 
 			# print self.get_arguments("tags")
@@ -232,6 +233,7 @@ class ProductAddHandler(BaseHandler):
 			prod.sell_price = self.get_argument("sell_price",0).encode("utf-8")
 			prod.delivery   = self.get_argument("delivery","").encode("utf-8")
 			prod.which_size = self.get_argument("which_size","").encode("utf-8")
+			prod.for_sale   = self.get_argument("for_sale",0)
 
 
 			size_arr = self.get_argument("size", "").split(",")
@@ -298,7 +300,7 @@ class FastEditHandler(BaseHandler):
 			prod.brand = self.get_argument("brand","").encode("utf-8")
 			prod.delivery = self.get_argument("delivery","").encode("utf-8")
 			prod.which_size = self.get_argument("which_size","").encode("utf-8")
-
+			prod.for_sale = self.get_argument("for_sale",0)
 			prod.upc = prod.upc.encode("utf-8")
 			prod.size = ",".join(prod.size).encode("utf-8")
 			prod.material = prod.material.encode("utf-8")
@@ -323,3 +325,15 @@ class FastEditHandler(BaseHandler):
 		else:
 			self.write(res)
 
+class ForSaleHandler(BaseHandler):
+
+	@tornado.web.authenticated
+	def get(self):
+
+		product_id = self.get_argument("product_id","")
+
+		if product_id.isnumeric():
+			prod = Product()
+			self.write(json_util.dumps(prod.ForSale(product_id)))
+		else:
+			self.write(json_util.dumps({"error":"Product ID proporcionado es inválido"}))

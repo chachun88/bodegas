@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 from model10.product import Product
 
@@ -143,3 +144,15 @@ class SearchHandler(BaseHandler):
 
 		product = Product()
 		self.write(json_util.dumps(product.Search(query)))
+
+class ForSaleHandler(BaseHandler):
+
+	def post(self):
+
+		product_id = self.get_argument("product_id","")
+
+		if product_id.isnumeric():
+			prod = Product()
+			self.write(json_util.dumps(prod.ForSale(product_id)))
+		else:
+			self.write(json_util.dumps({"error":"Product ID proporcionado es inválido"}))

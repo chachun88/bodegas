@@ -69,6 +69,7 @@ class SaveHandler(BaseHandler):
 		shipping.chilexpress_price = self.get_argument("chilexpress_price",0)
 		shipping.price = self.get_argument("price",0)
 		shipping.edited = self.get_argument("edited",0)
+		shipping.charge_type = self.get_argument("charge_type",1)
 		
 		guardado = shipping.Save()
 		

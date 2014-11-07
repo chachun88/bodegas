@@ -58,6 +58,7 @@ class Application(tornado.web.Application):
             (r"/product/find",          product_handler.GetProductHandler),
             (r"/product/list",          product_handler.ListProductsHandler),
             (r"/product/search",        product_handler.SearchHandler),
+            (r"/product/for_sale",      product_handler.ForSaleHandler),
 
             (r"/salesman/add",          seller_handler.AddSellerHandler),
             (r"/salesman/edit",         seller_handler.AddSellerHandler),

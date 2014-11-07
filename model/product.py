@@ -212,6 +212,13 @@ class Product(BaseModel):
     def which_size(self, value):
         self._which_size = value
     
+    @property
+    def for_sale(self):
+        return self._for_sale
+    @for_sale.setter
+    def for_sale(self, value):
+        self._for_sale = value
+    
     
     #################
     #### Methods ####
@@ -253,6 +260,7 @@ class Product(BaseModel):
             self.tags = data["tags"]
             self.which_size = data["which_size"]
             self.delivery = data["delivery"]
+            self.for_sale = data["for_sale"]
 
         return data_obj
 
@@ -294,6 +302,7 @@ class Product(BaseModel):
             self.tags = producto["tags"]
             self.which_size = producto["which_size"]
             self.delivery = producto["delivery"]
+            self.for_sale = producto["for_sale"]
         
         return data
 
@@ -332,7 +341,8 @@ class Product(BaseModel):
                 "tags" : self.tags, # se envia como string
                 "delivery" : self.delivery,
                 "which_size" : self.which_size,
-                "id" : self.identifier
+                "id" : self.identifier,
+                "for_sale": self.for_sale
             }
 
 
@@ -368,7 +378,8 @@ class Product(BaseModel):
                 "id" : self.identifier,
                 "tags" : self.tags,
                 "delivery" : self.delivery,
-                "which_size" : self.which_size
+                "which_size" : self.which_size,
+                "for_sale" : self.for_sale
             }
 
             post_data = urllib.urlencode(data)
@@ -405,10 +416,19 @@ class Product(BaseModel):
         
         return data
 
-    # def ProductExist( self, product_sku ):
-    #   url = self.wsurl() + "/product/exists?token=" + self.token
+    def ForSale(self, product_id):
 
-    #   url += "&sku=" + product_sku
+        url = self.wsurl() + "/product/for_sale?token=" + self.token
 
-    #   json_string = urllib.urlopen( url ).read()
-    #   return json_util.loads( json_string )[ "exists" ]   
+        data = {
+        "product_id":product_id
+        }
+
+        post_data = urllib.urlencode(data)
+
+        response_str = urllib.urlopen(url, post_data).read()
+
+        # print "one:{}".format(response_str)
+
+        return json_util.loads(response_str)
+

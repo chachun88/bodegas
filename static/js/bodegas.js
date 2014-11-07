@@ -318,6 +318,10 @@
 		return true
 	});
 
+ 	if($("#selected_charge_type").length > 0){
+ 		var selected_value = $("#selected_charge_type").val();
+ 		$(":radio[value='"+selected_value+"']").prop("checked", true);
+ 	}
 
 });
 
@@ -347,6 +351,27 @@ var FastEdit = function(form_id,sku){
 				$('#'+sku).slideToggle();
 			} else {
 				alert(obj.error);
+			}
+		}
+	});
+}
+
+var for_sale = function(product_id){
+	$.ajax({
+		url: "/product/for_sale",
+		data: "product_id="+product_id,
+		type: "get",
+		success: function(html){
+
+			obj = $.parseJSON(html);
+			var elem = $("i#"+product_id);
+
+			if(obj.error){
+				alert(obj.error)
+			} else if (obj.success) {
+				elem.removeClass("disabled");
+			} else {
+				elem.addClass("disabled");
 			}
 		}
 	});

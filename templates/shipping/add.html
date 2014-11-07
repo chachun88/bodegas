@@ -93,6 +93,14 @@
 					</div>
 				</div>
 				<div class="control-group body">
+					<label for="charge_type" class="col-md-3">Tipo de Cobro</label>
+					<div class="col-md-5">
+						<input type="radio" name="charge_type" value="1">Por items<br>
+						<input type="radio" name="charge_type" value="2">Por venta
+					</div>
+					<input type="hidden" id="selected_charge_type" value="{{shipping.charge_type}}">
+				</div>
+				<div class="control-group body">
 					<div class="col-md-8 text-right">
 						<input type="submit" class="btn btn-primary" value="Guardar">
 					</div>

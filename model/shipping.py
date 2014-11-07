@@ -67,6 +67,13 @@ class Shipping(BaseModel):
     def edited(self, value):
         self._edited = value
     
+    @property
+    def charge_type(self):
+        return self._charge_type
+    @charge_type.setter
+    def charge_type(self, value):
+        self._charge_type = value
+    
     
     def Save(self):
 
@@ -80,7 +87,8 @@ class Shipping(BaseModel):
         "correos_price":self.correos_price,
         "chilexpress_price":self.chilexpress_price,
         "price":self.price,
-        "edited":self.edited
+        "edited":self.edited,
+        "charge_type":self.charge_type
         }
 
         post_data = urllib.urlencode(data)
@@ -150,6 +158,7 @@ class Shipping(BaseModel):
             self.correos_price = data["correos_price"]
             self.chilexpress_price = data["chilexpress_price"]
             self.price = data["price"]
+            self.charge_type = data["charge_type"]
 
         return response_obj
 

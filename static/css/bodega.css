@@ -81,3 +81,15 @@ th{
 .table-report{
 	 margin-top: 30px;
 }
+
+.table th.for_sale{
+	line-height: 59px;
+}
+a.for_sale{
+	vertical-align: middle;
+	color: #666;
+	cursor: pointer;
+}
+i.disabled{
+	opacity: 0.3;
+}

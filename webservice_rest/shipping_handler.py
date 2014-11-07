@@ -20,10 +20,13 @@ class SaveHandler(BaseHandler):
 		shipping.correos_price = self.get_argument("correos_price",0)
 		shipping.chilexpress_price = self.get_argument("chilexpress_price",0)
 		shipping.price = self.get_argument("price",0)
+		shipping.charge_type = self.get_argument("charge_type",1)
+
 		if shipping.identifier == 0:
 			shipping.edited = False
 		else:
 			shipping.edited = True
+			
 		self.write(json_util.dumps(shipping.Save()))
 
 

@@ -17,6 +17,7 @@ class Shipping(BaseModel):
         self._price = 0
         self._correos_price = 0
         self._chilexpress_price = 0
+        self._charge_type = 1
 
     @property
     def identifier(self):
@@ -68,6 +69,14 @@ class Shipping(BaseModel):
     def edited(self, value):
         self._edited = value
 
+    @property
+    def charge_type(self):
+        return self._charge_type
+    @charge_type.setter
+    def charge_type(self, value):
+        self._charge_type = value
+    
+
     def List(self):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -87,7 +96,7 @@ class Shipping(BaseModel):
         if self.identifier != 0:
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            query = '''update "Shipping" set from_city_id = %(from_city_id)s, to_city_id = %(to_city_id)s, correos_price = %(correos_price)s, chilexpress_price = %(chilexpress_price)s, price = %(price)s, edited = %(edited)s where id = %(id)s'''
+            query = '''update "Shipping" set from_city_id = %(from_city_id)s, to_city_id = %(to_city_id)s, correos_price = %(correos_price)s, chilexpress_price = %(chilexpress_price)s, price = %(price)s, edited = %(edited)s, charge_type = %(charge_type)s where id = %(id)s'''
             parameters = {
             "id":self.identifier,
             "from_city_id":self.from_city_id,
@@ -95,7 +104,8 @@ class Shipping(BaseModel):
             "correos_price":self.correos_price,
             "chilexpress_price":self.chilexpress_price,
             "price":self.price,
-            "edited":self.edited
+            "edited":self.edited,
+            "charge_type":self.charge_type
             }
 
             try:
@@ -111,14 +121,15 @@ class Shipping(BaseModel):
         else:
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            query = '''insert into "Shipping" (from_city_id,to_city_id,correos_price,chilexpress_price,price,edited) values (%(from_city_id)s,%(to_city_id)s,%(correos_price)s,%(chilexpress_price)s,%(price)s,%(edited)s) returning id'''
+            query = '''insert into "Shipping" (from_city_id,to_city_id,correos_price,chilexpress_price,price,edited,charge_type) values (%(from_city_id)s,%(to_city_id)s,%(correos_price)s,%(chilexpress_price)s,%(price)s,%(edited)s,%(charge_type)s) returning id'''
             parameters = {
             "from_city_id":self.from_city_id,
             "to_city_id":self.to_city_id,
             "correos_price":self.correos_price,
             "chilexpress_price":self.chilexpress_price,
             "price":self.price,
-            "edited":self.edited
+            "edited":self.edited,
+            "charge_type":self.charge_type
             }
 
             try:

@@ -409,6 +409,9 @@ class Product(BaseModel):
                 sku_count = cur.fetchone()["cantidad"]
             except Exception,e:
                 return self.ShowError("Error checking if product exists, {}".format(str(e)))
+            finally:
+                cur.close()
+                self.connection.close()
 
             if sku_count >= 1:
 
@@ -474,6 +477,9 @@ class Product(BaseModel):
 
                 except Exception,e:
                     return self.ShowError("Error updating product, {}".format(str(e)))
+                finally:
+                    cur.close()
+                    self.connection.close()
 
                 q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where sku = %(sku)s'''
 
@@ -488,6 +494,9 @@ class Product(BaseModel):
 
                 except Exception,e:
                     return self.ShowError("Error updating product size, {}".format(str(e)))
+                finally:
+                    cur.close()
+                    self.connection.close()
 
                 _tag = Tag()
                 remover_asociacion = _tag.RemoveTagsAsociation(self.id)
@@ -564,6 +573,9 @@ class Product(BaseModel):
                     self.connection.commit()
                 except Exception,e:
                     return self.ShowError("Error updating by id:{}".format(str(e)))
+                finally:
+                    cur.close()
+                    self.connection.close()
 
                 q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where id = %(id)s'''
 
@@ -578,6 +590,9 @@ class Product(BaseModel):
 
                 except Exception,e:
                     return self.ShowError("Error updating product size, {}".format(str(e)))
+                finally:
+                    cur.close()
+                    self.connection.close()
 
                 
                 # self.id = cur.fetchone()[0]
@@ -642,6 +657,9 @@ class Product(BaseModel):
                     self.connection.commit()
                 except Exception,e:
                     return self.ShowError("Error inserting new product: {} query: {}".format(str(e),cur.mogrify(q.strip(),p)))
+                finally:
+                    cur.close()
+                    self.connection.close()
                 
 
                 self.id = cur.fetchone()["id"]
@@ -671,6 +689,9 @@ class Product(BaseModel):
 
         except Exception,e:
             return self.ShowError("product could not be saved, error:{}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
 
 
 
@@ -733,6 +754,9 @@ class Product(BaseModel):
                 return self.ShowError("product with sku {} not found".format(sku))
         except Exception,e:
             return self.ShowError("product cannot be initialized, {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
         
 
     def InitById(self, identifier):
@@ -771,6 +795,9 @@ class Product(BaseModel):
                 return self.ShowError("product cannot be initialized")
         except Exception,e:
             return self.ShowError("product cannot be initialized, error: {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
 
     def Exist(self, name):
         # if self.collection.find({"name":name}).count() >= 1:
@@ -793,6 +820,9 @@ class Product(BaseModel):
                 return False
         except:
             return False
+        finally:
+            cur.close()
+            self.connection.close()
 
     def Search(self, query):
 
@@ -822,6 +852,9 @@ class Product(BaseModel):
                 return {}
         except:
             return {}
+        finally:
+            cur.close()
+            self.connection.close()
 
 
     def GetList(self, page, items):
@@ -842,3 +875,50 @@ class Product(BaseModel):
         except Exception,e:
             print str(e)
             return {}
+        finally:
+            cur.close()
+            self.connection.close()
+
+    def ForSale(self, product_id):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        q = '''select for_sale from "Product" where id = %(id)s'''
+        p = {
+        "id":product_id
+        }
+
+        for_sale = 0
+
+        try:
+            cur.execute(q,p)
+            for_sale = int(cur.fetchone()["for_sale"])
+        except Exception,e:
+            return self.ShowError(str(e))
+        finally:
+            cur.close()
+            self.connection.close()
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        q = '''update "Product" set for_sale = %(for_sale)s where id = %(id)s'''
+        
+        if for_sale == 0:
+            p = {
+            "id":product_id,
+            "for_sale":1
+            }
+        else:
+            p = {
+            "id":product_id,
+            "for_sale":0
+            }
+
+        try:
+            cur.execute(q,p)
+            self.connection.commit()
+            return self.ShowSuccessMessage(product_id)
+        except Exception,e:
+            return self.ShowError(str(e))
+        finally:
+            cur.close()
+            self.connection.close()
+

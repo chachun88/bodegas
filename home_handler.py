@@ -209,6 +209,8 @@ class ProductLoadHandler(BaseHandler):
 							if j == ncols - 1:
 
 								prod.size = ",".join(tallas)
+
+								prod.for_sale = 0
 							
 								save = prod.Save("masive")
 
