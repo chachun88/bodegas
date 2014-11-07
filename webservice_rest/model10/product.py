@@ -906,16 +906,18 @@ class Product(BaseModel):
             "id":product_id,
             "for_sale":1
             }
+            for_sale = 1
         else:
             p = {
             "id":product_id,
             "for_sale":0
             }
+            for_sale = 0
 
         try:
             cur.execute(q,p)
             self.connection.commit()
-            return self.ShowSuccessMessage(product_id)
+            return self.ShowSuccessMessage(for_sale)
         except Exception,e:
             return self.ShowError(str(e))
         finally:

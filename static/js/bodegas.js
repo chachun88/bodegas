@@ -368,7 +368,7 @@ var for_sale = function(product_id){
 
 			if(obj.error){
 				alert(obj.error)
-			} else if (obj.success) {
+			} else if (obj.success == 1) {
 				elem.removeClass("disabled");
 			} else {
 				elem.addClass("disabled");
