@@ -293,3 +293,16 @@ class CellarComboboxHandler(BaseHandler):
 	## invalidate xsfr cookie for ajax use
 	def check_xsrf_cookie(self):
 		pass	
+
+class SelectForSaleHandler(BaseHandler):
+
+	@tornado.web.authenticated
+	def get(self):
+
+		cellar_id = self.get_argument("cellar_id","")
+
+		if cellar_id != "":
+			cellar = Cellar()
+			self.write(json_util.dumps(cellar.SelectForSale(cellar_id)))
+		else:
+			self.write(json_util.dumps({"error":"Cellar id is not valid"}))

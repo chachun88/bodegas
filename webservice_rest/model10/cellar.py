@@ -46,6 +46,14 @@ class Cellar(BaseModel):
     @city.setter
     def city(self, value):
         self._city = value
+
+    @property
+    def for_sale(self):
+        return self._for_sale
+    @for_sale.setter
+    def for_sale(self, value):
+        self._for_sale = value
+    
     
 
     ## override
@@ -187,6 +195,7 @@ class Cellar(BaseModel):
             me = {"id":self.id,
                 "name" : self.name,
                 "description": self.description,
+                "for_sale":self.for_sale,
                 "total_price": self.GetTotalPrice(),
                 "total_units": self.GetTotalUnits()}
 
@@ -357,6 +366,7 @@ class Cellar(BaseModel):
           cellar.name = d["name"]
           cellar.description = d["description"]
           cellar.city = d["city_id"]
+          cellar.for_sale = d["for_sale"]
 
           data_rtn.append(cellar.Print())
 
@@ -396,6 +406,7 @@ class Cellar(BaseModel):
             self.name = c['name']
             self.description = c['description']
             self.city = d["city_id"]
+            self.for_sale = d["for_sale"]
 
             data_rtn.append(cellar.Print())
 
@@ -431,7 +442,7 @@ class Cellar(BaseModel):
             self.name = cellar['name']
             self.description = cellar['description']
             self.city = cellar["city_id"]
-
+            self.for_sale = cellar["for_sale"]
             return self.ShowSuccessMessage("cellar initialized")
 
         else:
@@ -468,7 +479,7 @@ class Cellar(BaseModel):
             self.name = cellar['name']
             self.description = cellar['description']
             self.city = cellar["city_id"]
-
+            self.for_sale = cellar["for_sale"]
             return self.ShowSuccessMessage("cellar initialized")
 
         else:
@@ -712,3 +723,32 @@ class Cellar(BaseModel):
             self.ShowSuccessMessage("name changed correctly")
         except:
             self.ShowError("error changing name")
+
+
+    def SelectForSale(self,cellar_id):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        try:
+            query = '''update "Cellar" set for_sale = 0'''
+            cur.execute(query)
+        except Exception,e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
+
+        try:
+            query = '''update "Cellar" set for_sale = 1 where id = %(id)s'''
+            parameters = {
+            "id":cellar_id
+            }
+            cur.execute(query,parameters)
+            self.connection.commit()
+            return self.ShowSuccessMessage(cellar_id)
+        except Exception,e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
+

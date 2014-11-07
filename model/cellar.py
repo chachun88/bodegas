@@ -154,6 +154,23 @@ class Cellar(BaseModel):
 
 		json_string = urllib.urlopen( url ).read()
 		return json_util.loads( json_string )[ "exists" ]
+
+	def SelectForSale(self, cellar_id):
+
+		url = self.wsurl() + "/cellar/selectforsale"
+
+		data = {
+		"token":self.token,
+		"cellar_id":cellar_id
+		}
+
+		post_data = urllib.urlencode(data)
+
+		response_str = urllib.urlopen(url, post_data).read()
+
+		response_obj = json_util.loads(response_str)
+
+		return response_obj
  
 	@property
 	def name(self):
@@ -182,5 +199,13 @@ class Cellar(BaseModel):
 	@city.setter
 	def city(self, value):
 		self._city = value
+
+	@property
+	def for_sale(self):
+		return self._for_sale
+	@for_sale.setter
+	def for_sale(self, value):
+		self._for_sale = value
+	
 	
 	

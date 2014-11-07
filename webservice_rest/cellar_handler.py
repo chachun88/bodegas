@@ -196,3 +196,15 @@ class CellarProductFind(BaseHandler):
 		cellar = Cellar()
 		self.write(json_util.dumps(cellar.FindProductKardex(product_sku, cellar_id, size)))
 		pass
+
+class SelectForSaleHandler(BaseHandler):
+
+	def post(self):
+
+		cellar_id = self.get_argument("cellar_id", "")
+		cellar = Cellar()
+		if cellar_id != "":
+			res = cellar.SelectForSale(cellar_id)
+			self.write(json_util.dumps(res))
+		else:
+			self.write(json_util.dumps({"error":"Cellar id is not valid"}))

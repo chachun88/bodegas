@@ -31,7 +31,7 @@ from cellar_handler import CellarInputHandler
 from cellar_handler import CellarOutputHandler
 from cellar_handler import CellarDetailHandler, CellarComboboxHandler
 from cellar_handler import CellarEasyInputHandler
-from cellar_handler import CellarEasyOutputHandler
+from cellar_handler import CellarEasyOutputHandler, SelectForSaleHandler
 
 from order_handler import OrderHandler, AddOrderHandler, OrderActionsHandler
 
@@ -97,6 +97,7 @@ class Application(tornado.web.Application):
             (r"/cellar/output", CellarOutputHandler),
             (r"/cellar/detail", CellarDetailHandler),
             (r"/cellar/combobox", CellarComboboxHandler),
+            (r"/cellar/selectforsale", SelectForSaleHandler),
 
             # order
             (r"/order/list", OrderHandler),
