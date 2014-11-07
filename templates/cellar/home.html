@@ -31,7 +31,7 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th></th>
+						<!-- <th></th> -->
 						<th>Nombre</th>
 						<th>Descripción</th>
 						<!--
@@ -52,7 +52,7 @@
 				<tbody>
 					{% for p in data %}
 					<tr>
-						<td class="for_sale">
+						<!-- <td class="for_sale">
 							<a class="for_sale" onclick="for_sale('{{p['id']}}')">
 								{% if int(p["for_sale"]) == 0 %}
 								<i class="fa fa-eye disabled" id="{{p['id']}}"></i>
@@ -60,7 +60,7 @@
 								<i class="fa fa-eye" id="{{p['id']}}"></i>
 								{% end %}
 							</a>
-						</td>
+						</td> -->
 						<td>
 							{% if int(p["id"]) in current_user["cellar_permissions"] %}
 							<a href="/cellar/detail?id={{ str(p['id']) }}">{{ p["name"] }}</a>
