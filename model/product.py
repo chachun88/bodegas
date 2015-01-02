@@ -423,7 +423,7 @@ class Product(BaseModel):
 
             response_str = urllib.urlopen(url, post_data).read()
 
-            print "one:{}".format(response_str)
+            # print "one:{}".format(response_str)
 
             return json_util.loads(response_str)
 
