@@ -261,14 +261,12 @@ class ProductAddHandler(BaseHandler):
 
 			respose = prod.Save("one")
 
-			self.write(respose)
-
 			# print respose
 			
-			# if "success" in respose:
-			# 	self.redirect("/product/list")
-			# else:
-			# 	self.write(respose["error"])
+			if "success" in respose:
+				self.redirect("/product/list")
+			else:
+				self.write(respose["error"])
 
 
 class ProductEditHandler(BaseHandler):

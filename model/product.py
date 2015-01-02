@@ -425,9 +425,7 @@ class Product(BaseModel):
 
             # print "one:{}".format(response_str)
 
-            # return json_util.loads(response_str)
-
-            return response_str
+            return json_util.loads(response_str)
 
     def get_product_list(self,items=100):
             
