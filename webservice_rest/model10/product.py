@@ -699,6 +699,8 @@ class Product(BaseModel):
 
                 # print cur.mogrify(q.strip(),p)
 
+                cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
                 try:
                     cur.execute(q,p)
                     self.connection.commit()
