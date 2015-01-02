@@ -703,6 +703,7 @@ class Product(BaseModel):
             try:
                 cur.execute(q,p)
                 self.connection.commit()
+                self.id = cur.fetchone()["id"]
             except Exception,e:
                 return self.ShowError("Error inserting new product: {} query: {}".format(str(e),cur.mogrify(q.strip(),p)))
             finally:
@@ -710,7 +711,7 @@ class Product(BaseModel):
                 self.connection.close()
             
 
-            self.id = cur.fetchone()["id"]
+            
 
             _tag = Tag()
             remover_asociacion = _tag.RemoveTagsAsociation(self.id)
