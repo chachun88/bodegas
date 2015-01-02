@@ -419,328 +419,323 @@ class Product(BaseModel):
         # except Exception, e:
         #   return self.ShowError("product could not be saved")
 
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        sizes=self.size.split(',')
+
+        q = '''select count(*) as cantidad from "Product" where sku = %(sku)s'''
+        p = {
+        "sku":self.sku
+        }
+
+        sku_count = 0
+
         try:
+            cur.execute(q,p)
+            sku_count = cur.fetchone()["cantidad"]
+        except Exception,e:
+            return self.ShowError("Error checking if product exists, {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
+
+        if sku_count >= 1:
+
+            q = '''update "Product" set 
+            name = %(name)s 
+            ,description = %(description)s 
+            ,brand = %(brand)s 
+            ,manufacturer = %(manufacturer)s 
+            ,material = %(material)s 
+            ,bullet_1 = %(bullet_1)s 
+            ,bullet_2 = %(bullet_2)s 
+            ,image = %(image)s 
+            ,image_2 = %(image_2)s 
+            ,image_3 = %(image_3)s 
+            ,image_4 = %(image_4)s 
+            ,image_5 = %(image_5)s 
+            ,image_6 = %(image_6)s 
+            ,category_id = %(category_id)s 
+            ,price = %(price)s 
+            ,upc = %(upc)s
+            ,color = %(color)s
+            ,sell_price = %(sell_price)s
+            ,which_size = %(which_size)s
+            ,delivery = %(delivery)s where sku = %(sku)s returning id'''
+
+            category = Category()
+            category.name = self.category
+            res = category.Save()
+
+            if "error" in res:
+                return self.ShowError("Category can not be saved {}".format(res["error"]))
+
+            p = {
+                    "name":self.name,
+                    "description":self.description,
+                    "brand":self.brand,
+                    "manufacturer":self.manufacturer,
+                    "size":sizes,
+                    "color":self.color,
+                    "material":self.material,
+                    "bullet_1":self.bullet_1,
+                    "bullet_2":self.bullet_2,
+                    "bullet_3":self.bullet_3,
+                    "image":self.image,
+                    "image_2":self.image_2,
+                    "image_3":self.image_3,
+                    "image_4":self.image_4,
+                    "image_5":self.image_5,
+                    "image_6":self.image_6,
+                    "delivery":self.delivery,
+                    "which_size":self.which_size,
+                    # "currency":self.currency,
+                    "category_id":category.id,
+                    "price":self.price,
+                    "upc":self.upc,
+                    "sku":self.sku,
+                    "sell_price":self.sell_price
+                }
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-            sizes=self.size.split(',')
-
-            q = '''select count(*) as cantidad from "Product" where sku = %(sku)s'''
-            p = {
-            "sku":self.sku
-            }
-
-            sku_count = 0
-
             try:
+
+                # print "existe sku:{}".format(cur.mogrify(q,p))
                 cur.execute(q,p)
-                sku_count = cur.fetchone()["cantidad"]
+
+                self.connection.commit()
+                self.id = cur.fetchone()["id"]
+
+                # print self.id
+
             except Exception,e:
-                return self.ShowError("Error checking if product exists, {}".format(str(e)))
+                return self.ShowError("Error updating product, {}".format(str(e)))
             finally:
                 cur.close()
                 self.connection.close()
 
-            if sku_count >= 1:
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-                q = '''update "Product" set 
-                name = %(name)s 
-                ,description = %(description)s 
-                ,brand = %(brand)s 
-                ,manufacturer = %(manufacturer)s 
-                ,material = %(material)s 
-                ,bullet_1 = %(bullet_1)s 
-                ,bullet_2 = %(bullet_2)s 
-                ,image = %(image)s 
-                ,image_2 = %(image_2)s 
-                ,image_3 = %(image_3)s 
-                ,image_4 = %(image_4)s 
-                ,image_5 = %(image_5)s 
-                ,image_6 = %(image_6)s 
-                ,category_id = %(category_id)s 
-                ,price = %(price)s 
-                ,upc = %(upc)s
-                ,color = %(color)s
-                ,sell_price = %(sell_price)s
-                ,which_size = %(which_size)s
-                ,delivery = %(delivery)s where sku = %(sku)s returning id'''
+            q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where sku = %(sku)s'''
 
-                category = Category()
-                category.name = self.category
-                res = category.Save()
+            p = {
+                    "size":sizes,
+                    "sku":self.sku
+                }
 
-                if "error" in res:
-                    return self.ShowError("Category can not be saved {}".format(res["error"]))
+            try:
+                cur.execute(q,p)
+                self.connection.commit()
 
-                p = {
-                        "name":self.name,
-                        "description":self.description,
-                        "brand":self.brand,
-                        "manufacturer":self.manufacturer,
-                        "size":sizes,
-                        "color":self.color,
-                        "material":self.material,
-                        "bullet_1":self.bullet_1,
-                        "bullet_2":self.bullet_2,
-                        "bullet_3":self.bullet_3,
-                        "image":self.image,
-                        "image_2":self.image_2,
-                        "image_3":self.image_3,
-                        "image_4":self.image_4,
-                        "image_5":self.image_5,
-                        "image_6":self.image_6,
-                        "delivery":self.delivery,
-                        "which_size":self.which_size,
-                        # "currency":self.currency,
-                        "category_id":category.id,
-                        "price":self.price,
-                        "upc":self.upc,
-                        "sku":self.sku,
-                        "sell_price":self.sell_price
-                    }
+            except Exception,e:
+                return self.ShowError("Error updating product size, {}".format(str(e)))
+            finally:
+                cur.close()
+                self.connection.close()
 
-                cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            _tag = Tag()
+            remover_asociacion = _tag.RemoveTagsAsociation(self.id)
 
-                try:
+            if "error" in remover_asociacion:
+                return self.ShowError(remover_asociacion["error"])
 
-                    # print "existe sku:{}".format(cur.mogrify(q,p))
-                    cur.execute(q,p)
+            # print "type:{} value:{}".format(type(self.tags.split(",")),self.tags.split(","))
 
-                    self.connection.commit()
-                    self.id = cur.fetchone()["id"]
+            for t in self.tags.split(","):
+                if t.strip() != "":
+                    res = _tag.AddTagProduct(t.strip(),self.id)
+                    if "error" in res:
+                        return self.ShowError(res["error"])
 
-                    # print self.id
+            return self.ShowSuccessMessage("product correctly updated by sku")
 
-                except Exception,e:
-                    return self.ShowError("Error updating product, {}".format(str(e)))
-                finally:
-                    cur.close()
-                    self.connection.close()
+        elif self.id.strip() != "":
 
-                cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            q = '''update "Product" set 
+            name=%(name)s 
+            , description = %(description)s 
+            , brand = %(brand)s 
+            , manufacturer = %(manufacturer)s 
+            , material = %(material)s 
+            , bullet_1 = %(bullet_1)s 
+            , bullet_2 = %(bullet_2)s 
+            , image = %(image)s 
+            , image_2 = %(image_2)s 
+            , image_3 = %(image_3)s 
+            , image_4 = %(image_4)s 
+            , image_5 = %(image_5)s 
+            , image_6 = %(image_6)s 
+            , category_id = %(category_id)s 
+            , price = %(price)s 
+            , upc = %(upc)s
+            , sku = %(sku)s
+            , color = %(color)s
+            , sell_price = %(sell_price)s
+            , which_size = %(which_size)s
+            , delivery = %(delivery)s where id = %(id)s'''
 
-                q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where sku = %(sku)s'''
+            category = Category()
+            category.name = self.category
+            res = category.Save()
 
-                p = {
-                        "size":sizes,
-                        "sku":self.sku
-                    }
+            if "error" in res:
+                return self.ShowError("Category can not be saved {}".format(res["error"]))
 
-                try:
-                    cur.execute(q,p)
-                    self.connection.commit()
+            p = {
+                    "name":self.name,
+                    "description":self.description,
+                    "brand":self.brand,
+                    "manufacturer":self.manufacturer,
+                    "size":sizes,
+                    "color":self.color,
+                    "material":self.material,
+                    "bullet_1":self.bullet_1,
+                    "bullet_2":self.bullet_2,
+                    "bullet_3":self.bullet_3,
+                    "image":self.image,
+                    "image_2":self.image_2,
+                    "image_3":self.image_3,
+                    "image_4":self.image_4,
+                    "image_5":self.image_5,
+                    "image_6":self.image_6,
+                    "sku":self.sku,
+                    "category_id":category.id,
+                    "price":self.price,
+                    "upc":self.upc,
+                    "id":self.id,
+                    "sell_price":self.sell_price,
+                    "delivery":self.delivery,
+                    "which_size":self.which_size
+                }
 
-                except Exception,e:
-                    return self.ShowError("Error updating product size, {}".format(str(e)))
-                finally:
-                    cur.close()
-                    self.connection.close()
+            # print "existe id:{}".format(cur.mogrify(q,p))
+            try:
+                cur.execute(q,p)
+                self.connection.commit()
+            except Exception,e:
+                return self.ShowError("Error updating by id:{}".format(str(e)))
+            finally:
+                cur.close()
+                self.connection.close()
 
-                _tag = Tag()
-                remover_asociacion = _tag.RemoveTagsAsociation(self.id)
+            q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where id = %(id)s'''
 
-                if "error" in remover_asociacion:
-                    return self.ShowError(remover_asociacion["error"])
+            p = {
+                    "size":sizes,
+                    "id":self.id
+                }
 
-                # print "type:{} value:{}".format(type(self.tags.split(",")),self.tags.split(","))
+            try:
+                cur.execute(q,p)
+                self.connection.commit()
 
-                for t in self.tags.split(","):
-                    if t.strip() != "":
-                        res = _tag.AddTagProduct(t.strip(),self.id)
-                        if "error" in res:
-                            return self.ShowError(res["error"])
+            except Exception,e:
+                return self.ShowError("Error updating product size, {}".format(str(e)))
+            finally:
+                cur.close()
+                self.connection.close()
 
-                return self.ShowSuccessMessage("product correctly updated by sku")
+            
+            # self.id = cur.fetchone()[0]
 
-            elif self.id.strip() != "":
+            _tag = Tag()
+            remover_asociacion = _tag.RemoveTagsAsociation(self.id)
 
-                q = '''update "Product" set 
-                name=%(name)s 
-                , description = %(description)s 
-                , brand = %(brand)s 
-                , manufacturer = %(manufacturer)s 
-                , material = %(material)s 
-                , bullet_1 = %(bullet_1)s 
-                , bullet_2 = %(bullet_2)s 
-                , image = %(image)s 
-                , image_2 = %(image_2)s 
-                , image_3 = %(image_3)s 
-                , image_4 = %(image_4)s 
-                , image_5 = %(image_5)s 
-                , image_6 = %(image_6)s 
-                , category_id = %(category_id)s 
-                , price = %(price)s 
-                , upc = %(upc)s
-                , sku = %(sku)s
-                , color = %(color)s
-                , sell_price = %(sell_price)s
-                , which_size = %(which_size)s
-                , delivery = %(delivery)s where id = %(id)s'''
+            if "error" in remover_asociacion:
+                return self.ShowError(remover_asociacion["error"])
 
-                category = Category()
-                category.name = self.category
-                res = category.Save()
+            # print self.tags
 
-                if "error" in res:
-                    return self.ShowError("Category can not be saved {}".format(res["error"]))
+            # print "type:{} value:{}".format(type(self.tags.split(",")),self.tags.split(","))
 
-                p = {
-                        "name":self.name,
-                        "description":self.description,
-                        "brand":self.brand,
-                        "manufacturer":self.manufacturer,
-                        "size":sizes,
-                        "color":self.color,
-                        "material":self.material,
-                        "bullet_1":self.bullet_1,
-                        "bullet_2":self.bullet_2,
-                        "bullet_3":self.bullet_3,
-                        "image":self.image,
-                        "image_2":self.image_2,
-                        "image_3":self.image_3,
-                        "image_4":self.image_4,
-                        "image_5":self.image_5,
-                        "image_6":self.image_6,
-                        "sku":self.sku,
-                        "category_id":category.id,
-                        "price":self.price,
-                        "upc":self.upc,
-                        "id":self.id,
-                        "sell_price":self.sell_price,
-                        "delivery":self.delivery,
-                        "which_size":self.which_size
-                    }
+            for t in self.tags.split(","):
+                if t.strip() != "":
+                    res = _tag.AddTagProduct(t.strip(),self.id)
+                    if "error" in res:
+                        return self.ShowError(res["error"])
 
-                # print "existe id:{}".format(cur.mogrify(q,p))
-                try:
-                    cur.execute(q,p)
-                    self.connection.commit()
-                except Exception,e:
-                    return self.ShowError("Error updating by id:{}".format(str(e)))
-                finally:
-                    cur.close()
-                    self.connection.close()
+            return self.ShowSuccessMessage("product correctly updated by id")
 
-                q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where id = %(id)s'''
+        elif self.sku != "":
 
-                p = {
-                        "size":sizes,
-                        "id":self.id
-                    }
+            q = '''insert into "Product" (delivery,which_size,name,description,sku,brand,manufacturer,material,bullet_1,bullet_2,bullet_3,image,image_2,image_3, image_4, image_5, image_6, category_id, price, upc,size,color,sell_price)
+            values (%(delivery)s,%(which_size)s,%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_1)s,%(bullet_2)s,%(bullet_3)s,%(image)s,%(image_2)s,%(image_3)s,%(image_4)s,%(image_5)s,%(image_6)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s,%(sell_price)s) returning id'''
 
-                try:
-                    cur.execute(q,p)
-                    self.connection.commit()
+            category = Category()
+            category.name = self.category
+            res = category.Save()
 
-                except Exception,e:
-                    return self.ShowError("Error updating product size, {}".format(str(e)))
-                finally:
-                    cur.close()
-                    self.connection.close()
+            if "error" in res:
+                return self.ShowError("Category can not be saved {}".format(res["error"]))
 
-                
-                # self.id = cur.fetchone()[0]
+            p = {
+                    "name":self.name,
+                    "description":self.description,
+                    "sku":self.sku,
+                    "brand":self.brand,
+                    "manufacturer":self.manufacturer,
+                    "size":sizes,
+                    "color":self.color,
+                    "material":self.material,
+                    "bullet_1":self.bullet_1,
+                    "bullet_2":self.bullet_2,
+                    "bullet_3":self.bullet_3,
+                    "image":self.image,
+                    "image_2":self.image_2,
+                    "image_3":self.image_3,
+                    "image_4":self.image_4,
+                    "image_5":self.image_5,
+                    "image_6":self.image_6,
+                    "category_id":category.id,
+                    "price":self.price,
+                    "upc":self.upc,
+                    "sell_price":self.sell_price,
+                    "delivery":self.delivery,
+                    "which_size":self.which_size
+                }
 
-                _tag = Tag()
-                remover_asociacion = _tag.RemoveTagsAsociation(self.id)
+            # print cur.mogrify(q.strip(),p)
 
-                if "error" in remover_asociacion:
-                    return self.ShowError(remover_asociacion["error"])
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-                # print self.tags
-
-                # print "type:{} value:{}".format(type(self.tags.split(",")),self.tags.split(","))
-
-                for t in self.tags.split(","):
-                    if t.strip() != "":
-                        res = _tag.AddTagProduct(t.strip(),self.id)
-                        if "error" in res:
-                            return self.ShowError(res["error"])
-
-                return self.ShowSuccessMessage("product correctly updated by id")
-
-            elif self.sku != "":
-
-                q = '''insert into "Product" (delivery,which_size,name,description,sku,brand,manufacturer,material,bullet_1,bullet_2,bullet_3,image,image_2,image_3, category_id, price, upc,size,color,sell_price)
-                values (%(delivery)s,%(which_size)s,%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_1)s,%(bullet_2)s,%(bullet_3)s,%(image)s,%(image_2)s,%(image_3)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s,%(sell_price)s) returning id'''
-
-                category = Category()
-                category.name = self.category
-                res = category.Save()
-
-                if "error" in res:
-                    return self.ShowError("Category can not be saved {}".format(res["error"]))
-
-                p = {
-                        "name":self.name,
-                        "description":self.description,
-                        "sku":self.sku,
-                        "brand":self.brand,
-                        "manufacturer":self.manufacturer,
-                        "size":sizes,
-                        "color":self.color,
-                        "material":self.material,
-                        "bullet_1":self.bullet_1,
-                        "bullet_2":self.bullet_2,
-                        "bullet_3":self.bullet_3,
-                        "image":self.image,
-                        "image_2":self.image_2,
-                        "image_3":self.image_3,
-                        "image_4":self.image_4,
-                        "image_5":self.image_5,
-                        "image_6":self.image_6,
-                        "category_id":category.id,
-                        "price":self.price,
-                        "upc":self.upc,
-                        "sell_price":self.sell_price,
-                        "delivery":self.delivery,
-                        "which_size":self.which_size
-                    }
-
-                # print cur.mogrify(q.strip(),p)
-
-                cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-                try:
-                    cur.execute(q,p)
-                    self.connection.commit()
-                except Exception,e:
-                    return self.ShowError("Error inserting new product: {} query: {}".format(str(e),cur.mogrify(q.strip(),p)))
-                finally:
-                    cur.close()
-                    self.connection.close()
-                
-
-                self.id = cur.fetchone()["id"]
-
-                _tag = Tag()
-                remover_asociacion = _tag.RemoveTagsAsociation(self.id)
-
-                if "error" in remover_asociacion:
-                    return self.ShowError(remover_asociacion["error"])
-
-                # print "type:{} value:{}".format(type(self.tags),self.tags)
-
-                for t in self.tags.split(","):
-                    if t.strip() != "":
-                        res = _tag.AddTagProduct(t.strip(),self.id)
-                        if "error" in res:
-                            return self.ShowError(res["error"])
-
-                
-
-                return self.ShowSuccessMessage("product correctly inserted")
-
-            else:
-
-                return self.ShowError("No viene sku")
+            try:
+                cur.execute(q,p)
+                self.connection.commit()
+            except Exception,e:
+                return self.ShowError("Error inserting new product: {} query: {}".format(str(e),cur.mogrify(q.strip(),p)))
+            finally:
+                cur.close()
+                self.connection.close()
             
 
-        except Exception,e:
-            return self.ShowError("product could not be saved, error:{}".format(str(e)))
-        finally:
-            cur.close()
-            self.connection.close()
+            self.id = cur.fetchone()["id"]
+
+            _tag = Tag()
+            remover_asociacion = _tag.RemoveTagsAsociation(self.id)
+
+            if "error" in remover_asociacion:
+                return self.ShowError(remover_asociacion["error"])
+
+            # print "type:{} value:{}".format(type(self.tags),self.tags)
+
+            for t in self.tags.split(","):
+                if t.strip() != "":
+                    res = _tag.AddTagProduct(t.strip(),self.id)
+                    if "error" in res:
+                        return self.ShowError(res["error"])
+
+            
+
+            return self.ShowSuccessMessage("product correctly inserted")
+
+        else:
+
+            return self.ShowError("No viene sku")
+            
+
+        
 
 
 
