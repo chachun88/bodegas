@@ -181,7 +181,7 @@ class User(BaseModel):
 		if self.identifier != "":
 			url  =self.wsurl() + "/salesman/delete"
 			url += "?token=" + self.token
-			url += "&id=" + self.identifier
+			url += "&id={}".format(self.identifier)
 
 			response = urllib.urlopen(url).read()
 
