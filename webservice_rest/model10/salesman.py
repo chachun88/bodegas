@@ -280,7 +280,11 @@ class Salesman(BaseModel):
 		offset = (page-1)*items
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		try:
-			q = '''select u.*, STRING_AGG(distinct p.name, ',') as permissions_name, STRING_AGG(distinct c.name, ',') as cellars_name from "User" u left join "Permission" p on p.id = any(u.permissions) left join "Cellar" c on c.id = any(u.cellar_permissions) group by u.id limit %(limit)s offset %(offset)s'''
+			q = '''select u.*, STRING_AGG(distinct p.name, ',') as permissions_name, STRING_AGG(distinct c.name, ',') as cellars_name from "User" u 
+			left join "Permission" p on p.id = any(u.permissions) 
+			left join "Cellar" c on c.id = any(u.cellar_permissions) 
+			where u.type_id = 1 or u.type_id = 2
+			group by u.id limit %(limit)s offset %(offset)s'''
 			p = {
 			"limit":items,
 			"offset":offset
