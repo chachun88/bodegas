@@ -30,6 +30,9 @@ class Product(BaseModel):
         self._image = '' #imagen 1
         self._image_2 = '' #imagen 2
         self._image_3 = '' #imagen 3
+        self._image_4 = '' #imagen 4
+        self._image_5 = '' #imagen 5
+        self._image_6 = '' #imagen 6
         self._category = '' #categoria
         self._upc = '' #articulo
         self._price='' #precio compra
@@ -155,6 +158,28 @@ class Product(BaseModel):
         self._image_3 = value
 
     @property
+    def image_4(self):
+        return self._image_4
+    @image_4.setter
+    def image_4(self, value):
+        self._image_4 = value
+
+    @property
+    def image_5(self):
+        return self._image_5
+    @image_5.setter
+    def image_5(self, value):
+        self._image_5 = value
+        
+    @property
+    def image_6(self):
+        return self._image_6
+    @image_6.setter
+    def image_6(self, value):
+        self._image_6 = value
+    
+
+    @property
     def category(self):
         return self._category
     @category.setter
@@ -218,6 +243,9 @@ class Product(BaseModel):
                 "image":self.image,
                 "image_2":self.image_2,
                 "image_3":self.image_3,
+                "image_4":self.image_4,
+                "image_5":self.image_5,
+                "image_6":self.image_6,
                 # "currency":self.currency,
                 "category":self.category,
                 "upc":self.upc,
@@ -426,6 +454,9 @@ class Product(BaseModel):
                 ,image = %(image)s 
                 ,image_2 = %(image_2)s 
                 ,image_3 = %(image_3)s 
+                ,image_4 = %(image_4)s 
+                ,image_5 = %(image_5)s 
+                ,image_6 = %(image_6)s 
                 ,category_id = %(category_id)s 
                 ,price = %(price)s 
                 ,upc = %(upc)s
@@ -455,6 +486,9 @@ class Product(BaseModel):
                         "image":self.image,
                         "image_2":self.image_2,
                         "image_3":self.image_3,
+                        "image_4":self.image_4,
+                        "image_5":self.image_5,
+                        "image_6":self.image_6,
                         "delivery":self.delivery,
                         "which_size":self.which_size,
                         # "currency":self.currency,
@@ -464,6 +498,8 @@ class Product(BaseModel):
                         "sku":self.sku,
                         "sell_price":self.sell_price
                     }
+
+                cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
                 try:
 
@@ -480,6 +516,8 @@ class Product(BaseModel):
                 finally:
                     cur.close()
                     self.connection.close()
+
+                cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
                 q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where sku = %(sku)s'''
 
@@ -527,6 +565,9 @@ class Product(BaseModel):
                 , image = %(image)s 
                 , image_2 = %(image_2)s 
                 , image_3 = %(image_3)s 
+                , image_4 = %(image_4)s 
+                , image_5 = %(image_5)s 
+                , image_6 = %(image_6)s 
                 , category_id = %(category_id)s 
                 , price = %(price)s 
                 , upc = %(upc)s
@@ -557,6 +598,9 @@ class Product(BaseModel):
                         "image":self.image,
                         "image_2":self.image_2,
                         "image_3":self.image_3,
+                        "image_4":self.image_4,
+                        "image_5":self.image_5,
+                        "image_6":self.image_6,
                         "sku":self.sku,
                         "category_id":category.id,
                         "price":self.price,
@@ -642,6 +686,9 @@ class Product(BaseModel):
                         "image":self.image,
                         "image_2":self.image_2,
                         "image_3":self.image_3,
+                        "image_4":self.image_4,
+                        "image_5":self.image_5,
+                        "image_6":self.image_6,
                         "category_id":category.id,
                         "price":self.price,
                         "upc":self.upc,

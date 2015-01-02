@@ -41,6 +41,9 @@ class Product(BaseModel):
         self._image=""
         self._image_2=""
         self._image_3=""
+        self._image_4=""
+        self._image_5=""
+        self._image_6=""
         self._sell_price = 0
         self._tags = ""
         self._which_size = ""
@@ -185,6 +188,28 @@ class Product(BaseModel):
         self._image_3 = value
 
     @property
+    def image_4(self):
+        return self._image_4
+    @image_4.setter
+    def image_4(self, value):
+        self._image_4 = value
+
+    @property
+    def image_5(self):
+        return self._image_5
+    @image_5.setter
+    def image_5(self, value):
+        self._image_5 = value
+
+    @property
+    def image_6(self):
+        return self._image_6
+    @image_6.setter
+    def image_6(self, value):
+        self._image_6 = value
+            
+
+    @property
     def sell_price(self):
         return self._sell_price
     @sell_price.setter
@@ -253,9 +278,12 @@ class Product(BaseModel):
             self.bullet_3=data ["bullet_3"]
             # self.currency=data ["currency"]
             self.price =data["price"]
-            self.image = data ["image"]
-            self.image_2 = data ["image_2"]
-            self.image_3 = data ["image_3"]
+            self.image = data["image"]
+            self.image_2 = data["image_2"]
+            self.image_3 = data["image_3"]
+            self.image_4 = data["image_4"]
+            self.image_5 = data["image_5"]
+            self.image_6 = data["image_6"]
             self.sell_price = data["sell_price"]
             self.tags = data["tags"]
             self.which_size = data["which_size"]
@@ -298,6 +326,9 @@ class Product(BaseModel):
             self.image = producto ["image"]
             self.image_2 = producto ["image_2"]
             self.image_3 = producto ["image_3"] 
+            self.image_4 = producto ["image_4"]
+            self.image_5 = producto ["image_5"]
+            self.image_6 = producto ["image_6"]
             self.sell_price = producto["sell_price"]
             self.tags = producto["tags"]
             self.which_size = producto["which_size"]
@@ -337,6 +368,9 @@ class Product(BaseModel):
                 "image" : self.image,
                 "image_2" : self.image_2,
                 "image_3" : self.image_3,
+                "image_4" : self.image_4,
+                "image_5" : self.image_5,
+                "image_6" : self.image_6,
                 "sell_price" : self.sell_price,
                 "tags" : self.tags, # se envia como string
                 "delivery" : self.delivery,
@@ -374,6 +408,9 @@ class Product(BaseModel):
                 "image" : self.image,
                 "image_2" : self.image_2,
                 "image_3" : self.image_3,
+                "image_4" : self.image_4,
+                "image_5" : self.image_5,
+                "image_6" : self.image_6,
                 "sell_price" : self.sell_price,
                 "id" : self.identifier,
                 "tags" : self.tags,

@@ -3,6 +3,8 @@
 
 import os.path
 
+import os
+
 import pymongo
 
 import tornado.auth
@@ -137,6 +139,9 @@ class ProductAddHandler(BaseHandler):
 		img1 = "{}_{}.png".format( 0, self.get_argument("sku", "").encode('utf-8') )
 		img2 = "{}_{}.png".format( 1, self.get_argument("sku", "").encode('utf-8') )
 		img3 = "{}_{}.png".format( 2, self.get_argument("sku", "").encode('utf-8') )
+		img4 = "{}_{}.png".format( 3, self.get_argument("sku", "").encode('utf-8') )
+		img5 = "{}_{}.png".format( 4, self.get_argument("sku", "").encode('utf-8') )
+		img6 = "{}_{}.png".format( 5, self.get_argument("sku", "").encode('utf-8') )
 
 		if ( "image" in self.request.files ):
 			img1 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
@@ -144,6 +149,12 @@ class ProductAddHandler(BaseHandler):
 			img2 = self.saveImage( self.request.files['image-1'][0], self.get_argument("sku", ""), 1 )
 		if ( "image-2" in self.request.files ):
 			img3 = self.saveImage( self.request.files['image-2'][0], self.get_argument("sku", ""), 2 )
+		if ( "image-3" in self.request.files ):
+			img3 = self.saveImage( self.request.files['image-3'][0], self.get_argument("sku", ""), 3 )
+		if ( "image-4" in self.request.files ):
+			img3 = self.saveImage( self.request.files['image-4'][0], self.get_argument("sku", ""), 4 )
+		if ( "image-5" in self.request.files ):
+			img3 = self.saveImage( self.request.files['image-5'][0], self.get_argument("sku", ""), 5 )
 
 		##if the category does not exist is created
 		category = Category()
@@ -191,6 +202,9 @@ class ProductAddHandler(BaseHandler):
 			prod.image 		= img1
 			prod.image_2 	= img2
 			prod.image_3 	= img3
+			prod.image_4    = img4
+			prod.image_5    = img5
+			prod.image_6    = img6
 			prod.sell_price = self.get_argument("sell_price",0)
 			prod.delivery   = self.get_argument("delivery","").encode('utf-8')
 			prod.which_size = self.get_argument("which_size","").encode('utf-8')
@@ -230,6 +244,9 @@ class ProductAddHandler(BaseHandler):
 			prod.image 		= img1.encode("utf-8")
 			prod.image_2 	= img2.encode("utf-8")
 			prod.image_3 	= img3.encode("utf-8")
+			prod.image_4	= img4.encode("utf-8")
+			prod.image_5 	= img5.encode("utf-8")
+			prod.image_6 	= img6.encode("utf-8")
 			prod.sell_price = self.get_argument("sell_price",0).encode("utf-8")
 			prod.delivery   = self.get_argument("delivery","").encode("utf-8")
 			prod.which_size = self.get_argument("which_size","").encode("utf-8")
@@ -311,6 +328,9 @@ class FastEditHandler(BaseHandler):
 			prod.image = prod.image.encode("utf-8")
 			prod.image_2 = prod.image_2.encode("utf-8")
 			prod.image_3 = prod.image_3.encode("utf-8")
+			prod.image_4 = prod.image_4.encode("utf-8")
+			prod.image_5 = prod.image_5.encode("utf-8")
+			prod.image_6 = prod.image_6.encode("utf-8")
 
 			# print "type:{} value:{}".format(type(prod.tags),prod.tags)
 

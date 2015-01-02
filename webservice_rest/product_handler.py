@@ -35,6 +35,9 @@ class AddProductHandler(BaseHandler):
 		product.image 			= self.get_argument("image", "")
 		product.image_2			= self.get_argument("image_2", "")
 		product.image_3 		= self.get_argument("image_3", "")
+		product.image_4 		= self.get_argument("image_4", "")
+		product.image_5 		= self.get_argument("image_5", "")
+		product.image_6 		= self.get_argument("image_6", "")
 		product.sell_price      = self.get_argument("sell_price",0)
 		product.tags            = self.get_argument("tags","") # se obtiene como string
 		product.delivery        = self.get_argument("delivery","")
