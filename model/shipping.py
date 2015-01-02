@@ -16,6 +16,7 @@ class Shipping(BaseModel):
         self._price = 0
         self._correos_price = 0
         self._chilexpress_price = 0
+        self._charge_type = 1
 
     @property
     def identifier(self):
