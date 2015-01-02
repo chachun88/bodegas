@@ -82,7 +82,7 @@ class Shipping(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         try:
-            cur.execute('''select s.id,c.name as origen, c2.name as destino, s.correos_price, s.chilexpress_price, s.price, s.edited s.charge_type from "Shipping" s left join "City" c on c.id = s.from_city_id left join "City" c2 on c2.id = s.to_city_id''')
+            cur.execute('''select s.id,c.name as origen, c2.name as destino, s.correos_price, s.chilexpress_price, s.price, s.edited, s.charge_type from "Shipping" s left join "City" c on c.id = s.from_city_id left join "City" c2 on c2.id = s.to_city_id''')
             lista = cur.fetchall()
             return self.ShowSuccessMessage(lista)
         except Exception,e:
