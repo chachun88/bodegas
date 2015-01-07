@@ -126,7 +126,7 @@ $(document).ready(function(){
 	}
 
 	// loading user current permissions
-	var current_permissions = {{user.permissions }};
+	var current_permissions = {% if user.permissions == "" %}{}{% else %}{{ user.permissions }}{% end %};
 
 	for (var i = 0; i <= current_permissions.length - 1; i++) {
 		console.log(current_permissions[i]);
