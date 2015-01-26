@@ -190,9 +190,9 @@ class ProductLoadHandler(BaseHandler):
 								# prod.color = sheet.cell_value(i,j).encode("utf-8")
 								prod.color = sheet.cell_value(i,j).encode("utf-8")
 							elif j == 5:										
-								prod.sell_price = int(sheet.cell_value(i,j))
-							elif j == 6:
 								prod.price = int(sheet.cell_value(i,j))
+							elif j == 6:
+								prod.sell_price = int(sheet.cell_value(i,j))
 							elif j == 7:
 								prod.manufacturer = sheet.cell_value(i,j).encode("utf-8")
 							elif j == 8:
@@ -201,7 +201,7 @@ class ProductLoadHandler(BaseHandler):
 								prod.brand = sheet.cell_value(i,j).encode("utf-8")
 							elif j > 10:
 
-								size = str(sheet.cell_value(1,j))
+								size = str(sheet.cell_value(0,j))
 								quantity = sheet.cell_value(i,j)
 
 								if quantity != "":
