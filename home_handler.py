@@ -417,7 +417,7 @@ class ProductMassiveOutputHandler(BaseHandler):
 				for i in range(nrows):	
 					matriz.append([])
 					for j in range(ncols):				
-						if i == 0 and j > 11:
+						if i == 1 and j > 11:
 							tallas.append(sheet.cell_value(i,j))				
 
 				for i in range(nrows):	
@@ -428,7 +428,7 @@ class ProductMassiveOutputHandler(BaseHandler):
 							matriz[i].append(sheet.cell_value(i,j))
 							
 							# try: 
-							if i > 3 and i < nrows:
+							if i > 0 and i < nrows:
 								prod.size=str(tallas[k]).split(",")
 								size=str(tallas[k])
 								if j == 0:
@@ -442,15 +442,12 @@ class ProductMassiveOutputHandler(BaseHandler):
 								elif j == 4:										
 									prod.color=matriz[i][j].encode('utf-8').split(",")
 									color=matriz[i][j].encode('utf-8')
-								#elif j == 5:
-								#	try:
-								#		price = str(int(matriz[i][j]))
-								#	except:
-								#		price = 0
 								elif j == 5:
-									price_sell = str(matriz[i][j])									
+									prod.price = int(matriz[i][j])									
 								elif j == 6:
-									prod.manufacturer = matriz[i][j].encode('utf-8')	
+									prod.sell_price = int(matriz[i][j])	
+								elif j == 7:										
+									prod.manufacturer = matriz[i][j].encode('utf-8')
 								elif j == 8:
 									cellar_name= matriz[i][j].encode('utf-8')
 								elif j == 9:
