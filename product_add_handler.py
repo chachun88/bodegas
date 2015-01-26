@@ -82,7 +82,7 @@ class ProductAddHandler(BaseHandler):
 		# print "files {}".format( image_name )
 		
 		if image_name != "":
-			os.chdir( "uploads/images" )
+			os.chdir( "uploads/images/" )
 			for file in glob.glob("*" + image_name):
 				try:
 					os.remove( file )
