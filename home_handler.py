@@ -176,7 +176,7 @@ class ProductLoadHandler(BaseHandler):
 					tallas = []
 
 					for j in range(ncols):				
-						if i > 3:
+						if i > 0:
 
 							if j == 0:
 								prod.category = sheet.cell_value(i,j).encode("utf-8")
@@ -189,15 +189,17 @@ class ProductLoadHandler(BaseHandler):
 							elif j == 4:										
 								# prod.color = sheet.cell_value(i,j).encode("utf-8")
 								prod.color = sheet.cell_value(i,j).encode("utf-8")
-							elif j == 5:
-								prod.price = int(sheet.cell_value(i,j))
+							elif j == 5:										
+								prod.sell_price = int(sheet.cell_value(i,j))
 							elif j == 6:
-								prod.manufacturer = sheet.cell_value(i,j).encode("utf-8")
+								prod.price = int(sheet.cell_value(i,j))
 							elif j == 7:
-								cellar_name = sheet.cell_value(i,j)
+								prod.manufacturer = sheet.cell_value(i,j).encode("utf-8")
 							elif j == 8:
+								cellar_name = sheet.cell_value(i,j)
+							elif j == 9:
 								prod.brand = sheet.cell_value(i,j).encode("utf-8")
-							elif j > 9:
+							elif j > 10:
 
 								size = str(sheet.cell_value(3,j))
 								quantity = sheet.cell_value(i,j)
