@@ -417,7 +417,7 @@ class ProductMassiveOutputHandler(BaseHandler):
 				for i in range(nrows):	
 					matriz.append([])
 					for j in range(ncols):				
-						if i == 3 and j > 11:
+						if i == 0 and j > 11:
 							tallas.append(sheet.cell_value(i,j))				
 
 				for i in range(nrows):	
