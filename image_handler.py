@@ -127,7 +127,7 @@ class ImageDeleteHandler(BaseHandler):
 
 		image_name = self.get_argument("image_name", "")
 
-		os.chdir( "uploads/images" )
+		os.chdir( "uploads/images/" )
 
 		print "files"
 		for file in glob.glob("*" + image_name):
