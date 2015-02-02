@@ -12,6 +12,7 @@ import StringIO
 import time
 import os
 import glob
+import os.path
 
 from basehandler import BaseHandler
 
@@ -38,16 +39,13 @@ def getIamgeBuffer(handler, image_name):
 	else:
 		## show scaled image
 		try: # detect if image exist
-
 			f = open("uploads/images/{}{}".format(wwidth, image_name), "rb")
 			buff = f.read()
 			f.close()
 
-			#print "ya no crea thumbnail"
-
 			return buff
 		except Exception, ex:
-			
+			#print str(ex)
 			try:
 				##image doesnt exist so i create it
 				image_path = "uploads/images/{}{}".format(wwidth, image_name)
@@ -71,15 +69,14 @@ def getIamgeBuffer(handler, image_name):
 
 				return jpeg
 
-			except Exception,e:
-				# print str(e)
+			except:
 				pass
-			
 
-	## set image name to default_image
+	##### here return the image when doesn't find the requested image
+	# ## set image name to default_image
 	image_name = DEFAULT_IMAGE
 
-	## getting variables
+	# ## getting variables
 	orig = Image.open(image_name)
 	width = int(orig.size[0])
 	height = int(orig.size[1])
@@ -117,8 +114,13 @@ class ImageHandler(BaseHandler):
 class ImageHandler2(BaseHandler):
 
 	def get(self):
+
+		#setting headers
+		self.set_header("Content-Type", "image/png")
+
 		self.write(getIamgeBuffer(self, DEFAULT_IMAGE))
 		self.finish()
+		
 
 class ImageDeleteHandler(BaseHandler):
 
@@ -126,19 +128,30 @@ class ImageDeleteHandler(BaseHandler):
 	def get(self):
 
 		image_name = self.get_argument("image_name", "")
-
-		os.chdir( "uploads/images/" )
+		tipo = self.get_argument("type","")
+		identificador = self.get_argument("id","")
 
 		print "files"
-		for file in glob.glob("*" + image_name):
-			try:
-				os.remove( file )
-			except Exception, e:
-				print "no se elimino la imagen {}: {}".format( image_naeme, str(e) )
-				pass
+		if image_name != "":
+			os.chdir( "uploads/images" )
 
-		os.chdir("../../")
-		
+			for file in glob.glob("*" + image_name):
+				try:
+					os.remove( file )
+				except Exception, e:
+					print "no se elimino : {}".format( str(e) )
+					pass
 
-		self.write("imagen eliminada")
+			os.chdir("../../")
 
+			if tipo == "timeline":
+				try:
+					timeline = Timeline()
+					timeline.RemoveImage(identificador, image_name)
+				except Exception,e:
+					print str( e )
+
+
+			self.write("imagen eliminada")
+		else:
+			self.write( "imagen no existe " )
