@@ -56,8 +56,8 @@
 						<!-- <th>Comuna</th>
 						<th>Ciudad</th> -->
 						<!-- <th>Pa&iacute;s</th> -->
-						<th>Cantidad Items</th>
-						<th>Cantidad Productos</th>
+						<th>Cantidad <br/>Items</th>
+						<th>Cantidad <br/>Productos</th>
 						<th>Total</th>
 						<th>Status</th>
 						<th></th>
@@ -79,7 +79,11 @@
 							{{p["customer"]}}
 						</td>
 						<td>
-							{{p["type"]}}
+							{% if int(p["type"]) == 1 %}
+								PERSONA
+							{% else %}
+								EMPRESA
+							{% end %}
 						</td>
 						<td>
 							{{p["source"]}}

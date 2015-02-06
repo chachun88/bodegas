@@ -14,6 +14,13 @@ class Contact(BaseModel):
     @id.setter
     def id(self, value):
         self._id = value
+
+    @property
+    def user_id(self):
+        return self._user_id
+    @user_id.setter
+    def user_id(self, value):
+        self._user_id = value
     
     @property
     def name(self):
@@ -28,6 +35,13 @@ class Contact(BaseModel):
     @type.setter
     def type(self, value):
         self._type = value
+
+    @property
+    def address(self):
+        return self._address
+    @address.setter
+    def address(self, value):
+        self._address = value
     
     @property
     def telephone(self):
@@ -42,20 +56,48 @@ class Contact(BaseModel):
     @email.setter
     def email(self, value):
         self._email = value
-    
-    @property
-    def user_id(self):
-        return self._user_id
-    @user_id.setter
-    def user_id(self, value):
-        self._user_id = value
 
     @property
-    def address(self):
-        return self._address
-    @address.setter
-    def address(self, value):
-        self._address = value
+    def lastname(self):
+        return self._lastname
+    @lastname.setter
+    def lastname(self, value):
+        self._lastname = value
+
+    @property
+    def city(self):
+        return self._city
+    @city.setter
+    def city(self, value):
+        self._city = value
+    
+    @property
+    def zip_code(self):
+        return self._zip_code
+    @zip_code.setter
+    def zip_code(self, value):
+        self._zip_code = value
+
+    @property
+    def additional_info(self):
+        return self._additional_info
+    @additional_info.setter
+    def additional_info(self, value):
+        self._additional_info = value
+
+    @property
+    def town(self):
+        return self._town
+    @town.setter
+    def town(self, value):
+        self._town = value
+    
+    @property
+    def rut(self):
+        return self._rut
+    @rut.setter
+    def rut(self, value):
+        self._rut = value
     
     
     def __init__(self):
@@ -67,6 +109,12 @@ class Contact(BaseModel):
         self._telephone = ""
         self._user_id = ""
         self._type = ""
+        self._lastname = ""
+        self._city = ""
+        self._zip_code = ""
+        self._additional_info = ""
+        self._town = ""
+        self._rut = ""
         
 
     def Save(self):
@@ -80,7 +128,14 @@ class Contact(BaseModel):
         "address":self.address,
         "telephone":self.telephone,
         "user_id":self.user_id,
-        "type_id":self.type
+        "type_id":self.type,
+        "type":self.type,
+        "lastname":self.lastname,
+        "city":self.city,
+        "zip_code":self.zip_code,
+        "additional_info":self.additional_info,
+        "town":self.town,
+        "rut":self.rut
         }
 
         post_data = urllib.urlencode(data)
@@ -103,7 +158,14 @@ class Contact(BaseModel):
         "telephone":self.telephone,
         "user_id":self.user_id,
         "type_id":self.type,
-        "id":self.id
+        "id":self.id,
+        "type":self.type,
+        "lastname":self.lastname,
+        "city":self.city,
+        "zip_code":self.zip_code,
+        "additional_info":self.additional_info,
+        "town":self.town,
+        "rut":self.rut
         }
 
         post_data = urllib.urlencode(data)
@@ -175,6 +237,12 @@ class Contact(BaseModel):
         self.telephone = json_obj["telephone"]
         self.user_id = json_obj["user_id"]
         self.type = json_obj["type"]
+        self.lastname = json_obj["lastname"]
+        self.city = json_obj["city_id"]
+        self.zip_code = json_obj["zip_code"]
+        self.additional_info = json_obj["additional_info"]
+        self.town = json_obj["town"]
+        self.rut = json_obj["rut"]
 
     def GetTypes(self):
 

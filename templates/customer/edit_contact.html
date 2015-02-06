@@ -39,9 +39,27 @@
                                 </div>
                             </div>
                             <div class="control-group">
+                                <label class="control-label" for="prefix">Apellido</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="Apellido" name="lastname" type="text" class="form-control" value="{{contact.lastname}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Rut</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="Rut" name="rut" type="text" class="form-control" value="{{contact.rut}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
                                 <label class="control-label" for="prefix">Email</label>
                                 <div class="controls form-group">
                                     <div class="col-sm-8"><input placeholder="email" name="email" type="text" class="form-control" value="{{contact.email}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Tel&eacute;fono</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="telephone" name="telephone" type="text" class="form-control" value="{{contact.telephone}}"></div>
                                 </div>
                             </div>
                             <div class="control-group">
@@ -51,18 +69,46 @@
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label" for="prefix">Tel&eacute;fono</label>
+                                <label class="control-label" for="prefix">Comuna</label>
                                 <div class="controls form-group">
-                                    <div class="col-sm-8"><input placeholder="telephone" name="telephone" type="text" class="form-control" value="{{contact.telephone}}"></div>
+                                    <div class="col-sm-8"><input placeholder="Comuna" name="town" type="text" class="form-control" value="{{contact.town}}"></div>
                                 </div>
                             </div>
-<!--                             <div class="control-group">
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Ciudad</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8">
+                                        <select name="city">
+                                            {% for c in cities %}
+                                                {% if int(contact.city) == int(c['id']) %}
+                                                    <option value="{{c['id']}}" selected>{{c['name']}}</option>
+                                                {% else %}
+                                                    <option value="{{c['id']}}">{{c['name']}}</option>
+                                                {% end %}
+                                            {% end %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">C&oacute;digo postal</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="C&oacute;digo postal" name="zip_code" type="text" class="form-control" value="{{contact.zip_code}}"></div>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Informaci&oacute;n adicional</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="Informaci&oacute;n adicional" name="additional_info" type="text" class="form-control" value="{{contact.additional_info}}"></div>
+                                </div>
+                            </div>
+                            <input placeholder="user_id" name="user_id" type="hidden" class="form-control" value="{{contact.user_id}}">
+                            <!-- <div class="control-group">
                                 <label class="control-label" for="prefix">ID Cliente</label>
                                 <div class="controls form-group">
                                     <div class="col-sm-8"></div>
                                 </div>
                             </div> -->
-                            <input placeholder="user_id" name="user_id" type="hidden" class="form-control" value="{{contact.user_id}}">
                             <div class="control-group">
                                 <label class="control-label" for="prefix">Tipo</label>
                                 <div class="controls form-group">
@@ -70,16 +116,13 @@
                                         <!-- <input placeholder="type" name="type" type="text" class="form-control" value="{{contact.type}}"> -->
                                         <select name="type">
                                             {% for t in types %}
-                                                {% if t["name"] == contact.type %}
-                                                <option value="{{t['id']}}" selected>{{t["name"]}}</option>
-                                                {% else %}
-                                                <option value="{{t['id']}}">{{t["name"]}}</option>
-                                                {% end %}
+                                            <option value="{{t['id']}}">{{t["name"]}}</option>
                                             {% end %}
                                         </select>
                                     </div>
                                 </div>
                             </div>
+                            <input placeholder="user_id" name="user_id" type="hidden" class="form-control" value="{{contact.user_id}}">
                         </fieldset>
                         <div class="form-actions">
                         {% if mode == "edit" %}

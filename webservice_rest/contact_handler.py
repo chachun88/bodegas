@@ -23,6 +23,14 @@ class SaveHandler(BaseHandler):
         contact.address = self.get_argument("address","")
         contact.id = self.get_argument("id","")
 
+        contact.type = self.get_argument("type","")
+        contact.lastname = self.get_argument("lastname","")
+        contact.city = self.get_argument("city","")
+        contact.zip_code = self.get_argument("zip_code","")
+        contact.additional_info = self.get_argument("additional_info","")
+        contact.town = self.get_argument("town","")
+        contact.rut = self.get_argument("rut","")
+
         self.write(json_util.dumps(contact.Save()))
 
 class EditHandler(BaseHandler):
@@ -40,6 +48,14 @@ class EditHandler(BaseHandler):
         contact.user_id = self.get_argument("user_id","")
         contact.address = self.get_argument("address","")
         contact.id = self.get_argument("id","")
+
+        contact.type = self.get_argument("type","")
+        contact.lastname = self.get_argument("lastname","")
+        contact.city = self.get_argument("city","")
+        contact.zip_code = self.get_argument("zip_code","")
+        contact.additional_info = self.get_argument("additional_info","")
+        contact.town = self.get_argument("town","")
+        contact.rut = self.get_argument("rut","")
 
         self.write(json_util.dumps(contact.Edit()))
 

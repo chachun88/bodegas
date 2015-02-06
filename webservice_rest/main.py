@@ -23,6 +23,7 @@ import contact_handler
 import tag_handler
 import city_handler
 import shipping_handler
+import webpay_handler
 
 import doc_handler
 from bson.objectid import ObjectId
@@ -142,7 +143,9 @@ class Application(tornado.web.Application):
             (r"/shipping/list",                      shipping_handler.ListHandler),
             (r"/shipping/action",                    shipping_handler.ActionHandler),
             (r"/shipping/initbyid",                  shipping_handler.InitByIdHandler),
-            (r"/shipping/remove",                    shipping_handler.RemoveHandler)
+            (r"/shipping/remove",                    shipping_handler.RemoveHandler),
+
+            (r"/webpay/initbyorderid",               webpay_handler.InitByOrderIdHandler)
             
             ]
 

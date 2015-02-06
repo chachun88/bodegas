@@ -12,6 +12,7 @@ from globals import Menu
 from basehandler import BaseHandler
 from model.customer import Customer
 from model.contact import Contact
+from model.city import City
 
 from datetime import datetime
 
@@ -43,39 +44,7 @@ class CustomerViewContactHandler(BaseHandler):
                 self.write(response["error"])
 
 
-class CustomerAddContactHandler(BaseHandler):
 
-    @tornado.web.authenticated
-    def get(self):
-        user_id = self.get_argument("user_id","")
-        contact = Contact()
-        contact.user_id = user_id
-        
-        types = {}
-
-        response = contact.GetTypes()
-
-        if "success" in response:
-            types = response["success"]
-
-        self.render("customer/add_contact.html",contact=contact,mode="add",dn="",types=types)
-
-    @tornado.web.authenticated
-    def post(self):
-        contact = Contact()
-        contact.user_id = self.get_argument("user_id","")
-        contact.name = self.get_argument("name","").encode("utf-8")
-        contact.email = self.get_argument("email","").encode("utf-8")
-        contact.address = self.get_argument("address","").encode("utf-8")
-        contact.telephone = self.get_argument("telephone","").encode("utf-8")
-        contact.type = self.get_argument("type","")
-
-        response = contact.Save()
-
-        if "success" in response:
-            self.redirect("/customer")
-        else:
-            self.write(response["error"])
 
 class CustomerHandler(BaseHandler):
 
@@ -243,6 +212,54 @@ class ContactActionsHandler(BaseHandler):
     def check_xsrf_cookie(self):
         pass
 
+class CustomerAddContactHandler(BaseHandler):
+
+    @tornado.web.authenticated
+    def get(self):
+        user_id = self.get_argument("user_id","")
+        contact = Contact()
+        contact.user_id = user_id
+        
+        types = {}
+
+        response = contact.GetTypes()
+
+        if "success" in response:
+            types = response["success"]
+
+        cities = {}
+
+        city = City()
+        res_city = city.List()
+
+        if "success" in res_city:
+            cities = res_city["success"]
+
+        self.render("customer/add_contact.html",contact=contact,mode="add",dn="",types=types, cities=cities)
+
+    @tornado.web.authenticated
+    def post(self):
+        contact = Contact()
+        contact.user_id = self.get_argument("user_id","")
+        contact.name = self.get_argument("name","").encode("utf-8")
+        contact.email = self.get_argument("email","").encode("utf-8")
+        contact.address = self.get_argument("address","").encode("utf-8")
+        contact.telephone = self.get_argument("telephone","").encode("utf-8")
+        contact.type = self.get_argument("type","")
+        contact.rut = self.get_argument("rut","")
+        contact.city = self.get_argument("city","")
+        contact.town = self.get_argument("town","")
+        contact.zip_code = self.get_argument("zip_code","")
+        contact.additional_info = self.get_argument("additional_info","")
+        contact.lastname = self.get_argument("lastname","")
+
+        response = contact.Save()
+
+        if "success" in response:
+            self.redirect("/customer")
+        else:
+            self.write(response["error"])
+
 class EditContactHandler(BaseHandler):
 
     @tornado.web.authenticated
@@ -251,6 +268,14 @@ class EditContactHandler(BaseHandler):
         contact = Contact()
         contact.InitById(contact_id)
 
+        city = City()
+        res_city = city.List()
+
+        cities = {}
+
+        if "success" in res_city:
+            cities = res_city["success"]
+
         types = {}
 
         response = contact.GetTypes()
@@ -258,7 +283,7 @@ class EditContactHandler(BaseHandler):
         if "success" in response:
             types = response["success"]
 
-        self.render("customer/edit_contact.html",contact=contact,mode="edit",dn="",types=types)
+        self.render("customer/edit_contact.html",contact=contact,mode="edit",dn="",types=types,cities=cities)
 
     @tornado.web.authenticated
     def post(self):
@@ -270,6 +295,12 @@ class EditContactHandler(BaseHandler):
         contact.telephone = self.get_argument("telephone","").encode("utf-8")
         contact.type = self.get_argument("type","")
         contact.id = self.get_argument("id","")
+        contact.rut = self.get_argument("rut","")
+        contact.city = self.get_argument("city","")
+        contact.town = self.get_argument("town","")
+        contact.zip_code = self.get_argument("zip_code","")
+        contact.additional_info = self.get_argument("additional_info","")
+        contact.lastname = self.get_argument("lastname","")
 
         response = contact.GetTypes()
 
