@@ -132,6 +132,14 @@ class Order(BaseModel):
     def state(self, value):
         self._state = value
 
+    @property
+    def payment_type(self):
+        return self._payment_type
+    @payment_type.setter
+    def payment_type(self, value):
+        self._payment_type = value
+    
+
     def __init__(self):
         BaseModel.__init__(self)
         self._id                     = ""
@@ -151,6 +159,7 @@ class Order(BaseModel):
         self._items_quantity         = ""
         self._product_quantity       = ""
         self._state                  = ""
+        self._payment_type           = ""
 
     def Save(self):
         url = self.wsurl() + "/order/add"
@@ -171,6 +180,7 @@ class Order(BaseModel):
         url += "&items_quantity=" + self.items_quantity
         url += "&product_quantity=" + self.product_quantity
         url += "&state=" + self.state
+        url += "&payment_type=" + self.payment_type
 
         url = url.encode("utf-8")
 
@@ -214,6 +224,7 @@ class Order(BaseModel):
             self.items_quantity         = data["items_quantity"]
             self.product_quantity       = data["products_quantity"]
             self.state                  = data["state"]
+            self.payment_type           = data["payment_type"]
 
         return json_data
 

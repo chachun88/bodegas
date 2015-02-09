@@ -123,6 +123,14 @@ class Order(BaseModel):
     def state(self, value):
         self._state = value
 
+    @property
+    def payment_type(self):
+        return self._payment_type
+    @payment_type.setter
+    def payment_type(self, value):
+        self._payment_type = value
+    
+
     def __init__(self):
         BaseModel.__init__(self)
         self.table = "Order"
@@ -143,6 +151,7 @@ class Order(BaseModel):
         self._items_quantity         = ""
         self._product_quantity       = ""
         self._state                  = ""
+        self._payment_type           = ""
 
     def GetList(self, page, items):
 
@@ -222,8 +231,8 @@ class Order(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''insert into "Order" (date,source,items_quantity,state,user_id,subtotal,shipping,tax,total,type,products_quantity)'''
-        query += ''' values(%(date)s,%(source)s,%(items_quantity)s,%(state)s,%(user_id)s,%(subtotal)s,%(shipping)s,%(tax)s,%(total)s,%(type)s,%(products_quantity)s)'''
+        query = '''insert into "Order" (date,source,items_quantity,state,user_id,subtotal,shipping,tax,total,type,products_quantity, payment_type)'''
+        query += ''' values(%(date)s,%(source)s,%(items_quantity)s,%(state)s,%(user_id)s,%(subtotal)s,%(shipping)s,%(tax)s,%(total)s,%(type)s,%(products_quantity)s%(payment_type)s)'''
         query += ''' returning id'''
 
         parametros = {
@@ -237,7 +246,8 @@ class Order(BaseModel):
             "tax" : self.tax,
             "total" : self.total,
             "user_id" : self.customer,
-            "type" : self.type
+            "type" : self.type,
+            "payment_type": self.payment_type
         }
 
         cur.execute(query,parametros)
