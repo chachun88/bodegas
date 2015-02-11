@@ -138,6 +138,20 @@ class Order(BaseModel):
     @payment_type.setter
     def payment_type(self, value):
         self._payment_type = value
+
+    @property
+    def billing_id(self):
+        return self._billing_id
+    @billing_id.setter
+    def billing_id(self, value):
+        self._billing_id = value
+    
+    @property
+    def shipping_id(self):
+        return self._shipping_id
+    @shipping_id.setter
+    def shipping_id(self, value):
+        self._shipping_id = value
     
 
     def __init__(self):
@@ -160,6 +174,8 @@ class Order(BaseModel):
         self._product_quantity       = ""
         self._state                  = ""
         self._payment_type           = ""
+        self._billing_id             = ""
+        self._shipping_id            = ""
 
     def Save(self):
         url = self.wsurl() + "/order/add"
@@ -181,6 +197,8 @@ class Order(BaseModel):
         url += "&product_quantity=" + self.product_quantity
         url += "&state=" + self.state
         url += "&payment_type=" + self.payment_type
+        url += "&billing_id=" + self.billing_id
+        url += "&shipping_id=" + self.shipping_id
 
         url = url.encode("utf-8")
 
@@ -225,6 +243,8 @@ class Order(BaseModel):
             self.product_quantity       = data["products_quantity"]
             self.state                  = data["state"]
             self.payment_type           = data["payment_type"]
+            self.billing_id             = data["billing_id"]
+            self.shipping_id            = data["shipping_id"]
 
         return json_data
 

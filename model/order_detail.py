@@ -87,7 +87,7 @@ class OrderDetail(BaseModel):
         json_string = urllib.urlopen(url).read()
         json_data = json_util.loads(json_string)
 
-        print json_data
+        # print json_data
 
         self._id = str(json_data["_id"])
         self._order_id = json_data["order_id"]

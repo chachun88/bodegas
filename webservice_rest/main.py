@@ -144,6 +144,7 @@ class Application(tornado.web.Application):
             (r"/shipping/action",                    shipping_handler.ActionHandler),
             (r"/shipping/initbyid",                  shipping_handler.InitByIdHandler),
             (r"/shipping/remove",                    shipping_handler.RemoveHandler),
+            (r"/shipping/save_tracking",             shipping_handler.SaveTrackingHandler),
 
             (r"/webpay/initbyorderid",               webpay_handler.InitByOrderIdHandler)
             

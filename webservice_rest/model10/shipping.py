@@ -250,3 +250,26 @@ class Shipping(BaseModel):
             finally:
                 self.connection.close()
                 cur.close()
+
+    def SaveTrackingCode(self, order_id="", tracking_code="", provider_id=""):
+
+        if order_id == "":
+            return self.ShowError("order id is empty")
+        elif tracking_code == "":
+            return self.ShowError("tracking_code of order {} is empty".format(order_id))
+        elif provider_id == "":
+            return self.ShowError("provider_id of order {} is empty".format(provider_id))
+        else:
+
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            query = '''update "Order" set tracking_code = %(tracking_code)s, provider_id = %(provider_id)s, state = 4 where id = %(order_id)s returning user_id'''
+            parameters = {"tracking_code":tracking_code,"order_id":order_id,"provider_id":provider_id}
+
+            try:
+                cur.execute(query,parameters)
+                self.connection.commit()
+                user_id = cur.fetchone()["user_id"]
+                return self.ShowSuccessMessage(user_id)
+            except Exception, e:
+                return self.ShowError("saving tracking code {}".format(str(e)))

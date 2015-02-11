@@ -86,3 +86,27 @@ class RemoveHandler(BaseHandler):
 			self.write(json_util.dumps({"error":"Debe especificar identificador"}))
 		else:
 			self.write(json_util.dumps(shipping.Remove()))
+
+class SaveTrackingHandler(BaseHandler):
+
+	def post(self):
+
+		if not self.ValidateToken():
+			self.write(json_util.dumps({"error":"invalid token"}))
+
+		else:
+
+			order_id = self.get_argument("order_id","")
+			tracking_code = self.get_argument("tracking_code","")
+			provider_id = self.get_argument("provider_id","")
+
+			if order_id == "":
+				self.write(json_util.dumps({"error":"invalid order_id"}))
+			elif tracking_code == "":
+				self.write(json_util.dumps({"error":"invalid tracking_code"}))
+			elif provider_id == "":
+				self.write(json_util.dumps({"error":"invalid provider_id"}))
+			else:
+				shipping = Shipping()
+				res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
+				self.write(json_util.dumps(res))

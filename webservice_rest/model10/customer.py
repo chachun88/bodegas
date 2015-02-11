@@ -113,6 +113,14 @@ class Customer(BaseModel):
     def password(self, value):
         self._password = value
 
+    @property
+    def email(self):
+        return self._email
+    @email.setter
+    def email(self, value):
+        self._email = value
+    
+
     def __init__(self):
         BaseModel.__init__(self)
         self._id = ""
@@ -129,6 +137,7 @@ class Customer(BaseModel):
         self._last_view = ""
         self._username = ""
         self._password = ""
+        self._email = ""
     
     def InitById(self, _id):
 
@@ -175,7 +184,8 @@ class Customer(BaseModel):
         "first_view": self.first_view,
         "last_view": self.last_view,
         "username": self.username,
-        "password": self.password
+        "password": self.password,
+        "email": self.email
         }
 
         # try:
@@ -190,8 +200,8 @@ class Customer(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''insert into "User" (name,lastname,type,rut,bussiness,approval_date,registration_date,status,first_view,last_view,username,password)
-        values (%(name)s,%(lastname)s,%(type)s,%(rut)s,%(bussiness)s,%(approval_date)s,%(registration_date)s,%(status)s,%(first_view)s,%(last_view)s,%(username)s,%(password)s)
+        query = '''insert into "User" (name,lastname,type,rut,bussiness,approval_date,registration_date,status,first_view,last_view,username,password, email)
+        values (%(name)s,%(lastname)s,%(type)s,%(rut)s,%(bussiness)s,%(approval_date)s,%(registration_date)s,%(status)s,%(first_view)s,%(last_view)s,%(username)s,%(password)s,%(email)s)
          returning id'''
 
         try:
@@ -209,7 +219,8 @@ class Customer(BaseModel):
         "lastname": self.lastname,
         "type": self.type,
         "bussiness": self.bussiness,
-        "id":self.id
+        "id":self.id,
+        "email":self.email
         }
 
         # try:
@@ -224,7 +235,7 @@ class Customer(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''update "User" set name = %(name)s, lastname = %(lastname)s, type_id = %(type)s, bussiness = %(bussiness)s where id = %(id)s'''
+        query = '''update "User" set name = %(name)s, lastname = %(lastname)s, type_id = %(type)s, bussiness = %(bussiness)s, email = %(email)s where id = %(id)s'''
 
         try:
             cur.execute(query,customer)

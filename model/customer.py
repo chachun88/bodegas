@@ -107,6 +107,13 @@ class Customer(BaseModel):
     def password(self, value):
         self._password = value
     
+    @property
+    def email(self):
+        return self._email
+    @email.setter
+    def email(self, value):
+        self._email = value
+    
 
     def __init__(self):
         BaseModel.__init__(self)
@@ -124,6 +131,7 @@ class Customer(BaseModel):
         self._last_view = ""
         self._username = ""
         self._password = ""
+        self._email = ""
 
     def Save(self):
 
@@ -144,7 +152,8 @@ class Customer(BaseModel):
         "contact":self.contact,
         "username":self.username,
         "password":self.password,
-        "id":self.id
+        "id":self.id,
+        "email":self.email
         }
 
         post_data = urllib.urlencode(data)
@@ -196,6 +205,7 @@ class Customer(BaseModel):
             self.first_view = data["first_view"]
             self.last_view = data["last_view"]
             self.approval_date = data["approval_date"]
+            self.email = data["email"]
             if "contact" in data:
                 self.contact = data["contact"]
             # self.username = data["username"]

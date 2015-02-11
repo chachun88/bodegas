@@ -129,6 +129,20 @@ class Order(BaseModel):
     @payment_type.setter
     def payment_type(self, value):
         self._payment_type = value
+
+    @property
+    def billing_id(self):
+        return self._billing_id
+    @billing_id.setter
+    def billing_id(self, value):
+        self._billing_id = value
+    
+    @property
+    def shipping_id(self):
+        return self._shipping_id
+    @shipping_id.setter
+    def shipping_id(self, value):
+        self._shipping_id = value
     
 
     def __init__(self):
@@ -152,6 +166,8 @@ class Order(BaseModel):
         self._product_quantity       = ""
         self._state                  = ""
         self._payment_type           = ""
+        self._billing_id             = ""
+        self._shipping_id            = ""
 
     def GetList(self, page, items):
 
@@ -231,8 +247,8 @@ class Order(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''insert into "Order" (date,source,items_quantity,state,user_id,subtotal,shipping,tax,total,type,products_quantity, payment_type)'''
-        query += ''' values(%(date)s,%(source)s,%(items_quantity)s,%(state)s,%(user_id)s,%(subtotal)s,%(shipping)s,%(tax)s,%(total)s,%(type)s,%(products_quantity)s%(payment_type)s)'''
+        query = '''insert into "Order" (date,source,items_quantity,state,user_id,subtotal,shipping,tax,total,type,products_quantity, payment_type, billing_id, shipping_id)'''
+        query += ''' values(%(date)s,%(source)s,%(items_quantity)s,%(state)s,%(user_id)s,%(subtotal)s,%(shipping)s,%(tax)s,%(total)s,%(type)s,%(products_quantity)s%(payment_type)s,%(billing_id)s,%(shipping_id)s)'''
         query += ''' returning id'''
 
         parametros = {
@@ -247,7 +263,9 @@ class Order(BaseModel):
             "total" : self.total,
             "user_id" : self.customer,
             "type" : self.type,
-            "payment_type": self.payment_type
+            "payment_type": self.payment_type,
+            "billing_id": self.billing_id,
+            "shipping_id": self.shipping_id
         }
 
         cur.execute(query,parametros)

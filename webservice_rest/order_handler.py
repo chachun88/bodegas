@@ -63,6 +63,8 @@ class AddOrderHandler(BaseHandler):
         order.product_quantity  = self.get_argument("product_quantity","")
         order.state             = self.get_argument("state","")
         order.payment_type      = self.get_argument("payment_type","")
+        order.billing_id        = self.get_argument("billing_id","")
+        order.shipping_id       = self.get_argument("shipping_id","")
 
         #saving the current order
         oid = order.Save()
@@ -96,6 +98,8 @@ class EditOrderHandler(BaseHandler):
         order.product_quantity  = self.get_argument("product_quantity","")
         order.state             = self.get_argument("state","")
         order.payment_type      = self.get_argument("payment_type","")
+        order.billing_id        = self.get_argument("billing_id","")
+        order.shipping_id       = self.get_argument("shipping_id","")
 
         #saving the current order
         oid = order.Edit(self.db.orders)

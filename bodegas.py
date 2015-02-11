@@ -145,7 +145,8 @@ class Application(tornado.web.Application):
             (r"/shipping/save",         shipping_handler.SaveHandler),
             (r"/shipping/savecity",     shipping_handler.AddCityHandler),
             (r"/shipping/action",       shipping_handler.ActionHandler),
-            (r"/shipping/remove",       shipping_handler.RemoveHandler)
+            (r"/shipping/remove",       shipping_handler.RemoveHandler),
+            (r"/shipping/save_tracking",       shipping_handler.SaveTrackingCodeHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 

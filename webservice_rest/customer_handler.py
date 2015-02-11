@@ -44,6 +44,7 @@ class SaveHandler(BaseHandler):
         customer.id = self.get_argument("id","")
         customer.username = self.get_argument("username","")
         customer.password = self.get_argument("password","")
+        customer.email = self.get_argument("email","")
 
         #saving the current customer
         if customer.id == "":
@@ -86,6 +87,7 @@ class EditHandler(BaseHandler):
         customer.last_view = self.get_argument("last_view","")
         customer.username = self.get_argument("username","")
         customer.password = self.get_argument("password","")
+        customer.email = self.get_argument("email","")
 
         #saving the current customer
         oid = customer.Edit()

@@ -93,7 +93,10 @@ class Contact(BaseModel):
 
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-		query = '''select c.*,ct.name as type from "Contact" c left join "Contact_Types" ct on ct.id = c.type_id where c.id = %(id)s limit 1'''
+		query = '''select c.id, c.user_id, c.name, c.city_id, c.email, c.address, c.telephone, c.zip_code, c.lastname, c.additional_info, c.lastname, c.town, c.rut, ct.name as type, city.name as city from "Contact" c 
+		inner join "Contact_Types" ct on ct.id = c.type_id 
+		inner join "City" city on city.id = c.city_id
+		where c.id = %(id)s limit 1'''
 
 		parametros = {
 		"id":_id
@@ -208,7 +211,10 @@ class Contact(BaseModel):
 
 		try:
 
-			query = '''select c.*,ct.name as type from "Contact" c left join "Contact_Types" ct on ct.id = c.type_id where user_id = %(user_id)s'''
+			query = '''select c.id, c.user_id, c.city_id, c.name, c.email, c.address, c.telephone, c.zip_code, c.lastname, c.additional_info, c.lastname, c.town, c.rut, ct.name as type, city.name as city from "Contact" c 
+			inner join "Contact_Types" ct on ct.id = c.type_id 
+			inner join "City" city on city.id = c.city_id
+			where user_id = %(user_id)s'''
 			parametros = {
 			"user_id":_user_id
 			}

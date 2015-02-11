@@ -238,7 +238,7 @@ class Contact(BaseModel):
         self.user_id = json_obj["user_id"]
         self.type = json_obj["type"]
         self.lastname = json_obj["lastname"]
-        self.city = json_obj["city_id"]
+        self.city = json_obj["city"]
         self.zip_code = json_obj["zip_code"]
         self.additional_info = json_obj["additional_info"]
         self.town = json_obj["town"]

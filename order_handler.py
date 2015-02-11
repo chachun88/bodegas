@@ -18,17 +18,16 @@ from datetime import datetime
 from bson import json_util
 
 ACCIONES_ELIMINAR = 1
-ACCIONES_ACEPTAR = 2
-ACCIONES_DESPACHADO = 3
-ACCIONES_PENDIENTE = 4
+ACCIONES_CONFIRMAR = 2
+ACCIONES_PICKING = 3
+ACCIONES_DESPACHADO = 4
+ACCIONES_CANCELADO = 5
 
-ESTADO_PENDIENTE = 0
-ESTADO_ACEPTADO = 1
-ESTADO_DESPACHADO = 2
-ESTADO_CONFIRMADO = 3
-ESTADO_PICKING = 4
+ESTADO_PENDIENTE = 1
+ESTADO_CONFIRMADO = 2
+ESTADO_PICKING = 3
+ESTADO_DESPACHADO = 4
 ESTADO_CANCELADO = 5
-ESTADO_CANCELADO = 6
 
 class OrderHandler(BaseHandler):
     @tornado.web.authenticated
@@ -97,15 +96,21 @@ class OrderActionsHandler(BaseHandler):
             self.write("Debe seleccionar al menos un pedido")
             return
 
-        if accion == ACCIONES_ACEPTAR:
+        if accion == ACCIONES_ELIMINAR:
+
+            response = order.Remove(valores)
+
+            self.write(json_util.dumps(response))
+
+        elif accion == ACCIONES_CONFIRMAR:
             
-            response = order.ChangeStateOrders(valores,ESTADO_ACEPTADO)
+            response = order.ChangeStateOrders(valores,ESTADO_CONFIRMADO)
             
             self.write(json_util.dumps(response))
 
-        elif accion == ACCIONES_ELIMINAR:
+        elif accion == ACCIONES_PICKING:
 
-            response = order.Remove(valores)
+            response = order.ChangeStateOrders(valores,ESTADO_PICKING)
 
             self.write(json_util.dumps(response))
 
@@ -115,9 +120,9 @@ class OrderActionsHandler(BaseHandler):
 
             self.write(json_util.dumps(response))
 
-        elif accion == ACCIONES_PENDIENTE:
+        elif accion == ACCIONES_CANCELADO:
 
-            response = order.ChangeStateOrders(valores,ESTADO_PENDIENTE)
+            response = order.ChangeStateOrders(valores,ESTADO_CANCELADO)
 
             self.write(json_util.dumps(response))
 

@@ -6,6 +6,8 @@ from basehandler import BaseHandler
 from model.city import City
 from model.shipping import Shipping
 from bson import json_util
+from emails import TrackingCustomer
+from model.customer import Customer
 
 from globals import Menu
 
@@ -133,3 +135,65 @@ class RemoveHandler(BaseHandler):
 		else:
 
 			self.write("Identificador no válido")
+
+
+class SaveTrackingCodeHandler(BaseHandler):
+
+	def get(self):
+
+		shipping = Shipping()
+
+		errores = []
+
+		arr_tracking_code = self.get_arguments("tracking_code")
+
+		arr_provider_id = self.get_arguments("provider_id")
+
+		arr_order_id = self.get_arguments("order_id")
+
+		for x in range(0, len(arr_order_id)):
+
+			order_id = arr_order_id[x]
+			tracking_code = arr_tracking_code[x]
+			provider_id = arr_provider_id[x]
+
+			provider_name = ""
+
+			res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
+
+			if "error" in res:
+				errores.append(res["error"])
+			else:
+				if int(provider_id) == 1:
+					provider_name = "Chilexpress"
+				elif int(provider_id) == 2:
+					provider_name = "Correos de Chile"
+
+				customer = Customer()
+				response = customer.InitById(res["success"])
+
+				if response == "ok":
+					TrackingCustomer(customer.email,customer.name,tracking_code,provider_name,order_id)
+
+		cellar_id = self.get_argument("cellar_id", "")
+
+		cellar = Cellar()
+		selected = cellar.GetWebCellar()
+
+		if "success" in selected:
+			cellar_id = selected["success"]
+
+		product_id = self.get_argument("product_id", "")
+		quantity = self.get_argument("quantity", "")
+		price = self.get_argument("price", "")
+		balance_price=self.get_argument("balance_price", "")
+		new_cellar = self.get_argument("new_cellar", "")
+		size= self.get_argument("size", "")
+		color=self.get_argument("color", "")
+		operation=self.get_argument("operation", "")
+
+		if len(errores) > 0:
+			self.write(json_util.dumps({"state":1,"obj":errores}))
+		else:
+			self.write(json_util.dumps({"state":0}))
+		

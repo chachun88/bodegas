@@ -83,7 +83,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
         return date.strftime('%d/%m/%Y %H:%M')
 
-    def money_format(self, value):
+    @staticmethod
+    def money_format(value):
 
         if os.name != "nt":
             locale.setlocale( locale.LC_NUMERIC, 'es_ES.utf8' )

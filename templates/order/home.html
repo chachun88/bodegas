@@ -19,6 +19,24 @@
 </div>
 {% end %}
 
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <form id="shipping-tracking" class="form-inline" action="/shipping/save_tracking" method="get"></form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick='return ValidateTracking()'>Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
@@ -32,9 +50,10 @@
 							class="chzn-select select-block-level" id="default-select">
 								<option value=""></option>
 								<option value="1">Eliminar</option>
-								<option value="2">Aceptado</option>
-								<option value="3">Despachado</option>
-								<option value="4">Pendiente</option>
+								<option value="2">Confirmado</option>
+								<option value="3">Picking</option>
+								<option value="4">Despachado</option>
+								<option value="5">Cancelado</option>
 							</select>
 						</th>
 						<th>
@@ -68,7 +87,7 @@
 					{% for p in pedidos %}
 					<tr>
 						<td>
-							<input type="checkbox" name="pedidos" class="iCheck" value="{{p['order_id']}}">
+							<input type="checkbox" name="pedidos" class="iCheck" value="{{p['order_id']}}" tracking-code="{{p['tracking_code']}}">
 						</td>
 						<td>
 							{{p["order_id"]}}
