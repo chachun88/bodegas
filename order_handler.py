@@ -232,7 +232,7 @@ def SendShippedMail(email,name,id_orden):
                 print despacho_response["success"]
 
             datos_facturacion = """\
-            <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
+            <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
               <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                 <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Datos de Facturaci&oacute;n </th>
               </tr>
@@ -260,7 +260,7 @@ def SendShippedMail(email,name,id_orden):
             """.format(order_id=order.id,name=facturacion["name"],address=facturacion["address"],town="",city=facturacion["city"],country="",telephone=facturacion["telephone"],email=facturacion["email"])
 
             datos_despacho = """\
-            <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
+                <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
               <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                 <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Datos de Despacho</th>
               </tr>
@@ -308,14 +308,14 @@ def SendShippedMail(email,name,id_orden):
                       <td align="center" valign="top">
 
                         <!-- start top navigation container -->
-                        <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container">
+                        <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container">
 
                           <tbody><tr>
                             <td valign="top">
 
 
                               <!-- start top navigaton -->
-                              <table width="560" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width">
+                              <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width">
 
                                 <!-- start space -->
                                 <tbody><tr>
@@ -382,15 +382,15 @@ def SendShippedMail(email,name,id_orden):
             <tr>
              <td align="center" valign="top" class="fix-box">
 
-               <!-- start  container width 600px --> 
-               <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; ">
+               <!-- start  container width 100%px --> 
+               <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; ">
 
 
                  <tbody><tr>
                    <td valign="top">
 
-                     <!-- start container width 560px --> 
-                     <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:10px;">
+                     <!-- start container width 100%px --> 
+                     <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:10px;">
 
 
                        <!-- start text content --> 
@@ -425,11 +425,11 @@ def SendShippedMail(email,name,id_orden):
 
 
                      </tbody></table>
-                     <!-- end  container width 560px --> 
+                     <!-- end  container width 100%px --> 
                    </td>
                  </tr>
                </tbody></table>
-               <!-- end  container width 600px --> 
+               <!-- end  container width 100%px --> 
              </td>
             </tr>
 
@@ -441,15 +441,15 @@ def SendShippedMail(email,name,id_orden):
             <tr>
              <td align="center" valign="top" class="fix-box">
 
-               <!-- start  container width 600px --> 
-               <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; ">
+               <!-- start  container width 100%px --> 
+               <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; ">
 
 
                  <tbody><tr>
                    <td valign="top">
 
-                     <!-- start container width 560px --> 
-                     <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
+                     <!-- start container width 100%px --> 
+                     <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
 
 
                        <!-- start text content --> 
@@ -513,11 +513,11 @@ def SendShippedMail(email,name,id_orden):
 
 
                      </tbody></table>
-                     <!-- end  container width 560px --> 
+                     <!-- end  container width 100%px --> 
                    </td>
                  </tr>
                </tbody></table>
-               <!-- end  container width 600px --> 
+               <!-- end  container width 100%px --> 
              </td>
             </tr>
 
@@ -527,8 +527,8 @@ def SendShippedMail(email,name,id_orden):
             <tr>
              <td align="center" valign="top" class="fix-box">
 
-               <!-- start  container width 600px --> 
-               <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; border-bottom:1px solid #c7c7c7; border-top:1px solid #c7c7c7;">
+               <!-- start  container width 100%px --> 
+               <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; border-bottom:1px solid #c7c7c7; border-top:1px solid #c7c7c7;">
 
                 <!--start space height --> 
                 <tbody><tr>
@@ -539,8 +539,8 @@ def SendShippedMail(email,name,id_orden):
                <tr>
                  <td valign="top">
 
-                   <!-- start container width 560px --> 
-                   <table width="560" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
+                   <!-- start container width 100%px --> 
+                   <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
 
 
 
@@ -548,11 +548,11 @@ def SendShippedMail(email,name,id_orden):
                      <!-- start heading -->               
                      <tbody><tr>     
                        <td valign="top">
-                         <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                         <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
                            <tbody><tr>
 
 
-                             <td align="left" style="font-size: 18px; line-height: 22px; font-family:Roboto,Open Sans, Arial,Tahoma, Helvetica, sans-serif; color:#555555; font-weight:300; text-align:left;">
+                             <td align="center" style="font-size: 18px; line-height: 22px; font-family:Roboto,Open Sans, Arial,Tahoma, Helvetica, sans-serif; color:#555555; font-weight:300; text-align:center;">
                                <span style="color: #555555; font-weight:300;">
                                  <a href="#" style="text-decoration: none; color: #555555; font-weight: 300;">Trackea tu producto </a>
                                </span>
@@ -573,7 +573,7 @@ def SendShippedMail(email,name,id_orden):
                      <!-- start text content -->
                      <tr>
                        <td valign="top">
-                         <table border="0" cellspacing="0" cellpadding="0" align="left">
+                         <table border="0" cellspacing="0" cellpadding="0" align="center">
 
 
                            <tbody><tr>
@@ -608,11 +608,11 @@ def SendShippedMail(email,name,id_orden):
                      
 
                    </tbody></table>
-                   <!-- end  container width 560px --> 
+                   <!-- end  container width 100%px --> 
                  </td>
                </tr>
              </tbody></table>
-             <!-- end  container width 600px --> 
+             <!-- end  container width 6px --> 
             </td>
             </tr>
 
@@ -623,15 +623,15 @@ def SendShippedMail(email,name,id_orden):
             <tr>
              <td align="center" valign="top" class="fix-box">
 
-               <!-- start  container width 600px --> 
-               <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; padding-bottom:20px; ">
+               <!-- start  container width 100%px --> 
+               <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; padding-bottom:20px; ">
 
 
                  <tbody><tr>
                    <td valign="top">
 
-                     <!-- start container width 560px --> 
-                     <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
+                     <!-- start container width 100%px --> 
+                     <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
 
 
                        <!-- start text content --> 
@@ -699,13 +699,14 @@ def SendShippedMail(email,name,id_orden):
 
                     {datos_facturacion}
                     {datos_despacho}
+                
 
-                    <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
+                    <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
                       <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                         <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Datos compra</th>
                       </tr>
                     </tbody></table>
-                    <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
+                    <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
                       <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                         <th style="line-height: 2.5;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6; border-right: 1px solid #d6d6d6;">Cantidad</th>
                         <th style="line-height: 2.5;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">Nombre producto</th>
@@ -715,11 +716,11 @@ def SendShippedMail(email,name,id_orden):
                         <th style="line-height: 2.5;margin-right: -1px;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-right: 1px;border-right-color: #d6d6d6; border-right-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">Subtotal</th>
                       </tr>
                         
-                        {detalle_orden}
+                         {detalle_orden}
 
                     </tbody></table>
 
-                    <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
+                    <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
                       <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                         <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Resumen</th>
                       </tr>
@@ -736,11 +737,11 @@ def SendShippedMail(email,name,id_orden):
                         <td style="line-height: 2.5;margin-left: -1px;height: 30px;border-right: 1px;border-right-color: #d6d6d6; border-right-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">$ {order_total}</td>
                       </tr>
                     </tbody></table>
-                    <!-- end  container width 560px --> 
+                    <!-- end  container width 100%px --> 
                   </td>
                 </tr>
               </tbody></table>
-              <!-- end  container width 600px --> 
+              <!-- end  container width 100%px --> 
             </td>
             </tr>
 
@@ -756,14 +757,14 @@ def SendShippedMail(email,name,id_orden):
                     <td align="center" valign="top">
 
                       <!-- start footer container -->
-                      <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container">
+                      <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container">
 
                         <tbody><tr>
                           <td valign="top">
 
 
                             <!-- start footer -->
-                            <table width="560" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width">
+                            <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width">
 
                               <!-- start space -->
                               <tbody><tr>
@@ -775,7 +776,7 @@ def SendShippedMail(email,name,id_orden):
                               <tr>
                                 <td valign="middle">
 
-                                  <table align="left" border="0" cellspacing="0" cellpadding="0" class="container2">
+                                  <table align="center" border="0" cellspacing="0" cellpadding="0" class="container2">
 
                                     <tbody><tr>
                                       <td align="center" valign="top">
@@ -827,10 +828,10 @@ def SendShippedMail(email,name,id_orden):
 
             <tr>
               <td align="center" valign="top" style="background-color:#FEBEBD;">
-                <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color:#FEBEBD;">
+                <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color:#FEBEBD;">
                   <tbody><tr>
                     <td valign="top">
-                      <table width="560" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color:#FEBEBD;">
+                      <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color:#FEBEBD;">
 
                         <!--start space height -->                      
                         <tbody><tr>
