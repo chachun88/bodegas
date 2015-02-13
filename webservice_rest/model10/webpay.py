@@ -128,8 +128,11 @@ class Webpay(BaseModel):
 
         try:
             cur.execute(query,parametros)
-            res = cur.fetchone()
-            return self.ShowSuccessMessage(res)
+            if cur.rowcount > 0:
+                res = cur.fetchone()
+                return self.ShowSuccessMessage(res)
+            else:
+                return self.ShowError("not paid with webpay")
         except Exception, e:
             return self.ShowError("Init by order id {}".format(str(e)))
         finally:

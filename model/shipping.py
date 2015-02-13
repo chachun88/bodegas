@@ -180,7 +180,7 @@ class Shipping(BaseModel):
 
         return response_obj
     
-    def SaveTrackingCode(self, order_id, tracking_code, provider_id):
+    def SaveTrackingCode(self, order_id, tracking_code, provider_id,new_cellar_id):
 
         url = self.wsurl() + "/shipping/save_tracking"
 
@@ -188,18 +188,19 @@ class Shipping(BaseModel):
         "token":self.token,
         "order_id":order_id,
         "tracking_code":tracking_code,
-        "provider_id":provider_id
+        "provider_id":provider_id,
+        "new_cellar_id":new_cellar_id
         }
 
         post_data = urllib.urlencode(data)
 
         response_str = urllib.urlopen(url, post_data).read()
 
-        print "sakjdhaskjdhaskjdhasjkdh\n"
+        # print "sakjdhaskjdhaskjdhasjkdh\n"
 
-        print response_str
+        # print response_str
 
-        print "\nksajdhsajkdhaskj"
+        # print "\nksajdhsajkdhaskj"
 
         response_obj = json_util.loads(response_str)
 

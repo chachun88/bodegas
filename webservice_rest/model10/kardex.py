@@ -290,7 +290,7 @@ class Kardex(BaseModel):
 			self.connection.commit()
 			return self.ShowSuccessMessage("products has been added")
 		except Exception,e:
-			return self.ShowError("an error ocurred, error:{}".format(str(e)))
+			return self.ShowError("an error inserting kardex, error:{}".format(str(e)))
 
 
 		

@@ -159,7 +159,7 @@ class SaveTrackingCodeHandler(BaseHandler):
 
 			provider_name = ""
 
-			res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
+			res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id,new_cellar_id)
 
 			if "error" in res:
 				errores.append(res["error"])
@@ -175,22 +175,6 @@ class SaveTrackingCodeHandler(BaseHandler):
 				if response == "ok":
 					TrackingCustomer(customer.email,customer.name,tracking_code,provider_name,order_id)
 
-		cellar_id = self.get_argument("cellar_id", "")
-
-		cellar = Cellar()
-		selected = cellar.GetWebCellar()
-
-		if "success" in selected:
-			cellar_id = selected["success"]
-
-		product_id = self.get_argument("product_id", "")
-		quantity = self.get_argument("quantity", "")
-		price = self.get_argument("price", "")
-		balance_price=self.get_argument("balance_price", "")
-		new_cellar = self.get_argument("new_cellar", "")
-		size= self.get_argument("size", "")
-		color=self.get_argument("color", "")
-		operation=self.get_argument("operation", "")
 
 		if len(errores) > 0:
 			self.write(json_util.dumps({"state":1,"obj":errores}))

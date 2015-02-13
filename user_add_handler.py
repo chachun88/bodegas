@@ -14,6 +14,8 @@ from model.cellar import Cellar
 
 from bson import json_util
 
+import hashlib
+
 class UserAddHandler(BaseHandler):
 
 	@tornado.web.authenticated
@@ -33,7 +35,12 @@ class UserAddHandler(BaseHandler):
 		usr.name 		= self.get_argument("name", "").encode("utf-8")
 		usr.surname 	= self.get_argument("surname", "").encode("utf-8")
 		usr.email 		= self.get_argument("email", "").encode("utf-8")
-		usr.password 	= self.get_argument("password", "").encode("utf-8")
+
+		m = hashlib.md5()
+		m.update(self.get_argument("password", "").encode("utf-8"))
+		password = m.hexdigest()
+
+		usr.password 	= password
 		usr.permissions = self.get_argument("permissions", "").encode("utf-8")
 		usr.identifier	= self.get_argument("id", "").encode("utf-8")
 		usr.cellars     = self.get_argument("cellars","").encode("utf-8")

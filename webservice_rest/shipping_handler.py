@@ -2,6 +2,10 @@
 # -*- coding: UTF-8 -*-
 
 from model10.shipping import Shipping
+from model10.cellar import Cellar
+from model10.product import Product
+from model10.kardex import Kardex
+from model10.order_detail import OrderDetail
 
 from base_handler import BaseHandler
 from bson import json_util
@@ -99,6 +103,7 @@ class SaveTrackingHandler(BaseHandler):
 			order_id = self.get_argument("order_id","")
 			tracking_code = self.get_argument("tracking_code","")
 			provider_id = self.get_argument("provider_id","")
+			new_cellar = self.get_argument("new_cellar","")
 
 			if order_id == "":
 				self.write(json_util.dumps({"error":"invalid order_id"}))
@@ -107,6 +112,92 @@ class SaveTrackingHandler(BaseHandler):
 			elif provider_id == "":
 				self.write(json_util.dumps({"error":"invalid provider_id"}))
 			else:
+
+				cellar = Cellar()
+				web_cellar = cellar.GetWebCellar()
+
+				web_cellar_id = ""
+
+				if "success" in web_cellar:
+					web_cellar_id = web_cellar["success"]
+
+				order_detail = OrderDetail()
+				details_res = order_detail.ListByOrderId(order_id)
+
+				if "success" in details_res:
+					details = details_res["success"]
+
+				for detail in details:
+
+					sku = detail["sku"]
+					quantity = detail["quantity"]
+					operation = Kardex.OPERATION_SELL
+					price = detail["price"]
+					size = detail["product_size"]
+					color = detail["color"]
+					user = 'Sistema'
+
+					k = Kardex()
+					find_kardex = k.FindKardex(sku, web_cellar_id, size)
+
+					balance_price = 0
+
+					if "success" in find_kardex:
+						balance_price = k.balance_price
+
+					product_find = cellar.FindProductKardex(sku, web_cellar_id, size)
+
+					buy=0
+					sell=0
+
+					for p in product_find:
+						if p["operation_type"] == "buy":
+							buy=p["total"]	
+
+						if p["operation_type"] == "sell":
+							sell=p["total"]
+
+					units=buy-sell		
+
+					if int(units) >= int(quantity): 
+
+						kardex = Kardex()
+
+						kardex.product_sku = sku
+						kardex.cellar_identifier = web_cellar_id
+						kardex.date = str(datetime.datetime.now().isoformat())
+
+						kardex.operation_type = operation
+						kardex.units = quantity
+						kardex.price = price
+						kardex.size = size
+
+						kardex.color= color
+						kardex.user = user
+
+						response_kardex = kardex.Insert()
+
+						if "error" in response_kardex:
+							self.write(json_util.dumps(response_kardex))
+							return
+
+						elif operation =='mov':
+							
+							cellar2 = Cellar()
+							cellar2.InitById(new_cellar)
+
+							response_move_kardex = cellar2.AddProducts(sku, quantity, balance_price, size, color, operation, user)
+
+							if "error" in response_move_kardex:
+								self.write(json_util.dumps(response_move_kardex))
+								return
+								
+
+					else:
+						self.write(json_util.dumps({"error":"Stock insuficiente para realizar el movimiento"}))
+						return
+
+
 				shipping = Shipping()
 				res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
 				self.write(json_util.dumps(res))

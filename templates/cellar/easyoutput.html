@@ -36,7 +36,7 @@
 						<td>{{ p["description"] }}</td>
 						<td>{{ p["brand"] }}</td>
 						<td>{{ p["manufacturer"] }}</td>
-						<td>{{ ", ".join(p["size"]) }}</td>
+						<td>{{ p["size"] }}</td>
 						<td>{{ p["color"] }}</td>
 						<td>{{ int(p["balance_units"]) }}</td>
 						<td>
@@ -66,9 +66,7 @@
 											<div class="controls form-group">
 												<div class="col-sm-12">
 													<select name="size" class="form-control">
-														{% for pro in p["size"] %}
-														<option value="{{ pro }}"> {{ pro }}</option>
-														{% end %}
+														<option value="{{ p['size'] }}"> {{ p["size"] }}</option>
 													</select>
 												</div>
 											</div>
@@ -106,9 +104,7 @@
 											<div class="controls form-group">
 												<div class="col-sm-12">
 													<select name="size" class="form-control">
-													{% for s in p["size"] %}
-													<option value="{{ s }}"> {{ s }}</option>													
-													{% end %}
+														<option value="{{ p['size'] }}"> {{ p["size"] }}</option>	
 													</select>
 												</div>
 											</div>

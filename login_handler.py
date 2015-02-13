@@ -9,6 +9,8 @@ import tornado.options
 import tornado.web
 from bson import json_util
 
+import hashlib
+
 from lp_email_tool import lpEmailTool
 
 from model.user import User
@@ -36,6 +38,12 @@ class LoginHandler(BaseHandler):
 
 		# print username
 		# print password
+
+		m = hashlib.md5()
+
+		m.update(password)
+
+		password = m.hexdigest()
 		
 		if username == usr.email and password == usr.password:
 			auth = True

@@ -130,20 +130,27 @@ class Cellar(BaseModel):
 		return json_util.loads(response_str)
 
 	def RemoveProducts(self, product_sku, quantity, price, size, color, operation, user):
-		url = self.wsurl() + "/cellar/products/remove?token=" + self.token
+		url = self.wsurl() + "/cellar/products/remove"
 
-		url += "&cellar_id=" + self.identifier
-		url += "&product_sku=" + product_sku
-		url += "&operation=sell"
-		url += "&quantity=" + quantity
-		url += "&price=" + price
-		url += "&size=" + size
-		url += "&color=" + color
-		url += "&user=" + user
+		data = {
+			"token":self.token,
+			"cellar_id": self.identifier,
+			"product_sku": product_sku,
+			"operation": operation,
+			"quantity": quantity,
+			"price": price,
+			"size": size,
+			"color": color,
+			"user": user
+		}
 
 		json_string = urllib.urlopen(url).read()
 
+		print "skjdhakjdshsajkd"+"\n"
+
 		print json_string
+
+		print "\nkasjhdaskjdhaskjdha"
 
 		return json_util.loads(json_string)
 
