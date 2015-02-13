@@ -10,6 +10,8 @@ from model10.order_detail import OrderDetail
 from base_handler import BaseHandler
 from bson import json_util
 
+import datetime
+
 class SaveHandler(BaseHandler):
 
 	def post(self):
@@ -103,7 +105,7 @@ class SaveTrackingHandler(BaseHandler):
 			order_id = self.get_argument("order_id","")
 			tracking_code = self.get_argument("tracking_code","")
 			provider_id = self.get_argument("provider_id","")
-			new_cellar = self.get_argument("new_cellar","")
+			new_cellar_id = self.get_argument("new_cellar_id","")
 
 			if order_id == "":
 				self.write(json_util.dumps({"error":"invalid order_id"}))
@@ -114,12 +116,6 @@ class SaveTrackingHandler(BaseHandler):
 			else:
 
 				cellar = Cellar()
-				web_cellar = cellar.GetWebCellar()
-
-				web_cellar_id = ""
-
-				if "success" in web_cellar:
-					web_cellar_id = web_cellar["success"]
 
 				order_detail = OrderDetail()
 				details_res = order_detail.ListByOrderId(order_id)
@@ -133,29 +129,30 @@ class SaveTrackingHandler(BaseHandler):
 					quantity = detail["quantity"]
 					operation = Kardex.OPERATION_SELL
 					price = detail["price"]
-					size = detail["product_size"]
+					sell_price = detail["sell_price"]
+					size = detail["size"]
 					color = detail["color"]
 					user = 'Sistema'
 
 					k = Kardex()
-					find_kardex = k.FindKardex(sku, web_cellar_id, size)
+					find_kardex = k.FindKardex(sku, new_cellar_id, size)
 
 					balance_price = 0
 
 					if "success" in find_kardex:
 						balance_price = k.balance_price
 
-					product_find = cellar.FindProductKardex(sku, web_cellar_id, size)
+					product_find = cellar.FindProductKardex(sku, new_cellar_id, size)
 
 					buy=0
 					sell=0
 
 					for p in product_find:
-						if p["operation_type"] == "buy":
-							buy=p["total"]	
+						if p["operation_type"] == Kardex.OPERATION_BUY or p["operation_type"] == Kardex.OPERATION_MOV_IN:
+							buy+=p["total"]	
 
-						if p["operation_type"] == "sell":
-							sell=p["total"]
+						if p["operation_type"] == Kardex.OPERATION_SELL or p["operation_type"] == Kardex.OPERATION_MOV_OUT:
+							sell+=p["total"]
 
 					units=buy-sell		
 
@@ -164,13 +161,14 @@ class SaveTrackingHandler(BaseHandler):
 						kardex = Kardex()
 
 						kardex.product_sku = sku
-						kardex.cellar_identifier = web_cellar_id
+						kardex.cellar_identifier = new_cellar_id
 						kardex.date = str(datetime.datetime.now().isoformat())
 
 						kardex.operation_type = operation
 						kardex.units = quantity
 						kardex.price = price
 						kardex.size = size
+						kardex.sell_price = sell_price
 
 						kardex.color= color
 						kardex.user = user
@@ -180,17 +178,6 @@ class SaveTrackingHandler(BaseHandler):
 						if "error" in response_kardex:
 							self.write(json_util.dumps(response_kardex))
 							return
-
-						elif operation =='mov':
-							
-							cellar2 = Cellar()
-							cellar2.InitById(new_cellar)
-
-							response_move_kardex = cellar2.AddProducts(sku, quantity, balance_price, size, color, operation, user)
-
-							if "error" in response_move_kardex:
-								self.write(json_util.dumps(response_move_kardex))
-								return
 								
 
 					else:

@@ -13,6 +13,8 @@ from basehandler import BaseHandler
 from model.cellar import Cellar
 from model.product import Product
 
+from model.kardex import Kardex
+
 from bson import json_util
 
 class CellarHandler(BaseHandler):
@@ -154,34 +156,42 @@ class CellarEasyOutputHandler(BaseHandler):
 		sell=0
 
 		for p in product_find:
-			if p["operation_type"] == "buy":
-				buy=p["total"]	
+			if p["operation_type"] == Kardex.OPERATION_BUY or p["operation_type"] == Kardex.OPERATION_MOV_IN:
+				buy+=p["total"]	
 
-			if p["operation_type"] == "sell":
-				sell=p["total"]
+			if p["operation_type"] == Kardex.OPERATION_SELL or p["operation_type"] == Kardex.OPERATION_MOV_OUT:
+				sell+=p["total"]
 
 		units=buy-sell		
 
 		if int(units) >= int(quantity): 
 
-			if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, operation, self.get_user_email()):
-				self.write("ok")
-			else:
-				self.write("no")
+			if operation == "mov":
 
-			if operation =='mov':
-				
+				if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, Kardex.OPERATION_MOV_OUT, self.get_user_email()):
+					self.write("ok")
+				else:
+					self.write("no")
+
 				cellar2 = Cellar()
 				cellar2.InitWithId(new_cellar)
 
 				# redirect = "t"
 
-				if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, operation, self.get_user_email()):
+				if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, Kardex.OPERATION_MOV_IN, self.get_user_email()):
 					self.write("ok")
 					redirect = "bpt"
 				else:
 					self.write("no")
 					redirect = "bpf"
+
+			else:
+
+				if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, operation, self.get_user_email()):
+					self.write("ok")
+				else:
+					self.write("no")
+
 		else:
 			self.write("no")
 			redirect = "bpf"

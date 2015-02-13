@@ -115,7 +115,7 @@ class Cellar(BaseModel):
 		data = {
 			"cellar_id": self.identifier,
 			"product_sku": product_sku,
-			"operation": "buy",
+			"operation": operation,
 			"quantity": quantity,
 			"price": price,
 			"size": size,
@@ -144,13 +144,9 @@ class Cellar(BaseModel):
 			"user": user
 		}
 
-		json_string = urllib.urlopen(url).read()
+		post_data = urllib.urlencode(data)
 
-		print "skjdhakjdshsajkd"+"\n"
-
-		print json_string
-
-		print "\nkasjhdaskjdhaskjdha"
+		json_string = urllib.urlopen(url, post_data).read()
 
 		return json_util.loads(json_string)
 

@@ -8,6 +8,11 @@ from bson import json_util
 
 class Kardex(BaseModel):
 
+	OPERATION_BUY = "buy"
+	OPERATION_SELL= "sell"
+	OPERATION_MOV_IN = "mov_in"
+	OPERATION_MOV_OUT = "mov_out"
+
 	""" docstring for Cellar """
 	def __init__(self):
 		BaseModel.__init__(self)

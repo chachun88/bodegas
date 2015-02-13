@@ -152,6 +152,14 @@ class Order(BaseModel):
     @shipping_id.setter
     def shipping_id(self, value):
         self._shipping_id = value
+
+    @property
+    def customer_email(self):
+        return self._customer_email
+    @customer_email.setter
+    def customer_email(self, value):
+        self._customer_email = value
+    
     
 
     def __init__(self):
@@ -176,6 +184,7 @@ class Order(BaseModel):
         self._payment_type           = ""
         self._billing_id             = ""
         self._shipping_id            = ""
+        self._customer_email         = ""
 
     def Save(self):
         url = self.wsurl() + "/order/add"
@@ -245,6 +254,7 @@ class Order(BaseModel):
             self.payment_type           = data["payment_type"]
             self.billing_id             = data["billing_id"]
             self.shipping_id            = data["shipping_id"]
+            self.customer_email         = data["email"]
 
         return json_data
 

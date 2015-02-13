@@ -199,7 +199,7 @@ class Order(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select o.*,u.name as customer,c.*,o.id as order_id, ct.name as city from "Order" o left join "User" u on u.id = o.user_id left join "Contact" c on c.id = o.billing_id left join "City" ct on ct.id = c.city_id where o.id = %(id)s limit 1'''
+        query = '''select o.*,u.name as customer,c.*,o.id as order_id, u.email, ct.name as city from "Order" o inner join "User" u on u.id = o.user_id inner join "Contact" c on c.id = o.billing_id inner join "City" ct on ct.id = c.city_id where o.id = %(id)s limit 1'''
 
         parametros = {
         "id":_id

@@ -9,7 +9,7 @@ from bson import json_util
 from emails import TrackingCustomer
 from model.customer import Customer
 
-from globals import Menu
+from globals import Menu, reserve_cellar_id
 
 class AddCityHandler(BaseHandler):
 
@@ -159,7 +159,7 @@ class SaveTrackingCodeHandler(BaseHandler):
 
 			provider_name = ""
 
-			res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id,new_cellar_id)
+			res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id, reserve_cellar_id)
 
 			if "error" in res:
 				errores.append(res["error"])

@@ -72,7 +72,10 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">Descripción</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Descripción" name="description" type="text" class="form-control" value="{{ product.description }}"></div>
+							<div class="col-sm-8">
+								<!-- <input placeholder="Descripción" name="description" type="text"  value=""> -->
+								<textarea id="wysihtml5-textarea" placeholder="Descripci&oacute;n" name="description" class="form-control" autofocus>{{ product.description }}</textarea>
+							</div>
 						</div>
 					</div>
 					<div class="control-group">
