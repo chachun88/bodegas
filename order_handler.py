@@ -115,7 +115,7 @@ class OrderActionsHandler(BaseHandler):
 
                 if "success" in res_order:
                     if _order.payment_type == 1:
-                        SendConfirmedMail(_order.customer_email, _order.customer, _order.id)
+                        SendConfirmedMail(_order.customer_email, _order.customer, v)
                 else:
                     print res_order["error"]
             
