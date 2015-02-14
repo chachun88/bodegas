@@ -76,7 +76,7 @@ class ListOrderDetailHandler(BaseHandler):
                 if TBK_TIPO_PAGO == "VD":
                     TBK_TIPO_PAGO = "Redcompra"
                 else:
-                    TBK_TIPO_PAGO = "Cr&eacute;dito"
+                    TBK_TIPO_PAGO = "Crédito"
 
                 if TBK_TIPO_CUOTA == "VN":
                     TBK_TIPO_CUOTA = "Sin Cuotas"
