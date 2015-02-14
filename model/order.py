@@ -234,7 +234,7 @@ class Order(BaseModel):
 
             data = json_data["success"]
 
-            self.id                     = data["id"]
+            self.id                     = data["order_id"]
             self.date                   = data["date"]
             self.type                   = data["type"]
             # self.salesman               = data["salesman"]
