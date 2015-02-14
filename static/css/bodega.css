@@ -93,3 +93,6 @@ a.for_sale{
 i.disabled{
 	opacity: 0.3;
 }
+iframe.wysihtml5-sandbox{
+	height: 250px !important;
+}

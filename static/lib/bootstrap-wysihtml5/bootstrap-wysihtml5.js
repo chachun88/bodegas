@@ -24,9 +24,9 @@
             var size = (options && options.size) ? ' btn-'+options.size : '';
             return "<li>" +
                 "<div class='btn-group'>" +
-                "<a class='btn btn-default btn" + size + "' data-wysihtml5-command='bold' title='CTRL+B' tabindex='-1'>" + locale.emphasis.bold + "</a>" +
-                "<a class='btn btn-default btn" + size + "' data-wysihtml5-command='italic' title='CTRL+I' tabindex='-1'>" + locale.emphasis.italic + "</a>" +
-                "<a class='btn btn-default btn" + size + "' data-wysihtml5-command='underline' title='CTRL+U' tabindex='-1'>" + locale.emphasis.underline + "</a>" +
+                "<a class='btn btn-default btn" + size + "' data-wysihtml5-command='bold' title='" + locale.emphasis.bold_text + "' tabindex='-1'>" + locale.emphasis.bold + "</a>" +
+                "<a class='btn btn-default btn" + size + "' data-wysihtml5-command='italic' title='" + locale.emphasis.italic_text + "' tabindex='-1'>" + locale.emphasis.italic + "</a>" +
+                "<a class='btn btn-default btn" + size + "' data-wysihtml5-command='underline' title='" + locale.emphasis.underline_text + "' tabindex='-1'>" + locale.emphasis.underline + "</a>" +
                 "</div>" +
                 "</li>";
         },
@@ -480,13 +480,65 @@
             emphasis: {
                 bold: "Bold",
                 italic: "Italic",
-                underline: "Underline"
+                underline: "Underline",
+                bold_text: "CTRL+B",
+                italic_text: "CTRL+I",
+                underline_text: "CTRL+U"
             },
             lists: {
                 unordered: "Unordered list",
                 ordered: "Ordered list",
                 outdent: "Outdent",
                 indent: "Indent"
+            },
+            link: {
+                insert: "Insert link",
+                cancel: "Cancel",
+                target: "Open link in new window"
+            },
+            image: {
+                insert: "Insert image",
+                cancel: "Cancel"
+            },
+            html: {
+                edit: "Edit HTML"
+            },
+            colours: {
+                black: "Black",
+                silver: "Silver",
+                gray: "Grey",
+                maroon: "Maroon",
+                red: "Red",
+                purple: "Purple",
+                green: "Green",
+                olive: "Olive",
+                navy: "Navy",
+                blue: "Blue",
+                orange: "Orange"
+            }
+        }, es: {
+            font_styles: {
+                normal: "Normal text",
+                h1: "Heading 1",
+                h2: "Heading 2",
+                h3: "Heading 3",
+                h4: "Heading 4",
+                h5: "Heading 5",
+                h6: "Heading 6"
+            },
+            emphasis: {
+                bold: "N",
+                italic: "I",
+                underline: "U",
+                bold_text: "Negrita",
+                italic_text: "Italica",
+                underline_text: "Subrayado"
+            },
+            lists: {
+                unordered: "Lista No Ordenada",
+                ordered: "Lista Ordenada",
+                outdent: "Anular Sangría",
+                indent: "Sangría"
             },
             link: {
                 insert: "Insert link",
