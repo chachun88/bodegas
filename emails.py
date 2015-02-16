@@ -154,11 +154,11 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
               <tbody><tr>
                 <td align="center" valign="top">
                   <!-- start top navigation container -->
-                  <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container">
+                  <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container">
                     <tbody><tr>
                       <td valign="top">
                         <!-- start top navigaton -->
-                        <table width="560" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width">
+                        <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width">
                           <!-- start space -->
                           <tbody><tr>
                             <td valign="top" height="20">
@@ -167,7 +167,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
                           <!-- end space -->
                           <tr>
                             <td valign="middle">
-                              <table align="left" border="0" cellspacing="0" cellpadding="0" class="container2">
+                              <table align="center" border="0" cellspacing="0" cellpadding="0" class="container2">
                                 <tbody><tr>
                                   <td align="center" valign="top">
                                     <a href="#"><img src="http://giani.ondev.today/static/images/giani-logo-2-gris-260x119.png" width="250" style="max-width:250px;" alt="Logo" border="0" hspace="0" vspace="0"></a>
@@ -207,7 +207,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
         <tr>
           <td align="center" valign="top" class="fix-box">
             <!-- start  container width 600px -->
-            <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; ">
+            <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; ">
               <tbody><tr>
                 <td valign="top">
                   <!-- start container width 560px -->
@@ -250,7 +250,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
         <tr>
           <td align="center" valign="top" class="fix-box">
             <!-- start  container width 600px -->
-            <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; ">
+            <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; ">
               <tbody><tr>
                 <td valign="top">
                   <!-- start container width 560px -->
@@ -308,7 +308,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
         <tr>
           <td align="center" valign="top" class="fix-box">
             <!-- start  container width 600px -->
-            <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; border-bottom:1px solid #c7c7c7; border-top:1px solid #c7c7c7;">
+            <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; border-bottom:1px solid #c7c7c7; border-top:1px solid #c7c7c7;">
               <!--start space height -->
               <tbody><tr>
                 <td height="20" valign="top"></td>
@@ -317,13 +317,13 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
               <tr>
                 <td valign="top">
                   <!-- start container width 560px -->
-                  <table width="560" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
+                  <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
                     <!-- start heading -->
                     <tbody><tr>
                       <td valign="top">
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="left">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
                           <tbody><tr>
-                            <td align="left" style="font-size: 18px; line-height: 22px; font-family:Roboto,Open Sans, Arial,Tahoma, Helvetica, sans-serif; color:#555555; font-weight:300; text-align:left;">
+                            <td align="center" style="font-size: 18px; line-height: 22px; font-family:Roboto,Open Sans, Arial,Tahoma, Helvetica, sans-serif; color:#555555; font-weight:300; text-align:left;">
                               <span style="color: #555555; font-weight:300;">
                               <a href="#" style="text-decoration: none; color: #555555; font-weight: 300;">Trackea tu producto </a>
                               </span>
@@ -342,7 +342,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
                     <!-- start text content -->
                     <tr>
                       <td valign="top">
-                        <table border="0" cellspacing="0" cellpadding="0" align="left">
+                        <table border="0" cellspacing="0" cellpadding="0" align="center">
                           <tbody><tr>
                             <td style="font-size: 13px; line-height: 22px; font-family:Roboto,Open Sans,Arial,Tahoma, Helvetica, sans-serif; color:#a3a2a2; font-weight:300; text-align:left; ">
                               Usa este c&oacute;digo en {provider_name}. {tracking_code}
@@ -377,7 +377,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
         <tr>
           <td align="center" valign="top" class="fix-box">
             <!-- start  container width 600px -->
-            <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; padding-bottom:20px; ">
+            <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color: #ffffff; padding-bottom:20px; ">
               <tbody><tr>
                 <td valign="top">
                   <!-- start container width 560px -->
@@ -444,11 +444,11 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
               <tbody><tr>
                 <td align="center" valign="top">
                   <!-- start footer container -->
-                  <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container">
+                  <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container">
                     <tbody><tr>
                       <td valign="top">
                         <!-- start footer -->
-                        <table width="560" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width">
+                        <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width">
                           <!-- start space -->
                           <tbody><tr>
                             <td valign="top" height="20">
@@ -457,7 +457,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
                           <!-- end space -->
                           <tr>
                             <td valign="middle">
-                              <table align="left" border="0" cellspacing="0" cellpadding="0" class="container2">
+                              <table align="center" border="0" cellspacing="0" cellpadding="0" class="container2">
                                 <tbody><tr>
                                   <td align="center" valign="top">
                                     <a href="#"><img src="http://giani.ondev.today/static/images/giani-logo-2-gris-260x119.png" width="114" style="max-width:114px;" alt="Logo" border="0" hspace="0" vspace="0"></a>
@@ -497,10 +497,10 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
         <!--  START FOOTER COPY RIGHT -->
         <tr>
           <td align="center" valign="top" style="background-color:#FEBEBD;">
-            <table width="600" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color:#FEBEBD;">
+            <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color:#FEBEBD;">
               <tbody><tr>
                 <td valign="top">
-                  <table width="560" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color:#FEBEBD;">
+                  <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="container" style="background-color:#FEBEBD;">
                     <!--start space height -->
                     <tbody><tr>
                       <td height="10"></td>
