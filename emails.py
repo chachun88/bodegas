@@ -23,7 +23,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
     listbyorderid = order_detail.ListByOrderId(order_id)
 
     datos_facturacion = """\
-    <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
+    <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
     <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
       <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Datos de Facturaci&oacute;n </th>
     </tr>
@@ -53,7 +53,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
     contact.InitById(order.shipping_id)
 
     datos_despacho = """\
-    <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
+    <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
     <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
       <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Datos de Despacho</th>
     </tr>
@@ -98,12 +98,12 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
             </tr>""".format(quantity=d["quantity"],name=d["name"].encode("utf-8"),size=d["size"],price=BaseHandler.money_format(d["sell_price"]),subtotal=BaseHandler.money_format(d["subtotal"]),color=d["color"].encode("utf-8"))
 
     datos_compra = """\
-    <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
+    <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
     <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
       <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Datos compra</th>
     </tr>
     </tbody></table>
-    <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
+    <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
     <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
       <th style="line-height: 2.5;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">Cantidad</th>
       <th style="line-height: 2.5;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">Nombre producto</th>
@@ -116,7 +116,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
     </tbody></table>""".format(items_compra=items_compra)
 
     resumen = """\
-    <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
+    <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
     <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
       <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Resumen</th>
     </tr>
@@ -145,7 +145,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
       <link href="http://fonts.googleapis.com/css?family=Roboto:300,100,400" rel="stylesheet" type="text/css">
     </head>
     <body style="font-size:12px; font-family:Roboto,Open Sans,Roboto,Open Sans, Arial,Tahoma, Helvetica, sans-serif; background-color:#ffffff; ">
-      <table width="100%" id="mainStructure" border="0" cellspacing="0" cellpadding="0" style="background-color:#ecebeb;">
+      <table width="100%" id="mainStructure" border="0" cellspacing="0" cellpadding="0" style="background-color:#fffff;">
         <!--START TOP NAVIGATION ​LAYOUT-->
         <tr>
           <td valign="top">
@@ -211,7 +211,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
               <tbody><tr>
                 <td valign="top">
                   <!-- start container width 560px -->
-                  <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:10px;">
+                  <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:10px;">
                     <!-- start text content -->
                     <tbody><tr>
                       <td valign="top">
@@ -254,7 +254,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
               <tbody><tr>
                 <td valign="top">
                   <!-- start container width 560px -->
-                  <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
+                  <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
                     <!-- start text content -->
                     <tbody><tr>
                       <td valign="top">
@@ -381,7 +381,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
               <tbody><tr>
                 <td valign="top">
                   <!-- start container width 560px -->
-                  <table width="540" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
+                  <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;">
                     <!-- start text content -->
                     <tbody><tr>
                       <td valign="top">
