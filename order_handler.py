@@ -232,7 +232,7 @@ def SendShippedMail(email,name,id_orden):
                 print despacho_response["success"]
 
             datos_facturacion = """\
-            <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
+            <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
               <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                 <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Datos de Facturaci&oacute;n </th>
               </tr>
@@ -260,7 +260,7 @@ def SendShippedMail(email,name,id_orden):
             """.format(order_id=order.id,name=facturacion["name"],address=facturacion["address"],town="",city=facturacion["city"],country="",telephone=facturacion["telephone"],email=facturacion["email"])
 
             datos_despacho = """\
-                <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
+                <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
               <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                 <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Datos de Despacho</th>
               </tr>
@@ -701,12 +701,12 @@ def SendShippedMail(email,name,id_orden):
                     {datos_despacho}
                 
 
-                    <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
+                    <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
                       <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                         <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Datos compra</th>
                       </tr>
                     </tbody></table>
-                    <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
+                    <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;"><tbody>
                       <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                         <th style="line-height: 2.5;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6; border-right: 1px solid #d6d6d6;">Cantidad</th>
                         <th style="line-height: 2.5;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">Nombre producto</th>
@@ -720,7 +720,7 @@ def SendShippedMail(email,name,id_orden):
 
                     </tbody></table>
 
-                    <table width="100% " align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
+                    <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>
                       <tr style="font-family: Arial;background-color: #FFFFFF;text-align: center; font-size:12px;">
                         <th colspan=2 style="line-height: 2.5;height: 30px; border: 1px;border-color: #d6d6d6; border-style: solid; text-align: center;">Resumen</th>
                       </tr>
@@ -910,7 +910,7 @@ def SendConfirmedMail(email,name,id_orden):
 
         <body style="font-size:12px; font-family:Roboto,Open Sans,Roboto,Open Sans, Arial,Tahoma, Helvetica, sans-serif; background-color:#ffffff; ">
 
-        <!--start 100% wrapper (white background) -->
+        <!--start 100%wrapper (white background) -->
         <table width="100%" id="mainStructure" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff;">  
 
 
@@ -1267,7 +1267,7 @@ def SendConfirmedMail(email,name,id_orden):
 
 
         </tbody></table>
-        <!-- end 100% wrapper (white background) -->
+        <!-- end 100%wrapper (white background) -->
 
 
 
