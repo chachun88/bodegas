@@ -411,11 +411,11 @@ class Cellar(BaseModel):
         if day == "today":
             # now = datetime.datetime.now()
             # yesterday = now - datetime.timedelta(days=1)
-            query = """select * from "Kardex" where date(date) = DATE 'today'"""
+            query = """select k.*, c.name from "Kardex" k inner join "Cellar" c on c.id = k.cellar_id where date(date) = DATE 'today'"""
         if day == "yesterday":
             # now = datetime.datetime.now() - datetime.timedelta(days=1)
             # yesterday = now - datetime.timedelta(days=2)
-            query = """select * from "Kardex" where date(date) = DATE 'yesterday'"""
+            query = """select k.*, c.name from "Kardex" k inner join "Cellar" c on c.id = k.cellar_id where date(date) = DATE 'yesterday'"""
 
         if day == "today" or day == "yesterday":
 
@@ -460,10 +460,13 @@ class Cellar(BaseModel):
             # data = db.kardex.find( json_util.loads(str_query) )
             # return data
 
-            query = """select * from "Kardex" where date(date) between %(start_date)s and %(end_date)s and operation_type = 'sell'"""
-            # data = db.kardex.find( json_util.loads(str_query) )
+            query = """select k.*, c.name from "Kardex" k inner join "Cellar" c on c.id = k.cellar_id where date(date) between %(start_date)s and %(end_date)s and operation_type = 'sell'"""
+            parameters = {
+            "start_date":fromm,
+            "end_date":until
+            }
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            cur.execute(query)
+            cur.execute(query, parameters)
             data = cur.fetchall()
             return data
 
