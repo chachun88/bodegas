@@ -12,6 +12,12 @@ ACCIONES_DESPACHADO = 3
 
 class Order(BaseModel):
 
+    ESTADO_PENDIENTE = 1
+    ESTADO_CONFIRMADO = 2
+    ESTADO_PICKING = 3
+    ESTADO_DESPACHADO = 4
+    ESTADO_CANCELADO = 5
+
     @property
     def id(self):
         return self._id
@@ -278,4 +284,18 @@ class Order(BaseModel):
         response = urllib.urlopen(url).read()
         return json_util.loads(response)
 
-    
+    def cancel(self, ids):
+
+        url = self.wsurl() + "/order/cancel"
+
+        data = {
+        "token": self.token,
+        "ids": ids
+        }
+
+        post_data = urllib.urlencode(data)
+        response = urllib.urlopen(url, post_data).read()
+
+        # print response
+
+        return json_util.loads(response)

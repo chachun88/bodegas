@@ -140,7 +140,7 @@ class Cellar(BaseModel):
 			"quantity": quantity,
 			"price": price,
 			"size": size,
-			"color": color,
+			"color": color.encode("utf-8"),
 			"user": user
 		}
 
@@ -175,9 +175,42 @@ class Cellar(BaseModel):
 
 		return response_obj
 
+	def SelectReservation(self, cellar_id):
+
+		url = self.wsurl() + "/cellar/selectreservation"
+
+		data = {
+		"token":self.token,
+		"cellar_id":cellar_id
+		}
+
+		post_data = urllib.urlencode(data)
+
+		response_str = urllib.urlopen(url, post_data).read()
+
+		response_obj = json_util.loads(response_str)
+
+		return response_obj
+
 	def GetWebCellar(self):
 
 		url = self.wsurl() + "/cellar/getwebcellar"
+
+		data = {
+		"token":self.token
+		}
+
+		post_data = urllib.urlencode(data)
+
+		response_str = urllib.urlopen(url, post_data).read()
+
+		response_obj = json_util.loads(response_str)
+
+		return response_obj
+
+	def	GetReservationCellar(self):
+
+		url = self.wsurl() + "/cellar/getreservationcellar"
 
 		data = {
 		"token":self.token

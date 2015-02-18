@@ -77,7 +77,7 @@
 						<td>{{ MoneyFormat(p["total_price"]) }}</td>
 						<td>
 							{% if int(4) in current_user["permissions"] %}
-							{% if p["name"] != "Bodega Central" %}
+							{% if reservation_cellar_id != p['id'] and web_cellar_id != p['id'] %}
 							<button type="button" cellar-id="{{ str(p['id']) }}" class="btn btn-danger btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-danger .btn-sm">
 								Eliminar
 							</button>
@@ -87,7 +87,7 @@
 							{% end %}
 						</td>
 						<td>
-							{% if int(p["id"]) in current_user["cellar_permissions"] %}
+							{% if int(p["id"]) in current_user["cellar_permissions"] and reservation_cellar_id != p['id'] %}
 							<a type="button" href="/cellar/easyinput?id={{ str(p['id']) }}" cellar-id="{{ str(p['id']) }}" class="btn btn-success btn-sm" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
 								Entrada Fácil
 							</a>
@@ -96,7 +96,7 @@
 							{% end %}
 						</td>
 						<td>
-							{% if int(p["id"]) in current_user["cellar_permissions"] %}
+							{% if int(p["id"]) in current_user["cellar_permissions"] and reservation_cellar_id != p['id'] %}
 							<a type="button" href="/cellar/easyoutput?id={{ str(p['id']) }}" cellar-id="{{ str(p['id']) }}" class="btn btn-success btn-sm" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
 								Salida Fácil
 							</a>

@@ -11,6 +11,12 @@ import psycopg2.extras
 
 class Order(BaseModel):
 
+    ESTADO_PENDIENTE = 1
+    ESTADO_CONFIRMADO = 2
+    ESTADO_PICKING = 3
+    ESTADO_DESPACHADO = 4
+    ESTADO_CANCELADO = 5
+
     @property
     def salesman(self):
         return self._salesman

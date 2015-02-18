@@ -108,7 +108,11 @@ class OrderDetail(BaseModel):
 		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 		try:
-			query = '''select od.*, p.name, p.sell_price, p.color, p.size as product_size, p.sku, p.price from "Order_Detail" od inner join "Product" p on od.product_id = p.id where od.order_id = %(order_id)s limit %(limit)s offset %(offset)s'''
+			query = '''select od.*, o.state, p.name, p.sell_price, p.color, p.size as product_size, p.sku, p.price from "Order_Detail" od 
+			inner join "Product" p on od.product_id = p.id 
+			inner join "Order" o on od.order_id = o.id 
+			where od.order_id = %(order_id)s 
+			limit %(limit)s offset %(offset)s'''
 			parameters = {
 			"order_id":order_id,
 			"limit":int(limit),

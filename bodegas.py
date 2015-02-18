@@ -31,7 +31,7 @@ from cellar_handler import CellarInputHandler
 from cellar_handler import CellarOutputHandler
 from cellar_handler import CellarDetailHandler, CellarComboboxHandler
 from cellar_handler import CellarEasyInputHandler
-from cellar_handler import CellarEasyOutputHandler, SelectForSaleHandler
+from cellar_handler import CellarEasyOutputHandler, SelectForSaleHandler, SelectReservationHandler
 
 from order_handler import OrderHandler, AddOrderHandler, OrderActionsHandler
 
@@ -98,6 +98,7 @@ class Application(tornado.web.Application):
             (r"/cellar/detail", CellarDetailHandler),
             (r"/cellar/combobox", CellarComboboxHandler),
             (r"/cellar/selectforsale", SelectForSaleHandler),
+            (r"/cellar/selectreservation", SelectReservationHandler),
 
             # order
             (r"/order/list", OrderHandler),
@@ -176,7 +177,8 @@ class Application(tornado.web.Application):
                             "sub_menu":[
                                         {"class":"", "name":Menu.BODEGAS_LISTAR, "link":"/cellar"},
                                         {"class":"", "name":Menu.BODEGAS_AGREGAR, "link":"/cellar/add"},
-                                        {"class":"", "name":Menu.BODEGAS_FORSALE, "link":"/cellar/selectforsale"}
+                                        {"class":"", "name":Menu.BODEGAS_FORSALE, "link":"/cellar/selectforsale"},
+                                        {"class":"", "name":Menu.BODEGAS_RESERVATION, "link":"/cellar/selectreservation"}
                                         ]},
                         {"class":"panel", "name":Menu.USUARIOS, "icon":"asterisk", "link":"/",
                             "sub_menu":[

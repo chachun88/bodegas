@@ -7,7 +7,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from globals import Menu
+from globals import Menu, debugMode
 
 from basehandler import BaseHandler
 from model.cellar import Cellar
@@ -23,7 +23,27 @@ class CellarHandler(BaseHandler):
 		self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
 		data = Cellar().List(1, 100)
-		self.render("cellar/home.html",side_menu=self.side_menu, data=data, dn=self.get_argument("dn", ""))
+
+		cellar = Cellar()
+
+		web_cellar_id = None
+		reservation_cellar_id = None
+
+		res_web_cellar = cellar.GetWebCellar()
+		res_reservation_cellar = cellar.GetReservationCellar()
+
+		if "success" in res_web_cellar:
+			web_cellar_id = res_web_cellar["success"]
+		elif debugMode:
+			print res_web_cellar["error"]
+
+		if "success" in res_reservation_cellar:
+			reservation_cellar_id = res_reservation_cellar["success"]
+		elif debugMode:
+			print res_web_cellar["error"]
+
+		self.render("cellar/home.html",side_menu=self.side_menu, data=data, dn=self.get_argument("dn", ""), web_cellar_id=web_cellar_id,
+			reservation_cellar_id=reservation_cellar_id)
 
 
 class CellarOutputHandler(BaseHandler):
@@ -328,5 +348,33 @@ class SelectForSaleHandler(BaseHandler):
 		if cellar_id != "":
 			cellar = Cellar()
 			self.write(json_util.dumps(cellar.SelectForSale(cellar_id)))
+		else:
+			self.write(json_util.dumps({"error":"Cellar id is not valid"}))
+
+
+class SelectReservationHandler(BaseHandler):
+
+	@tornado.web.authenticated
+	def get(self):
+
+		cellar = Cellar()
+		selected = cellar.GetReservationCellar()
+		data = Cellar().List(1, 100)
+
+		cellar_id = ""
+
+		if "success" in selected:
+			cellar_id = selected["success"]
+		
+		self.render("cellar/selectreservation.html",cellars=data,cellar_id=cellar_id)
+
+	@tornado.web.authenticated
+	def post(self):
+
+		cellar_id = self.get_argument("cellar_id","")
+
+		if cellar_id != "":
+			cellar = Cellar()
+			self.write(json_util.dumps(cellar.SelectReservation(cellar_id)))
 		else:
 			self.write(json_util.dumps({"error":"Cellar id is not valid"}))

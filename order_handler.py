@@ -26,12 +26,6 @@ ACCIONES_PICKING = 3
 ACCIONES_DESPACHADO = 4
 ACCIONES_CANCELADO = 5
 
-ESTADO_PENDIENTE = 1
-ESTADO_CONFIRMADO = 2
-ESTADO_PICKING = 3
-ESTADO_DESPACHADO = 4
-ESTADO_CANCELADO = 5
-
 class OrderHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -107,7 +101,7 @@ class OrderActionsHandler(BaseHandler):
 
         elif accion == ACCIONES_CONFIRMAR:
             
-            response = order.ChangeStateOrders(valores,ESTADO_CONFIRMADO)
+            response = order.ChangeStateOrders(valores,Order.ESTADO_CONFIRMADO)
 
             for v in valores.split(","):
                 _order = Order()
@@ -123,15 +117,22 @@ class OrderActionsHandler(BaseHandler):
 
         elif accion == ACCIONES_PICKING:
 
-            response = order.ChangeStateOrders(valores,ESTADO_PICKING)
+            response = order.ChangeStateOrders(valores,Order.ESTADO_PICKING)
 
             self.write(json_util.dumps(response))
 
         elif accion == ACCIONES_CANCELADO:
 
-            response = order.ChangeStateOrders(valores,ESTADO_CANCELADO)
+            res_cancel = order.cancel(valores)
+            self.write(json_util.dumps(res_cancel))
 
-            self.write(json_util.dumps(response))
+                # if "success" in res_cancel:
+                #     response = order.ChangeStateOrders(v,Order.ESTADO_CANCELADO)
+                #     if "success" in response:
+                #       self.write(json_util.dumps(response))
+                # else:
+                #     self.write(json_util.dumps(res_cancel))
+                #     break
 
         ''' replaced by shipping_handler.SaveTrackingCodeHandler'''
 

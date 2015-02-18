@@ -294,7 +294,9 @@ class Kardex(BaseModel):
 			return self.ShowError("an error inserting kardex, error:{}".format(str(e)))
 
 
-		
+	def move(self, web_cellar_id):
+
+
 
 	## only for debugging.
 	def Debug(self, product_sku, cellar_identifier, size):

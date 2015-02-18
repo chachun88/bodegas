@@ -69,7 +69,7 @@ $(document).ready(function(){
                     var html_str = JSON.stringify(html);
                     obj = $.parseJSON(html_str);
                     if (obj["success"]) {
-                        location.reload()
+                        location.reload();
                     } else {
                         alert(obj.error);
                     }

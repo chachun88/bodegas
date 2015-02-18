@@ -73,6 +73,7 @@ class Menu:
     BODEGAS_LISTAR = "Lista de bodegas"
     BODEGAS_AGREGAR = "Agregar bodega"
     BODEGAS_FORSALE = "Seleccionar bodega web"
+    BODEGAS_RESERVATION = "Seleccionar bodega de reserva online"
     # end sub_menu
 
     USUARIOS = "Usuarios"

@@ -559,3 +559,38 @@ class Cellar(BaseModel):
             self.connection.close()
             cur.close()
 
+    def GetReservationCellar(self):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        try:
+            query = '''select id from "Cellar" where reservation = 1 limit 1'''
+            cur.execute(query)
+            cellar = cur.fetchone()["id"]
+            return self.ShowSuccessMessage(cellar)
+        except Exception,e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
+
+    def SelectReservation(self,cellar_id):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        try:
+            query = '''update "Cellar" set reservation = 0'''
+            cur.execute(query)
+
+            query = '''update "Cellar" set reservation = 1 where id = %(id)s'''
+            parameters = {
+            "id":cellar_id
+            }
+            cur.execute(query,parameters)
+            self.connection.commit()
+            return self.ShowSuccessMessage(cellar_id)
+        except Exception,e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
