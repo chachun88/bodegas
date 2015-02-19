@@ -68,10 +68,23 @@ $(document).ready(function(){
                 success: function(html) {
                     var html_str = JSON.stringify(html);
                     obj = $.parseJSON(html_str);
+
                     if (obj["success"]) {
                         location.reload();
                     } else {
-                        alert(obj.error);
+                        if (parseInt(action) != 5){
+                            alert(obj.error);
+                        } else {
+                            var html_res = ''
+
+                            for(var i = 0; i < obj.error.length; i++){
+                                if(obj.error[i]){
+                                    html_res += 'pedido ' + obj.error[i]["identificador"] + ' : ' + obj.error[i]["error"] + '\n';
+                                }
+                            }
+
+                            alert(html_res);
+                        }
                     }
                 }
             });

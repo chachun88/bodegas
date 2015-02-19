@@ -296,6 +296,6 @@ class Order(BaseModel):
         post_data = urllib.urlencode(data)
         response = urllib.urlopen(url, post_data).read()
 
-        # print response
+        print response
 
         return json_util.loads(response)

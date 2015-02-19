@@ -123,20 +123,16 @@ class OrderActionsHandler(BaseHandler):
 
         elif accion == ACCIONES_CANCELADO:
 
-            response = order.ChangeStateOrders(valores,Order.ESTADO_CANCELADO)
+            # response = order.ChangeStateOrders(valores,Order.ESTADO_CANCELADO)
 
-            self.write(json_util.dumps(response))
+            res_cancel = order.cancel(valores)
 
-            # res_cancel = order.cancel(valores)
-            # self.write(json_util.dumps(res_cancel))
-
-            # if "success" in res_cancel:
-            #     response = order.ChangeStateOrders(v,Order.ESTADO_CANCELADO)
-            #     if "success" in response:
-            #       self.write(json_util.dumps(response))
-            # else:
-            #     self.write(json_util.dumps(res_cancel))
-            #     break
+            if "success" in res_cancel:
+                response = order.ChangeStateOrders(valores,Order.ESTADO_CANCELADO)
+                if "success" in response:
+                  self.write(json_util.dumps(response))
+            else:
+                self.write(json_util.dumps(res_cancel))
 
         ''' replaced by shipping_handler.SaveTrackingCodeHandler'''
 

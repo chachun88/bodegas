@@ -158,53 +158,113 @@ class CancelHandler(BaseHandler):
     """docstring for CancelHandler"""
     
     def post(self):
-
-        pass
         
-        # #validate constrains
-        # if not self.ValidateToken():
-        #     return
+        #validate constrains
+        if not self.ValidateToken():
+            return
 
-        # ids = self.get_argument("ids","")
-        # cellar_id = None
-        # web_cellar = None
+        ids = self.get_argument("ids","")
+        cellar_id = None
+        web_cellar = None
 
-        # cellar = Cellar()
-        # res_reservation_cellar = cellar.GetReservationCellar()
+        cellar = Cellar()
+        res_reservation_cellar = cellar.GetReservationCellar()
 
-        # if "success" in res_reservation_cellar:
-        #     cellar_id = res_reservation_cellar["success"]
-        # else:
-        #     self.write(json_util.dumps({"error":res_reservation_cellar["error"]}))
+        if "success" in res_reservation_cellar:
+            cellar_id = res_reservation_cellar["success"]
+        else:
+            self.write(json_util.dumps({"error":res_reservation_cellar["error"]}))
 
-        # if ids == "":
-        #     self.write(json_util.dumps({"error":"ids viene vacio"}))
-        # else:
+        if ids == "":
+            self.write(json_util.dumps({"error":"ids viene vacio"}))
+        else:
 
-        #     identificadores = []
+            identificadores = []
 
 
-        #     for identificador in ids.split(","):
+            for identificador in ids.split(","):
 
-        #         order = Order()
-        #         res_order = order.GetOrderById(identificador)
+                order = Order()
+                res_order = order.GetOrderById(identificador)
 
-        #         cancelable = False
+                cancelable = True
 
-        #         if "success" in res_order:
+                if "success" in res_order:
 
-        #             o = res_order["success"]
+                    o = res_order["success"]
 
-        #             if o["state"] != Order.ESTADO_CANCELADO:
+                    if o["state"] != Order.ESTADO_CANCELADO:
 
-                        
-        #             else:
-        #                 identificadores.append(identificador)
-        #         else:
-        #             self.write(json_util.dumps({"error":res_order["error"]}))
-        #             return
+                        order_detail = OrderDetail()
+                        details_res = order_detail.ListByOrderId(identificador)
 
-        #     if len(identificadores) > 0:
-        #         self.write(json_util.dumps({"error":"la(s) orden(es) {} no es(son) cancelable(s)".format(",".join(identificadores))}))
-        #     else:
-        #         self.write(json_util.dumps({"success":"ok"}))
+                        if "success" in details_res:
+
+                            details = details_res["success"]
+                            
+                            # recorre cada producto del detalle de orden y determina si la orden es cancelable
+                            for d in details:
+
+                                k = Kardex()
+                                find_kardex = k.FindKardex(d["sku"], cellar_id, d['size'])
+
+                                balance_price = 0
+
+                                if "success" in find_kardex:
+                                    balance_price = k.balance_price
+
+                                product_find = cellar.FindProductKardex(d["sku"], cellar_id, d['size'])
+
+                                buy=0
+                                sell=0
+
+                                for p in product_find:
+                                    if p["operation_type"] == Kardex.OPERATION_BUY or p["operation_type"] == Kardex.OPERATION_MOV_IN:
+                                        buy+=p["total"] 
+
+                                    if p["operation_type"] == Kardex.OPERATION_SELL or p["operation_type"] == Kardex.OPERATION_MOV_OUT:
+                                        sell+=p["total"]
+
+                                units=buy-sell      
+
+                                if int(units) < int(d['quantity']): 
+
+                                    cancelable = False
+
+                            # end for
+
+                            # si no es cancelable la orden se guarda en el array identificadores para avisar al usuario
+                            if not cancelable:
+                                identificadores.append({"identificador":identificador,"error":"no tiene stock suficiente"})
+                            else:
+
+                                cellar = Cellar()
+                                res_web_cellar = cellar.GetWebCellar()
+
+                                if "success" in res_web_cellar:
+
+                                    web_cellar = res_web_cellar["success"]
+
+                                # mueve c/u de los productos desde la bodega de reserva a la bodega web
+                                kardex = Kardex()
+                                res = kardex.moveOrder(details, web_cellar, cellar_id)
+
+                                if "error" in res:
+                                    identificadores.append({"identificador":identificador,"error":res["error"]})
+                        else:
+                            if identificador not in identificadores:
+                                identificadores.append({"identificador":identificador,"error":details_res["error"]})
+                    elif o["state"] == Order.ESTADO_DESPACHADO:
+                        if identificador not in identificadores:
+                            identificadores.append(identificadores.append({"identificador":identificador,"error":"Pedido ya esta despachado"}))
+                    else:
+                        if identificador not in identificadores:
+                            identificadores.append(identificadores.append({"identificador":identificador,"error":"Pedido ya esta cancelado"}))
+                else:
+                    if identificador not in identificadores:
+                        identificadores.append(identificadores.append({"identificador":identificador,"error":res_order["error"]}))
+
+            if len(identificadores) > 0:
+                self.write(json_util.dumps({"error":identificadores}))
+            else:
+                self.write(json_util.dumps({"success":"ok"}))
