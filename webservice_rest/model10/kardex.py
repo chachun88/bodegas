@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from basemodel import BaseModel
+from model10.order_detail import OrderDetail
 import psycopg2
 import psycopg2.extras
 
@@ -294,8 +295,82 @@ class Kardex(BaseModel):
 			return self.ShowError("an error inserting kardex, error:{}".format(str(e)))
 
 
-	def move(self, web_cellar_id):
+	# def move(self, web_cellar_id):
 
+	# 	order_detail = OrderDetail()
+ #        details_res = order_detail.ListByOrderId(identificador)
+
+ #        if "success" in details_res:
+
+ #            details = details_res["success"]
+            
+ #            for d in details:
+
+ #                k = Kardex()
+ #                find_kardex = k.FindKardex(d["sku"], cellar_id, d['size'])
+
+ #                balance_price = 0
+
+ #                if "success" in find_kardex:
+ #                    balance_price = k.balance_price
+
+ #                product_find = cellar.FindProductKardex(d["sku"], cellar_id, d['size'])
+
+ #                buy=0
+ #                sell=0
+
+ #                for p in product_find:
+ #                    if p["operation_type"] == Kardex.OPERATION_BUY or p["operation_type"] == Kardex.OPERATION_MOV_IN:
+ #                        buy+=p["total"] 
+
+ #                    if p["operation_type"] == Kardex.OPERATION_SELL or p["operation_type"] == Kardex.OPERATION_MOV_OUT:
+ #                        sell+=p["total"]
+
+ #                units=buy-sell      
+
+ #                if int(units) < int(d['quantity']): 
+
+ #                    cancelable = True
+
+ #            # end for
+
+ #            if not cancelable:
+ #                identificadores.append(identificador)
+ #            else:
+
+ #                for d in details:
+
+ #                    kardex = Kardex()
+ #                    cellar = Cellar()
+
+ #                    kardex.product_sku = d["sku"]
+ #                    kardex.cellar_identifier = cellar_id
+ #                    kardex.date = str(datetime.datetime.now().isoformat())
+
+ #                    kardex.operation_type = Kardex.OPERATION_MOV_OUT
+ #                    kardex.units = d['quantity']
+ #                    kardex.price = d['price']
+ #                    kardex.size = d['size']
+
+ #                    kardex.color= d["color"]
+ #                    kardex.user = "Sistema"
+
+ #                    res_web_cellar = cellar.GetWebCellar()
+
+ #                    if "success" in res_web_cellar:
+
+ #                        web_cellar = res_web_cellar["success"]
+
+ #                        res_kardex = kardex.move(web_cellar)
+
+ #                        self.write(json_util.dumps(res_kardex))
+
+ #                    else:
+ #                        self.write(json_util.dumps(res_web_cellar))
+ #                        return
+ #            # end for
+ #        else:
+ #            self.write(json_util.dumps({"error":details_res["error"]}))
 
 
 	## only for debugging.
