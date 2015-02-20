@@ -28,7 +28,7 @@ port = 0
 ws_port = 0
 
 reserve_cellar_id = 12
-email_giani = "info@gianidafirenze.cl"
+email_giani = "contacto@gianidafirenze.cl"
 
 ### setting vars
 if (debugMode):
