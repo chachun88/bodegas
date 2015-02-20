@@ -1,10 +1,10 @@
 from lp.tools.scriptloader import ScriptLoader
 
 sl = ScriptLoader()
-sl.dbname = "mprint"
-sl.user = "mprint"
+sl.dbname = "giani"
+sl.user = "yichun"
 sl.host = "localhost"  # solo se puede ejecutar directamente en el servidor
-sl.password = "mprint"
+sl.password = "chachun88"
 
 sl.delete_old()
 
