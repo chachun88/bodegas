@@ -8,7 +8,6 @@ sl.password = "chachun88"
 
 sl.delete_old()
 
-
 # load this database backup with given configurations
 sl.script_file = "back20150220.sql"  # last backup
 sl.execute()
