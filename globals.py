@@ -42,7 +42,7 @@ else:
     carpeta_img = '/var/www/tellmecuando/static/img'
     port = BODEGA_PORT
     ws_port = WS_PORT
-    webservice_url = "http://wgiani.ondev.today"
+    webservice_url = "http://wgiani.loadingplay.com"
 
 
 
