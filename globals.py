@@ -43,8 +43,6 @@ else:
     port = BODEGA_PORT
     ws_port = WS_PORT
     webservice_url = "http://wgiani.ondev.today"
-    
-
 
 
 
