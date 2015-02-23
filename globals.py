@@ -16,8 +16,6 @@ if os.name == "nt":
 else:
     debugMode = False
 
-debugMode = True
-
 BODEGA_PORT = 9007
 WS_PORT = 8890
 BODEGA_DEBUG_PORT = 9008
