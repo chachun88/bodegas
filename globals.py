@@ -16,6 +16,8 @@ if os.name == "nt":
 else:
     debugMode = False
 
+testMode = True
+
 BODEGA_PORT = 9007
 WS_PORT = 8890
 BODEGA_DEBUG_PORT = 9008
@@ -32,6 +34,12 @@ email_giani = "contacto@gianidafirenze.cl"
 
 # setting vars
 if (debugMode):
+    userMode = "test"
+    carpeta_img = 'C:\Python27\tellmecuando\static\img'
+    port = BODEGA_DEBUG_PORT
+    ws_port = DEBUG_WS_PORT
+    webservice_url += ":{}".format(ws_port)
+elif testMode:
     userMode = "test"
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
     port = BODEGA_DEBUG_PORT
