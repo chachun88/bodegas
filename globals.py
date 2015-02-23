@@ -33,7 +33,7 @@ reserve_cellar_id = 12
 email_giani = "contacto@gianidafirenze.cl"
 
 # setting vars
-if (debugMode):
+if debugMode:
     userMode = "test"
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
     port = BODEGA_DEBUG_PORT
