@@ -34,7 +34,7 @@ class BaseModel(object):
     @property
     def connection(self):
         if self._connection.closed != 0:
-            self._connection = psycopg2.connect("host='localhost' dbname='giani' user='yichun' password='chachun88'")
+            self._connection = psycopg2.connect("host='ondev.today' dbname='giani' user='yichun' password='chachun88'")
 
         return self._connection
 
