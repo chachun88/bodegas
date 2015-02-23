@@ -42,8 +42,8 @@ if (debugMode):
 elif testMode:
     userMode = "test"
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
-    port = BODEGA_DEBUG_PORT
-    ws_port = DEBUG_WS_PORT
+    port = BODEGA_PORT
+    ws_port = DEBUG_PORT
     webservice_url = "http://wgiani.ondev.today"
 else:
     userMode = "prod"
