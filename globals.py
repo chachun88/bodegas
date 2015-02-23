@@ -42,9 +42,9 @@ else:
     carpeta_img = '/var/www/tellmecuando/static/img'
     port = BODEGA_PORT
     ws_port = WS_PORT
-    webservice_url = "http://127.0.0.1"
+    webservice_url += ":{}".format(ws_port)
 
-print "{}".format(debugMode)
+# print "{}".format(debugMode)
 
 # --- menu ---
 
