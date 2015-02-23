@@ -16,10 +16,10 @@ if os.name == "nt":
 else:
     debugMode = False
 
-BODEGA_PORT=9007
-WS_PORT=8890
-BODEGA_DEBUG_PORT=9008
-DEBUG_WS_PORT=8891
+BODEGA_PORT = 9007
+WS_PORT = 8890
+BODEGA_DEBUG_PORT = 9008
+DEBUG_WS_PORT = 8891
 
 appid = 100
 
@@ -30,25 +30,22 @@ ws_port = 0
 reserve_cellar_id = 12
 email_giani = "contacto@gianidafirenze.cl"
 
-### setting vars
+# setting vars
 if (debugMode):
-    userMode="test"
+    userMode = "test"
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
     port = BODEGA_DEBUG_PORT
     ws_port = DEBUG_WS_PORT
     webservice_url += ":{}".format(ws_port)
 else:
-    userMode="prod"
+    userMode = "prod"
     carpeta_img = '/var/www/tellmecuando/static/img'
     port = BODEGA_PORT
     ws_port = WS_PORT
-    webservice_url = "http://wgiani.ondev.today"
-    
+    webservice_url = "http://wgiani.loadingplay.com"
 
 
-
-
-#### menu #####
+# --- menu ---
 
 class Menu:
 
@@ -106,7 +103,7 @@ class Menu:
     SALIR = "Salir"
 
 
-#### functions #####
+# --- functions ---
 def tomoney(x):
     if x != "":
         flotante = '{:20,.0f}'.format(float(x))
@@ -114,7 +111,8 @@ def tomoney(x):
         return "$"+price.strip()
     else:
         return ""
-    
+
+
 def roundfloat(x):
 
     flotante = ("{0:.0f}".format(round(x,2)))

@@ -9,7 +9,8 @@ from bson import json_util
 from model.user import User
 import locale
 import os
-#from loadingplay.multilang.lang import lpautoSelectCurrentLang
+# from loadingplay.multilang.lang import lpautoSelectCurrentLang
+
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -29,7 +30,6 @@ class BaseHandler(tornado.web.RequestHandler):
     def side_menu(self):
         return self.application.side_menu
 
-
     def set_active(self, active_name):
         for x in self.side_menu:
             x["class"] = "panel"
@@ -40,16 +40,16 @@ class BaseHandler(tornado.web.RequestHandler):
                 for y in x['sub_menu']:
                     y['class'] = ""
                     if y["name"] == active_name:
-                        #print "llegaaaa"
+                        # print "llegaaaa"
                         x["class"] += " active"
                         y["class"] = " active"
 
     def __init__(self, application, request, **kwargs):
         tornado.web.RequestHandler.__init__(self, application, request, **kwargs)
-        
+
         # detecto el lenguage del navegador del usuario
-        #lpautoSelectCurrentLang(self)
-    
+        # lpautoSelectCurrentLang(self)
+
     ''' @return current user email '''
     def get_current_user(self):
         user_json = self.get_secure_cookie("user_bodega")        
@@ -57,10 +57,10 @@ class BaseHandler(tornado.web.RequestHandler):
             return tornado.escape.json_decode(user_json)
         else:
             return None
-    
+
     def get_usuarios(self):
         return self.db.user.find({"picture":{"$exists":True}}).limit(24)
-    
+
     def get_login_url(self):
         return u"/auth/login"
 
@@ -87,14 +87,14 @@ class BaseHandler(tornado.web.RequestHandler):
     def money_format(value):
 
         if os.name != "nt":
-            locale.setlocale( locale.LC_NUMERIC, 'es_ES.utf8' )
+            locale.setlocale( locale.LC_NUMERIC, 'es_ES.UTF-8' )
         else:
             locale.setlocale( locale.LC_NUMERIC, 'Spanish_Spain.1252' )
         return "${}".format(locale.format('%d', value, True))
 
     def render(self, template_name ,**kwargs):
 
-        ## loading current_user
+        # loading current_user
         user = User()
         try:
             user.InitWithEmail( self.get_current_user() )
@@ -107,11 +107,10 @@ class BaseHandler(tornado.web.RequestHandler):
         kwargs["CustomDateFormat"] = self.CustomDateFormat
         kwargs["money_format"] = self.money_format
 
-        ## overrided method
+        # overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)
 
     '''
     def write_error(status_code=500, **kwargs):
         self.write("llega")
     '''
-

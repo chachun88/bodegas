@@ -5,14 +5,15 @@ Created on 13/12/2012
 '''
 import tornado
 
-from bson.objectid import ObjectId
 from model10.basemodel import BaseModel
 
+
 class BaseHandler(tornado.web.RequestHandler):
+
     @property
     def db(self):
         return self.application.db
-    
+
     def __init__(self, application, request, **kwargs):
         tornado.web.RequestHandler.__init__(self, application, request, **kwargs)
 

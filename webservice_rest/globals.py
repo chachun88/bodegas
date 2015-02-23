@@ -10,7 +10,6 @@ reutilizado por estefy en bodegas
 '''
 
 import os
-import pymongo
 
 if os.name == "nt":
     debugMode = True
@@ -22,23 +21,23 @@ webservice_url = "http://localhost"
 port = 0
 ws_port = 0
 
-BODEGA_PORT=9007
-WS_PORT=8890
-BODEGA_DEBUG_PORT=9008
-DEBUG_WS_PORT=8891
+BODEGA_PORT = 9007
+WS_PORT = 8890
+BODEGA_DEBUG_PORT = 9008
+DEBUG_WS_PORT = 8891
 
 
 print "debug mode enabled : {}".format(debugMode)
 
 
-### setting vars
+# setting vars
 if (debugMode):
-    userMode="test"
+    userMode = "test"
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
     port = BODEGA_DEBUG_PORT
     ws_port = DEBUG_WS_PORT
 else:
-    userMode="prod"
+    userMode = "prod"
     carpeta_img = '/var/www/tellmecuando/static/img'
     port = BODEGA_PORT
     ws_port = WS_PORT
@@ -47,8 +46,7 @@ else:
 webservice_url += ":{}".format(ws_port)
 
 
-#### menu #####
-
+# --- menu ---
 class Menu:
 
     INFORMES = "Informes"
@@ -80,12 +78,10 @@ class Menu:
     USUARIOS_AGREGAR = "Agregar usuario"
     # sub_menu
 
-
-
     SALIR = "Salir"
 
 
-#### functions #####
+# --- functions ---
 def tomoney(x):
     if x != "":
         flotante = '{:20,.0f}'.format(float(x))
@@ -93,7 +89,8 @@ def tomoney(x):
         return "$"+price.strip()
     else:
         return ""
-    
+
+
 def roundfloat(x):
     flotante = ("{0:.0f}".format(round(x,2)))
     price = flotante.replace(",",".")
