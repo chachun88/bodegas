@@ -16,6 +16,8 @@ if os.name == "nt":
 else:
     debugMode = False
 
+debugMode = True
+
 token = "5334d6c29ec9a710f56d9ab5"
 webservice_url = "http://localhost"
 port = 0

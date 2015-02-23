@@ -16,7 +16,7 @@ if os.name == "nt":
 else:
     debugMode = False
 
-testMode = True
+debugMode = True
 
 BODEGA_PORT = 9007
 WS_PORT = 8890
@@ -39,12 +39,6 @@ if (debugMode):
     port = BODEGA_DEBUG_PORT
     ws_port = DEBUG_WS_PORT
     webservice_url += ":{}".format(ws_port)
-elif testMode:
-    userMode = "test"
-    carpeta_img = 'C:\Python27\tellmecuando\static\img'
-    port = BODEGA_PORT
-    ws_port = WS_PORT
-    webservice_url = "http://wgiani.ondev.today"
 else:
     userMode = "prod"
     carpeta_img = '/var/www/tellmecuando/static/img'
