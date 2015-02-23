@@ -22,7 +22,7 @@ from bson import json_util
 
 ACCIONES_ELIMINAR = 1
 ACCIONES_CONFIRMAR = 2
-ACCIONES_PICKING = 3
+ACCIONES_PARA_DESPACHO = 3
 ACCIONES_DESPACHADO = 4
 ACCIONES_CANCELADO = 5
 
@@ -115,9 +115,9 @@ class OrderActionsHandler(BaseHandler):
             
             self.write(json_util.dumps(response))
 
-        elif accion == ACCIONES_PICKING:
+        elif accion == ACCIONES_PARA_DESPACHO:
 
-            response = order.ChangeStateOrders(valores,Order.ESTADO_PICKING)
+            response = order.ChangeStateOrders(valores,Order.ESTADO_PARA_DESPACHO)
 
             self.write(json_util.dumps(response))
 

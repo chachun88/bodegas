@@ -50,7 +50,7 @@
 								<option value=""></option>
 								<option value="1">Eliminar</option>
 								<option value="2">Confirmado</option>
-								<option value="3">Picking</option>
+								<option value="3">Listo para despacho</option>
 								<option value="4">Despachado</option>
 								<option value="5">Cancelado</option>
 							</select>
@@ -125,7 +125,7 @@
 							{% elif int(p["state"]) == 2 %}
 								<span class="label label-important">CONFIRMADO</span>
 							{% elif int(p["state"]) == 3 %}
-								<span class="label label-info">PICKING</span>
+								<span class="label label-info">LISTO PARA DESPACHO</span>
 							{% elif int(p["state"]) == 4 %}
 								<span class="label label-success">DESPACHADO</span>
 							{% else %}
