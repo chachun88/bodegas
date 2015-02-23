@@ -201,7 +201,7 @@ class ProductLoadHandler(BaseHandler):
 								prod.brand = sheet.cell_value(i,j).encode("utf-8")
 							elif j > 10:
 
-								size = str(sheet.cell_value(0,j))
+								size = sheet.cell_value(0,j).encode("utf-8")
 								quantity = sheet.cell_value(i,j)
 
 								if quantity != "":
