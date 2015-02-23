@@ -129,7 +129,14 @@ class SaveTrackingHandler(BaseHandler):
 					quantity = detail["quantity"]
 					operation = Kardex.OPERATION_SELL
 					price = detail["price"]
-					sell_price = detail["sell_price"]
+
+					promotion_price = detail["promotion_price"]
+
+					if promotion_price != 0:
+						sell_price = promotion_price
+					else:
+						sell_price = detail["sell_price"]
+						
 					size = detail["size"]
 					color = detail["color"]
 					user = 'Sistema'
