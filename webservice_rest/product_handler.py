@@ -31,7 +31,7 @@ class AddProductHandler(BaseHandler):
 		product.bullet_point_2 	= self.get_argument("bullet_2", "")
 		product.bullet_point_3 	= self.get_argument("bullet_3", "")
 		product.price			= self.get_argument("price", "")
-		# product.currency 		= self.get_argument("currency", "")
+		product.promotion_price = self.get_argument("promotion_price", 0)
 		product.image 			= self.get_argument("image", "")
 		product.image_2			= self.get_argument("image_2", "")
 		product.image_3 		= self.get_argument("image_3", "")

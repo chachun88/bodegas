@@ -40,6 +40,7 @@ class Product(BaseModel):
         self._delivery = "" #texto delivery detalle de producto
         self._which_size = "" #texto cual es tu talla detalle de producto
         self._tags = ''
+        self._promotion_price = 0 # precio promocion
 
         # self.collection = db.product
 
@@ -221,6 +222,13 @@ class Product(BaseModel):
     def which_size(self, value):
         self._which_size = value
     
+    @property
+    def promotion_price(self):
+        return self._promotion_price
+    @promotion_price.setter
+    def promotion_price(self, value):
+        self._promotion_price = value
+    
 
     def GetCellars(self):
         return ''
@@ -246,7 +254,7 @@ class Product(BaseModel):
                 "image_4":self.image_4,
                 "image_5":self.image_5,
                 "image_6":self.image_6,
-                # "currency":self.currency,
+                "promotion_price":self.promotion_price,
                 "category":self.category,
                 "upc":self.upc,
                 "price":self.price,
@@ -262,164 +270,6 @@ class Product(BaseModel):
 
     def Save(self):
  
-        # try:
-        #   #if Category().Exist(self.category) == False and Brand().Exist(self.brand) == False:
-        #   #   raise
-        #   # print "coloooooooooooooooooor "+ self.color
-        #   sizes=self.size.split(',')
-        #   colors=self.color.split(',')
-        #   if len(sizes) > len(colors):
-        #       count=len(sizes)
-        #   else:
-        #       count=len(colors)
-
-        #   sku_count = self.collection.find({"sku":self.sku}).count()
-
-        #   ## solve when sku already exists
-        #   if sku_count >= 1:
-        #       for i in range(0,len(sizes)):
-                    
-        #           try:
-        #               self.collection.update({
-        #                       "sku":self.sku
-        #                       },{
-        #                       "$addToSet":{
-        #                           "size":sizes[i]
-        #                           }
-        #                           })
-        #           except Exception, e:
-        #               print " except "+str(e)+ " i "  + str(i)
-        #               pass
-        #       for i in range(0,len(colors)):
-                    
-        #           try:
-        #               self.collection.update({
-        #                       "sku":self.sku
-        #                       },{
-        #                       "$addToSet":{
-        #                           "color":colors[i]
-        #                           }
-        #                           })
-        #           except Exception, e:
-        #               print " except "+str(e)+ " i "  + str(i)
-        #               pass            
-
-        #       self.collection.update({
-        #               "sku":self.sku
-        #               },{
-        #               "$set":{
-        #                   "name":self.name,
-        #                   "description":self.description,
-        #                   "brand":self.brand,
-        #                   "manufacturer":self.manufacturer,
-        #                   # "size":self.sizes,
-        #                   # "color":self.colors,
-        #                   "material":self.material,
-        #                   "bullet_1":self.bullet_1,
-        #                   "bullet_2":self.bullet_2,
-        #                   "bullet_3":self.bullet_3,
-        #                   "image":self.image,
-        #                   "image_2":self.image_2,
-        #                   "image_3":self.image_3,
-        #                   # "currency":self.currency,
-        #                   "category":self.category,
-        #                   "price":self.price,
-        #                   "upc":self.upc
-        #                   }
-        #               })
-
-        #       self.identifier = str(self.collection.find({"sku":self.sku})[0]["_id"])
-        #   ##solve when id is not empty
-        #   elif self.identifier.strip() != "":
-        #       for i in range(0,len(sizes)):
-                    
-        #           try:
-        #               self.collection.update({
-        #                       "sku":self.sku
-        #                       },{
-        #                       "$addToSet":{
-        #                           "size":sizes[i]
-        #                           }
-        #                           })
-        #           except Exception, e:
-        #               print " except "+str(e)+ " i "  + str(i)
-        #               pass
-        #       for i in range(0,len(colors)):
-                    
-        #           try:
-        #               self.collection.update({
-        #                       "sku":self.sku
-        #                       },{
-        #                       "$addToSet":{
-        #                           "color":colors[i]
-        #                           }
-        #                           })
-        #           except Exception, e:
-        #               print " except "+str(e)+ " i "  + str(i)
-        #               pass            
-
-
-        #       self.collection.update({
-        #               "_id":ObjectId(self.identifier)
-        #           },{
-        #           "$set":{
-        #               "name":self.name,
-        #               "description":self.description,
-        #               "sku":self.sku,
-        #               "brand":self.brand,
-        #               "manufacturer":self.manufacturer,
-        #               # "size":self.sizes,
-        #               # "color":self.colors,
-        #               "material":self.material,
-        #               "bullet_1":self.bullet_1,
-        #               "bullet_2":self.bullet_2,
-        #               "bullet_3":self.bullet_3,
-        #               "image":self.image,
-        #               "image_2":self.image_2,
-        #               "image_3":self.image_3,
-        #               # "currency":self.currency,
-        #               "category":self.category,
-        #               "price":self.price,
-        #               "upc":self.upc
-        #           }})
-                
-        #   ##solve when the product does not exists
-        #   else:
-        #       self.identifier = str(self.collection.save({
-        #               "name":self.name,
-        #               "description":self.description,
-        #               "sku":self.sku,
-        #               "brand":self.brand,
-        #               "manufacturer":self.manufacturer,
-        #               # "size":self.size,
-        #               # "color":self.color,
-        #               "material":self.material,
-        #               "bullet_1":self.bullet_1,
-        #               "bullet_2":self.bullet_2,
-        #               "bullet_3":self.bullet_3,
-        #               "image":self.image,
-        #               "image_2":self.image_2,
-        #               "image_3":self.image_3,
-        #               "category":self.category,
-        #               "price":self.price,
-        #               "upc":self.upc
-        #           }))
-                
-        #       for i in range(count):
-        #           self.collection.update({
-        #                   "sku":self.sku
-        #                   },{
-        #                   "$addToSet":{
-        #                       "size":sizes[i],
-        #                       "color":colors[i]
-        #                       }
-        #                   })
-
-        #   return self.ShowSuccessMessage("product correctly saved")
-        # except Exception, e:
-        #   return self.ShowError("product could not be saved")
-
-
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         sizes=self.size.split(',')
@@ -462,6 +312,7 @@ class Product(BaseModel):
             ,color = %(color)s
             ,sell_price = %(sell_price)s
             ,which_size = %(which_size)s
+            ,promotion_price = %(promotion_price)s
             ,delivery = %(delivery)s where sku = %(sku)s returning id'''
 
             category = Category()
@@ -490,7 +341,7 @@ class Product(BaseModel):
                     "image_6":self.image_6,
                     "delivery":self.delivery,
                     "which_size":self.which_size,
-                    # "currency":self.currency,
+                    "promotion_price":self.promotion_price,
                     "category_id":category.id,
                     "price":self.price,
                     "upc":self.upc,
@@ -574,6 +425,7 @@ class Product(BaseModel):
             , color = %(color)s
             , sell_price = %(sell_price)s
             , which_size = %(which_size)s
+            , promotion_price = %(promotion_price)s
             , delivery = %(delivery)s where id = %(id)s'''
 
             category = Category()
@@ -607,7 +459,8 @@ class Product(BaseModel):
                     "id":self.id,
                     "sell_price":self.sell_price,
                     "delivery":self.delivery,
-                    "which_size":self.which_size
+                    "which_size":self.which_size,
+                    "promotion_price":self.promotion_price
                 }
 
             # print "existe id:{}".format(cur.mogrify(q,p))
@@ -660,8 +513,54 @@ class Product(BaseModel):
 
         elif self.sku != "":
 
-            q = '''insert into "Product" (delivery,which_size,name,description,sku,brand,manufacturer,material,bullet_1,bullet_2,bullet_3,image,image_2,image_3, image_4, image_5, image_6, category_id, price, upc,size,color,sell_price)
-            values (%(delivery)s,%(which_size)s,%(name)s,%(description)s,%(sku)s,%(brand)s,%(manufacturer)s,%(material)s,%(bullet_1)s,%(bullet_2)s,%(bullet_3)s,%(image)s,%(image_2)s,%(image_3)s,%(image_4)s,%(image_5)s,%(image_6)s,%(category_id)s,%(price)s,%(upc)s,%(size)s,%(color)s,%(sell_price)s) returning id'''
+            q = '''insert into "Product" (delivery,
+                                        which_size,
+                                        name,
+                                        description,
+                                        sku,
+                                        brand,
+                                        manufacturer,
+                                        material,
+                                        bullet_1,
+                                        bullet_2,
+                                        bullet_3,
+                                        image,
+                                        image_2,
+                                        image_3,
+                                        image_4,
+                                        image_5,
+                                        image_6,
+                                        category_id,
+                                        price,
+                                        upc,
+                                        size,
+                                        color,
+                                        sell_price,
+                                        promotion_price)
+            values (%(delivery)s,
+                    %(which_size)s,
+                    %(name)s,
+                    %(description)s,
+                    %(sku)s,
+                    %(brand)s,
+                    %(manufacturer)s,
+                    %(material)s,
+                    %(bullet_1)s,
+                    %(bullet_2)s,
+                    %(bullet_3)s,
+                    %(image)s,
+                    %(image_2)s,
+                    %(image_3)s,
+                    %(image_4)s,
+                    %(image_5)s,
+                    %(image_6)s,
+                    %(category_id)s,
+                    %(price)s,
+                    %(upc)s,
+                    %(size)s,
+                    %(color)s,
+                    %(sell_price)s,
+                    %(promotion_price)s) returning id'''
 
             category = Category()
             category.name = self.category
@@ -693,7 +592,8 @@ class Product(BaseModel):
                     "upc":self.upc,
                     "sell_price":self.sell_price,
                     "delivery":self.delivery,
-                    "which_size":self.which_size
+                    "which_size":self.which_size,
+                    "promotion_price":self.promotion_price
                 }
 
             # print cur.mogrify(q.strip(),p)

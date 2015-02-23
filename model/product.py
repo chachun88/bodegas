@@ -48,6 +48,7 @@ class Product(BaseModel):
         self._tags = ""
         self._which_size = ""
         self._delivery = ""
+        self._promotion_price = 0
         
 
     ####################
@@ -244,7 +245,14 @@ class Product(BaseModel):
     def for_sale(self, value):
         self._for_sale = value
     
+    @property
+    def promotion_price(self):
+        return self._promotion_price
+    @promotion_price.setter
+    def promotion_price(self, value):
+        self._promotion_price = value
     
+
     #################
     #### Methods ####
     #################
@@ -289,6 +297,7 @@ class Product(BaseModel):
             self.which_size = data["which_size"]
             self.delivery = data["delivery"]
             self.for_sale = data["for_sale"]
+            self.promotion_price = data["promotion_price"]
 
         return data_obj
 
@@ -334,6 +343,7 @@ class Product(BaseModel):
             self.which_size = producto["which_size"]
             self.delivery = producto["delivery"]
             self.for_sale = producto["for_sale"]
+            self._promotion_price = producto["promotion_price"]
         
         return data
 
@@ -376,7 +386,8 @@ class Product(BaseModel):
                 "delivery" : self.delivery,
                 "which_size" : self.which_size,
                 "id" : self.identifier,
-                "for_sale": self.for_sale
+                "for_sale": self.for_sale,
+                "promotion_price": self.promotion_price
             }
 
 
@@ -396,11 +407,11 @@ class Product(BaseModel):
                 "sku" : self.sku,
                 "name" : self.name,
                 "upc" : self.upc,
-                "description" : self.description.encode("utf-8"),
+                "description" : self.description,
                 "brand" : self.brand,
                 "manufacturer" : self.manufacturer,
                 "size" : self.size,
-                "color" : self.color.encode("utf-8"),
+                "color" : self.color,
                 "bullet_1" : self.bullet_1,
                 "bullet_2" : self.bullet_2,
                 "bullet_3" : self.bullet_3,
@@ -416,7 +427,8 @@ class Product(BaseModel):
                 "tags" : self.tags,
                 "delivery" : self.delivery,
                 "which_size" : self.which_size,
-                "for_sale" : self.for_sale
+                "for_sale" : self.for_sale,
+                "promotion_price": self.promotion_price
             }
 
             post_data = urllib.urlencode(data)

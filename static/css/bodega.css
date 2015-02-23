@@ -96,3 +96,9 @@ i.disabled{
 iframe.wysihtml5-sandbox{
 	height: 250px !important;
 }
+tr.special_row > td{
+	padding: 0 !important;
+}
+tr.special_row > td > div{
+	padding-top: 30px;
+}
