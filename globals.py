@@ -46,6 +46,7 @@ else:
     ws_port = WS_PORT
     webservice_url = "http://wgiani.loadingplay.com"
 
+print "{}".format(debugMode)
 
 # --- menu ---
 
