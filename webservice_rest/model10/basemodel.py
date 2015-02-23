@@ -11,7 +11,7 @@ from bson.objectid import ObjectId
 class BaseModel(object):
     def __init__(self):
 
-        self._connection = psycopg2.connect("host='localhost' dbname='giani' user='yichun' password='chachun88'")
+        self._connection = psycopg2.connect("host='ondev.today' dbname='giani' user='yichun' password='chachun88'")
         self._table = ""
         self._id = ""
 
