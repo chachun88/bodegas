@@ -407,7 +407,7 @@ class Product(BaseModel):
                 "sku" : self.sku,
                 "name" : self.name,
                 "upc" : self.upc,
-                "description" : self.description,
+                "description" : self.description.encode("utf-8"),
                 "brand" : self.brand,
                 "manufacturer" : self.manufacturer,
                 "size" : self.size,
