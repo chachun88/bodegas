@@ -411,7 +411,7 @@ class Product(BaseModel):
                 "brand" : self.brand,
                 "manufacturer" : self.manufacturer,
                 "size" : self.size,
-                "color" : self.color,
+                "color" : self.color.encode("utf-8"),
                 "bullet_1" : self.bullet_1,
                 "bullet_2" : self.bullet_2,
                 "bullet_3" : self.bullet_3,
