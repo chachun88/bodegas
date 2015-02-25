@@ -310,7 +310,7 @@ class FastEditHandler(BaseHandler):
 
 			prod.name		= self.get_argument("name", "").encode('utf-8')
 			prod.description= self.get_argument("description", "")
-			prod.color 		= self.get_argument("color", "").encode('utf-8')
+			prod.color 		= self.get_argument("color", "")
 			prod.price= self.get_argument("price", "").encode('utf-8')
 			prod.sell_price 	= self.get_argument("sell_price", "").encode('utf-8')
 			prod.category = self.get_argument("category","").encode("utf-8")
