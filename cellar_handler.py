@@ -158,7 +158,7 @@ class CellarEasyOutputHandler(BaseHandler):
 		quantity = self.get_argument("quantity", "")
 		price = self.get_argument("price", "")
 		balance_price=self.get_argument("balance_price", "")
-		new_cellar = self.get_argument("new_cellar", "")
+		# new_cellar = self.get_argument("new_cellar", "")
 		size= self.get_argument("size", "")
 		color=self.get_argument("color", "")
 		operation=self.get_argument("operation", "")
@@ -194,7 +194,7 @@ class CellarEasyOutputHandler(BaseHandler):
 					self.write("no")
 
 				cellar2 = Cellar()
-				cellar2.InitWithId(new_cellar)
+				cellar2.InitWithId(cellar_id)
 
 				# redirect = "t"
 

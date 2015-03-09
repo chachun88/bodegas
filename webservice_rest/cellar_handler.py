@@ -127,7 +127,7 @@ class CellarProductsAddHandler(BaseHandler):
 		cellar_id = self.get_argument("cellar_id", "")
 		product_sku = self.get_argument("product_sku", "")
 		quantity = self.get_argument("quantity", 0)
-		operation = self.get_argument("operation", Kardex.OPERATION_BUY)
+		operation = self.get_argument("operation", "")
 		price = self.get_argument("price", 0)
 		size = self.get_argument("size", "")
 		color = self.get_argument("color", "")
