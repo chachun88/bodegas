@@ -32,8 +32,11 @@ class OrderHandler(BaseHandler):
 
         self.set_active(Menu.PEDIDOS_LISTA)
 
+        page = self.get_argument("page",1) 
+        items = self.get_argument("items",20)
+
         order = Order()
-        pedidos = order.List()
+        pedidos = order.List(page, items)
         self.render("order/home.html",side_menu=self.side_menu, pedidos=pedidos, dn=self.get_argument("dn", ""))
 
 class AddOrderHandler(BaseHandler):
