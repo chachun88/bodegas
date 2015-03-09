@@ -293,103 +293,6 @@ class Kardex(BaseModel):
         except Exception,e:
             return self.ShowError("an error inserting kardex, error:{}".format(str(e)))
 
-
-    def move(self, web_cellar_id):
-
-        response_prevkardex = self.GetPrevKardex()
-
-        prev_kardex = Kardex()
-
-        if "success" in response_prevkardex:
-            prev_kardex = response_prevkardex["success"]
-        else:
-            return self.ShowError("error al obtener kardex {}".format(response_prevkardex["error"]))
-
-        ##parsing all to float
-        self.price = float(self.price)
-        self.total = float(self.total)
-        self.balance_price = float(self.balance_price)
-        self.balance_total = float(self.balance_total)
-        self.units = int(self.units)
-
-        ## doing maths...
-        if self.operation_type == Kardex.OPERATION_SELL or self.operation_type == Kardex.OPERATION_MOV_OUT:
-            self.price = prev_kardex.balance_price ## calculate price
-        if self.price == "0":
-            self.price = prev_kardex.balance_price
-
-        self.total = self.units * self.price
-
-        if self.operation_type == Kardex.OPERATION_BUY or self.operation_type == Kardex.OPERATION_MOV_IN:
-            self.sell_price = "0"
-            self.balance_units = prev_kardex.balance_units + self.units
-            self.balance_total = prev_kardex.balance_total + self.total
-        else:
-            self.balance_units = prev_kardex.balance_units - self.units
-            self.balance_total = prev_kardex.balance_total - self.total
- 
-        if self.balance_units != 0: ## prevent division by zero 
-            self.balance_price = self.balance_total / self.balance_units
-
-        ## truncate
-        self.price = float(int(self.price * 100)) / 100.0
-        self.total = round(float(int(self.total * 100)) / 100.0)
-        self.balance_price = float(int(self.balance_price * 100)) / 100.0
-        self.balance_total = round(float(int(self.balance_total * 100)) / 100.0)
-
-
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-        parametros = {
-        "product_sku":self.product_sku,
-        "cellar_id":self.cellar_identifier,
-        "operation_type":self.operation_type,
-        "units":self.units,
-        "price":self.price,
-        "sell_price":self.sell_price,
-        "size":self.size,
-        "color":self.color,
-        "total":self.total,
-        "balance_units":self.balance_units,
-        "balance_price":self.balance_price,
-        "balance_total":self.balance_total,
-        "date":self.date,
-        "user":self.user
-        }
-
-        try:
-            query = '''insert into "Kardex" (balance_total,product_sku,cellar_id,operation_type,units,price,sell_price,size,color,total,balance_units,balance_price,date,"user") values (%(balance_total)s,%(product_sku)s,%(cellar_id)s,%(operation_type)s,%(units)s,%(price)s,%(sell_price)s,%(size)s,%(color)s,%(total)s,%(balance_units)s,%(balance_price)s,%(date)s,%(user)s)'''
-            cur.execute(query,parametros)
-        except Exception,e:
-            return self.ShowError("an error inserting kardex, error:{}".format(str(e)))
-
-        parametros = {
-        "product_sku":self.product_sku,
-        "cellar_id":web_cellar_id,
-        "operation_type":Kardex.OPERATION_MOV_IN,
-        "units":self.units,
-        "price":self.price,
-        "sell_price":self.sell_price,
-        "size":self.size,
-        "color":self.color,
-        "total":self.total,
-        "balance_units":self.balance_units,
-        "balance_price":self.balance_price,
-        "balance_total":self.balance_total,
-        "date":self.date,
-        "user":self.user
-        }
-
-        try:
-            query = '''insert into "Kardex" (balance_total,product_sku,cellar_id,operation_type,units,price,sell_price,size,color,total,balance_units,balance_price,date,"user") values (%(balance_total)s,%(product_sku)s,%(cellar_id)s,%(operation_type)s,%(units)s,%(price)s,%(sell_price)s,%(size)s,%(color)s,%(total)s,%(balance_units)s,%(balance_price)s,%(date)s,%(user)s)'''
-            cur.execute(query,parametros)
-            self.connection.commit()
-            return self.ShowSuccessMessage("products has been moved")
-        except Exception,e:
-            return self.ShowError("an error inserting kardex, error:{}".format(str(e)))
-        finally:
-            cur.close()
-
     def moveOrder(self, details, web_cellar, cellar_id):
 
         errors = []
@@ -409,9 +312,19 @@ class Kardex(BaseModel):
             kardex.color= d["color"]
             kardex.user = "Sistema"
 
-            res_kardex = kardex.move(web_cellar)
+            res_kardex = kardex.Insert()
 
-            if "error" in res_kardex:
+            if "success" in res_kardex:
+
+                kardex.cellar_identifier = web_cellar
+                kardex.operation_type = Kardex.OPERATION_MOV_IN
+
+                res_kardex_2 = kardex.Insert()
+
+                if "error" in res_kardex_2:
+                    errors.append(res_kardex_2["error"])
+                    
+            else:
                 errors.append(res_kardex["error"])
 
         # end for
