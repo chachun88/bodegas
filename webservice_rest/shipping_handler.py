@@ -139,7 +139,7 @@ class SaveTrackingHandler(BaseHandler):
 						
 					size = detail["size"]
 					color = detail["color"]
-					user = 'Sistema'
+					user = 'Sistema - Despacho'
 
 					k = Kardex()
 					find_kardex = k.FindKardex(sku, new_cellar_id, size)
