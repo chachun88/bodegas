@@ -312,4 +312,7 @@ class Order(BaseModel):
         "items": items
         }
 
+        post_data = urllib.urlencode(data)
+        response = urllib.urlopen(url, post_data).read()
+        
         return json_util.loads(response)
