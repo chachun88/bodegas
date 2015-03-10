@@ -152,17 +152,13 @@
 			</table>
 			
 		</div>
-		<div class="body">
-			<div class="col-md-6 text-left">
-				{% if int(page) != 1 %}
-					<a href="?page={{int(page)-1}}">Anterior</a>
-				{% end %}
-			</div>
-			<div class="col-md-6 text-right">
-				{% if int(total_pages) > int(page) %}
-					<a href="?page={{int(page)+1}}">Siguiente</a>
-				{% end %}
-			</div>
+		<div class="body text-center">
+			{% if int(page) != 1 %}
+				<a href="?page={{int(page)-1}}">Anterior</a>
+			{% end %}
+			{% if int(total_pages) > int(page) %}
+				<a href="?page={{int(page)+1}}">Siguiente</a>
+			{% end %}
 		</div>
 	</section>
 </div>
