@@ -150,13 +150,16 @@
 					{% end %}
 				</tbody>
 			</table>
-			{% if int(page) != 1 %}
+			
+		</div>
+		<footer>
+		{% if int(page) != 1 %}
 			<a href="?page={{int(page)-1}}">Anterior</a>
 			{% end %}
 			{% if int(total_pages) > int(page) %}
 			<a href="?page={{int(page)+1}}">Siguiente</a>
 			{% end %}
-		</div>
+			</footer>
 	</section>
 </div>
 
