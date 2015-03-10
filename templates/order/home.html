@@ -150,6 +150,8 @@
 					{% end %}
 				</tbody>
 			</table>
+			{{page}}<br/>
+			{{total_pages}}
 			{% if int(total_pages) > int(page) %}
 			<a href="?page={{page+1}}">Siguiente</a>
 			{% end %}
