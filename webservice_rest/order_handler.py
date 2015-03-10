@@ -268,3 +268,16 @@ class CancelHandler(BaseHandler):
                 self.write(json_util.dumps({"error":identificadores}))
             else:
                 self.write(json_util.dumps({"success":"ok"}))
+
+
+class GetTotalPagesHandler(BaseHandler):
+    """ get total pages with items """
+
+    def get(self):
+
+        items = self.get_argument("items", 20)
+
+        order = Order()
+        total = order.getTotalPages(items)
+
+        self.write(json_util.dumps(total))

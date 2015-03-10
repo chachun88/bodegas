@@ -97,6 +97,7 @@ class Application(tornado.web.Application):
             (r"/order/list",            order_handler.ListOrderHandler),
             (r"/order/changestate",     order_handler.ChangeStateHandler),
             (r"/order/cancel",          order_handler.CancelHandler),
+            (r"/order/totalpages",      order_handler.GetTotalPagesHandler),
 
             (r"/order-detail/save",     order_detail_handler.AddOrderDetailHandler),
             (r"/order-detail/remove",   order_detail_handler.RemoveOrderDetailHandler),

@@ -331,4 +331,21 @@ class Order(BaseModel):
         except Exception,e:
             self.connection.rollback()
             return self.ShowError(str(e))
+
+    def getTotalPages(self, items):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''select floor(count(*)/%(items)s) as pages from "Order"'''
+        parameters = {"items":items}
+
+        try:
+            cur.execute(query,parameters)
+            pages = cur.fetchone()["pages"]
+            return self.ShowSuccessMessage(pages)
+        except Exception, e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
         

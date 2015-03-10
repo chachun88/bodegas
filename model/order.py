@@ -298,6 +298,18 @@ class Order(BaseModel):
         post_data = urllib.urlencode(data)
         response = urllib.urlopen(url, post_data).read()
 
-        print response
+        # print response
+
+        return json_util.loads(response)
+
+
+    def getTotalPages(self, items):
+
+        url = self.wsurl() + "/order/totalpages"
+
+        data = {
+        "token": self.token,
+        "items": items
+        }
 
         return json_util.loads(response)

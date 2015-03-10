@@ -35,9 +35,16 @@ class OrderHandler(BaseHandler):
         page = self.get_argument("page",1) 
         items = self.get_argument("items",20)
 
+        total_pages = 1
+
         order = Order()
         pedidos = order.List(page, items)
-        self.render("order/home.html",side_menu=self.side_menu, pedidos=pedidos, dn=self.get_argument("dn", ""))
+        res_total_pages = order.getTotalPages(items)
+
+        if "success" in res_total_pages:
+          total_pages = res_total_pages["success"]
+
+        self.render("order/home.html",side_menu=self.side_menu, pedidos=pedidos, dn=self.get_argument("dn", ""), page=page, total_pages=total_pages)
 
 class AddOrderHandler(BaseHandler):
 
@@ -183,8 +190,6 @@ class OrderActionsHandler(BaseHandler):
 
     def check_xsrf_cookie(self):
         pass
-
-
 
 
 def SendConfirmedMail(email,name,id_orden):
