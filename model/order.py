@@ -18,6 +18,8 @@ class Order(BaseModel):
     ESTADO_DESPACHADO = 4
     ESTADO_CANCELADO = 5
 
+    TIPO_WEB = 1
+
     @property
     def id(self):
         return self._id

@@ -60,14 +60,14 @@
 							<div id="perm" class="form-control" >
 								{% set permiso = ["acceso a api","cargar productos nuevos","vender","modificar bodegas","administrar usuarios","ver informes"] %}
 								{% for i in range(0,len(permiso)) %} 
-									{% if int(i)+1 in user.permissions %}
+									{% if str(int(i)+1) in user.permissions %}
 									<a id="perm_top{{ i + 1 }}" class="btn-sm btn-primary btn-perm" onclick="addElementBot({{ i + 1 }})">{{ permiso[i] }}</a>
 									{% end %}
 								{% end %}
 							</div>
 							<div id="perm_bot">
 								{% for i in range(0,len(permiso)) %} 
-									{% if int(i)+1 not in user.permissions %}
+									{% if str(int(i)+1) not in user.permissions %}
 									<a id="perm_{{ i + 1 }}" class="btn-sm btn-primary btn-perm-bot" onclick="addElement({{ i + 1 }})">{{ permiso[i] }}</a>
 									{% end %}
 								{% end %}
