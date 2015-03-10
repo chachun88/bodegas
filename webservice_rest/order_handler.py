@@ -273,7 +273,7 @@ class CancelHandler(BaseHandler):
 class GetTotalPagesHandler(BaseHandler):
     """ get total pages with items """
 
-    def get(self):
+    def post(self):
 
         items = self.get_argument("items", 20)
 
