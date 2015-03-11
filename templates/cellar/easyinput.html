@@ -49,11 +49,7 @@
                             name="product_sku" 
                             id="multiple">
                             {% for p in product_list %}
-                                {% if p['id'] in asociados %}
-                                    <option value="{{p['id']}}" selected="selected">{{p['name']}} {{p['color']}}</option>
-                                {% else %}
-                                    <option value="{{p['id']}}">{{p['name']}} {{p['color']}}</option>
-                                {% end %}
+                                <option value="{{p['id']}}">{{p['name']}} {{p['color']}}</option>
                             {% end %}
                         </select>
 						<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
