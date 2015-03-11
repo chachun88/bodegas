@@ -47,11 +47,12 @@
 	{
 		if (!mouse_over) 
 		{
-			$(".lptooltip").hide(animation_duration);
+			if(!$(".select2-dropdown-open").length)
+				$(".lptooltip").hide(animation_duration);
 		}
 	});
 
-	$(".lptooltip, .select2-drop").mouseover(function()
+	$(".lptooltip").mouseover(function()
 	{
 		mouse_over = true;
 	});
