@@ -104,7 +104,10 @@ class CellarEasyInputHandler(BaseHandler):
 		cellar = Cellar()
 		cellar.InitWithId(self.get_argument("id", ""))
 
-		self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar, products=cellar.ListProducts())
+		product = Product()
+		lista = product.get_product_list()
+
+		self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar, products=cellar.ListProducts(), product_list=lista)
 	
 	@tornado.web.authenticated
 	def post(self):
