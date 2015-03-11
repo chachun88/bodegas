@@ -102,6 +102,6 @@ tr.special_row > td{
 tr.special_row > td > div{
 	padding-top: 30px;
 }
-.select2-choice {
-	max-height: 50px;
+.select2-results {
+	max-height: 100px;
 }
