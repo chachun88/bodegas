@@ -17,7 +17,7 @@
 				<a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
 					Agregar stock producto nuevo
 				</a>
-				<div class="lptooltip col-sm-4" >
+				<div class="lptooltip col-sm-3" >
 					<div class="pointer">
 						<img src="/static/img/pointer.png" />
 					</div>
@@ -29,7 +29,7 @@
 									<div class="col-sm-12">
 										<select data-placeholder="Producto"
 				                            class="chzn-select select-block-level" tabindex="-1"
-				                            name="product_sku" 
+				                            name="product_sku" data-size="5"
 				                            id="multiple">
 				                            {% for p in product_list %}
 				                                <option value="{{p['sku']}}">{{p['sku']}}</option>
