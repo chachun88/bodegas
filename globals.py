@@ -24,6 +24,7 @@ DEBUG_WS_PORT = 8891
 appid = 100
 
 webservice_url = "http://localhost"
+url_local = "http://www.gianidafirenze.cl"
 port = 0
 ws_port = 0
 
@@ -36,11 +37,13 @@ if debugMode:
     carpeta_img = 'C:\Python27\tellmecuando\static\img'
     port = BODEGA_DEBUG_PORT
     ws_port = DEBUG_WS_PORT
+    url_local = "http://giani.ondev.today"
 else:
     userMode = "prod"
     carpeta_img = '/var/www/tellmecuando/static/img'
     port = BODEGA_PORT
     ws_port = WS_PORT
+    url_local = "http://www.gianidafirenze.cl"
 
 webservice_url += ":{}".format(ws_port)
 

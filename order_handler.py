@@ -7,7 +7,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from globals import Menu, email_giani
+from globals import Menu, email_giani, url_local
 
 from basehandler import BaseHandler
 from model.order import Order
@@ -255,7 +255,7 @@ def SendConfirmedMail(email,name,id_orden):
                              
                               <tbody><tr>
                                 <td align="center" valign="top">
-                                   <a href="#"><img src="http://giani.ondev.today/static/images/giani-logo-2-gris-260x119.png" width="250" style="max-width:250px;" alt="Logo" border="0" hspace="0" vspace="0"></a>
+                                   <a href="#"><img src="{url_local}/static/images/giani-logo-2-gris-260x119.png" width="250" style="max-width:250px;" alt="Logo" border="0" hspace="0" vspace="0"></a>
                                 </td>
                               
                               </tr>
@@ -481,7 +481,7 @@ def SendConfirmedMail(email,name,id_orden):
                              
                               <tbody><tr>
                                 <td align="center" valign="top">
-                                   <a href="#"><img src="http://giani.ondev.today/static/images/giani-logo-2-gris-260x119.png" width="114" style="max-width:114px;" alt="Logo" border="0" hspace="0" vspace="0"></a>
+                                   <a href="#"><img src="{url_local}/static/images/giani-logo-2-gris-260x119.png" width="114" style="max-width:114px;" alt="Logo" border="0" hspace="0" vspace="0"></a>
                                 </td>
                               
                               </tr>
@@ -570,7 +570,7 @@ def SendConfirmedMail(email,name,id_orden):
 
 
         </body></html>
-                """.format(name=name, order_id=id_orden)
+                """.format(name=name, order_id=id_orden, url_local=url_local)
 
     sg = sendgrid.SendGridClient('nailuj41', 'Equipo_1234')
     message = sendgrid.Mail()
