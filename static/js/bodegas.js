@@ -51,7 +51,7 @@
 		}
 	});
 
-	$(".lptooltip").mouseover(function()
+	$(".lptooltip, .select2-drop").mouseover(function()
 	{
 		mouse_over = true;
 	});
