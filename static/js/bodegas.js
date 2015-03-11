@@ -47,8 +47,7 @@
 	{
 		if (!mouse_over) 
 		{
-			if(!$(".select2-dropdown-open").length)
-				$(".lptooltip").hide(animation_duration);
+			$(".lptooltip").hide(animation_duration);
 		}
 	});
 
@@ -59,7 +58,8 @@
 
 	$(".lptooltip").mouseout(function()
 	{
-		mouse_over = false;
+		if(!$(".select2-dropdown-open").length)
+			mouse_over = false;
 	});
 
 	$(".btn-add").click(function(event)
