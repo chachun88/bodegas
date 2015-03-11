@@ -24,6 +24,21 @@
 					<form action="/cellar/easyinput" class="form-add" >
 						<fieldset>
 							<div class="control-group">
+								<label for="producto">Producto</label>
+								<div class="control form-group">
+									<div class="col-sm-12">
+										<select data-placeholder="Producto"
+				                            class="chzn-select select-block-level" tabindex="-1"
+				                            name="product_sku" 
+				                            id="multiple">
+				                            {% for p in product_list %}
+				                                <option value="{{p['id']}}">{{p['name']}} {{p['color']}}</option>
+				                            {% end %}
+				                        </select>
+									</div>
+								</div>
+							</div>
+							<div class="control-group">
 								<label for="" class="control-label">Cantidad</label>
 								<div class="controls form-group">
 									<div class="col-sm-12"><input type="number" required="required" name="quantity" min="1" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
@@ -44,14 +59,7 @@
 								</div>
 							</div>
 						</fieldset>
-						<select data-placeholder="Tags Asociados"
-                            class="chzn-select select-block-level" tabindex="-1"
-                            name="product_sku" 
-                            id="multiple">
-                            {% for p in product_list %}
-                                <option value="{{p['id']}}">{{p['name']}} {{p['color']}}</option>
-                            {% end %}
-                        </select>
+						
 						<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
 						<input type="hidden" name="product_name" value="" />
 						<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
