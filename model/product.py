@@ -49,6 +49,7 @@ class Product(BaseModel):
         self._which_size = ""
         self._delivery = ""
         self._promotion_price = 0
+        self._for_sale = False
         
 
     ####################
@@ -251,6 +252,13 @@ class Product(BaseModel):
     @promotion_price.setter
     def promotion_price(self, value):
         self._promotion_price = value
+    
+    @property
+    def for_sale(self):
+        return self._for_sale
+    @for_sale.setter
+    def for_sale(self, value):
+        self._for_sale = value
     
 
     #################
