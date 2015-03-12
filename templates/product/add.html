@@ -81,7 +81,12 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">Tallas</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Escriba las tallas separadas por coma (,)" id="size" name="size" required="required" type="text" class="form-control" value="{{ ",".join(product.size) }}"></div>
+							<input type="checkbox" name="size" value="35.0" {% if "35.0" in product.size %}checked{% end %} >
+							<input type="checkbox" name="size" value="36.0">
+							<input type="checkbox" name="size" value="37.0">
+							<input type="checkbox" name="size" value="38.0">
+							<input type="checkbox" name="size" value="39.0">
+							<input type="checkbox" name="size" value="40.0">
 						</div>
 					</div>
 					<div class="control-group">
