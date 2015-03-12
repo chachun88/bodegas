@@ -116,7 +116,6 @@ class CellarEasyInputHandler(BaseHandler):
 		quantity = self.get_argument("quantity", "")
 		price = self.get_argument("price", "")
 		size = self.get_argument("size", "")
-		color = self.get_argument("color", "")
 		operation = "buy"
 
 
@@ -127,7 +126,6 @@ class CellarEasyInputHandler(BaseHandler):
 		product.InitWithSku(product_sku)
 
 		product.size=size
-		product.color=color.encode("utf-8")
 		product.description = product.description.encode("utf-8")
 		product.Save()
 
