@@ -255,10 +255,10 @@ class ProductAddHandler(BaseHandler):
 			prod.promotion_price = self.get_argument("promotion_price", 0)
 
 
-			size_arr = self.get_argument("size", "").split(",")
-			size_arr = [s.encode("utf-8") for s in size_arr]
+			# size_arr = self.get_argument("size", "").split(",")
+			# size_arr = [s.encode("utf-8") for s in size_arr]
 
-			prod.size 		= ",".join(size_arr)
+			prod.size 		= ",".join([t.encode("utf-8") for t in self.get_arguments("size")])
 			prod.tags       = ",".join([t.encode("utf-8") for t in self.get_arguments("tags","")])
 
 			respose = prod.Save("one")
