@@ -30,7 +30,7 @@
 										<select data-placeholder="Producto"
 				                            class="chzn-select select-block-level" tabindex="-1"
 				                            name="product_sku"
-				                            id="multiple">
+				                            id="product_sku">
 				                            {% for p in product_list %}
 				                                <option value="{{p['sku']}}">{{p['sku']}}</option>
 				                            {% end %}
@@ -75,7 +75,6 @@
 						</fieldset>
 						
 						<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
-						<input type="hidden" name="product_name" value="" />
 						<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
 					</form>
 				</div>

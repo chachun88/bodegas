@@ -78,6 +78,8 @@
 		$(".alert-success").hide(animation_duration);
 		return false;
 	});
+
+
 	
 	$(".form-add").submit(function(event)
 	{
@@ -95,6 +97,10 @@
 		var balance_price = $("input[name=balance_price]", $(this)).val();
 		var transaction = $("input[name=transaction]", $(this)).val();
 		var operation =$("input[name=operation]", $(this)).val();
+
+		if($("select#product_sku",$(this)).length){
+			product_sku = $("select#product_sku",$(this)).val();
+		}
 
 		if (size == undefined){
 			size = $("select[name=size]", $(this)).val();
