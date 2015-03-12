@@ -343,7 +343,7 @@ class Product(BaseModel):
             self.which_size = producto["which_size"]
             self.delivery = producto["delivery"]
             self.for_sale = producto["for_sale"]
-            self._promotion_price = producto["promotion_price"]
+            self.promotion_price = producto["promotion_price"]
         
         return data
 
