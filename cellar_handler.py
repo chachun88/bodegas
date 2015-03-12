@@ -129,7 +129,7 @@ class CellarEasyInputHandler(BaseHandler):
 		product.description = product.description.encode("utf-8")
 		product.Save()
 
-		if "success" in cellar.AddProducts(product_sku, quantity, price, size, color, operation, self.get_user_email() ):
+		if "success" in cellar.AddProducts(product_sku, quantity, price, size, product.color, operation, self.get_user_email() ):
 			self.write("ok")
 		else:
 			self.write("no")
