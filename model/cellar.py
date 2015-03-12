@@ -119,7 +119,7 @@ class Cellar(BaseModel):
 			"quantity": quantity,
 			"price": price,
 			"size": size,
-			"color": color.encode("utf-8"),
+			"color": color,
 			"user": user
 		}
 
