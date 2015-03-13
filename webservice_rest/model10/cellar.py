@@ -114,7 +114,7 @@ class Cellar(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select distinct product_sku, size from "Kardex" where cellar_id = %(id)s'''
+        query = '''select distinct product_id, size_id from "Kardex" k where k.cellar_id = %(id)s'''
         parametros = {
         "id":self.id
         }
@@ -126,7 +126,7 @@ class Cellar(BaseModel):
 
         for p in psku:
 
-            response = kardex.FindKardex(p["product_sku"],self.id,p["size"])
+            response = kardex.FindKardex(p["product_id"],self.id,p["size_id"])
 
             if "success" in response:
                 total_units += kardex.balance_units
@@ -141,7 +141,7 @@ class Cellar(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select distinct product_sku,size from "Kardex" where cellar_id = %(id)s'''
+        query = '''select distinct product_id, size_id from "Kardex" where cellar_id = %(id)s'''
         parametros = {
         "id":self.id
         }
@@ -153,7 +153,7 @@ class Cellar(BaseModel):
 
         for p in psku:
 
-            response = kardex.FindKardex(p["product_sku"],self.id,p["size"])
+            response = kardex.FindKardex(p["product_id"],self.id,p["size_id"])
 
             if "success" in response:
                 total_price += kardex.balance_total
