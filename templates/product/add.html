@@ -138,7 +138,7 @@
                                 name="tags" 
                                 id="multiple">
                                 {% for p in tags %}
-                                    {% if p['id'] in product.tags %}
+                                    {% if str(p['id']) in product.tags %}
                                         <option value="{{p['id']}}" selected="selected">{{p['name']}}</option>
                                     {% else %}
                                         <option value="{{p['id']}}">{{p['name']}}</option>

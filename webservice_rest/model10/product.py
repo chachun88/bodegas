@@ -313,6 +313,7 @@ class Product(BaseModel):
             ,sell_price = %(sell_price)s
             ,which_size = %(which_size)s
             ,promotion_price = %(promotion_price)s
+            ,size = %(size)s
             ,delivery = %(delivery)s where sku = %(sku)s returning id'''
 
             category = Category()
@@ -346,7 +347,8 @@ class Product(BaseModel):
                     "price":self.price,
                     "upc":self.upc,
                     "sku":self.sku,
-                    "sell_price":self.sell_price
+                    "sell_price":self.sell_price,
+                    "size":sizes
                 }
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -367,24 +369,24 @@ class Product(BaseModel):
                 cur.close()
                 self.connection.close()
 
-            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            # cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-            q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where sku = %(sku)s'''
+            # q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where sku = %(sku)s'''
 
-            p = {
-                    "size":sizes,
-                    "sku":self.sku
-                }
+            # p = {
+            #         "size":sizes,
+            #         "sku":self.sku
+            #     }
 
-            try:
-                cur.execute(q,p)
-                self.connection.commit()
+            # try:
+            #     cur.execute(q,p)
+            #     self.connection.commit()
 
-            except Exception,e:
-                return self.ShowError("Error updating product size, {}".format(str(e)))
-            finally:
-                cur.close()
-                self.connection.close()
+            # except Exception,e:
+            #     return self.ShowError("Error updating product size, {}".format(str(e)))
+            # finally:
+            #     cur.close()
+            #     self.connection.close()
 
             _tag = Tag()
             remover_asociacion = _tag.RemoveTagsAsociation(self.id)
@@ -425,6 +427,7 @@ class Product(BaseModel):
             , color = %(color)s
             , sell_price = %(sell_price)s
             , which_size = %(which_size)s
+            , size = %(size)s
             , promotion_price = %(promotion_price)s
             , delivery = %(delivery)s where id = %(id)s'''
 
@@ -460,7 +463,8 @@ class Product(BaseModel):
                     "sell_price":self.sell_price,
                     "delivery":self.delivery,
                     "which_size":self.which_size,
-                    "promotion_price":self.promotion_price
+                    "promotion_price":self.promotion_price,
+                    "size": sizes
                 }
 
             # print "existe id:{}".format(cur.mogrify(q,p))
@@ -473,22 +477,22 @@ class Product(BaseModel):
                 cur.close()
                 self.connection.close()
 
-            q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where id = %(id)s'''
+            # q = '''update "Product" set size = (select ARRAY(select unnest(size) union select unnest(%(size)s))) where id = %(id)s'''
 
-            p = {
-                    "size":sizes,
-                    "id":self.id
-                }
+            # p = {
+            #         "size":sizes,
+            #         "id":self.id
+            #     }
 
-            try:
-                cur.execute(q,p)
-                self.connection.commit()
+            # try:
+            #     cur.execute(q,p)
+            #     self.connection.commit()
 
-            except Exception,e:
-                return self.ShowError("Error updating product size, {}".format(str(e)))
-            finally:
-                cur.close()
-                self.connection.close()
+            # except Exception,e:
+            #     return self.ShowError("Error updating product size, {}".format(str(e)))
+            # finally:
+            #     cur.close()
+            #     self.connection.close()
 
             
             # self.id = cur.fetchone()[0]
@@ -709,7 +713,10 @@ class Product(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id where p.id = %(id)s limit 1'''
+        q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
+                inner join "Category" c on c.id = p.category_id 
+                inner join sizes s on s.product_id = p.id
+                where p.id = %(id)s group by p.id, c.name limit 1'''
         p = {
         "id":identifier
         }
@@ -809,7 +816,10 @@ class Product(BaseModel):
         offset = (page-1)*items
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
-            q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id order by p.sku limit %(items)s offset %(offset)s'''
+            q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
+            inner join "Category" c on c.id = p.category_id 
+            inner join sizes s on s.product_id = p.id
+            group by p.id, c.name limit %(items)s offset %(offset)s'''
             p = {
                 "items":items,
                 "offset":offset
