@@ -26,20 +26,10 @@ where t2.name = t1.size;
 
 ALTER TABLE "Kardex" DROP COLUMN size;
 
-ALTER TABLE "Kardex" ADD COLUMN product_id integer;
-
-ALTER TABLE "Kardex" ADD CONSTRAINT kardex_product FOREIGN KEY (product_id) REFERENCES "Product" (id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-UPDATE "Kardex" t1
-SET product_id = t2.id
-FROM "Product" t2
-where t2.sku = t1.product_sku;
-
-alter table "Kardex" drop column "product_sku";
-
 alter table "Product" drop column "size";
 
 CREATE OR REPLACE VIEW sizes AS 
- SELECT DISTINCT ON (k.product_id, k.size_id) k.product_id, k.size_id, s.name
+ SELECT DISTINCT ON (k.product_sku, k.size_id) k.product_sku, k.size_id, s.name
    FROM "Kardex" k
-   JOIN "Size" s ON s.id = k.size_id;
+   JOIN "Size" s ON s.id = k.size_id
+  ORDER BY k.product_sku, k.size_id DESC;
