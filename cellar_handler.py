@@ -12,7 +12,7 @@ from globals import Menu, debugMode
 from basehandler import BaseHandler
 from model.cellar import Cellar
 from model.product import Product
-
+from model.size import Size
 from model.kardex import Kardex
 
 from bson import json_util
@@ -59,7 +59,15 @@ class CellarOutputHandler(BaseHandler):
 		product = Product()
 		# product.InitWithId(product_id)
 
-		self.render("cellar/output.html", operation="Salidas", opp="out", side_menu=self.side_menu, cellar=cellar, data=data, product=product)
+		
+
+		self.render("cellar/output.html", 
+			operation="Salidas", 
+			opp="out", 
+			side_menu=self.side_menu, 
+			cellar=cellar, 
+			data=data, 
+			product=product)
 
 	@tornado.web.authenticated
 	def post(self):
@@ -107,12 +115,19 @@ class CellarEasyInputHandler(BaseHandler):
 		product = Product()
 		lista = product.get_product_list()
 
-		self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar, products=cellar.ListProducts(), product_list=lista)
+		size = Size()
+		res_tallas = size.list()
+		tallas = []
+
+		if "success" in res_tallas:
+			tallas = res_tallas["success"]
+
+		self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar, products=cellar.ListProducts(), product_list=lista, tallas=tallas)
 	
 	@tornado.web.authenticated
 	def post(self):
 		cellar_id = self.get_argument("cellar_id", "")
-		product_sku = self.get_argument("product_sku", "")
+		product_id = self.get_argument("product_id", "")
 		quantity = self.get_argument("quantity", "")
 		price = self.get_argument("price", "")
 		size = self.get_argument("size", "")
@@ -123,16 +138,20 @@ class CellarEasyInputHandler(BaseHandler):
 		cellar.InitWithId(cellar_id)
 
 		product = Product()
-		product.InitWithSku(product_sku)
+		product.InitWithId(product_id)
 
 		product.size=size
 		product.description = product.description.encode("utf-8")
 		product.color = product.color.encode("utf-8")
+		product.tags = ",".join(product.tags)
 		product.Save()
 
-		if "success" in cellar.AddProducts(product_sku, quantity, price, size, product.color, operation, self.get_user_email() ):
+		res_add_product = cellar.AddProducts(product_id, quantity, price, size, product.color, operation, self.get_user_email() )
+
+		if "success" in res_add_product:
 			self.write("ok")
 		else:
+			print res_add_product["error"]
 			self.write("no")
 
 	## invalidate xsfr cookie for ajax use
@@ -152,7 +171,19 @@ class CellarEasyOutputHandler(BaseHandler):
 		cellar.InitWithId(self.get_argument("id", ""))
 
 		data = Cellar().List(1, 100)
-		self.render("cellar/easyoutput.html", cellar=cellar, products=cellar.ListProducts(), cellarList=data)
+
+		size = Size()
+		res_tallas = size.list()
+		tallas = []
+
+		if "success" in res_tallas:
+			tallas = res_tallas["success"]
+
+		self.render("cellar/easyoutput.html", 
+			cellar=cellar, 
+			products=cellar.ListProducts(), 
+			cellarList=data,
+			tallas=tallas)
 
 	@tornado.web.authenticated
 	def post(self):
@@ -161,19 +192,20 @@ class CellarEasyOutputHandler(BaseHandler):
 		quantity = self.get_argument("quantity", "")
 		price = self.get_argument("price", "")
 		balance_price=self.get_argument("balance_price", "")
-		# new_cellar = self.get_argument("new_cellar", "")
+		new_cellar = self.get_argument("new_cellar", "")
 		size= self.get_argument("size", "")
-		color=self.get_argument("color", "")
+		color=self.get_argument("color", "").encode("utf-8")
 		operation=self.get_argument("operation", "")
+
+		# print product_id
 
 		cellar = Cellar()
 		cellar.InitWithId(cellar_id)
 
 		product = Product()
 		product.InitWithId(product_id)
-		product_sku=product.sku
 
-		product_find =cellar.ProductKardex(product_sku, cellar_id, size)
+		product_find =cellar.ProductKardex(product_id, cellar_id, size)
 
 		buy=0
 		sell=0
@@ -191,17 +223,20 @@ class CellarEasyOutputHandler(BaseHandler):
 
 			if operation == "mov":
 
-				if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, Kardex.OPERATION_MOV_OUT, self.get_user_email()):
+				res_remove = cellar.RemoveProducts(product_id, quantity, price, size, color, Kardex.OPERATION_MOV_OUT, self.get_user_email())
+
+				if "success" in res_remove:
 					self.write("ok")
 				else:
+					print res_remove["error"]
 					self.write("no")
 
 				cellar2 = Cellar()
-				cellar2.InitWithId(cellar_id)
+				cellar2.InitWithId(new_cellar)
 
 				# redirect = "t"
 
-				if "success" in cellar2.AddProducts(product_sku, quantity, balance_price, size, color, Kardex.OPERATION_MOV_IN, self.get_user_email()):
+				if "success" in cellar2.AddProducts(product_id, quantity, balance_price, size, color, Kardex.OPERATION_MOV_IN, self.get_user_email()):
 					self.write("ok")
 					redirect = "bpt"
 				else:
@@ -210,7 +245,7 @@ class CellarEasyOutputHandler(BaseHandler):
 
 			else:
 
-				if "success" in cellar.RemoveProducts(product_sku, quantity, price, size, color, operation, self.get_user_email()):
+				if "success" in cellar.RemoveProducts(product_id, quantity, price, size, color, operation, self.get_user_email()):
 					self.write("ok")
 				else:
 					self.write("no")

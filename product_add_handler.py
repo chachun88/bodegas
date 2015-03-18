@@ -31,13 +31,11 @@ from model.product import Product
 from model.category import Category
 from model.brand import Brand
 from model.tag import Tag
+from model.kardex import Kardex
+from model.size import Size
 from basehandler import BaseHandler
 
 class ProductAddHandler(BaseHandler):
-
-	global load
-
-	load="new"	
 
 	@tornado.web.authenticated
 	def get(self):
@@ -178,7 +176,9 @@ class ProductAddHandler(BaseHandler):
 
 		
 
-		res = prod.InitWithSku(self.get_argument("sku", ""))
+		res = prod.InitWithId(self.get_argument("sku", ""))
+
+		print res
 
 		# print "type:{} value:{}".format(type(res),res)
 
@@ -191,7 +191,7 @@ class ProductAddHandler(BaseHandler):
 			prod.description= self.get_argument("description", "").encode('utf-8')
 			prod.brand 		= self.get_argument("brand", "").encode('utf-8')
 			prod.manufacturer= self.get_argument("manufacturer", "")
-			prod.size 		= ",".join(self.get_arguments("size"))
+			prod.size_id 		= ",".join(self.get_arguments("size"))
 			prod.color 		= self.get_argument("color", "").encode('utf-8')
 			prod.material 	= self.get_argument("material", "")
 			prod.bullet_1 	= self.get_argument("bullet_1", "")
@@ -258,7 +258,7 @@ class ProductAddHandler(BaseHandler):
 			# size_arr = self.get_argument("size", "").split(",")
 			# size_arr = [s.encode("utf-8") for s in size_arr]
 
-			prod.size 		= ",".join([t.encode("utf-8") for t in self.get_arguments("size")])
+			prod.size_id	= ",".join([t.encode("utf-8") for t in self.get_arguments("size")])
 			prod.tags       = ",".join([t.encode("utf-8") for t in self.get_arguments("tags","")])
 
 			respose = prod.Save("one")
@@ -277,24 +277,29 @@ class ProductEditHandler(BaseHandler):
  	def get(self):
  		self.set_active(Menu.PRODUCTOS_CARGA)
 
- 		global load
-
- 		load="old"
-
 		prod = Product()
 		res = prod.InitWithId(self.get_argument("id", ""))
+
+		
 
 		tags = []
 		tag = Tag()
 		res_tags = tag.List(1,100000)
 
+		sizes = []
+		size = Size()
+		res_sizes = size.list()
+
+		if "success" in res_sizes:
+			sizes = res_sizes["success"]
+
 		if "success" in res_tags:
 			tags = res_tags["success"]
 
-		if res == "ok":
-			self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="edit", tags=tags)
+		if "success" in res:
+			self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
 		else:
-			self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="edit", tags=tags)
+			self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
 
  		 
 class FastEditHandler(BaseHandler):
@@ -309,8 +314,8 @@ class FastEditHandler(BaseHandler):
 		if "success" in res:
 
 			prod.name		= self.get_argument("name", "").encode('utf-8')
-			prod.description= self.get_argument("description", "")
-			prod.color 		= self.get_argument("color", "")
+			prod.description= self.get_argument("description", "").encode('utf-8')
+			prod.color 		= self.get_argument("color", "").encode('utf-8')
 			prod.price= self.get_argument("price", "").encode('utf-8')
 			prod.sell_price 	= self.get_argument("sell_price", "").encode('utf-8')
 			prod.category = self.get_argument("category","").encode("utf-8")
@@ -322,6 +327,7 @@ class FastEditHandler(BaseHandler):
 			prod.for_sale = self.get_argument("for_sale",0)
 			prod.upc = prod.upc.encode("utf-8")
 			prod.size = ",".join(prod.size).encode("utf-8")
+			prod.size_id = ','.join(str(v) for v in prod.size_id)
 			prod.material = prod.material.encode("utf-8")
 			prod.bullet_1 = prod.bullet_1.encode("utf-8")
 			prod.bullet_2 = prod.bullet_2.encode("utf-8")
@@ -360,3 +366,28 @@ class ForSaleHandler(BaseHandler):
 			self.write(json_util.dumps(prod.ForSale(product_id)))
 		else:
 			self.write(json_util.dumps({"error":"Product ID proporcionado es inválido"}))
+
+class CheckStockHandler(BaseHandler):
+
+	@tornado.web.authenticated
+	def get(self):
+
+		product_id = self.get_argument("product_id", "")
+		size_id = self.get_argument("size_id", "")
+
+		if product_id != "":
+
+			if size_id != "":
+
+				kardex = Kardex()
+				res_stock = kardex.stockByProductId(product_id, size_id)
+
+				self.write(json_util.dumps(res_stock))
+
+			else:
+				self.write(json_util.dumps(self.showError("size_id esta vacio")))
+
+		else:
+			self.write(json_util.dumps(self.showError("product_id esta vacio")))
+		
+		

@@ -95,9 +95,11 @@ class Cellar(BaseModel):
 		json_string = urllib.urlopen(url).read()
 		json_data = json_util.loads(json_string)
 
+
 		self.identifier = str(json_data["id"])
 		self.name = json_data["name"]
-		self.description = json_data["description"]		
+		self.description = json_data["description"]
+
 
 	def List(self, page, items):
 		url = self.wsurl() + "/cellar/list"
@@ -127,6 +129,8 @@ class Cellar(BaseModel):
 
 		response_str = urllib.urlopen(url, post_data).read()
 
+		print response_str
+
 		return json_util.loads(response_str)
 
 	def RemoveProducts(self, product_sku, quantity, price, size, color, operation, user):
@@ -140,7 +144,7 @@ class Cellar(BaseModel):
 			"quantity": quantity,
 			"price": price,
 			"size": size,
-			"color": color.encode("utf-8"),
+			"color": color,
 			"user": user
 		}
 

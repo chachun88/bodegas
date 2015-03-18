@@ -51,8 +51,10 @@
 							{% if tit == "edit" %}
 							<input placeholder="SKU" id="sku" name="sku_edit" required="required" type="text" class="form-control" value="{{ product.sku }}" disabled>
 							<input name="sku" type="hidden" class="form-control" value="{{ product.sku }}">
+							<input name="product_id" type="hidden" class="form-control" value="{{ product.identifier }}">
 							{% else %}
 							<input placeholder="SKU" id="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}" required>
+							<input name="product_id" type="hidden" class="form-control" value="{{ product.identifier }}">
 							{% end %}
 							</div>
 						</div>
@@ -81,12 +83,9 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">Tallas</label>
 						<div class="controls form-group">
-							<input type="checkbox" name="size" value="35.0" {% if "35.0" in product.size %}checked{% end %}> 35.0<br/>
-							<input type="checkbox" name="size" value="36.0" {% if "36.0" in product.size %}checked{% end %}> 36.0<br/>
-							<input type="checkbox" name="size" value="37.0" {% if "37.0" in product.size %}checked{% end %}> 37.0<br/>
-							<input type="checkbox" name="size" value="38.0" {% if "38.0" in product.size %}checked{% end %}> 38.0<br/>
-							<input type="checkbox" name="size" value="39.0" {% if "39.0" in product.size %}checked{% end %}> 39.0<br/>
-							<input type="checkbox" name="size" value="40.0" {% if "40.0" in product.size %}checked{% end %}> 40.0<br/>
+							{% for s in sizes %}
+							<input type="checkbox" name="size" value="{{s['name']}}" {% if s['name'] in product.size %}checked{% end %}> {{s['name']}}<br/>
+							{% end %}
 						</div>
 					</div>
 					<div class="control-group">
@@ -138,7 +137,7 @@
                                 name="tags" 
                                 id="multiple">
                                 {% for p in tags %}
-                                    {% if str(p['id']) in product.tags %}
+                                    {% if p['id'] in product.tags %}
                                         <option value="{{p['id']}}" selected="selected">{{p['name']}}</option>
                                     {% else %}
                                         <option value="{{p['id']}}">{{p['name']}}</option>

@@ -61,16 +61,6 @@
 												<div class="col-sm-12"><input type="number" required="required" name="price" min="0" placeholder="Precio de producto" autocomplete="off" class="form-control"></div>
 											</div>
 										</div>
-										<div class="control-group">
-											<label for="" class="control-label">Talla</label>
-											<div class="controls form-group">
-												<div class="col-sm-12">
-													<select name="size" class="form-control">
-														<option value="{{ p['size'] }}"> {{ p["size"] }}</option>
-													</select>
-												</div>
-											</div>
-										</div>
 										<input type="hidden" name="color" value="{{p['color']}}">																				
 										<div class="form-actions">
 											<button type="submit" class="btn btn-primary">Sacar</button>
@@ -82,6 +72,7 @@
 									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
 									<input type="hidden" name="transaction" value="eliminado" />
 									<input type="hidden" name="operation" value="sell" />
+									<input type="hidden" name="size" value="{{p['size_id']}}" />
 								</form>
 							</div>
 						</td>
@@ -100,14 +91,7 @@
 											<div class="controls form-group">
 												<div class="col-sm-12"><input type="number" required="required" name="quantity" min="1" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
 											</div>
-											<label for="" class="control-label">Talla</label>
-											<div class="controls form-group">
-												<div class="col-sm-12">
-													<select name="size" class="form-control">
-														<option value="{{ p['size'] }}"> {{ p["size"] }}</option>	
-													</select>
-												</div>
-											</div>
+											<input type="hidden" name="size" value="{{p['size_id']}}" />
 											<input type="hidden" name="color" value="{{p['color']}}">
 											<label for="" class="control-label">Bodega Destino</label>
 											<div class="controls form-group">

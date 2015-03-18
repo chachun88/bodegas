@@ -13,6 +13,7 @@ from bson import json_util
 from base_handler import BaseHandler
 from model10.cellar import Cellar
 from model10.kardex import Kardex
+from model10.size import Size
 
 class CellarAddHandler(BaseHandler):
 	def get(self):
@@ -73,12 +74,21 @@ class CellarFindHandler(BaseHandler):
 		cellar = Cellar()
 
 		if idd != "":
-			cellar.InitById(idd)
+			
+			res_id = cellar.InitById(idd)
+
+			if "success" in res_id:
+				self.write(json_util.dumps(cellar.Print()))
+			else:
+				self.write(json_util.dumps(res_id))
 		else:
-			cellar.InitByName(name)
-		
-		self.write(json_util.dumps(cellar.Print()))
-		pass
+
+			res_name = cellar.InitByName(name)
+
+			if "success" in res_name:
+				self.write(json_util.dumps(cellar.Print()))
+			else:
+				self.write(json_util.dumps(res_name))
 
 class CellarProductsListHandler(BaseHandler):
 	"""docstring for CellarProductsListHandler"""
@@ -129,11 +139,16 @@ class CellarProductsAddHandler(BaseHandler):
 		quantity = self.get_argument("quantity", 0)
 		operation = self.get_argument("operation", "")
 		price = self.get_argument("price", 0)
-		size = self.get_argument("size", "")
+		size_name = self.get_argument("size", "")
 		color = self.get_argument("color", "")
 		user = self.get_argument("user", "")
 
-		# self.write(quantity)
+		size = Size()
+		size.name = size_name
+		res_size = size.initByName()
+
+		if "error" in res_size:
+			return self.write(json_util.dumps(res_size))
 
 		kardex = Kardex()
 
@@ -144,7 +159,7 @@ class CellarProductsAddHandler(BaseHandler):
 		kardex.operation_type = operation
 		kardex.units = quantity
 		kardex.price = price
-		kardex.size = size
+		kardex.size_id = size.id
 
 		kardex.color= color
 		kardex.user = user
@@ -191,10 +206,10 @@ class CellarProductFind(BaseHandler):
 
 		cellar_id = self.get_argument("cellar_id", "")
 		product_sku = self.get_argument("product_sku", "")
-		size = self.get_argument("size", "")
+		size_id = self.get_argument("size_id", "")
 
 		cellar = Cellar()
-		self.write(json_util.dumps(cellar.FindProductKardex(product_sku, cellar_id, size)))
+		self.write(json_util.dumps(cellar.FindProductKardex(product_sku, cellar_id, size_id)))
 		pass
 
 class SelectForSaleHandler(BaseHandler):

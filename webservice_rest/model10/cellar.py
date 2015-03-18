@@ -6,6 +6,8 @@ from basemodel import BaseModel
 
 from kardex import Kardex
 from product import Product
+from size import Size
+
 from bson import json_util
 
 import psycopg2
@@ -18,7 +20,9 @@ import re
 
 from salesman import Salesman
 
+
 class Cellar(BaseModel):
+
     def __init__(self):
         BaseModel.__init__(self)
         self._name = ''
@@ -28,7 +32,8 @@ class Cellar(BaseModel):
 
     @property
     def name(self):
-        return self._name 
+        return self._name
+
     @name.setter
     def name(self, value):
         self._name = value
@@ -36,6 +41,7 @@ class Cellar(BaseModel):
     @property
     def description(self):
         return self._description
+
     @description.setter
     def description(self, value):
         self._description = value
@@ -43,6 +49,7 @@ class Cellar(BaseModel):
     @property
     def city(self):
         return self._city
+
     @city.setter
     def city(self, value):
         self._city = value
@@ -50,13 +57,12 @@ class Cellar(BaseModel):
     @property
     def for_sale(self):
         return self._for_sale
+
     @for_sale.setter
     def for_sale(self, value):
         self._for_sale = value
-    
-    
 
-    ## override
+    # override
     def Remove(self):
 
         is_empty = True
@@ -66,94 +72,90 @@ class Cellar(BaseModel):
         query = '''select * from "Kardex" where cellar_id = %(cellar_id)s'''
 
         parametros = {
-        "cellar_id":self.id
+            "cellar_id": self.id
         }
 
-        cur.execute(query,parametros)
+        cur.execute(query, parametros)
 
         kardex = cur.fetchall()
 
         for k in kardex:
 
-            query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s order by id desc limit 1'''
+            query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s order by id desc limit 1'''
 
             parametros = {
-            "product_sku":k["product_sku"],
-            "cellar_id":self.id,
-            "size":k["size"]
+                "product_sku": k["product_sku"],
+                "cellar_id": self.id,
+                "size_id": k["size_id"]
             }
 
-            cur.execute(query,parametros)
+            cur.execute(query, parametros)
 
             _kardex = cur.fetchone()
 
             if _kardex:
-                if int(_kardex["balance_units"]) >=1:
+                if int(_kardex["balance_units"]) >= 1:
                     is_empty = False
 
         if is_empty:
-            
+
             query = '''update "User" set cellar_permissions = cellar_permissions - array[%(cellar_id)s]'''
             parametros = {
-            "cellar_id":self.id
+                "cellar_id": self.id
             }
 
-            cur.execute(query,parametros)
+            cur.execute(query, parametros)
             self.connection.commit()
-
 
             return BaseModel.Remove(self)
 
         else:
             return self.ShowError("No se puede eliminar, aún contiene productos.")
 
-
     def GetTotalUnits(self):
-
-        
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select distinct product_id, size_id from "Kardex" k where k.cellar_id = %(id)s'''
+        query = '''select distinct product_sku, size_id from "Kardex" k where k.cellar_id = %(id)s'''
         parametros = {
-        "id":self.id
+            "id": self.id
         }
-        cur.execute(query,parametros)
-        psku = cur.fetchall()
+        cur.execute(query, parametros)
+        pproduct_sku = cur.fetchall()
 
         kardex = Kardex()
         total_units = 0
 
-        for p in psku:
+        for p in pproduct_sku:
 
-            response = kardex.FindKardex(p["product_id"],self.id,p["size_id"])
+            response = kardex.FindKardex(
+                p["product_sku"], self.id, p["size_id"])
 
             if "success" in response:
                 total_units += kardex.balance_units
-            else:
-                print response["error"]
-            
+            # else:
+            #     print response["error"]
 
         return int(total_units)
 
     def GetTotalPrice(self):
-        
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select distinct product_id, size_id from "Kardex" where cellar_id = %(id)s'''
+        query = '''select distinct product_sku, size_id from "Kardex" where cellar_id = %(id)s'''
         parametros = {
-        "id":self.id
+            "id": self.id
         }
-        cur.execute(query,parametros)
-        psku = cur.fetchall()
+        cur.execute(query, parametros)
+        pproduct_sku = cur.fetchall()
 
         kardex = Kardex()
         total_price = 0
 
-        for p in psku:
+        for p in pproduct_sku:
 
-            response = kardex.FindKardex(p["product_id"],self.id,p["size_id"])
+            response = kardex.FindKardex(
+                p["product_sku"], self.id, p["size_id"])
 
             if "success" in response:
                 total_price += kardex.balance_total
@@ -164,21 +166,18 @@ class Cellar(BaseModel):
 
     #@return json
     def Print(self):
-        try:
-            me = {"id":self.id,
-                "name" : self.name,
-                "description": self.description,
-                "for_sale":self.for_sale,
-                "total_price": self.GetTotalPrice(),
-                "total_units": self.GetTotalUnits()}
 
-            return me
-        except Exception,e:
-            # return self.ShowError("failed to print cellar, error:{}".format(e))
-            pass
+        me = {"id": self.id,
+              "name": self.name,
+              "description": self.description,
+              "for_sale": self.for_sale,
+              "total_price": self.GetTotalPrice(),
+              "total_units": self.GetTotalUnits()}
+
+        return me
 
     @staticmethod
-    def CellarExists( cellar_name ):
+    def CellarExists(cellar_name):
 
         bm = BaseModel()
 
@@ -186,26 +185,26 @@ class Cellar(BaseModel):
 
         query = '''select * from "Cellar" where name = %(name)s limit 1'''
         parametros = {
-        "name":cellar_name
+            "name": cellar_name
         }
-        cur.execute(query,parametros)
-        cellar = cur.fetchone()
+        
+        cur.execute(query, parametros)
 
-        if cellar:
+        if cur.rowcount > 0:
             return True
         else:
             return False
 
-    ## validates and save cellar, it could be validated by name
+    # validates and save cellar, it could be validated by name
     def Save(self):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         query = '''select * from "Cellar" where name = %(name)s limit 1'''
         parametros = {
-        "name":self.name
+            "name": self.name
         }
-        cur.execute(query,parametros)
+        cur.execute(query, parametros)
         cellar = cur.fetchone()
 
         if cellar:
@@ -213,43 +212,41 @@ class Cellar(BaseModel):
             try:
                 query = '''update "Cellar" set description = %(description)s, name = %(name)s, city_id = %(city)s where id = %(id)s returning id'''
                 parametros = {
-                "description": self.description,
-                "name": self.name,
-                "id":cellar['id'],
-                "city":self.city
+                    "description": self.description,
+                    "name": self.name,
+                    "id": cellar['id'],
+                    "city": self.city
                 }
-                cur.execute(query,parametros)
+                cur.execute(query, parametros)
                 self.connection.commit()
                 self.id = cur.fetchone()[0]
                 self.InitById(self.id)
 
                 return self.ShowSuccessMessage(self.id)
 
-            except Exception,e:
-                return self.ShowError("failed to update cellar {}, error:{}".format(self.name,str(e)))
+            except Exception, e:
+                return self.ShowError("failed to update cellar {}, error:{}".format(self.name, str(e)))
 
         else:
 
             try:
                 query = '''insert into "Cellar" (description, name,city_id) values (%(description)s,%(name)s,%(city_id)s) returning id'''
                 parametros = {
-                "description": self.description,
-                "name": self.name,
-                "city_id":self.city
+                    "description": self.description,
+                    "name": self.name,
+                    "city_id": self.city
                 }
-                cur.execute(query,parametros)
+                cur.execute(query, parametros)
                 self.connection.commit()
                 self.id = cur.fetchone()[0]
                 self.InitById(self.id)
 
                 return self.ShowSuccessMessage(self.id)
 
-            except Exception,e:
-                return self.ShowError("failed to save cellar {}, error:{}".format(self.name,str(e)))            
-        
+            except Exception, e:
+                return self.ShowError("failed to save cellar {}, error:{}".format(self.name, str(e)))
 
     def GetList(self, page, items):
-        
 
         page = int(page)
         items = int(items)
@@ -259,69 +256,78 @@ class Cellar(BaseModel):
 
         query = '''select * from "Cellar" limit %(items)s offset %(offset)s'''
         parametros = {
-        "items":items,
-        "offset":offset
+            "items": items,
+            "offset": offset
         }
 
-        cur.execute(query,parametros)
+        cur.execute(query, parametros)
         cellars = cur.fetchall()
 
-        data_rtn = [] ## return this data
+        data_rtn = []  # return this data
 
         for d in cellars:
 
-          cellar = Cellar()
-          cellar.id = d["id"]
-          cellar.name = d["name"]
-          cellar.description = d["description"]
-          cellar.city = d["city_id"]
-          cellar.for_sale = d["for_sale"]
+            cellar = Cellar()
+            cellar.id = d["id"]
+            cellar.name = d["name"]
+            cellar.description = d["description"]
+            cellar.city = d["city_id"]
+            cellar.for_sale = d["for_sale"]
 
-          data_rtn.append(cellar.Print())
+            data_rtn.append(cellar.Print())
 
         return json_util.dumps(data_rtn)
 
         # return json_util.dumps(cellars)
 
-    ### WARNING: this method is not opmitimized
+    #  WARNING: this method is not opmitimized
     #@return direct database collection
     @staticmethod
     def GetAllCellars():
-        
 
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        conn = BaseModel().connection
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         query = '''select * from "Cellar"'''
-        cur.execute(query)
-        cellar = cur.fetchall()
 
-        data_rtn = []
+        try:
+            cur.execute(query)
+            cellar = cur.fetchall()
 
-        for c in cellar:
-            cellar = Cellar()
-            self.id = c['id']
-            self.name = c['name']
-            self.description = c['description']
-            self.city = d["city_id"]
-            self.for_sale = d["for_sale"]
+            data_rtn = []
 
-            data_rtn.append(cellar.Print())
+            for c in cellar:
+                cellar = Cellar()
+                cellar.id = c['id']
+                cellar.name = c['name']
+                cellar.description = c['description']
+                cellar.city = c["city_id"]
+                cellar.for_sale = c["for_sale"]
 
-        return data_rtn
+                data_rtn.append(cellar.Print())
+
+            return data_rtn
+
+        except Exception, e:
+            print "Get all cellars {}".format(str(e))
+        finally:
+            conn.close()
+            cur.close()
 
     def InitByName(self, name):
-        
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         query = '''select * from "Cellar" where name = %(name)s limit 1'''
         parametros = {
-        "name":name
+            "name": name
         }
-        cur.execute(query,parametros)
-        cellar = cur.fetchone()
+        cur.execute(query, parametros)
 
-        if cellar:
+        if cur.rowcount > 0:
+
+            cellar = cur.fetchone()
+
             self.id = cellar['id']
             self.name = cellar['name']
             self.description = cellar['description']
@@ -334,18 +340,17 @@ class Cellar(BaseModel):
             return self.ShowError("item not found")
 
     def InitById(self, idd):
-        
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         query = '''select * from "Cellar" where id = %(id)s limit 1'''
         parametros = {
-        "id":idd
+            "id": idd
         }
-        cur.execute(query,parametros)
+        cur.execute(query, parametros)
         cellar = cur.fetchone()
 
-        if cellar:
+        if cur.rowcount > 0:
             self.id = cellar['id']
             self.name = cellar['name']
             self.description = cellar['description']
@@ -358,51 +363,62 @@ class Cellar(BaseModel):
             return self.ShowError("item not found")
 
     def ListProducts(self, page, items):
-        
 
         rtn_data = []
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select distinct product_sku, size from "Kardex" where cellar_id = %(id)s order by product_sku'''
+        query = '''select distinct product_sku, size_id from "Kardex" where cellar_id = %(id)s order by product_sku'''
         parametros = {
-        "id":self.id
+            "id": self.id
         }
-        cur.execute(query,parametros)
-        psku = cur.fetchall()
+        cur.execute(query, parametros)
+        pproduct_sku = cur.fetchall()
 
         kardex = Kardex()
 
-        for p in psku:
+        for p in pproduct_sku:
             product = Product()
             # print "SKU:{}".format(p["product_sku"])
-            response_obj = product.InitBySku(p["product_sku"])
+            response_obj = product.InitById(p["product_sku"])
 
             if "error" not in response_obj:
 
                 prod_print = response_obj["success"]
 
-                response_obj = kardex.FindKardex(p["product_sku"], self.id, p["size"])
+                response_obj = kardex.FindKardex(
+                    p["product_sku"], self.id, p["size_id"])
 
                 if "success" in response_obj:
 
-                    prod_print["balance_units"] = kardex.balance_units
-                    prod_print["balance_price"] = kardex.balance_price
-                    prod_print["balance_total"] = kardex.balance_total
-                    prod_print["size"]          = kardex.size
+                    size = Size()
+                    size.id = kardex.size_id
 
-                    rtn_data.append(prod_print)
+                    res_size_id = size.initById()
+
+                    size_name = ""
+
+                    if "success" in res_size_id:
+
+                        prod_print["balance_units"] = kardex.balance_units
+                        prod_print["balance_price"] = kardex.balance_price
+                        prod_print["balance_total"] = kardex.balance_total
+                        prod_print["size_id"] = kardex.size_id
+                        prod_print["size"] = size.name
+
+                        rtn_data.append(prod_print)
+
+                    else:
+                        return res_size_id
 
                 else:
-                    print "error en findkardex"
                     return response_obj
 
             else:
                 print response_obj["error"]
                 # return response_obj
-        
-        return rtn_data
 
+        return rtn_data
 
     def ListKardex(self, page, items, day, fromm, until):
 
@@ -428,12 +444,13 @@ class Cellar(BaseModel):
 
             query += """ and operation_type = 'sell'"""
             # data = db.kardex.find( json_util.loads(str_query) )
-            cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur = self.connection.cursor(
+                cursor_factory=psycopg2.extras.DictCursor)
             cur.execute(query)
             data = cur.fetchall()
 
             return data
-            
+
         if day == "period":
 
             # ffrom=fromm.split("-")
@@ -448,8 +465,8 @@ class Cellar(BaseModel):
             # until_m=int(untill[1])
             # until_d=int(untill[2])
 
-            # # now = datetime.datetime.now()
-            # # yesterday = now - datetime.timedelta(days=30)   
+            # now = datetime.datetime.now()
+            # yesterday = now - datetime.timedelta(days=30)
 
             # start_date = datetime.datetime(from_y, from_m, from_d, 0, 0, 0)
             # end_date = datetime.datetime(until_y, until_m, until_d, 23, 59, 59)
@@ -462,46 +479,43 @@ class Cellar(BaseModel):
 
             query = """select k.*, c.name from "Kardex" k inner join "Cellar" c on c.id = k.cellar_id where date(date) between %(start_date)s and %(end_date)s and operation_type = 'sell'"""
             parameters = {
-            "start_date":fromm,
-            "end_date":until
+                "start_date": fromm,
+                "end_date": until
             }
-            cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur = self.connection.cursor(
+                cursor_factory=psycopg2.extras.DictCursor)
             cur.execute(query, parameters)
             data = cur.fetchall()
             return data
 
-    def FindProductKardex(self, product_sku, cellar_identifier, size):
+    def FindProductKardex(self, product_sku, cellar_identifier, size_id):
 
-        
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)     
+        if cellar_identifier == "remove" and size_id == "remove":
 
-        if cellar_identifier == "remove" and size == "remove":
-            
-            query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and size = %(size)s group by operation_type'''
+            query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and size_id = %(size_id)s group by operation_type'''
             parametros = {
-            "product_sku":product_sku,
-            "size":size
+                "product_sku": product_sku,
+                "size_id": size_id
             }
             cur.execute(query, parametros)
             result = cur.fetchall()
             return result
         else:
 
-            query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s group by operation_type'''
+            query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s group by operation_type'''
             parametros = {
-            "product_sku":product_sku,
-            "cellar_id":cellar_identifier,
-            "size":size
+                "product_sku": product_sku,
+                "cellar_id": cellar_identifier,
+                "size_id": size_id
             }
             cur.execute(query, parametros)
             result = cur.fetchall()
             return result
 
-
-
     def Rename(self, new_name):
-        
+
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         try:
@@ -511,21 +525,21 @@ class Cellar(BaseModel):
 
             query = '''update "Cellar" set name = %(name)s where id = %(id)s'''
             parametros = {
-            "name":new_name,
-            "id":self.id
+                "name": new_name,
+                "id": self.id
             }
 
-            cur.execute(query,parametros)
+            cur.execute(query, parametros)
             self.connection.commit()
             self.name = new_name
             self.ShowSuccessMessage("name changed correctly")
         except:
             self.ShowError("error changing name")
 
+    def SelectForSale(self, cellar_id):
 
-    def SelectForSale(self,cellar_id):
-
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur = self.connection.cursor(
+            cursor_factory=psycopg2.extras.RealDictCursor)
 
         try:
             query = '''update "Cellar" set for_sale = 0'''
@@ -533,12 +547,12 @@ class Cellar(BaseModel):
 
             query = '''update "Cellar" set for_sale = 1 where id = %(id)s'''
             parameters = {
-            "id":cellar_id
+                "id": cellar_id
             }
-            cur.execute(query,parameters)
+            cur.execute(query, parameters)
             self.connection.commit()
             return self.ShowSuccessMessage(cellar_id)
-        except Exception,e:
+        except Exception, e:
             return self.ShowError(str(e))
         finally:
             self.connection.close()
@@ -546,14 +560,15 @@ class Cellar(BaseModel):
 
     def GetWebCellar(self):
 
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur = self.connection.cursor(
+            cursor_factory=psycopg2.extras.RealDictCursor)
 
         try:
             query = '''select id from "Cellar" where for_sale = 1 limit 1'''
             cur.execute(query)
             cellar = cur.fetchone()["id"]
             return self.ShowSuccessMessage(cellar)
-        except Exception,e:
+        except Exception, e:
             return self.ShowError(str(e))
         finally:
             self.connection.close()
@@ -561,22 +576,24 @@ class Cellar(BaseModel):
 
     def GetReservationCellar(self):
 
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur = self.connection.cursor(
+            cursor_factory=psycopg2.extras.RealDictCursor)
 
         try:
             query = '''select id from "Cellar" where reservation = 1 limit 1'''
             cur.execute(query)
             cellar = cur.fetchone()["id"]
             return self.ShowSuccessMessage(cellar)
-        except Exception,e:
+        except Exception, e:
             return self.ShowError(str(e))
         finally:
             self.connection.close()
             cur.close()
 
-    def SelectReservation(self,cellar_id):
+    def SelectReservation(self, cellar_id):
 
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur = self.connection.cursor(
+            cursor_factory=psycopg2.extras.RealDictCursor)
 
         try:
             query = '''update "Cellar" set reservation = 0'''
@@ -584,12 +601,12 @@ class Cellar(BaseModel):
 
             query = '''update "Cellar" set reservation = 1 where id = %(id)s'''
             parameters = {
-            "id":cellar_id
+                "id": cellar_id
             }
-            cur.execute(query,parameters)
+            cur.execute(query, parameters)
             self.connection.commit()
             return self.ShowSuccessMessage(cellar_id)
-        except Exception,e:
+        except Exception, e:
             return self.ShowError(str(e))
         finally:
             self.connection.close()
