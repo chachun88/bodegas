@@ -470,9 +470,6 @@ class Product(BaseModel):
         # parse content to array data
         data = json_util.loads(content)
 
-        if "success" in data:
-            self.identifier = data["success"]["id"]
-
         return data
 
     def Search(self, query):

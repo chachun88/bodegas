@@ -393,7 +393,7 @@ class Kardex(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select sum(balance_units) as total from 
+        query = '''select coalesce(sum(balance_units),0) as total from 
                 (select distinct on(cellar_id) cellar_id, balance_units from "Kardex" 
                     where product_sku = %(product_sku)s 
                     and size_id = %(size_id)s 
@@ -406,6 +406,9 @@ class Kardex(BaseModel):
         }
 
         try:
+
+            # print cur.mogrify(query, parametros)
+
             cur.execute(query,parametros)
             total = cur.fetchone()["total"]
 
@@ -428,5 +431,5 @@ class Kardex(BaseModel):
             return self.ShowSuccessMessage(total)
 
         except Exception,e:
-            return self.ShowError("getting stock by product id, {}".format(str(e)))
+            return self.ShowError("getting stock by product sku, {}".format(str(e)))
 

@@ -308,7 +308,7 @@ class Product(BaseModel):
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        sizes = self.size_id.split(',')
+        sizes = self.size.split(',')
 
         q = '''select count(*) as cantidad from "Product" where sku = %(sku)s'''
         p = {
@@ -410,14 +410,13 @@ class Product(BaseModel):
 
             for size in sizes:
 
-                _size = Size()
-                _size.name = size
-                res_size = _size.initByName()
+                if size.strip() != "":
+                    _size = Size()
+                    _size.name = size
+                    res_name = _size.initByName()
 
-                if "error" in res_size:
-                    return res_size
-
-                sizes_id.append(_size.id)
+                    if "success" in res_name:
+                        sizes_id.append(_size.id)
 
             for size_id in sizes_id:
 
@@ -555,49 +554,13 @@ class Product(BaseModel):
 
             for size in sizes:
 
-                cur = self.connection.cursor(
-                    cursor_factory=psycopg2.extras.RealDictCursor)
+                if size.strip() != "":
+                    _size = Size()
+                    _size.name = size
+                    res_name = _size.initByName()
 
-                q = '''select id from "Size" where name = %(size)s'''
-
-                p = {
-                    "size": size
-                }
-
-                try:
-                    cur.execute(q, p)
-
-                    if cur.rowcount > 0:
-
-                        identifier = cur.fetchone()["id"]
-
-                        sizes_id.append(identifier)
-
-                    else:
-
-                        cur1 = self.connection.cursor(
-                            cursor_factory=psycopg2.extras.RealDictCursor)
-
-                        q1 = '''insert into "Size" (name) values (%(name)s) returning id'''
-
-                        p1 = {"name": size}
-
-                        try:
-                            cur1.execute(q1, p1)
-                            self.connection.commit()
-                            identifier = cur1.fetchone()["id"]
-                            sizes_id.append(identifier)
-                        except Exception, e:
-                            return self.ShowError("2. Inserting size, {}".format(e))
-                        finally:
-                            self.connection.close()
-                            cur1.close()
-
-                except Exception, e:
-                    return self.ShowError("Error updating product size, {}".format(str(e)))
-                finally:
-                    cur.close()
-                    self.connection.close()
+                    if "success" in res_name:
+                        sizes_id.append(_size.id)
 
             for size_id in sizes_id:
 
@@ -613,7 +576,7 @@ class Product(BaseModel):
 
                     if cur.rowcount == 0:
 
-                        cellars = Cellar.GetAllCellars()
+                        cellars = model10.cellar.Cellar.GetAllCellars()
 
                         for c in cellars:
 
@@ -759,12 +722,13 @@ class Product(BaseModel):
 
                 for size in sizes:
 
-                    _size = Size()
-                    _size.name = size
-                    res_name = _size.initByName()
+                    if size.strip() != "":
+                        _size = Size()
+                        _size.name = size
+                        res_name = _size.initByName()
 
-                    if "success" in res_name:
-                        sizes_id.append(res_name["success"])
+                        if "success" in res_name:
+                            sizes_id.append(_size.id)
 
                 for size_id in sizes_id:
 
@@ -777,7 +741,7 @@ class Product(BaseModel):
 
                         if total == 0:
 
-                            cellars = Cellar.GetAllCellars()
+                            cellars = model10.cellar.Cellar.GetAllCellars()
 
                             for c in cellars:
 
@@ -834,7 +798,7 @@ class Product(BaseModel):
 
         q = '''select string_agg(s.name,',') as size, array_agg(s.size_id) as size_id, p.*, c.name as category from "Product" p 
                 inner join "Category" c on c.id = p.category_id 
-                inner join sizes s on s.product_id = p.id
+                inner join sizes s on s.product_sku = p.sku
                 where p.sku = %(sku)s group by p.id, c.name limit 1'''
         p = {
             "sku": sku
@@ -873,7 +837,7 @@ class Product(BaseModel):
 
         q = '''select string_agg(s.name,',') as size, array_agg(s.size_id) as size_id, p.*, c.name as category from "Product" p 
                 inner join "Category" c on c.id = p.category_id 
-                inner join sizes s on s.product_id = p.id
+                inner join sizes s on s.product_sku = p.sku
                 where p.id = %(id)s group by p.id, c.name limit 1'''
         p = {
             "id": identifier
@@ -977,7 +941,7 @@ class Product(BaseModel):
         try:
             q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
             inner join "Category" c on c.id = p.category_id 
-            inner join sizes s on s.product_id = p.id
+            inner join sizes s on s.product_sku = p.sku
             group by p.id, c.name limit %(items)s offset %(offset)s'''
             p = {
                 "items": items,

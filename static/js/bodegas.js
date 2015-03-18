@@ -85,7 +85,7 @@
 	{
 		// agregar productos a bodega
 		var cellar_id = $("input[name=cellar_id]", $(this)).val();
-		var product_id = $("input[name=product_id]", $(this)).val();
+		var product_sku = $("input[name=product_sku]", $(this)).val();
 		var quantity = $("input[name=quantity]", $(this)).val();
 		var price = $("input[name=price]", $(this)).val();
 		var size = $("input[name=size]", $(this)).val();
@@ -124,7 +124,7 @@
 
 		var post_data = {
 			"cellar_id":cellar_id,
-			"product_id":product_id,
+			"product_sku":product_sku,
 			"quantity":quantity,
 			"price":price,
 			"size":size,

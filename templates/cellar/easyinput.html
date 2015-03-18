@@ -66,7 +66,7 @@
 												<div class="col-sm-12"><input type="number" required="required" name="price" min="0" placeholder="precio de compra" autocomplete="off" class="form-control" value="{{p['price']}}"></div>
 											</div>
 										</div>
-										<input name="size" id="size" type="hidden" value="{{p['size_id']}}">
+										<input name="size" id="size" type="hidden" value="{{p['size']}}">
 										<input type="hidden" name="color" id="color" value="{{p['color']}}">
 										<div class="control-group">
 											<label for="" class="control-label"></label>
@@ -75,7 +75,7 @@
 											</div>
 										</div>
 									</fieldset>
-									<input type="hidden" name="product_id" value='{{ p["id"] }}' />
+									<input type="hidden" name="product_sku" value='{{ p["sku"] }}' />
 									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />

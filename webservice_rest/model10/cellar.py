@@ -380,7 +380,7 @@ class Cellar(BaseModel):
         for p in pproduct_sku:
             product = Product()
             # print "SKU:{}".format(p["product_sku"])
-            response_obj = product.InitById(p["product_sku"])
+            response_obj = product.InitBySku(p["product_sku"])
 
             if "error" not in response_obj:
 

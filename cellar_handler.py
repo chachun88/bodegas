@@ -127,7 +127,7 @@ class CellarEasyInputHandler(BaseHandler):
 	@tornado.web.authenticated
 	def post(self):
 		cellar_id = self.get_argument("cellar_id", "")
-		product_id = self.get_argument("product_id", "")
+		product_sku = self.get_argument("product_sku", "")
 		quantity = self.get_argument("quantity", "")
 		price = self.get_argument("price", "")
 		size = self.get_argument("size", "")
@@ -138,7 +138,7 @@ class CellarEasyInputHandler(BaseHandler):
 		cellar.InitWithId(cellar_id)
 
 		product = Product()
-		product.InitWithId(product_id)
+		product.InitWithSku(product_sku)
 
 		product.size=size
 		product.description = product.description.encode("utf-8")
@@ -146,7 +146,7 @@ class CellarEasyInputHandler(BaseHandler):
 		product.tags = ",".join(product.tags)
 		product.Save()
 
-		res_add_product = cellar.AddProducts(product_id, quantity, price, size, product.color, operation, self.get_user_email() )
+		res_add_product = cellar.AddProducts(product_sku, quantity, price, size, product.color, operation, self.get_user_email() )
 
 		if "success" in res_add_product:
 			self.write("ok")
