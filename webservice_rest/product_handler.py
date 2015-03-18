@@ -178,15 +178,15 @@ class CheckStockHandler(BaseHandler):
 
     def post(self):
 
-        product_id = self.get_argument("product_id", "")
+        product_sku = self.get_argument("product_sku", "")
         size_id = self.get_argument("size_id", "")
 
-        if product_id != "":
+        if product_sku != "":
             if size_id != "":
                 kardex = Kardex()
-                res_stock = kardex.stockByProductId(product_id, size_id)
+                res_stock = kardex.stockByProductSku(product_sku, size_id)
                 self.write(json_util.dumps(res_stock))
             else:
                 self.write(json_util.dumps({"error": "size id esta vacio"}))
         else:
-            self.write(json_util.dumps({"error": "product id esta vacio"}))
+            self.write(json_util.dumps({"error": "product sku esta vacio"}))

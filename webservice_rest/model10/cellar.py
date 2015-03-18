@@ -187,7 +187,7 @@ class Cellar(BaseModel):
         parametros = {
             "name": cellar_name
         }
-        
+
         cur.execute(query, parametros)
 
         if cur.rowcount > 0:
@@ -427,11 +427,17 @@ class Cellar(BaseModel):
         if day == "today":
             # now = datetime.datetime.now()
             # yesterday = now - datetime.timedelta(days=1)
-            query = """select k.*, c.name from "Kardex" k inner join "Cellar" c on c.id = k.cellar_id where date(date) = DATE 'today'"""
+            query = """select k.*, c.name, s.name as size from "Kardex" k 
+                    inner join "Cellar" c on c.id = k.cellar_id 
+                    inner join "Size" s on s.id = k.size_id
+                    where date(date) = DATE 'today'"""
         if day == "yesterday":
             # now = datetime.datetime.now() - datetime.timedelta(days=1)
             # yesterday = now - datetime.timedelta(days=2)
-            query = """select k.*, c.name from "Kardex" k inner join "Cellar" c on c.id = k.cellar_id where date(date) = DATE 'yesterday'"""
+            query = """select k.*, c.name, s.name as size from "Kardex" k 
+                    inner join "Cellar" c on c.id = k.cellar_id 
+                    inner join "Size" s on s.id = k.size_id
+                    where date(date) = DATE 'yesterday'"""
 
         if day == "today" or day == "yesterday":
 
@@ -477,7 +483,10 @@ class Cellar(BaseModel):
             # data = db.kardex.find( json_util.loads(str_query) )
             # return data
 
-            query = """select k.*, c.name from "Kardex" k inner join "Cellar" c on c.id = k.cellar_id where date(date) between %(start_date)s and %(end_date)s and operation_type = 'sell'"""
+            query = """select k.*, c.name, s.name as size from "Kardex" k 
+                    inner join "Cellar" c on c.id = k.cellar_id 
+                    inner join "Size" s on s.id = k.size_id
+                    where date(date) between %(start_date)s and %(end_date)s and operation_type = 'sell'"""
             parameters = {
                 "start_date": fromm,
                 "end_date": until
@@ -499,9 +508,16 @@ class Cellar(BaseModel):
                 "product_sku": product_sku,
                 "size_id": size_id
             }
-            cur.execute(query, parametros)
-            result = cur.fetchall()
-            return result
+
+            try:
+                cur.execute(query, parametros)
+                result = cur.fetchall()
+                return self.ShowSuccessMessage(result)
+            except Exception, e:
+                return self.ShowError("get total by sku and size, {}".format(str(e)))
+            finally:
+                self.connection.close()
+                cur.close()
         else:
 
             query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s group by operation_type'''
@@ -510,9 +526,18 @@ class Cellar(BaseModel):
                 "cellar_id": cellar_identifier,
                 "size_id": size_id
             }
-            cur.execute(query, parametros)
-            result = cur.fetchall()
-            return result
+
+            print cur.mogrify(query, parametros)
+
+            try:
+                cur.execute(query, parametros)
+                result = cur.fetchall()
+                return self.ShowSuccessMessage(result)
+            except Exception, e:
+                return self.ShowError("get total by sku and size, {}".format(str(e)))
+            finally:
+                self.connection.close()
+                cur.close()
 
     def Rename(self, new_name):
 

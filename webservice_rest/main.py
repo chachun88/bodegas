@@ -154,8 +154,8 @@ class Application(tornado.web.Application):
 
             (r"/webpay/initbyorderid",               webpay_handler.InitByOrderIdHandler),
 
-            (r"/size/list",               size_handler.ListHandler)
-            
+            (r"/size/list",               size_handler.ListHandler),
+            (r"/size/initbyname",               size_handler.InitByNameHandler)
             ]
 
         settings = dict(

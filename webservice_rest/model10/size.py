@@ -41,7 +41,7 @@ class Size(BaseModel):
                 talla = cur.fetchone()
                 self.name = talla["name"]
 
-                return self.ShowSuccessMessage("Size have been successfully initialized")
+                return self.ShowSuccessMessage(talla)
 
             else:
 
@@ -103,7 +103,7 @@ class Size(BaseModel):
                 talla = cur.fetchone()
                 self.id = talla["id"]
 
-                return self.ShowSuccessMessage("Size have been successfully initialized")
+                return self.ShowSuccessMessage(talla)
 
             else:
 

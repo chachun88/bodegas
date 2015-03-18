@@ -122,6 +122,8 @@
 			price="0"
 		}
 
+		console.info(price);
+
 		var post_data = {
 			"cellar_id":cellar_id,
 			"product_sku":product_sku,
@@ -332,12 +334,12 @@
  	$("#product-form input[name=size]").click(function(){
 
  		var size = $(this).val();
- 		var product_id = $("#product-form input[name=product_id]").val();
+ 		var product_sku = $("#product-form input[name=sku]").val();
  		var obj = $(this);
 
  		$.ajax({
  			url: "/product/checkstock",
- 			data: "size_id=" + size + "&product_id=" + product_id,
+ 			data: "size_name=" + size + "&product_sku=" + product_sku,
  			type: "get",
  			dataType: "json",
  			success: function(response){

@@ -5,22 +5,11 @@ import os.path
 
 import os
 
-import pymongo
-
 import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
-from tornado.options import define, options
-
-import xlrd #lib excel
-import os
-import commands
-import cgi, cgitb
-import cgi, os
-import cgitb; cgitb.enable()
-import sys
 import glob
 
 from bson import json_util
@@ -176,7 +165,7 @@ class ProductAddHandler(BaseHandler):
 
         
 
-        res = prod.InitWithId(self.get_argument("sku", ""))
+        res = prod.InitWithSku(self.get_argument("sku", ""))
 
         print res
 
@@ -191,7 +180,7 @@ class ProductAddHandler(BaseHandler):
             prod.description= self.get_argument("description", "").encode('utf-8')
             prod.brand      = self.get_argument("brand", "").encode('utf-8')
             prod.manufacturer= self.get_argument("manufacturer", "")
-            prod.size_id        = ",".join(self.get_arguments("size"))
+            prod.size        = ",".join(self.get_arguments("size"))
             prod.color      = self.get_argument("color", "").encode('utf-8')
             prod.material   = self.get_argument("material", "")
             prod.bullet_1   = self.get_argument("bullet_1", "")
@@ -367,27 +356,37 @@ class ForSaleHandler(BaseHandler):
         else:
             self.write(json_util.dumps({"error":"Product ID proporcionado es inválido"}))
 
+
 class CheckStockHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
 
-        product_id = self.get_argument("product_id", "")
-        size_id = self.get_argument("size_id", "")
+        product_sku = self.get_argument("product_sku", "")
+        size_name = self.get_argument("size_name", "")
 
-        if product_id != "":
+        if product_sku != "":
 
-            if size_id != "":
+            if size_name != "":
 
-                kardex = Kardex()
-                res_stock = kardex.stockByProductId(product_id, size_id)
+                size = Size()
+                size.name = size_name
 
-                self.write(json_util.dumps(res_stock))
+                res_size_name = size.initByName()
+
+                if "success" in res_size_name:
+
+                    kardex = Kardex()
+                    res_stock = kardex.stockByProductId(product_sku, size.identifier)
+
+                    self.write(json_util.dumps(res_stock))
+
+                else:
+
+                    self.write(json_util.dumps(res_size_name))
 
             else:
                 self.write(json_util.dumps(self.showError("size_id esta vacio")))
 
         else:
-            self.write(json_util.dumps(self.showError("product_id esta vacio")))
-        
-        
+            self.write(json_util.dumps(self.showError("product_sku esta vacio")))

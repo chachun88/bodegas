@@ -51,10 +51,8 @@
 							{% if tit == "edit" %}
 							<input placeholder="SKU" id="sku" name="sku_edit" required="required" type="text" class="form-control" value="{{ product.sku }}" disabled>
 							<input name="sku" type="hidden" class="form-control" value="{{ product.sku }}">
-							<input name="product_id" type="hidden" class="form-control" value="{{ product.identifier }}">
 							{% else %}
 							<input placeholder="SKU" id="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}" required>
-							<input name="product_id" type="hidden" class="form-control" value="{{ product.identifier }}">
 							{% end %}
 							</div>
 						</div>
