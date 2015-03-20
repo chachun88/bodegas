@@ -34,11 +34,18 @@ class ProductAddHandler(BaseHandler):
         tag = Tag()
         res_tags = tag.List(1,100000)
 
+        sizes = []
+        size = Size()
+        res_sizes = size.list()
+
+        if "success" in res_sizes:
+            sizes = res_sizes["success"]
+
         if "success" in res_tags:
             tags = res_tags["success"]
 
         prod = Product()
-        self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="add", tags=tags)
+        self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="add", tags=tags, sizes=sizes)
 
 
     def saveImage( self, imagedata, sku, image_number ):
