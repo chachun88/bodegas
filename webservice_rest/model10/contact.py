@@ -211,9 +211,11 @@ class Contact(BaseModel):
 
 		try:
 
-			query = '''select c.id, c.user_id, c.city_id, c.name, c.email, c.address, c.telephone, c.zip_code, c.lastname, c.additional_info, c.lastname, c.town, c.rut, ct.name as type, city.name as city from "Contact" c 
+			query = '''select c.id, c.user_id, c.city_id, c.name, c.email, c.address, c.telephone, c.zip_code, c.lastname, c.additional_info, c.lastname, c.town, c.rut, ct.name as type, city.name as city 
+			from "Contact" c 
 			inner join "Contact_Types" ct on ct.id = c.type_id 
 			inner join "City" city on city.id = c.city_id
+			inner join "User" user on u.id = c.user_id
 			where user_id = %(user_id)s'''
 			parametros = {
 			"user_id":_user_id
