@@ -254,7 +254,7 @@ class ProductAddHandler(BaseHandler):
             # size_arr = self.get_argument("size", "").split(",")
             # size_arr = [s.encode("utf-8") for s in size_arr]
 
-            prod.size_id    = ",".join([t.encode("utf-8") for t in self.get_arguments("size")])
+            prod.size        = ",".join(self.get_arguments("size"))
             prod.tags       = ",".join([t.encode("utf-8") for t in self.get_arguments("tags","")])
 
             respose = prod.Save("one")
