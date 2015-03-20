@@ -763,7 +763,10 @@ class Product(BaseModel):
                                     datetime.datetime.now().isoformat())
                                 kardex.user = "Sistema - Nueva talla"
 
-                                kardex.Insert()
+                                res_kardex = kardex.Insert()
+
+                                if "error" in res_kardex:
+                                    return self.ShowError(res_kardex["error"])
 
                     else:
                         return self.ShowError("Getting stock by product sku, {}".format(res_stock["error"]))
