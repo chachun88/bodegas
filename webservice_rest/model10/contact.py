@@ -215,8 +215,8 @@ class Contact(BaseModel):
 			from "Contact" c 
 			inner join "Contact_Types" ct on ct.id = c.type_id 
 			inner join "City" city on city.id = c.city_id
-			inner join "User" user on u.id = c.user_id
-			where user_id = %(user_id)s'''
+			inner join "User" user on u.id = c.user_id 
+			where c.user_id = %(user_id)s'''
 			parametros = {
 			"user_id":_user_id
 			}
