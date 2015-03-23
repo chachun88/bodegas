@@ -146,7 +146,7 @@ class Contact(BaseModel):
 
 	def Edit(self):
 
-		print "Edit WS id:{}\n".format(self.id)
+		# print "Edit WS id:{}\n".format(self.id)
 
 		contact = {
 		"name": self.name,
