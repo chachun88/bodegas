@@ -113,7 +113,11 @@ class CellarEasyInputHandler(BaseHandler):
         cellar.InitWithId(self.get_argument("id", ""))
 
         product = Product()
-        lista = product.get_product_list()
+        res_lista = product.get_product_list()
+        lista = []
+
+        if "success" in res_lista:
+            lista = res_lista["success"]
 
         size = Size()
         res_tallas = size.list()

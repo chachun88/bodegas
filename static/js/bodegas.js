@@ -97,9 +97,9 @@
 		var transaction = $("input[name=transaction]", $(this)).val();
 		var operation =$("input[name=operation]", $(this)).val();
 
-		if($("select#product_id",$(this)).length){
-			product_id = $("select#product_id",$(this)).val();
-			product_name = $("select#product_id option:selected",$(this)).text();
+		if($("select#product_sku",$(this)).length){
+			product_sku = $("select#product_sku",$(this)).val();
+			product_name = $("select#product_sku option:selected",$(this)).text();
 		}
 
 		if (size == undefined){
