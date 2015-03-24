@@ -81,7 +81,9 @@
 					<div class="control-group">
 						<label class="control-label" for="prefix">Tallas</label>
 						<div class="controls form-group">
-							<div class="col-sm-8"><input placeholder="Escriba las tallas separadas por coma (,)" id="size" name="size" required="required" type="text" class="form-control" value="{{ ",".join(product.size) }}"></div>
+							{% for s in sizes %}
+							<input type="checkbox" name="size" value="{{s['name']}}" {% if s['name'] in product.size %}checked{% end %}> {{s['name']}}<br/>
+							{% end %}
 						</div>
 					</div>
 					<div class="control-group">
