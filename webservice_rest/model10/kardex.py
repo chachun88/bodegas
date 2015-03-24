@@ -16,7 +16,7 @@ class Kardex(BaseModel):
         self._units = 0
         self._price = 0.0
         self._sell_price = 0.0
-        self._size_id= ''
+        self._size= ''
         self._color=''
         self._total = 0.0
         self._balance_units = 0
@@ -24,7 +24,6 @@ class Kardex(BaseModel):
         self._balance_total = 0.0
         self._date = 0000000 
         self._user = ""
-        self._product_id = ""
 
     OPERATION_BUY = "buy"
     OPERATION_SELL= "sell"
@@ -37,14 +36,7 @@ class Kardex(BaseModel):
     @user.setter
     def user(self, value):
         self._user = value
-
-    @property
-    def product_id(self):
-        return self._product_id
-    @product_id.setter
-    def product_id(self, value):
-        self._product_id = value
-        
+    
 
     @property
     def product_sku(self):
@@ -90,11 +82,11 @@ class Kardex(BaseModel):
         
 
     @property
-    def size_id(self):
-        return self._size_id
-    @size_id.setter
-    def size_id(self, value):
-        self._size_id = value
+    def size(self):
+        return self._size
+    @size.setter
+    def size(self, value):
+        self._size = value
     
     @property
     def color(self):
@@ -144,17 +136,17 @@ class Kardex(BaseModel):
     def InitById(self, idd):
         return ''
         
-    def FindKardex(self, product_sku, cellar_identifier, size_id):
+    def FindKardex(self, product_sku, cellar_identifier,size):
 
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s order by date desc limit 1'''
+        query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s order by date desc limit 1'''
 
         parametros = {
         "product_sku":product_sku,
         "cellar_id":cellar_identifier,
-        "size_id":size_id
+        "size":size
         }
 
         try:
@@ -167,7 +159,7 @@ class Kardex(BaseModel):
             self.units = kardex["units"]
             self.price = kardex["price"]
             self.sell_price = kardex["sell_price"]
-            self.size_id =kardex["size_id"]
+            self.size =kardex["size"]
             self.color = kardex["color"]
             self.total = kardex["total"]
             self.balance_units = kardex["balance_units"]
@@ -198,12 +190,12 @@ class Kardex(BaseModel):
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-            query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s order by id desc limit 1'''
+            query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s order by id desc limit 1'''
 
             parametros = {
             "product_sku":self.product_sku,
             "cellar_id":self.cellar_identifier,
-            "size_id":self.size_id
+            "size":self.size
             }
             cur.execute(query,parametros)
             # print "QUERY:{}".format(cur.query)
@@ -215,7 +207,7 @@ class Kardex(BaseModel):
                 new_kardex.units = kardex["units"]
                 new_kardex.price = kardex["price"]
                 new_kardex.sell_price = kardex["sell_price"]
-                new_kardex.size_id =kardex["size_id"]
+                new_kardex.size =kardex["size"]
                 new_kardex.color = kardex["color"]
                 new_kardex.total = kardex["total"]
                 new_kardex.balance_units = kardex["balance_units"]
@@ -282,7 +274,7 @@ class Kardex(BaseModel):
         "units":self.units,
         "price":self.price,
         "sell_price":self.sell_price,
-        "size_id":self.size_id,
+        "size":self.size,
         "color":self.color,
         "total":self.total,
         "balance_units":self.balance_units,
@@ -293,7 +285,7 @@ class Kardex(BaseModel):
         }
 
         try:
-            query = '''insert into "Kardex" (balance_total,product_sku,cellar_id,operation_type,units,price,sell_price,size_id,color,total,balance_units,balance_price,date,"user") values (%(balance_total)s,%(product_sku)s,%(cellar_id)s,%(operation_type)s,%(units)s,%(price)s,%(sell_price)s,%(size_id)s,%(color)s,%(total)s,%(balance_units)s,%(balance_price)s,%(date)s,%(user)s)'''
+            query = '''insert into "Kardex" (balance_total,product_sku,cellar_id,operation_type,units,price,sell_price,size,color,total,balance_units,balance_price,date,"user") values (%(balance_total)s,%(product_sku)s,%(cellar_id)s,%(operation_type)s,%(units)s,%(price)s,%(sell_price)s,%(size)s,%(color)s,%(total)s,%(balance_units)s,%(balance_price)s,%(date)s,%(user)s)'''
             cur.execute(query,parametros)
             # return cur.mogrify(query,parametros)
             self.connection.commit()
@@ -315,7 +307,7 @@ class Kardex(BaseModel):
             kardex.operation_type = Kardex.OPERATION_MOV_OUT
             kardex.units = d['quantity']
             kardex.price = d['price']
-            kardex.size_id = d['size_id']
+            kardex.size = d['size']
 
             kardex.color= d["color"]
             kardex.user = "Sistema"
@@ -343,16 +335,16 @@ class Kardex(BaseModel):
             return self.ShowSuccessMessage("ok")
 
     ## only for debugging.
-    def Debug(self, product_sku, cellar_identifier, size_id):
+    def Debug(self, product_sku, cellar_identifier, size):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s order by id desc limit 1'''
+        query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size = %(size)s order by id desc limit 1'''
 
         parameters = {
         "product_sku":product_sku,
         "cellar_id":cellar_identifier,
-        "size_id":size_id
+        "size":size
         }
 
         # data = self.collection.find({
@@ -369,7 +361,7 @@ class Kardex(BaseModel):
                 print " units :     {}".format(d["units"])
                 print " price :     {}".format(d["price"])
                 print " sell_price :    {}".format(d["sell_price"])
-                print " size_id :  {}".format(d["size_id"])
+                print " size :  {}".format(d["size"])
                 print " color :     {}".format(d["color"])
                 print " total :     {}".format(d["total"])
                 print " balance units :     {}".format(d["balance_units"])
@@ -379,57 +371,4 @@ class Kardex(BaseModel):
         except Exception,e:
             print str(e)
             pass
-
-    def stockByProductSku(self, product_sku, size_id):
-
-        """
-        obtiene stock de producto por id, de todas las bodegas
-
-        @param string product_sku id de producto
-        @param integer size_id id talla
-        @return json si es exitoso retorna json con sucess de lo contrario retorna error
-        """
-
-
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-        query = '''select coalesce(sum(balance_units),0) as total from 
-                (select distinct on(cellar_id) cellar_id, balance_units from "Kardex" 
-                    where product_sku = %(product_sku)s 
-                    and size_id = %(size_id)s 
-                    order by cellar_id, date desc) 
-                as kardex'''
-
-        parametros = {
-        "product_sku":product_sku,
-        "size_id":size_id
-        }
-
-        try:
-
-            # print cur.mogrify(query, parametros)
-
-            cur.execute(query,parametros)
-            total = cur.fetchone()["total"]
-
-            # self.id = kardex["id"]
-            # self.product_sku = kardex["product_sku"]
-            # self.operation_type = kardex["operation_type"]
-            # self.units = kardex["units"]
-            # self.price = kardex["price"]
-            # self.sell_price = kardex["sell_price"]
-            # self.size_id =kardex["size_id"]
-            # self.color = kardex["color"]
-            # self.total = kardex["total"]
-            # self.balance_units = kardex["balance_units"]
-            # self.balance_price = kardex["balance_price"]
-            # self.balance_total = kardex["balance_total"]
-            # self.date = kardex["date"]
-            # self.user = kardex["user"]
-            # self.cellar_identifier = kardex["cellar_id"]
-
-            return self.ShowSuccessMessage(total)
-
-        except Exception,e:
-            return self.ShowError("getting stock by product sku, {}".format(str(e)))
 

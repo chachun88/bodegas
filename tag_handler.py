@@ -93,11 +93,7 @@ class EditHandler(BaseHandler):
 
 				if "success" in res:
 					product = Product()
-					res_lista = product.get_product_list()
-
-					if "success" in res_lista:
-						lista = res_lista["success"]
-						
+					lista = product.get_product_list()
 					self.render("tag/save.html",tag=tag,mode="edit",product_list=lista,dn="",asociados=asociados)
 				else:
 					self.write(res["error"])
