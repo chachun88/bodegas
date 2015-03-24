@@ -3,9 +3,6 @@
 
 import os.path
 
-import pymongo
-import urllib
-
 import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
@@ -13,8 +10,7 @@ import tornado.options
 import tornado.web
 from tornado.options import define, options
 
-from basehandler import BaseHandler
-from globals import port, debugMode, carpeta_img, userMode, Menu, webservice_url
+from globals import port, Menu
 
 from home_handler import HomeHandler
 from home_handler import ProductRemoveHandler
@@ -52,12 +48,12 @@ from customer_handler import CustomerHandler, CustomerSaveHandler, CustomerActio
 import tag_handler
 import shipping_handler
 
-#something
+# something
 define("port", default=port, help="run on the given port", type=int)
+
 
 class Application(tornado.web.Application):
     def __init__(self):
-
 
         settings = dict(
             blog_title=u"Bodegas",
@@ -74,7 +70,7 @@ class Application(tornado.web.Application):
             (r"/auth/recover", LoginPassHandler),
 
             # products
-            #(r"/", HomeHandler),
+            # (r"/", HomeHandler),
             (r"/product", HomeHandler),
             (r"/product/out", ProductOutHandler),
             (r"/product/massiveoutput", ProductMassiveOutputHandler),
@@ -106,7 +102,7 @@ class Application(tornado.web.Application):
             (r"/order/save", AddOrderHandler),
             (r"/orders/actions", OrderActionsHandler),
 
-            #order_detail
+            # order_detail
             (r"/order-detail/save", AddOrderDetailHandler),
             (r"/order-detail/list", ListOrderDetailHandler),
 
@@ -116,18 +112,18 @@ class Application(tornado.web.Application):
             (r"/user/remove", UserRemoveHandler),
             (r"/user/edit", UserEditHandler),
 
-            #report
+            # report
             (r"/", ReportHandler),
             (r"/report/upload", ReportUploadHandler),
             (r"/report/download/([^/]+)", tornado.web.StaticFileHandler, {'path': 'uploads/'}),
 
-            #images
+            # images
             (r"/image/([^/]+)", ImageHandler),
             (r"/image", ImageHandler2),
             (r"/image/", ImageHandler2),
             (r"/imageremove", ImageDeleteHandler),
 
-            #customer
+            # customer
             (r"/customer", CustomerHandler),
             (r"/customer/save", CustomerSaveHandler),
             (r"/customer/actions", CustomerActionsHandler),

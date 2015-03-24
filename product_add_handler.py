@@ -174,7 +174,7 @@ class ProductAddHandler(BaseHandler):
 
         res = prod.InitWithSku(self.get_argument("sku", ""))
 
-        print res
+        # print res
 
         # print "type:{} value:{}".format(type(res),res)
 
