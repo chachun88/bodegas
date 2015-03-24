@@ -114,9 +114,3 @@ class BaseHandler(tornado.web.RequestHandler):
     def write_error(status_code=500, **kwargs):
         self.write("llega")
     '''
-
-    def showError(self, error_text):
-        return {'error': error_text}
-
-    def showSuccessMessage(self, message):
-        return {'success': message}

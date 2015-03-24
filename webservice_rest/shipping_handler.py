@@ -6,7 +6,6 @@ from model10.cellar import Cellar
 from model10.product import Product
 from model10.kardex import Kardex
 from model10.order_detail import OrderDetail
-from model10.size import Size
 
 from base_handler import BaseHandler
 from bson import json_util
@@ -138,15 +137,7 @@ class SaveTrackingHandler(BaseHandler):
 					else:
 						sell_price = detail["sell_price"]
 						
-					_size = Size()
-					_size.name = detail["size"]
-					res_name = _size.initByName()
-
-					if "success" in res_name:
-						size = _size.id
-					else:
-						print res_name["error"]
-
+					size = detail["size"]
 					color = detail["color"]
 					user = 'Sistema - Despacho'
 
@@ -158,24 +149,17 @@ class SaveTrackingHandler(BaseHandler):
 					if "success" in find_kardex:
 						balance_price = k.balance_price
 
-					res_product_find = cellar.FindProductKardex(sku, new_cellar_id, size)
+					product_find = cellar.FindProductKardex(sku, new_cellar_id, size)
 
 					buy=0
 					sell=0
 
-					if "success" in res_product_find:
+					for p in product_find:
+						if p["operation_type"] == Kardex.OPERATION_BUY or p["operation_type"] == Kardex.OPERATION_MOV_IN:
+							buy+=p["total"]	
 
-						product_find = res_product_find["success"]
-
-						for p in product_find:
-							if p["operation_type"] == Kardex.OPERATION_BUY or p["operation_type"] == Kardex.OPERATION_MOV_IN:
-								buy+=p["total"]	
-
-							if p["operation_type"] == Kardex.OPERATION_SELL or p["operation_type"] == Kardex.OPERATION_MOV_OUT:
-								sell+=p["total"]
-
-					# else:
-					# 	print res_product_find["error"]
+						if p["operation_type"] == Kardex.OPERATION_SELL or p["operation_type"] == Kardex.OPERATION_MOV_OUT:
+							sell+=p["total"]
 
 					units=buy-sell		
 
@@ -190,7 +174,7 @@ class SaveTrackingHandler(BaseHandler):
 						kardex.operation_type = operation
 						kardex.units = quantity
 						kardex.price = price
-						kardex.size_id = size
+						kardex.size = size
 						kardex.sell_price = sell_price
 
 						kardex.color= color

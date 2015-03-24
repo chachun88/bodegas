@@ -15,104 +15,99 @@ from globals import Menu
 from model.cellar import Cellar
 from model.product import Product
 
-
 class ReportHandler(BaseHandler):
 
-    data = []
+	data=[]
 
-    @tornado.web.authenticated
-    def get(self):
-        self.set_active(Menu.INFORMES_POR_BODEGA)
-        global data
-        try:
-            day = self.get_argument("day")
-        except:
-            day = "today"
+	@tornado.web.authenticated
+	def get(self):
+		self.set_active(Menu.INFORMES_POR_BODEGA)
+		global data
+		try:
+			day = self.get_argument("day")
+		except:
+			day="today"	
+		
+		# data = Cellar().List(1, 10)
+		fromm = "from"
+		until = "until"
+		cellar = Cellar().List(1, 100)
+		data = Cellar().ListKardex(day, fromm, until)
+		product = Product().get_product_list()
+		self.render("report/home.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar,data_str=json_util.dumps(data))
 
-        # data = Cellar().List(1, 10)
-        fromm = "from"
-        until = "until"
-        cellar = Cellar().List(1, 100)
-        data = Cellar().ListKardex(day, fromm, until)
-        product = Product().get_product_list()
-        self.render("report/home.html", side_menu=self.side_menu, data=data,
-                    product=product, cellar=cellar, data_str=json_util.dumps(data))
+	@tornado.web.authenticated
+	def post(self):
+		global data
+		day = self.get_argument("day", "")
+		fromm = self.get_argument("from", "")
+		until = self.get_argument("until", "")
 
-    @tornado.web.authenticated
-    def post(self):
-        global data
-        day = self.get_argument("day", "")
-        fromm = self.get_argument("from", "")
-        until = self.get_argument("until", "")
+		cellar = Cellar().List(1, 100)
+		data = Cellar().ListKardex(day, fromm, until)
+		product = Product().get_product_list()
+		self.render("report/period.html", side_menu=self.side_menu, data=data, product=product, cellar=cellar,data_str=json_util.dumps(data))
+		# self.redirect("/")
 
-        cellar = Cellar().List(1, 100)
-        data = Cellar().ListKardex(day, fromm, until)
-        product = Product().get_product_list()
-        self.render("report/period.html", side_menu=self.side_menu, data=data,
-                    product=product, cellar=cellar, data_str=json_util.dumps(data))
-        # self.redirect("/")
-
-    def check_xsrf_cookie(self):
-        pass
-
+	def check_xsrf_cookie(self):
+		pass		
 
 class ReportUploadHandler(BaseHandler):
+	@tornado.web.authenticated
+	def get(self):
+		pass
 
-    @tornado.web.authenticated
-    def get(self):
-        pass
+	@tornado.web.authenticated
+	def post(self):
 
-    @tornado.web.authenticated
-    def post(self):
+		data_str = self.get_argument("load", "")
 
-        data_str = self.get_argument("load", "")
+		
+		data = json_util.loads(data_str)
 
-        data = json_util.loads(data_str)
+		cellar = Cellar().List(1, 100)
+		# data = json_util.dumps(len(data))
 
-        cellar = Cellar().List(1, 100)
-        # data = json_util.dumps(len(data))
+		tit=["SKU", "Talla", "Precio U. Compra", "Precio U. Venta", "Cantidad", "Total", "Usuario", "Bodega"]
 
-        tit = ["SKU", "Talla", "Precio U. Compra", "Precio U. Venta",
-               "Cantidad", "Total", "Usuario", "Bodega"]
+		item_length = len(data)
 
-        item_length = len(data)
+		matriz=[]
 
-        matriz = []
+		for i in range(item_length):
+			matriz.append([])
+			if "product_sku" in data[i]:
+				matriz[i].append(data[i]["product_sku"])
+			if "size" in data[i]:
+				matriz[i].append(data[i]["size"])
+			if "balance_price" in data[i]:
+				matriz[i].append(data[i]["balance_price"])
+			if "sell_price" in data[i]:
+				matriz[i].append(data[i]["sell_price"])
+			if "units" in data[i]:
+				matriz[i].append(data[i]["units"])
+			if "sell_price" in data[i] and "units" in data[i]:
+				total=int(data[i]["sell_price"])*int(data[i]["units"])
+				matriz[i].append(total)
+			if "user" in data[i]:
+				matriz[i].append(data[i]["user"])
 
-        for i in range(item_length):
-            matriz.append([])
-            if "product_sku" in data[i]:
-                matriz[i].append(data[i]["product_sku"])
-            if "size" in data[i]:
-                matriz[i].append(data[i]["size"])
-            if "balance_price" in data[i]:
-                matriz[i].append(data[i]["balance_price"])
-            if "sell_price" in data[i]:
-                matriz[i].append(data[i]["sell_price"])
-            if "units" in data[i]:
-                matriz[i].append(data[i]["units"])
-            if "sell_price" in data[i] and "units" in data[i]:
-                total = int(data[i]["sell_price"]) * int(data[i]["units"])
-                matriz[i].append(total)
-            if "user" in data[i]:
-                matriz[i].append(data[i]["user"])
+			for c in cellar:
+				# print "DATA:{}".format(data[i])
+				if data[i]["cellar_id"] == str(c["id"]):
+					matriz[i].append(c["name"])
 
-            for c in cellar:
-                # print "DATA:{}".format(data[i])
-                if data[i]["cellar_id"] == str(c["id"]):
-                    matriz[i].append(c["name"])
+		tras=zip(*matriz)
+		
+		# lol = [[1,2,3],[4,5,6],[7,8,9]]
+		# print lol
+		item_length = len(tras[0])
 
-        tras = zip(*matriz)
+		with open('uploads/informe.csv', 'wb') as test_file:
+			file_writer = csv.writer(test_file, delimiter=';')
+			file_writer.writerow([x for x in tit])
+			for i in range(item_length):
+				file_writer.writerow([x[i] for x in tras])	
 
-        # lol = [[1,2,3],[4,5,6],[7,8,9]]
-        # print lol
-        item_length = len(tras[0])
-
-        with open('uploads/informe.csv', 'wb') as test_file:
-            file_writer = csv.writer(test_file, delimiter=';')
-            file_writer.writerow([x for x in tit])
-            for i in range(item_length):
-                file_writer.writerow([x[i] for x in tras])
-
-    def check_xsrf_cookie(self):
-        pass
+	def check_xsrf_cookie(self):
+		pass
