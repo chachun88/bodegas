@@ -3,6 +3,7 @@
 
 import os.path
 
+import pymongo
 import urllib
 
 import tornado.auth
