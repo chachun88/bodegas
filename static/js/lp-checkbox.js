@@ -45,7 +45,7 @@ function addElement(texto){
 
 }
 
-function addElementBot(texto){
+function removeElement(texto){
 
     $("#perm_"+texto).css("display", "inline");
     $("#perm_top"+texto).css("display", "none");

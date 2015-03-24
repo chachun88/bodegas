@@ -39,13 +39,13 @@
 				<div class="control-group">
 					<label for="" class="control-label">Contraseña</label>
 					<div class="controls form-group">
-						<div class="col-sm-8"><input id="pass_1" placeholder="contraseña" name="password" required="required" type="password" class="form-control" onchange="form.re_password.pattern = this.value;" value=""></div>
+						<div class="col-sm-8"><input id="pass_1" placeholder="contraseña" name="password" required="required" type="password" class="form-control" onchange="form.re_password.pattern = this.value;" value="{{user.password}}"></div>
 					</div>
 				</div>
 				<div class="control-group">
 					<label for="" class="control-label">Repita contraseña</label>
 					<div class="controls form-group">
-						<div class="col-sm-8"><input id="pass_2" placeholder="contraseña" name="re_password"  type="password" class="form-control"  value="" required></div>
+						<div class="col-sm-8"><input id="pass_2" placeholder="contraseña" name="re_password"  type="password" class="form-control"  value="{{user.password}}" required></div>
 					</div>
 				</div>
 				<style type="text/css">
@@ -60,16 +60,12 @@
 							<div id="perm" class="form-control" >
 								{% set permiso = ["acceso a api","cargar productos nuevos","vender","modificar bodegas","administrar usuarios","ver informes"] %}
 								{% for i in range(0,len(permiso)) %} 
-									{% if str(int(i)+1) in user.permissions %}
-									<a id="perm_top{{ i + 1 }}" class="btn-sm btn-primary btn-perm" onclick="addElementBot({{ i + 1 }})">{{ permiso[i] }}</a>
-									{% end %}
+									<a id="perm_top{{ i + 1 }}" class="btn-sm btn-primary btn-perm" onclick="removeElement({{ i + 1 }})">{{ permiso[i] }}</a>
 								{% end %}
 							</div>
 							<div id="perm_bot">
 								{% for i in range(0,len(permiso)) %} 
-									{% if str(int(i)+1) not in user.permissions %}
 									<a id="perm_{{ i + 1 }}" class="btn-sm btn-primary btn-perm-bot" onclick="addElement({{ i + 1 }})">{{ permiso[i] }}</a>
-									{% end %}
 								{% end %}
 							</div>
 						</div>
@@ -119,7 +115,7 @@ $(document).ready(function(){
 		});
 
 		$(".btn-perm-bot").each(function(){
-			if ($(this).attr("id") == "perm_top" + permission) {
+			if ($(this).attr("id") == "perm_" + permission) {
 				$(this).css("display", "none");
 			}
 		});

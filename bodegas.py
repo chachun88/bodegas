@@ -35,7 +35,7 @@ from cellar_add_handler import CellarAddHandler
 from cellar_remove_handler import CellarRemoveHandler
 
 from user_handler import UserHandler, UserRemoveHandler
-from user_add_handler import UserAddHandler, UserEditHandler
+from user_add_handler import UserAddHandler
 
 from report_handler import ReportHandler, ReportUploadHandler
 
@@ -110,7 +110,7 @@ class Application(tornado.web.Application):
             (r"/user", UserHandler),
             (r"/user/add", UserAddHandler),
             (r"/user/remove", UserRemoveHandler),
-            (r"/user/edit", UserEditHandler),
+            (r"/user/edit", UserAddHandler),
 
             # report
             (r"/", ReportHandler),

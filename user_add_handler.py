@@ -16,59 +16,65 @@ from bson import json_util
 
 import hashlib
 
+
 class UserAddHandler(BaseHandler):
 
-	@tornado.web.authenticated
-	def get(self):
-		self.set_active(Menu.USUARIOS_AGREGAR)
+    @tornado.web.authenticated
+    def get(self):
 
-		usr = User()
-		cellar = Cellar()
+        self.set_active(Menu.USUARIOS_AGREGAR)
 
-		self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
+        usr = User()
+        cellar = Cellar()
+        user_id = self.get_argument("id", "")
 
-	@tornado.web.authenticated
-	def post(self):
+        if user_id != "":
 
-		usr = User()
+            response = usr.InitWithId(user_id)
 
-		usr.name 		= self.get_argument("name", "").encode("utf-8")
-		usr.surname 	= self.get_argument("surname", "").encode("utf-8")
-		usr.email 		= self.get_argument("email", "").encode("utf-8")
+            if "success" in response:
+                self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
+            else:
+                self.write(response["error"])
 
-		m = hashlib.md5()
-		m.update(self.get_argument("password", "").encode("utf-8"))
-		password = m.hexdigest()
+        else:
 
-		usr.password 	= password
-		usr.permissions = self.get_argument("permissions", "").encode("utf-8")
-		usr.identifier	= self.get_argument("id", "").encode("utf-8")
-		usr.cellars     = self.get_argument("cellars","").encode("utf-8")
+            self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
 
-		if usr.permissions == "":
-			self.redirect("/user?dn=t3")
-		else:
-			response = json_util.loads(usr.Save())
-			if "success" in response:
-				self.redirect("/user?dn=t")
-			else:
-				self.write(response["error"])
+    @tornado.web.authenticated
+    def post(self):
 
+        usr = User()
 
-class UserEditHandler(BaseHandler):
+        user_id = self.get_argument("id", "")
+        form_password = self.get_argument("password", "").encode("utf-8")
 
-	@tornado.web.authenticated
-	def get(self):
-		self.set_active(Menu.USUARIOS_AGREGAR)
-		
-		usr = User()
-		response = usr.InitWithId(self.get_argument("id", ""))
+        if user_id != "":
 
-		if "success" in response:
-			cellar = Cellar()
+            response = usr.InitWithId(user_id)
 
-			self.render("user/add.html", side_menu=self.side_menu, user=usr, cellars=cellar.List(1,100))
-		else:
-			self.write(response["error"])
+            if "success" in response:
 
-		
+                usr.name        = self.get_argument("name", "").encode("utf-8")
+                usr.surname     = self.get_argument("surname", "").encode("utf-8")
+                usr.email       = self.get_argument("email", "").encode("utf-8")
+
+                if usr.password != form_password:
+
+                    m = hashlib.md5()
+                    m.update(form_password)
+                    password = m.hexdigest()
+                    usr.password    = password
+
+                usr.permissions = self.get_argument("permissions", "").encode("utf-8")
+                usr.identifier  = self.get_argument("id", "").encode("utf-8")
+                usr.cellars     = self.get_argument("cellars","").encode("utf-8")
+
+                if usr.permissions == "":
+                    self.redirect("/user?dn=t3")
+                else:
+                    response = json_util.loads(usr.Save())
+                    if "success" in response:
+                        self.redirect("/user?dn=t")
+                    else:
+                        self.write(response["error"])

@@ -200,7 +200,7 @@ class Salesman(BaseModel):
 
 	def Save(self):
 		
-		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 		q = '''select id from "Permission" where name = any(%(permissions)s)'''
 		p = {
@@ -227,7 +227,7 @@ class Salesman(BaseModel):
 		"name":"Vendedor"
 		}
 		cur.execute(q,p)
-		tipo_usuario = cur.fetchone()[0]
+		tipo_usuario = cur.fetchone()["id"]
 
 		q = '''select * from "User" where email = %(email)s limit 1'''
 		p = {
