@@ -9,6 +9,7 @@ import sendgrid
 from model.order import Order
 from model.order_detail import OrderDetail
 from model.contact import Contact
+from globals import email_giani
 
 def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
 
@@ -537,7 +538,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
     sg = sendgrid.SendGridClient('nailuj41', 'Equipo_1234')
 
     message = sendgrid.Mail()
-    message.set_from("{nombre} <{mail}>".format(nombre="Giani Da Firenze", mail="notification@tellmecuando.com"))
+    message.set_from("{nombre} <{mail}>".format(nombre="Giani Da Firenze", mail=email_giani))
     message.add_to(email)
     message.set_subject("Giani Da Firenze - El Pedido Nro {order_id} Ha Sido Enviado".format(order_id=order_id))
     message.set_html(html)

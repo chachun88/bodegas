@@ -85,7 +85,6 @@
 	{
 		// agregar productos a bodega
 		var cellar_id = $("input[name=cellar_id]", $(this)).val();
-		var product_id = $("input[name=product_id]", $(this)).val();
 		var product_sku = $("input[name=product_sku]", $(this)).val();
 		var quantity = $("input[name=quantity]", $(this)).val();
 		var price = $("input[name=price]", $(this)).val();
@@ -100,6 +99,7 @@
 
 		if($("select#product_sku",$(this)).length){
 			product_sku = $("select#product_sku",$(this)).val();
+			product_name = $("select#product_sku option:selected",$(this)).text();
 		}
 
 		if (size == undefined){
@@ -122,9 +122,10 @@
 			price="0"
 		}
 
+		console.info(price);
+
 		var post_data = {
 			"cellar_id":cellar_id,
-			"product_id":product_id,
 			"product_sku":product_sku,
 			"quantity":quantity,
 			"price":price,
@@ -329,6 +330,36 @@
  		var selected_value = $("#selected_charge_type").val();
  		$(":radio[value='"+selected_value+"']").prop("checked", true);
  	}
+
+ 	$("#product-form input[name=size]").click(function(){
+
+ 		var size = $(this).val();
+ 		var product_sku = $("#product-form input[name=sku]").val();
+ 		var obj = $(this);
+
+ 		$.ajax({
+ 			url: "/product/checkstock",
+ 			data: "size_name=" + size + "&product_sku=" + product_sku,
+ 			type: "get",
+ 			dataType: "json",
+ 			success: function(response){
+ 				var str_response = JSON.stringify(response);
+ 				var json_response = $.parseJSON(str_response);
+
+ 				if(json_response.hasOwnProperty('error')){
+ 					console.log(json_response.error);
+ 				} else {
+ 					
+ 					var cantidad = parseInt(json_response.success);
+
+ 					if( cantidad > 0 ){
+ 						alert("esta talla sigue en stock");
+ 						obj.prop("checked", true);
+ 					}
+ 				}
+ 			}
+ 		});
+ 	});
 
 });
 

@@ -227,7 +227,7 @@ class Tag(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''select product_id from "Tag" t left join "Tag_Product" tp on tp.tag_id = t.id where tp.tag_id = %(id)s'''
+        query = '''select product_id from "Tag" t inner join "Tag_Product" tp on tp.tag_id = t.id where tp.tag_id = %(id)s'''
         parameters = {
         "id":_id
         }
