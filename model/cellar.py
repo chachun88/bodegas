@@ -8,256 +8,268 @@ from bson import json_util
 
 class Cellar(BaseModel):
 
-	""" docstring for Cellar """
-	def __init__(self):
-		BaseModel.__init__(self)
-		self._name = ""
-		self._description = ""
-		self._identifier = ""
-		self._city = 0
-		pass
+    """ docstring for Cellar """
+    def __init__(self):
+        BaseModel.__init__(self)
+        self._name = ""
+        self._description = ""
+        self._identifier = ""
+        self._city = 0
+        pass
 
-	def Save(self):
-		url = self.wsurl() + "/cellar/add"
-		url += "?token=" + self.token
-		url += "&name=" + self.name
-		url += "&description=" + self.description
-		url += "&city={}".format(self.city)
+    def Save(self):
+        url = self.wsurl() + "/cellar/add"
+        url += "?token=" + self.token
+        url += "&name=" + self.name
+        url += "&description=" + self.description
+        url += "&city={}".format(self.city)
 
-		return urllib.urlopen(url).read()
+        return urllib.urlopen(url).read()
 
-	def Remove(self):
-		url = self.wsurl() + "/cellar/remove"
-		url += "?token=" + self.token
-		url += "&id=" + self.identifier
+    def Remove(self):
+        url = self.wsurl() + "/cellar/remove"
+        url += "?token=" + self.token
+        url += "&id=" + self.identifier
 
-		return urllib.urlopen(url).read()
+        return urllib.urlopen(url).read()
 
-	def ListProducts(self):
+    def ListProducts(self):
 
-		url = self.wsurl() + "/cellar/products/list"
+        url = self.wsurl() + "/cellar/products/list"
 
-		url += "?token=" + self.token
-		url += "&id=" + self.identifier
-		url += "&page=1"
-		url += "&items=100"
-
-		json_string = urllib.urlopen(url).read()
-		return json_util.loads(json_string)
+        url += "?token=" + self.token
+        url += "&id=" + self.identifier
+        url += "&page=1"
+        url += "&items=100"
 
-	def ListKardex(self, day, fromm, until):
+        json_string = urllib.urlopen(url).read()
+        return json_util.loads(json_string)
 
-		url = self.wsurl() + "/cellar/products/kardex"
+    def ListKardex(self, day, fromm, until):
 
-		url += "?token=" + self.token
-		url += "&page=1"
-		url += "&items=1"
-		url += "&day="+ day
-		url += "&from="+ fromm
-		url += "&until="+ until
+        url = self.wsurl() + "/cellar/products/kardex"
 
-		json_string = urllib.urlopen(url).read()
-		return json_util.loads(json_string)	
+        url += "?token=" + self.token
+        url += "&page=1"
+        url += "&items=1"
+        url += "&day=" + day
+        url += "&from=" + fromm
+        url += "&until=" + until
 
-	def ProductKardex(self, sku, idd, size):
+        json_string = urllib.urlopen(url).read()
+        return json_util.loads(json_string) 
 
-		url = self.wsurl() + "/cellar/products/find"
+    def ProductKardex(self, sku, idd, size):
 
-		url += "?token=" + self.token
-		url += "&product_sku="+ sku
-		url += "&cellar_id="+ idd
-		url += "&size="+ size
+        url = self.wsurl() + "/cellar/products/find"
 
-		json_string = urllib.urlopen(url).read()
-		# print "{}".format(json_string)
-		return json_util.loads(json_string)	
+        # url += "?token=" + self.token
+        # url += "&product_sku="+ sku
+        # url += "&cellar_id="+ idd
+        # url += "&size="+ size
 
+        parameters = {
+            "token" : self.token,
+            "sku" : sku,
+            "cellar_id" : idd,
+            "size" : size
+        }
 
-	def InitWithId(self, idd):
-		url = self.wsurl() + "/cellar/find"
-		url += "?token=" + self.token
-		url += "&id=" + idd
+        data = urllib.urlencode(parameters)
 
-		json_string = urllib.urlopen(url).read()
-		json_data = json_util.loads(json_string)
+        json_string = urllib.urlopen(url, data).read()
 
-		# print "{}".format(json_string)
+        return json_util.loads(json_string) 
 
-		self.identifier = str(json_data["id"])
-		self.name = json_data["name"]
-		self.description = json_data["description"]
+    def InitWithId(self, idd):
+        url = self.wsurl() + "/cellar/find"
+        url += "?token=" + self.token
+        url += "&id=" + idd
 
-	def InitWithName(self, name):
-		url = self.wsurl() + "/cellar/find"
-		url += "?token=" + self.token
-		url += "&name=" + name
+        json_string = urllib.urlopen(url).read()
+        json_data = json_util.loads(json_string)
 
-		json_string = urllib.urlopen(url).read()
-		json_data = json_util.loads(json_string)
+        # print "{}".format(json_string)
 
-		self.identifier = str(json_data["id"])
-		self.name = json_data["name"]
-		self.description = json_data["description"]		
+        self.identifier = str(json_data["id"])
+        self.name = json_data["name"]
+        self.description = json_data["description"]
 
-	def List(self, page, items):
-		url = self.wsurl() + "/cellar/list"
-		url += "?token=" + self.token
-		url += "&page={}".format(page)
-		url += "&items={}".format(items)
+    def InitWithName(self, name):
+        url = self.wsurl() + "/cellar/find"
+        url += "?token=" + self.token
+        url += "&name=" + name
 
-		json_string = urllib.urlopen(url).read()
-		return json_util.loads(json_string)
-	
-	def AddProducts(self, product_sku, quantity, price, size, color, operation, user):
+        json_string = urllib.urlopen(url).read()
+        json_data = json_util.loads(json_string)
 
-		url = self.wsurl() + "/cellar/products/add?token=" + self.token
 
-		data = {
-			"cellar_id": self.identifier,
-			"product_sku": product_sku,
-			"operation": operation,
-			"quantity": quantity,
-			"price": price,
-			"size": size,
-			"color": color,
-			"user": user
-		}
+        self.identifier = str(json_data["id"])
+        self.name = json_data["name"]
+        self.description = json_data["description"]
 
-		post_data = urllib.urlencode(data)
 
-		response_str = urllib.urlopen(url, post_data).read()
+    def List(self, page, items):
+        url = self.wsurl() + "/cellar/list"
+        url += "?token=" + self.token
+        url += "&page={}".format(page)
+        url += "&items={}".format(items)
 
-		return json_util.loads(response_str)
+        json_string = urllib.urlopen(url).read()
+        return json_util.loads(json_string)
+    
+    def AddProducts(self, product_sku, quantity, price, size, color, operation, user):
 
-	def RemoveProducts(self, product_sku, quantity, price, size, color, operation, user):
-		url = self.wsurl() + "/cellar/products/remove"
+        url = self.wsurl() + "/cellar/products/add?token=" + self.token
 
-		data = {
-			"token":self.token,
-			"cellar_id": self.identifier,
-			"product_sku": product_sku,
-			"operation": operation,
-			"quantity": quantity,
-			"price": price,
-			"size": size,
-			"color": color.encode("utf-8"),
-			"user": user
-		}
+        data = {
+            "cellar_id": self.identifier,
+            "product_sku": product_sku,
+            "operation": operation,
+            "quantity": quantity,
+            "price": price,
+            "size": size,
+            "color": color,
+            "user": user
+        }
 
-		post_data = urllib.urlencode(data)
+        post_data = urllib.urlencode(data)
 
-		json_string = urllib.urlopen(url, post_data).read()
+        response_str = urllib.urlopen(url, post_data).read()
 
-		return json_util.loads(json_string)
+        # print response_str
 
-	def CellarExist( self, cellar_name ):
-		url = self.wsurl() + "/cellar/exists?token=" + self.token
+        return json_util.loads(response_str)
 
-		url += "&cellar_name=" + cellar_name
+    def RemoveProducts(self, product_sku, quantity, price, size, color, operation, user):
+        url = self.wsurl() + "/cellar/products/remove"
 
-		json_string = urllib.urlopen( url ).read()
-		return json_util.loads( json_string )[ "exists" ]
+        data = {
+            "token":self.token,
+            "cellar_id": self.identifier,
+            "product_sku": product_sku,
+            "operation": operation,
+            "quantity": quantity,
+            "price": price,
+            "size": size,
+            "color": color,
+            "user": user
+        }
 
-	def SelectForSale(self, cellar_id):
+        post_data = urllib.urlencode(data)
 
-		url = self.wsurl() + "/cellar/selectforsale"
+        json_string = urllib.urlopen(url, post_data).read()
 
-		data = {
-		"token":self.token,
-		"cellar_id":cellar_id
-		}
+        return json_util.loads(json_string)
 
-		post_data = urllib.urlencode(data)
+    def CellarExist( self, cellar_name ):
+        url = self.wsurl() + "/cellar/exists?token=" + self.token
 
-		response_str = urllib.urlopen(url, post_data).read()
+        url += "&cellar_name=" + cellar_name
 
-		response_obj = json_util.loads(response_str)
+        json_string = urllib.urlopen( url ).read()
+        return json_util.loads( json_string )[ "exists" ]
 
-		return response_obj
+    def SelectForSale(self, cellar_id):
 
-	def SelectReservation(self, cellar_id):
+        url = self.wsurl() + "/cellar/selectforsale"
 
-		url = self.wsurl() + "/cellar/selectreservation"
+        data = {
+        "token":self.token,
+        "cellar_id":cellar_id
+        }
 
-		data = {
-		"token":self.token,
-		"cellar_id":cellar_id
-		}
+        post_data = urllib.urlencode(data)
 
-		post_data = urllib.urlencode(data)
+        response_str = urllib.urlopen(url, post_data).read()
 
-		response_str = urllib.urlopen(url, post_data).read()
+        response_obj = json_util.loads(response_str)
 
-		response_obj = json_util.loads(response_str)
+        return response_obj
 
-		return response_obj
+    def SelectReservation(self, cellar_id):
 
-	def GetWebCellar(self):
+        url = self.wsurl() + "/cellar/selectreservation"
 
-		url = self.wsurl() + "/cellar/getwebcellar"
+        data = {
+        "token":self.token,
+        "cellar_id":cellar_id
+        }
 
-		data = {
-		"token":self.token
-		}
+        post_data = urllib.urlencode(data)
 
-		post_data = urllib.urlencode(data)
+        response_str = urllib.urlopen(url, post_data).read()
 
-		response_str = urllib.urlopen(url, post_data).read()
+        response_obj = json_util.loads(response_str)
 
-		response_obj = json_util.loads(response_str)
+        return response_obj
 
-		return response_obj
+    def GetWebCellar(self):
 
-	def	GetReservationCellar(self):
+        url = self.wsurl() + "/cellar/getwebcellar"
 
-		url = self.wsurl() + "/cellar/getreservationcellar"
+        data = {
+        "token":self.token
+        }
 
-		data = {
-		"token":self.token
-		}
+        post_data = urllib.urlencode(data)
 
-		post_data = urllib.urlencode(data)
+        response_str = urllib.urlopen(url, post_data).read()
 
-		response_str = urllib.urlopen(url, post_data).read()
+        response_obj = json_util.loads(response_str)
 
-		response_obj = json_util.loads(response_str)
+        return response_obj
 
-		return response_obj
+    def GetReservationCellar(self):
+
+        url = self.wsurl() + "/cellar/getreservationcellar"
+
+        data = {
+        "token":self.token
+        }
+
+        post_data = urllib.urlencode(data)
+
+        response_str = urllib.urlopen(url, post_data).read()
+
+        response_obj = json_util.loads(response_str)
+
+        return response_obj
  
-	@property
-	def name(self):
-		return self._name
-	@name.setter
-	def name(self, value):
-		self._name = value
-	
-	@property
-	def description(self):
-		return self._description
-	@description.setter
-	def description(self, value):
-		self._description = value
-	
-	@property
-	def identifier(self):
-		return self._identifier
-	@identifier.setter
-	def identifier(self, value):
-		self._identifier = value
+    @property
+    def name(self):
+        return self._name
+    @name.setter
+    def name(self, value):
+        self._name = value
+    
+    @property
+    def description(self):
+        return self._description
+    @description.setter
+    def description(self, value):
+        self._description = value
+    
+    @property
+    def identifier(self):
+        return self._identifier
+    @identifier.setter
+    def identifier(self, value):
+        self._identifier = value
 
-	@property
-	def city(self):
-		return self._city
-	@city.setter
-	def city(self, value):
-		self._city = value
+    @property
+    def city(self):
+        return self._city
+    @city.setter
+    def city(self, value):
+        self._city = value
 
-	@property
-	def for_sale(self):
-		return self._for_sale
-	@for_sale.setter
-	def for_sale(self, value):
-		self._for_sale = value
-	
-	
-	
+    @property
+    def for_sale(self):
+        return self._for_sale
+    @for_sale.setter
+    def for_sale(self, value):
+        self._for_sale = value
+    
+    
+    

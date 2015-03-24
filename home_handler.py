@@ -221,24 +221,21 @@ class ProductLoadHandler(BaseHandler):
 									operation="buy"
 
 									if cellar_name != "":
+
 										if cellar.CellarExist( cellar_name ):
-											try:
-												cellar.InitWithName(cellar_name)
-											except Exception,e:
-												error_name = "Error al inicializar bodega {}".format(str(e))
-												if error_name not in warnings:
-													warnings.append( error_name )
-												
+
+											cellar.InitWithName(cellar_name)
+
 											for item in stock:
 
 												for talla in item.keys():
 
-													print "talla: {} cantidad: {}".format(talla,item[talla])
+													# print "talla: {} cantidad: {}".format(talla,item[talla])
 
 													add_kardex = cellar.AddProducts(prod.sku, item[talla], prod.price, talla, prod.color, operation, self.get_user_email() )
 
-												if "error" in add_kardex:
-													print "Error al agregar {} a la kardex".format(prod.sku)
+													# if "error" in add_kardex:
+													# 	print "Error al agregar {} a la kardex, {}".format(prod.sku, add_kardex["error"].encode("utf-8"))
 										else:
 											error_name = "No existe la bodega {}".format(cellar_name)
 											if error_name not in warnings:
