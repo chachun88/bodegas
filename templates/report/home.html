@@ -1,93 +1,102 @@
 {% extends "../base.html" %}
+
 {% block title %}Informe de bodegas {% end %}
+
 {% block caption %}
-{% if int(6) in current_user["permissions"] %}
-	muestra las salidas realizadas
-{% else %}
-	sección no autorizada
-{% end %}
+	{% if int(6) in current_user["permissions"] %}
+		muestra las salidas realizadas
+	{% else %}
+		sección no autorizada
+	{% end %}
 {% end %}
 {% block body %}
 {% if int(6) in current_user["permissions"] %}
-	<div class="col-md-12">
-		<section class="widget">
-			<div style="float:right;">
-				<button type="submit" class="btn btn-primary btn-sm start cargarExcel" >
+<div class="col-md-12">
+	<section class="widget">
+		<div style="float:right;">
+			<button type="submit" class="btn btn-primary btn-sm start cargarExcel" >
 				<i class="fa fa-upload"></i>
 				<span>Exportar a excel</span>
 				<input type="hidden" name="upload" value="{{ data_str }}" id="upload">
-				</button>
-				<a type="button" href="/?day=today" class="btn btn-success btn-sm">HOY</a>
-				<a type="button" href="/?day=yesterday" class="btn btn-success btn-sm">AYER  </a>
-				<a type="button" href="#!" class="btn btn-success btn-sm btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">PERIODO</a>
-				<div class="lptooltip col-sm-2" >
-					<div class="pointer">
-						<img src="/static/img/pointer.png" />
-					</div>
-					<form action="/" class="form-period" >
-						<fieldset>
-							<div class="control-group">
-								<label for="" class="control-label">Desde</label>
-								<div class="controls form-group">
-									<div class="col-sm-12">
-										<input type="date" required="required" name="from" placeholder="dd-mm-aaaa" autocomplete="off" class="form-control"></div>
-									</div>
-									<label for="" class="control-label">Hasta</label>
-									<div class="controls form-group">
-										<div class="col-sm-12">
-											<input type="date" required="required" name="until" placeholder="dd-mm-aaaa" autocomplete="off" class="form-control"></div>
-										</div>
-									</div>
-									<div class="form-actions">
-										<button type="submit" class="btn btn-primary">Buscar</button>
-									</div>
-								</fieldset>
-								<input type="hidden" name="day" value="period" />
-							</form>
+			</button>
+			<a type="button" href="/?day=today" class="btn btn-success btn-sm">HOY</a>
+			<a type="button" href="/?day=yesterday" class="btn btn-success btn-sm">AYER  </a> 
+			<a type="button" href="#!" class="btn btn-success btn-sm btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">PERIODO</a>
+			<div class="lptooltip col-sm-2" >
+				<div class="pointer">
+					<img src="/static/img/pointer.png" />
+				</div>
+				<form action="/" class="form-period" >
+					<fieldset>
+						<div class="control-group">
+							<label for="" class="control-label">Desde</label>
+							<div class="controls form-group">
+								<div class="col-sm-12">
+									<input type="date" required="required" name="from" placeholder="dd-mm-aaaa" autocomplete="off" class="form-control"></div>
+							</div>
+							<label for="" class="control-label">Hasta</label>
+							<div class="controls form-group">
+								<div class="col-sm-12">
+									<input type="date" required="required" name="until" placeholder="dd-mm-aaaa" autocomplete="off" class="form-control"></div>
+								</div>								
 						</div>
-					</div>
-					<div id="period">
-						<div class="body">
-							<table class="table table-report table-striped" >
-								<thead>
-									<tr>
-										<th>SKU</th>
-										<!-- 						<th>Nombre</th>
-										<th>Descripción</th> -->
-										<th>Talla</th>
-										<th>Precio U. Compra</th>
-										<th>Precio U. Venta</th>
-										<th>Cantidad</th>
-										<th>Total</th>
-										<th>Usuario</th>
-										<th>Bodega</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% for p in data %}
-										<tr>
-											<td>{{ p["product_sku"] }}</td>
-											<td>{{ p["size"]}}</td>
-											<td>{{ p["balance_price"]}}</td>
-											{% try %}
-											<td>{{ p["sell_price"] }}</td>
-											{% except %}
-										{% end %}
-										<td>{{ int(p["units"]) }}</td>
-										{% try %}
-										<td>{{ int(p["sell_price"]) * int(p["units"])}}</td>
-										{% except %}
-									{% end %}
-									<td>
-									{% if "user" in p %}{{ p["user"] }}{% end %}
-								</td>
-								<td>{{ p["name"] }}</td>
-							</tr>
-						{% end %}
-					</tbody>
-				</table>
+
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary">Buscar</button>
+						</div>
+						</fieldset>
+						<input type="hidden" name="day" value="period" />
+					</form>
+				</div>
 			</div>
+			<div id="period">
+				<div class="body">
+					<table class="table table-report table-striped" >
+						<thead>
+							<tr>
+								<th>SKU</th>
+							<!-- 						<th>Nombre</th>
+								<th>Descripción</th> -->
+								<th>Talla</th>
+								<th>Precio U. Compra</th>
+								<th>Precio U. Venta</th>
+								<th>Cantidad</th>
+								<th>Total</th>
+								<th>Usuario</th>
+								<th>Bodega</th>
+							</tr>
+							</thead>
+							<tbody>
+								{% for p in data %}
+								<tr>
+									<td>{{ p["product_sku"] }}</td>
+<!-- 					{% for pro in product %}
+						{% if p["product_sku"] == pro["sku"] %}
+						<td>{{ pro["name"] }}</td>
+						<td>{{ pro["description"] }}</td>
+						{% end %}
+						{% end %}	 -->
+						<td>{{ p["size"]}}</td>
+						<td>{{ p["balance_price"]}}</td>
+						{% try %}
+						<td>{{ p["sell_price"] }}</td>
+						{% except %}
+						{% end %}
+						<td>{{ int(p["units"]) }}</td>
+						{% try %}
+						<td>{{ int(p["sell_price"]) * int(p["units"])}}</td>
+						{% except %}
+						{% end %}
+						<td>
+							{% if "user" in p %}{{ p["user"] }}{% end %}
+						</td>
+						<td>{{ p["name"] }}</td>						
+					</tr>
+					{% end %}	
+				</tbody>
+			</table>
 		</div>
+	</div>
 	</section>
 </div>
 {% else %}

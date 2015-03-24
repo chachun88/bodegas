@@ -66,7 +66,7 @@
 						<td class="name-{{p['sku']}}">{{ p["name"] }}</td> 
 						<td class="brand-{{p['sku']}}">{{ p["brand"] }}</td>
 						<td class="manufacturer-{{p['sku']}}">{{ p["manufacturer"] }}</td>
-						<td>{{ p["size"] }}</td>	
+						<td>{{ ", ".join(p["size"]) }}</td>	
 						<td class="color-{{p['sku']}}">{{ p["color"] }}</td>	
 						<td class="price-{{p['sku']}}">{{ p["price"] }}</td>
 						<td class="sell_price-{{p['sku']}}">{{p['sell_price']}}</td>
@@ -94,12 +94,12 @@
 											<input class="form-control" type="text" name="category" value="{{p['category']}}" placeholder="Categor&iacute;a">
 										</div>
 									</div>
-									<!-- <div class="form-group col-sm-5">
+									<div class="form-group col-sm-5">
 										<label class="col-sm-3">SKU</label>
 										<div class="col-sm-7">
 											<input class="form-control" type="text" name="sku" value="{{p['sku']}}" placeholder="SKU">
 										</div>
-									</div> -->
+									</div>
 									<div class="form-group col-sm-5">
 										<label class="col-sm-3">Nombre</label>
 										<div class="col-sm-7">
