@@ -15,7 +15,7 @@
 		<div class="body">
 			<div>
 				<a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
-					Agregar stock producto nuevo
+					Agregar producto a esta bodega
 				</a>
 				<div class="lptooltip col-sm-3" >
 					<div class="pointer">
@@ -141,7 +141,7 @@
 											</div>
 										</div>
 									</fieldset>
-									<input type="hidden" name="product_sku" value="{{ p["sku"] }}" />
+									<input type="hidden" name="product_sku" value='{{ p["sku"] }}' />
 									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
