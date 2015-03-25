@@ -124,6 +124,7 @@ class Application(tornado.web.Application):
             (r"/customer/remove",                    customer_handler.RemoveHandler),
             (r"/customer/initbyid",                  customer_handler.InitByIdHandler),
             (r"/customer/gettypes",                  customer_handler.GetTypesHandler),
+            (r"/customer/gettotalpages",             customer_handler.GetTotalPagesHandler),
 
             (r"/contact/save",                 contact_handler.SaveHandler),
             (r"/contact/edit",                 contact_handler.EditHandler),

@@ -44,8 +44,6 @@ class CustomerViewContactHandler(BaseHandler):
                 self.write(response["error"])
 
 
-
-
 class CustomerHandler(BaseHandler):
 
     @tornado.web.authenticated
@@ -53,9 +51,24 @@ class CustomerHandler(BaseHandler):
 
         self.set_active(Menu.CLIENTES_LISTAR)
 
+        page = int(self.get_argument("page", 1))
+        items = int(self.get_argument("items", 20))
+
         customer = Customer()
-        clientes = customer.List()
-        self.render("customer/list.html",side_menu=self.side_menu, clientes=clientes, dn=self.get_argument("dn", ""))
+        clientes = customer.List(page, items)
+
+        res_total_pages = customer.getTotalPages(page, items)
+
+        if "success" in res_total_pages:
+            total_pages = res_total_pages["success"]
+
+        self.render("customer/list.html",
+                    side_menu=self.side_menu,
+                    clientes=clientes, 
+                    dn=self.get_argument("dn", ""),
+                    page=page, 
+                    total_pages=total_pages)
+
 
 class CustomerSaveHandler(BaseHandler):
 

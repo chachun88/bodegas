@@ -275,6 +275,32 @@ class Customer(BaseModel):
 
         return lista
 
+    def getTotalPages(self, page, items):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''select floor(count(*)/%(items)s) as pages 
+                from "User" u 
+                inner join "User_Types" ut on ut.id = u.type_id 
+                where (u.type_id = 4 or u.type_id = 3) 
+                and u.email <> '' 
+                and u.deleted = 0'''
+
+        parameters = {
+            "items" : items
+        }
+
+        try:
+            cur.execute(query, parameters)
+            pages = cur.fetchone()["pages"]
+
+            return self.ShowSuccessMessage(pages)
+
+        except Exception, e:
+
+            return self.ShowError(str(e))
+
+
     def ChangeState(self,ids,state):
         
         results = ids.split(",")

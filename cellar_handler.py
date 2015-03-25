@@ -147,7 +147,7 @@ class CellarEasyInputHandler(BaseHandler):
         product.size=size
         product.description = product.description.encode("utf-8")
         product.color = product.color.encode("utf-8")
-        product.tags = ",".join(product.tags)
+        product.tags = ",".join(str(t) for t in product.tags)
         product.Save()
 
         res_add_product = cellar.AddProducts(product_sku, quantity, price, size, product.color, operation, self.get_user_email() )

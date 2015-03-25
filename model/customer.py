@@ -266,4 +266,19 @@ class Customer(BaseModel):
 
         return json_obj
 
-        
+    def getTotalPages(self, page, items):
+
+        url = self.wsurl() + "/customer/gettotalpages"
+
+        data = {
+            "token" : self.token,
+            "page" : page,
+            "items" : items
+        }
+
+        post_data = urllib.urlencode(data)
+
+        json_string = urllib.urlopen(url, post_data).read()
+        json_obj = json_util.loads(json_string)
+
+        return json_obj

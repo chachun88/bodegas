@@ -167,3 +167,17 @@ class GetTypesHandler(BaseHandler):
 
         customer = Customer()
         self.write(json_util.dumps(customer.GetTypes()))
+
+
+class GetTotalPagesHandler(BaseHandler):
+    """ get total pages with items """
+
+    def post(self):
+
+        items = self.get_argument("items", 20)
+        page = self.get_argument("page", 1)
+
+        customer = Customer()
+        total = customer.getTotalPages(page, items)
+
+        self.write(json_util.dumps(total))
