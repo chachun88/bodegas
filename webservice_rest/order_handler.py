@@ -10,6 +10,7 @@ from bson import json_util
 from base_handler import BaseHandler
 import datetime
 
+
 class ChangeStateHandler(BaseHandler):
 
     def get(self):
@@ -37,8 +38,7 @@ class ChangeStateHandler(BaseHandler):
         self.write(json_util.dumps(response))
 
 
-class AddOrderHandler(BaseHandler):
-    
+class AddOrderHandler(BaseHandler):  
 
     def get(self):
         # validate access token
@@ -69,7 +69,7 @@ class AddOrderHandler(BaseHandler):
         order.billing_id        = self.get_argument("billing_id","")
         order.shipping_id       = self.get_argument("shipping_id","")
 
-        #saving the current order
+        # saving the current order
         oid = order.Save()
 
         self.write(oid)
@@ -124,7 +124,7 @@ class RemoveOrderHandler(BaseHandler):
 class GetOrderHandler(BaseHandler):
     def get(self):
         
-        #validate constrains
+        # validate constrains
         if not self.ValidateToken():
             return
 
@@ -138,7 +138,7 @@ class GetOrderHandler(BaseHandler):
 class ListOrderHandler(BaseHandler):
     def get(self):
 
-        #validate constrains
+        # validate constrains
         if not self.ValidateToken():
             return
 
@@ -149,7 +149,7 @@ class ListOrderHandler(BaseHandler):
             items_per_page  = int(self.get_argument("items", "20"))
         except Exception, e:
             print str(e)
-        
+
         self.write(json_util.dumps(order.GetList(current_page, items_per_page)))
         # self.write(json_util.dumps())
 

@@ -182,7 +182,7 @@ class Order(BaseModel):
         offset = (page-1)*items
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
         try:
-            query = '''select o.*,u.name as customer,c.*,o.id as order_id, ct.name as city from "Order" o left join "User" u on u.id = o.user_id left join "Contact" c on c.id = o.billing_id left join "City" ct on ct.id = c.city_id order by o.id desc limit %(items)s offset %(offset)s'''
+            query = '''select o.*,u.name || u.lastname as customer,c.*,o.id as order_id, ct.name as city from "Order" o left join "User" u on u.id = o.user_id left join "Contact" c on c.id = o.billing_id left join "City" ct on ct.id = c.city_id order by o.id desc limit %(items)s offset %(offset)s'''
             parametros = {
             "items":items,
             "offset":offset

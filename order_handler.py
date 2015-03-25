@@ -26,6 +26,7 @@ ACCIONES_PARA_DESPACHO = 3
 ACCIONES_DESPACHADO = 4
 ACCIONES_CANCELADO = 5
 
+
 class OrderHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -44,7 +45,13 @@ class OrderHandler(BaseHandler):
         if "success" in res_total_pages:
             total_pages = res_total_pages["success"]
 
-        self.render("order/home.html",side_menu=self.side_menu, pedidos=pedidos, dn=self.get_argument("dn", ""), page=page, total_pages=total_pages)
+        self.render("order/home.html", 
+                    side_menu=self.side_menu, 
+                    pedidos=pedidos, 
+                    dn=self.get_argument("dn", ""), 
+                    page=page, 
+                    total_pages=total_pages)
+
 
 class AddOrderHandler(BaseHandler):
 
@@ -78,10 +85,11 @@ class AddOrderHandler(BaseHandler):
         order.product_quantity  = self.get_argument("product_quantity","")
         order.state             = self.get_argument("state","")
 
-        #saving the current order
+        # saving the current order
         oid = order.Save()
 
         self.write(oid)
+
 
 class OrderActionsHandler(BaseHandler):
 
