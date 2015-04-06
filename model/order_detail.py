@@ -7,39 +7,45 @@ from model.base_model import BaseModel
 from bson import json_util
 from product import Product
 
+
 class OrderDetail(BaseModel):
 
     @property
     def id(self):
         return self._id
+
     @id.setter
     def id(self, value):
         self._id = value
-    
+
     @property
     def order_id(self):
         return self._order_id
+
     @order_id.setter
     def order_id(self, value):
         self._order_id = value
-    
+
     @property
     def product(self):
         return self._product
+
     @product.setter
     def product(self, value):
         self._product = value
-    
+
     @property
     def quantity(self):
         return self._quantity
+
     @quantity.setter
     def quantity(self, value):
         self._quantity = value
-    
+
     @property
     def total(self):
         return self._total
+
     @total.setter
     def total(self, value):
         self._total = value
@@ -47,11 +53,10 @@ class OrderDetail(BaseModel):
     @property
     def product_id(self):
         return self._product_id
+
     @product_id.setter
     def product_id(self, value):
         self._product_id = value
-    
-    
 
     def __init__(self):
         BaseModel.__init__(self)
@@ -107,7 +112,7 @@ class OrderDetail(BaseModel):
         url += "&order_id={}".format(order_id)
 
         json_string = urllib.urlopen(url).read()
-        
+
         return json_util.loads(json_string)
 
     def List(self, page=1, items=20):
@@ -117,7 +122,5 @@ class OrderDetail(BaseModel):
         url += "&items={}".format(items)
 
         json_string = urllib.urlopen(url).read()
-        print json_string
+        # print json_string
         return json_util.loads(json_string)
-    
-    

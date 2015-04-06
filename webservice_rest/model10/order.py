@@ -1,10 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from bson import json_util
-from bson.objectid import ObjectId
 from basemodel import BaseModel
-from order_detail import OrderDetail
 import psycopg2
 import psycopg2.extras
 

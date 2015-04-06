@@ -23,14 +23,15 @@ class Order(BaseModel):
     @property
     def id(self):
         return self._id
+
     @id.setter
     def id(self, value):
         self._id = value
-    
 
     @property
     def salesman(self):
         return self._salesman
+
     @salesman.setter
     def salesman(self, value):
         self._salesman = value
@@ -38,6 +39,7 @@ class Order(BaseModel):
     @property
     def customer(self):
         return self._customer
+
     @customer.setter
     def customer(self, value):
         self._customer = value
@@ -45,6 +47,7 @@ class Order(BaseModel):
     @property
     def subtotal(self):
         return self._subtotal
+
     @subtotal.setter
     def subtotal(self, value):
         self._subtotal = value
@@ -52,6 +55,7 @@ class Order(BaseModel):
     @property
     def shipping(self):
         return self._shipping
+
     @shipping.setter
     def shipping(self, value):
         self._shipping = value
@@ -59,6 +63,7 @@ class Order(BaseModel):
     @property
     def tax(self):
         return self._tax
+
     @tax.setter
     def tax(self, value):
         self._tax = value
@@ -66,6 +71,7 @@ class Order(BaseModel):
     @property
     def total(self):
         return self._total
+
     @total.setter
     def total(self, value):
         self._total = value
@@ -73,6 +79,7 @@ class Order(BaseModel):
     @property
     def address(self):
         return self._address
+
     @address.setter
     def address(self, value):
         self._address = value
@@ -80,6 +87,7 @@ class Order(BaseModel):
     @property
     def town(self):
         return self._town
+
     @town.setter
     def town(self, value):
         self._town = value
@@ -87,6 +95,7 @@ class Order(BaseModel):
     @property
     def city(self):
         return self._city
+
     @city.setter
     def city(self, value):
         self._city = value
@@ -94,6 +103,7 @@ class Order(BaseModel):
     @property
     def date(self):
         return self._date
+
     @date.setter
     def date(self, value):
         self._date = value
@@ -101,6 +111,7 @@ class Order(BaseModel):
     @property
     def type(self):
         return self._type
+
     @type.setter
     def type(self, value):
         self._type = value
@@ -108,6 +119,7 @@ class Order(BaseModel):
     @property
     def source(self):
         return self._source
+
     @source.setter
     def source(self, value):
         self._source = value
@@ -115,6 +127,7 @@ class Order(BaseModel):
     @property
     def country(self):
         return self._country
+
     @country.setter
     def country(self, value):
         self._country = value
@@ -122,6 +135,7 @@ class Order(BaseModel):
     @property
     def items_quantity(self):
         return self._items_quantity
+
     @items_quantity.setter
     def items_quantity(self, value):
         self._items_quantity = value
@@ -129,6 +143,7 @@ class Order(BaseModel):
     @property
     def product_quantity(self):
         return self._product_quantity
+
     @product_quantity.setter
     def product_quantity(self, value):
         self._product_quantity = value
@@ -136,6 +151,7 @@ class Order(BaseModel):
     @property
     def state(self):
         return self._state
+
     @state.setter
     def state(self, value):
         self._state = value
@@ -143,6 +159,7 @@ class Order(BaseModel):
     @property
     def payment_type(self):
         return self._payment_type
+
     @payment_type.setter
     def payment_type(self, value):
         self._payment_type = value
@@ -150,6 +167,7 @@ class Order(BaseModel):
     @property
     def billing_id(self):
         return self._billing_id
+
     @billing_id.setter
     def billing_id(self, value):
         self._billing_id = value
@@ -157,6 +175,7 @@ class Order(BaseModel):
     @property
     def shipping_id(self):
         return self._shipping_id
+
     @shipping_id.setter
     def shipping_id(self, value):
         self._shipping_id = value
@@ -164,10 +183,18 @@ class Order(BaseModel):
     @property
     def customer_email(self):
         return self._customer_email
+
     @customer_email.setter
     def customer_email(self, value):
         self._customer_email = value
     
+    @property
+    def telephone(self):
+        return self._telephone
+
+    @telephone.setter
+    def telephone(self, value):
+        self._telephone = value
     
 
     def __init__(self):
@@ -193,6 +220,7 @@ class Order(BaseModel):
         self._billing_id             = ""
         self._shipping_id            = ""
         self._customer_email         = ""
+        self._telephone              = ""
 
     def Save(self):
         url = self.wsurl() + "/order/add"
@@ -245,7 +273,7 @@ class Order(BaseModel):
             self.id                     = data["order_id"]
             self.date                   = data["date"]
             self.type                   = data["type"]
-            # self.salesman               = data["salesman"]
+            self.telephone              = data["telephone"]
             self.customer               = data["customer"]
             self.subtotal               = data["subtotal"]
             self.shipping               = data["shipping"]

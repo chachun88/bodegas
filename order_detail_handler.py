@@ -7,15 +7,11 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from globals import Menu
-
 from basehandler import BaseHandler
 from model.order_detail import OrderDetail
 from model.order import Order
-from model.product import Product
 from model.webpay import Webpay
 
-from bson import json_util
 
 class ListOrderDetailHandler(BaseHandler):
 
@@ -30,8 +26,6 @@ class ListOrderDetailHandler(BaseHandler):
         response = order.InitWithId(order_id)
 
         order_detail = OrderDetail()
-        
-        product = Product()
 
         webpay_data = {}
 
@@ -46,7 +40,6 @@ class ListOrderDetailHandler(BaseHandler):
 
                 res_webpay_data = res_webpay["success"]
 
-
                 TBK_ORDEN_COMPRA = res_webpay_data["TBK_ORDEN_COMPRA"]
                 TBK_MONTO = res_webpay_data["TBK_MONTO"]
                 TBK_CODIGO_AUTORIZACION = res_webpay_data["TBK_CODIGO_AUTORIZACION"]
@@ -57,7 +50,6 @@ class ListOrderDetailHandler(BaseHandler):
                 TBK_NUMERO_CUOTAS = res_webpay_data["TBK_NUMERO_CUOTAS"]
                 TBK_FECHA_TRANSACCION = str(res_webpay_data["TBK_FECHA_TRANSACCION"])
                 TBK_ID_SESION = str(res_webpay_data["TBK_ID_SESION"])
-
 
                 anno_transaccion = TBK_ID_SESION[:4] 
                 mes_transaccion = TBK_ID_SESION[4:6]
@@ -120,11 +112,9 @@ class ListOrderDetailHandler(BaseHandler):
             except Exception, e:
                 self.render("order_detail/list.html",dn="bpf",error=str(e),order_detail=od_list,order=order, webpay_data=webpay_data)
 
-            
-
 
 class AddOrderDetailHandler(BaseHandler):
-    
+
     @tornado.web.authenticated
     def get(self):
         order_detail = OrderDetail()
@@ -143,17 +133,10 @@ class AddOrderDetailHandler(BaseHandler):
         if order_id == "" or product_id == "" or quantity == "" or total == "":
             self.render("order_detail/save.html",dn="Error al insertar detalle de pedido", order_detail=order_detail, mode="add")
 
-        
         order_detail.order_id = order_id
         order_detail.product_id = product_id
         order_detail.quantity = quantity
         order_detail.total = total
         order_detail.Save()
 
-        self.render("order_detail/save.html",dn="Detalle insertado correctamente",order_detail=order_detail, mode="add")        
-
-class EditOrderDetailHandler(BaseHandler):
-    
-    @tornado.web.authenticated
-    def get(self):
-        self.render("order_detail/save.html",dn="",mode="edit",order_detail=order_detail)
+        self.render("order_detail/save.html",dn="Detalle insertado correctamente",order_detail=order_detail, mode="add")
