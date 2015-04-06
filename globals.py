@@ -31,6 +31,9 @@ ws_port = 0
 reserve_cellar_id = 12
 email_giani = "contacto@gianidafirenze.cl"
 
+dir_products = 'uploads/salidas_masivas/'
+dir_stock = 'uploads/entradas_masivas/'
+
 # setting vars
 if debugMode:
     userMode = "test"
@@ -51,6 +54,7 @@ webservice_url += ":{}".format(ws_port)
 
 # --- menu ---
 
+
 class Menu:
 
     INFORMES = "Informes"
@@ -62,8 +66,8 @@ class Menu:
     PRODUCTOS = "Productos"
 
     # sub_menu
-    PRODUCTOS_CARGA_MASIVA = "Carga masiva"
-    PRODUCTOS_SALIDA_MASIVA = "Salida masiva"
+    PRODUCTOS_CARGA_STOCK = "Carga stock"
+    PRODUCTOS_CARGA_MASIVA = "Carga productos"
     PRODUCTOS_CARGA = "Agregar producto"
     PRODUCTOS_LISTA = "Maestro productos"
     # end sub_menu

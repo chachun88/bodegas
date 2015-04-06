@@ -43,6 +43,7 @@ class Product(BaseModel):
         self._tags = ''
         self._promotion_price = 0  # precio promocion
         self._size_id = ""
+        self._bulk_price = 0
 
         # self.collection = db.product
 
@@ -264,6 +265,14 @@ class Product(BaseModel):
     def promotion_price(self, value):
         self._promotion_price = value
 
+    @property
+    def bulk_price(self):
+        return self._bulk_price
+
+    @bulk_price.setter
+    def bulk_price(self, value):
+        self._bulk_price = value
+
     def GetCellars(self):
         return ''
 
@@ -296,7 +305,8 @@ class Product(BaseModel):
                 "sell_price": self.sell_price,
                 "which_size": self.which_size,
                 "delivery": self.delivery,
-                "size_id": self.size_id
+                "size_id": self.size_id,
+                "bulk_price" : self.bulk_price
             }
 
             return rtn_data
@@ -349,6 +359,7 @@ class Product(BaseModel):
             ,sell_price = %(sell_price)s
             ,which_size = %(which_size)s
             ,promotion_price = %(promotion_price)s
+            ,bulk_price = %(bulk_price)s
             ,delivery = %(delivery)s where sku = %(sku)s returning id'''
 
             category = Category()
@@ -382,7 +393,8 @@ class Product(BaseModel):
                 "price": self.price,
                 "upc": self.upc,
                 "sku": self.sku,
-                "sell_price": self.sell_price
+                "sell_price": self.sell_price,
+                "bulk_price" : self.bulk_price
             }
 
             cur = self.connection.cursor(
@@ -417,42 +429,6 @@ class Product(BaseModel):
 
                     if "success" in res_name:
                         sizes_id.append(_size.id)
-
-            for size_id in sizes_id:
-
-                k = Kardex()
-                res_stock = k.stockByProductSku(self.sku, size_id)
-
-                if "success" in res_stock:
-
-                    if res_stock["success"] == 0:
-
-                        cellars = model10.cellar.Cellar.GetAllCellars()
-
-                        for c in cellars:
-
-                            kardex = Kardex()
-
-                            kardex.product_sku = self.sku
-                            kardex.cellar_identifier = c["id"]
-                            kardex.operation_type = 'ingreso'
-                            kardex.units = 0
-                            kardex.price = self.price
-                            kardex.sell_price = 0.0
-                            kardex.size_id = size_id
-                            kardex.color = self.color
-                            kardex.total = 0.0
-                            kardex.balance_units = 0
-                            kardex.balance_price = 0.0
-                            kardex.balance_total = 0.0
-                            kardex.date = str(
-                                datetime.datetime.now().isoformat())
-                            kardex.user = "Sistema - Nueva talla"
-
-                            kardex.Insert()
-
-                else:
-                    return res_stock
 
             cur = self.connection.cursor(
                 cursor_factory=psycopg2.extras.RealDictCursor)
@@ -501,6 +477,7 @@ class Product(BaseModel):
             , sell_price = %(sell_price)s
             , which_size = %(which_size)s
             , promotion_price = %(promotion_price)s
+            , bulk_price = %(bulk_price)s
             , delivery = %(delivery)s where id = %(id)s'''
 
             category = Category()
@@ -535,7 +512,8 @@ class Product(BaseModel):
                 "sell_price": self.sell_price,
                 "delivery": self.delivery,
                 "which_size": self.which_size,
-                "promotion_price": self.promotion_price
+                "promotion_price": self.promotion_price,
+                "bulk_price" : self.bulk_price
             }
 
             # print "existe id:{}".format(cur.mogrify(q,p))
@@ -656,7 +634,8 @@ class Product(BaseModel):
                                         upc,
                                         color,
                                         sell_price,
-                                        promotion_price)
+                                        promotion_price,
+                                        bulk_price)
             values (%(delivery)s,
                     %(which_size)s,
                     %(name)s,
@@ -679,7 +658,8 @@ class Product(BaseModel):
                     %(upc)s,
                     %(color)s,
                     %(sell_price)s,
-                    %(promotion_price)s) returning id'''
+                    %(promotion_price)s,
+                    %(bulk_price)s) returning id'''
 
             p = {
                 "name": self.name,
@@ -704,7 +684,8 @@ class Product(BaseModel):
                 "sell_price": self.sell_price,
                 "delivery": self.delivery,
                 "which_size": self.which_size,
-                "promotion_price": self.promotion_price
+                "promotion_price": self.promotion_price,
+                "bulk_price" : self.bulk_price
             }
 
             # print cur.mogrify(q.strip(),p)

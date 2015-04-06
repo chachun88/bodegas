@@ -15,20 +15,21 @@ import glob
 from bson import json_util
 
 from basehandler import BaseHandler
-from globals import port, debugMode, carpeta_img, userMode, Menu
+from globals import Menu
 from model.product import Product
 from model.category import Category
 from model.brand import Brand
 from model.tag import Tag
 from model.kardex import Kardex
 from model.size import Size
-from basehandler import BaseHandler
+
 
 class ProductAddHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        self.set_active(Menu.PRODUCTOS_CARGA) #change menu active item
+
+        self.set_active(Menu.PRODUCTOS_CARGA)  # change menu active item
 
         tags = []
         tag = Tag()
@@ -47,15 +48,11 @@ class ProductAddHandler(BaseHandler):
         prod = Product()
         self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="add", tags=tags, sizes=sizes)
 
-
     def saveImage( self, imagedata, sku, image_number ):
 
         final_name = "{}_{}.png".format( image_number, sku )
 
         try:
-            fn = imagedata["filename"]
-
-            # print "filename:{}".format(fn)
 
             file_path = 'uploads/images/' + final_name
 
@@ -70,11 +67,9 @@ class ProductAddHandler(BaseHandler):
         return final_name
 
     def deleteOtherImages(self, image_name):
-        
-        identificador = self.get_argument("id","")
 
         # print "files {}".format( image_name )
-        
+
         if image_name != "":
             os.chdir( "uploads/images/" )
             for file in glob.glob("*" + image_name):
@@ -90,15 +85,13 @@ class ProductAddHandler(BaseHandler):
         else:
             self.write( "imagen no existe " )
 
-
     @tornado.web.authenticated
     def post(self):
 
-
-        try: # Windows needs stdio set for binary mode.
+        try:  # Windows needs stdio set for binary mode.
             import msvcrt
-            msvcrt.setmode (0, os.O_BINARY) # stdin  = 0
-            msvcrt.setmode (1, os.O_BINARY) # stdout = 1
+            msvcrt.setmode(0, os.O_BINARY)  # stdin  = 0
+            msvcrt.setmode(1, os.O_BINARY)  # stdout = 1
         except ImportError:
             pass
 
@@ -106,13 +99,13 @@ class ProductAddHandler(BaseHandler):
         fn =""    
         try:   
             form = cgi.FieldStorage()
-            
+
             # A nested FieldStorage instance holds the file
             fileitem = self.request.files['image'][0]
 
             for i in self.request.files:
                 self.write("llega : {} <br>".format( self.request.files[i][0]["filename"] ))
-        
+
             # strip leading path from file name to avoid directory traversal attacks
             fn = fileitem['filename']
         except:
@@ -150,7 +143,7 @@ class ProductAddHandler(BaseHandler):
         if ( "image-5" in self.request.files ):
             img3 = self.saveImage( self.request.files['image-5'][0], self.get_argument("sku", ""), 5 )
 
-        ##if the category does not exist is created
+        # if the category does not exist is created
         category = Category()
 
         try:
@@ -158,9 +151,9 @@ class ProductAddHandler(BaseHandler):
         except:     
             category.name = self.get_argument("category", "")
             category.Save()
-        
-        ##if the brand does not exist is created
-        brand=Brand()   
+
+        # if the brand does not exist is created
+        brand = Brand()   
 
         try:
             brand.InitWithName(self.get_argument("brand", ""))
@@ -169,8 +162,6 @@ class ProductAddHandler(BaseHandler):
             brand.Save()    
 
         prod = Product()
-
-        
 
         res = prod.InitWithSku(self.get_argument("sku", ""))
 
@@ -184,9 +175,9 @@ class ProductAddHandler(BaseHandler):
             prod.sku        = self.get_argument("sku", "")
             prod.name       = self.get_argument("name", "").encode('utf-8')
             prod.upc        = self.get_argument("upc", "")
-            prod.description= self.get_argument("description", "").encode('utf-8')
+            prod.description = self.get_argument("description", "").encode('utf-8')
             prod.brand      = self.get_argument("brand", "").encode('utf-8')
-            prod.manufacturer= self.get_argument("manufacturer", "")
+            prod.manufacturer = self.get_argument("manufacturer", "")
             prod.size        = ",".join(self.get_arguments("size"))
             prod.color      = self.get_argument("color", "").encode('utf-8')
             prod.material   = self.get_argument("material", "")
@@ -207,7 +198,7 @@ class ProductAddHandler(BaseHandler):
             prod.tags       = ",".join([t.encode("utf-8") for t in self.get_arguments("tags")])
             prod.for_sale   = self.get_argument("for_sale",0)
             prod.promotion_price = self.get_argument("promotion_price", 0)
-
+            prod.bulk_price = self.get_argument("bulk_price", 0)
 
             # print self.get_arguments("tags")
 
@@ -221,16 +212,13 @@ class ProductAddHandler(BaseHandler):
 
         else:
 
-            
-            
             prod.category   = self.get_argument("category", "").encode("utf-8")
             prod.sku        = self.get_argument("sku", "").encode("utf-8")
             prod.name       = self.get_argument("name", "").encode("utf-8")
             prod.upc        = self.get_argument("upc", "").encode("utf-8")
-            prod.description= self.get_argument("description", "").encode("utf-8")
+            prod.description = self.get_argument("description", "").encode("utf-8")
             prod.brand      = self.get_argument("brand", "").encode("utf-8")
-            prod.manufacturer= self.get_argument("manufacturer", "").encode("utf-8")
-            
+            prod.manufacturer = self.get_argument("manufacturer", "").encode("utf-8")
             prod.color      = self.get_argument("color", "").encode("utf-8")
             prod.material   = self.get_argument("material", "").encode("utf-8")
             prod.bullet_1   = self.get_argument("bullet_1", "").encode("utf-8")
@@ -249,7 +237,7 @@ class ProductAddHandler(BaseHandler):
             prod.which_size = self.get_argument("which_size","").encode("utf-8")
             prod.for_sale   = self.get_argument("for_sale",0)
             prod.promotion_price = self.get_argument("promotion_price", 0)
-
+            prod.bulk_price = self.get_argument("bulk_price", 0)
 
             # size_arr = self.get_argument("size", "").split(",")
             # size_arr = [s.encode("utf-8") for s in size_arr]
@@ -260,7 +248,7 @@ class ProductAddHandler(BaseHandler):
             respose = prod.Save("one")
 
             # print respose
-            
+
             if "success" in respose:
                 self.redirect("/product/list")
             else:
@@ -268,15 +256,13 @@ class ProductAddHandler(BaseHandler):
 
 
 class ProductEditHandler(BaseHandler):
-    
+
     @tornado.web.authenticated
     def get(self):
         self.set_active(Menu.PRODUCTOS_CARGA)
 
         prod = Product()
         res = prod.InitWithId(self.get_argument("id", ""))
-
-        
 
         tags = []
         tag = Tag()
@@ -297,7 +283,7 @@ class ProductEditHandler(BaseHandler):
         else:
             self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
 
-         
+
 class FastEditHandler(BaseHandler):
 
     @tornado.web.authenticated
@@ -336,19 +322,19 @@ class FastEditHandler(BaseHandler):
             prod.image_5 = prod.image_5.encode("utf-8")
             prod.image_6 = prod.image_6.encode("utf-8")
             prod.promotion_price = self.get_argument("promotion_price",0)
+            prod.bulk_price = self.get_argument("bulk_price", 0)
 
             # print "type:{} value:{}".format(type(prod.tags),prod.tags)
 
             prod.tags = ','.join(str(v) for v in prod.tags)
-            
-            
+
             respuesta = prod.Save()
 
             self.write(respuesta)
-                
 
         else:
             self.write(res)
+
 
 class ForSaleHandler(BaseHandler):
 

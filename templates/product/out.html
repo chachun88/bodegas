@@ -1,16 +1,16 @@
 {% extends "../base.html" %}
 
-{% block title %}Salidas Masivas {% end %}
+{% block title %}Carga Masiva productos {% end %}
 {% block caption %} puedes cargar un excel con una lista de productos{% end %}
 
 {% block body %}
-{% if dn == "t" %}
-<div class="alert alert-success">
+{% if args["dn"].encode("utf-8") == "t" %}
+<div class="alert alert-success alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<strong><i class="fa fa-check"></i> Bien hecho!</strong> Se ha cargado excel correctamente.
 </div>
 {% end %}
-{% if dn == "t2" %}
+{% if args["dn"].encode("utf-8") == "t2" %}
 <div class="alert alert-warning">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong> Debe cargar excel antes de subir archivo.
@@ -36,11 +36,13 @@
 			</div>
 			{% raw xsrf_form_html() %}
 		</form>
-		<form enctype="multipart/form-data" action="/product/massiveoutput" method="post">
+		<form enctype="multipart/form-data" action="/product/load" method="post">
 			<div class="form-actions fileupload-buttonbar no-margin">
+				<input type="hidden" name="filename" value="{{args["filename"]}}">
+				<input type="hidden" name="dn" value="{{args['dn']}}">
 				<button type="submit" class="btn btn-primary btn-sm start">
 					<i class="fa fa-upload"></i>
-					<span>Sacar productos</span>
+					<span>Cargar productos</span>
 				</button>
 			</div>
 			{% raw xsrf_form_html() %}
@@ -51,8 +53,8 @@
 				<thead>
 					<tr>
 						{% try %}
-							{% for j in range(ncols) %} 
-								<th class="sorting" >{{matriz[3][j]}}</th>
+							{% for j in range(args["ncols"]) %} 
+								<th>{{args["matriz"][0][j]}}</th>
 							{% end %}
 						{% except %}
 						{% end %}
@@ -60,10 +62,10 @@
 				</thead>
 				<tbody>
 					{% try %}
-						{% for i in range(4, nrows) %}
+						{% for i in range(1, args["nrows"]) %}
 							<tr>
-							{% for j in range(ncols) %}
-								<td class="hidden-xs-portrait">{{matriz[i][j]}}</td>
+							{% for j in range(args["ncols"]) %}
+								<td class="hidden-xs-portrait">{{args["matriz"][i][j]}}</td>
 							{% end %}	
 							</tr>
 						{% end %}

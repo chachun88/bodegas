@@ -46,6 +46,7 @@ class AddProductHandler(BaseHandler):
         product.which_size = self.get_argument("which_size", "")
         product.id = self.get_argument("id", "")
         product.size_id = self.get_argument("size_id", "")
+        product.bulk_price = self.get_argument("bulk_price", 0)
 
         # self.write(product.sku)
         # return
@@ -141,9 +142,6 @@ class UploadPictureHandler(BaseHandler):
 
             output_file = open("uploads/" + image['filename'], 'w')
             output_file.write(image['body'])
-
-            image_number = self.get_argument("number")
-            product_id = self.get_argument("id")
 
             self.finish('se ha subido la imagen')
         except Exception, e:

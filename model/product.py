@@ -42,6 +42,7 @@ class Product(BaseModel):
         self._promotion_price = 0
         self._for_sale = False
         self._size_id = []
+        self._bulk_price = 0
 
     # Class fields #
 
@@ -277,6 +278,14 @@ class Product(BaseModel):
     def size_id(self, value):
         self._size_id = value
 
+    @property
+    def bulk_price(self):
+        return self._bulk_price
+
+    @bulk_price.setter
+    def bulk_price(self, value):
+        self._bulk_price = value    
+
     # methods
 
     def InitWithId(self, idd):
@@ -322,6 +331,7 @@ class Product(BaseModel):
             self.delivery = data["delivery"]
             self.for_sale = data["for_sale"]
             self.promotion_price = data["promotion_price"]
+            self.bulk_price = data["bulk_price"]
 
         return data_obj
 
@@ -366,6 +376,7 @@ class Product(BaseModel):
             self.delivery = producto["delivery"]
             self.for_sale = producto["for_sale"]
             self.promotion_price = producto["promotion_price"]
+            self.bulk_price = producto["bulk_price"]
 
         return data
 
@@ -410,7 +421,8 @@ class Product(BaseModel):
                 "id": self.identifier,
                 "for_sale": self.for_sale,
                 "promotion_price": self.promotion_price,
-                "size_id": self.size_id
+                "size_id": self.size_id,
+                "bulk_price" : self.bulk_price
             }
 
             post_data = urllib.urlencode(data)
@@ -450,7 +462,8 @@ class Product(BaseModel):
                 "which_size": self.which_size,
                 "for_sale": self.for_sale,
                 "promotion_price": self.promotion_price,
-                "size_id": self.size_id
+                "size_id": self.size_id,
+                "bulk_price" : self.bulk_price
             }
 
             post_data = urllib.urlencode(data)

@@ -33,3 +33,5 @@ CREATE OR REPLACE VIEW sizes AS
    FROM "Kardex" k
    JOIN "Size" s ON s.id = k.size_id
   ORDER BY k.product_sku, k.size_id DESC;
+
+alter table "Product" add column "bulk_price" integer not null default 0;
