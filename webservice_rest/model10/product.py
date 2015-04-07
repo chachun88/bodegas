@@ -10,6 +10,7 @@ from category import Category
 import psycopg2
 import psycopg2.extras
 import datetime
+from model10.product_size import Product_Size
 
 
 class Product(BaseModel):
@@ -424,14 +425,22 @@ class Product(BaseModel):
 
                 if size.strip() != "":
                     _size = Size()
-                    _size.name = size
+                    _size.name = size.strip()
                     res_name = _size.initByName()
 
                     if "success" in res_name:
                         sizes_id.append(_size.id)
 
-            cur = self.connection.cursor(
-                cursor_factory=psycopg2.extras.RealDictCursor)
+            for size_id in sizes_id:
+
+                ps = Product_Size()
+                ps.product_sku = self.sku
+                ps.size_id = size_id
+
+                res_ps = ps.save()
+
+                if "error" in res_ps:
+                    return self.ShowError(res_ps["error"])
 
             _tag = Tag()
             remover_asociacion = _tag.RemoveTagsAsociation(self.id)
@@ -534,7 +543,7 @@ class Product(BaseModel):
 
                 if size.strip() != "":
                     _size = Size()
-                    _size.name = size
+                    _size.name = size.strip()
                     res_name = _size.initByName()
 
                     if "success" in res_name:
@@ -542,47 +551,14 @@ class Product(BaseModel):
 
             for size_id in sizes_id:
 
-                cur = self.connection.cursor(
-                    cursor_factory=psycopg2.extras.RealDictCursor)
+                ps = Product_Size()
+                ps.product_sku = self.sku
+                ps.size_id = size_id
 
-                query = '''select id from "Kardex" where product_sku = %(product_sku)s and size_id = %(size_id)s order by date desc limit 1'''
+                res_ps = ps.save()
 
-                parameter = {"product_sku": self.id, "size_id": size_id}
-
-                try:
-                    cur.execute(query, parameter)
-
-                    if cur.rowcount == 0:
-
-                        cellars = model10.cellar.Cellar.GetAllCellars()
-
-                        for c in cellars:
-
-                            kardex = Kardex()
-
-                            kardex.product_sku = self.sku
-                            kardex.cellar_identifier = c["id"]
-                            kardex.operation_type = 'ingreso'
-                            kardex.units = 0
-                            kardex.price = self.price
-                            kardex.sell_price = 0.0
-                            kardex.size_id = size_id
-                            kardex.color = self.color
-                            kardex.total = 0.0
-                            kardex.balance_units = 0
-                            kardex.balance_price = 0.0
-                            kardex.balance_total = 0.0
-                            kardex.date = str(
-                                datetime.datetime.now().isoformat())
-                            kardex.user = "Sistema - Nueva talla"
-
-                            kardex.Insert()
-
-                except Exception, e:
-                    return self.ShowError("2. Searching in kardex by size and product id, {}".format(str(e)))
-                finally:
-                    cur.close()
-                    self.connection.close()
+                if "error" in res_ps:
+                    return self.ShowError(res_ps["error"])
 
             _tag = Tag()
             remover_asociacion = _tag.RemoveTagsAsociation(self.id)
@@ -705,7 +681,7 @@ class Product(BaseModel):
 
                     if size.strip() != "":
                         _size = Size()
-                        _size.name = size
+                        _size.name = size.strip()
                         res_name = _size.initByName()
 
                         if "success" in res_name:
@@ -713,44 +689,14 @@ class Product(BaseModel):
 
                 for size_id in sizes_id:
 
-                    kardex = Kardex()
-                    res_stock = kardex.stockByProductSku(self.sku, size_id)
+                    ps = Product_Size()
+                    ps.product_sku = self.sku
+                    ps.size_id = size_id
 
-                    if "success" in res_stock:
+                    res_ps = ps.save()
 
-                        total = res_stock["success"]
-
-                        if total == 0:
-
-                            cellars = model10.cellar.Cellar.GetAllCellars()
-
-                            for c in cellars:
-
-                                kardex = Kardex()
-
-                                kardex.product_sku = self.sku
-                                kardex.cellar_identifier = c["id"]
-                                kardex.operation_type = 'ingreso'
-                                kardex.units = 0
-                                kardex.price = self.price
-                                kardex.sell_price = 0.0
-                                kardex.size_id = size_id
-                                kardex.color = self.color
-                                kardex.total = 0.0
-                                kardex.balance_units = 0
-                                kardex.balance_price = 0.0
-                                kardex.balance_total = 0.0
-                                kardex.date = str(
-                                    datetime.datetime.now().isoformat())
-                                kardex.user = "Sistema - Nueva talla"
-
-                                res_kardex = kardex.Insert()
-
-                                if "error" in res_kardex:
-                                    return self.ShowError(res_kardex["error"])
-
-                    else:
-                        return self.ShowError("Getting stock by product sku, {}".format(res_stock["error"]))
+                    if "error" in res_ps:
+                        return self.ShowError(res_ps["error"])
 
                 _tag = Tag()
 
@@ -780,9 +726,10 @@ class Product(BaseModel):
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        q = '''select string_agg(s.name,',') as size, array_agg(s.size_id) as size_id, p.*, c.name as category from "Product" p 
+        q = '''select string_agg(s.name,',') as size, array_agg(s.id) as size_id, p.*, c.name as category from "Product" p 
                 inner join "Category" c on c.id = p.category_id 
-                inner join sizes s on s.product_sku = p.sku
+                inner join "Product_Size" ps on ps.product_sku = p.sku
+                inner join "Size" s on s.id = ps.size_id
                 where p.sku = %(sku)s group by p.id, c.name limit 1'''
         p = {
             "sku": sku
@@ -819,9 +766,10 @@ class Product(BaseModel):
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        q = '''select string_agg(s.name,',') as size, array_agg(s.size_id) as size_id, p.*, c.name as category from "Product" p 
+        q = '''select string_agg(s.name,',') as size, array_agg(s.id) as size_id, p.*, c.name as category from "Product" p 
                 inner join "Category" c on c.id = p.category_id 
-                inner join sizes s on s.product_sku = p.sku
+                inner join "Product_Size" ps on ps.product_sku = p.sku
+                inner join "Size" s on s.id = ps.size_id
                 where p.id = %(id)s group by p.id, c.name limit 1'''
         p = {
             "id": identifier
@@ -895,7 +843,9 @@ class Product(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        q = '''select p.*,c.name as category from "Product" p left join "Category" c on c.id = p.category_id where lower(p.name) like %(name)s limit 5'''
+        q = '''select p.*,c.name as category from "Product" p 
+        left join "Category" c on c.id = p.category_id 
+        where lower(p.name) like %(name)s limit 5'''
         p = {
             "name": "%{}%".format(query.lower())
         }
@@ -925,7 +875,8 @@ class Product(BaseModel):
         try:
             q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
             inner join "Category" c on c.id = p.category_id 
-            inner join sizes s on s.product_sku = p.sku
+            inner join "Product_Size" ps on ps.product_sku = p.sku
+            inner join "Size" s on s.id = ps.size_id
             group by p.id, c.name limit %(items)s offset %(offset)s'''
             p = {
                 "items": items,

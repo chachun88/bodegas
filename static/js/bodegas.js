@@ -258,10 +258,10 @@
 			cont++;
 		}
 
-		if (upc.length == esp){
+		/*if (upc.length == esp){
 			alert ("Falta ingresar artículo");
 			return false;
-		}
+		}*/
 
 		//name
 		cont = 0;

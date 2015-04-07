@@ -128,22 +128,19 @@ class ProductLoadHandler(BaseHandler):
 
         if fn != "":
 
-            doc = xlrd.open_workbook(dir_stock + fn)
+            doc = xlrd.open_workbook(dir_products + fn)
 
             sheet = doc.sheet_by_index(0)
 
             nrows = sheet.nrows
             ncols = sheet.ncols
-            # print ncols
+            print ncols
             # self.write("{}".format(ncols))
-
-            cellar = Cellar()
 
             # fila
             for i in range(1, nrows):
 
                 prod = Product()
-                cellar = Cellar()
 
                 # columna
                 for j in range(ncols):
@@ -167,14 +164,19 @@ class ProductLoadHandler(BaseHandler):
                         bulk_price = sheet.cell_value(i,j)
 
                         if bulk_price != "":
-                            prod.bulk_price = int(sheet.cell_value(i,j))
+                            prod.bulk_price = int(bulk_price)
 
                     elif j == 8:
                         prod.manufacturer = sheet.cell_value(i,j).encode("utf-8")
                     elif j == 9:
-                        cellar.name = sheet.cell_value(i,j).encode("utf-8")
-                    elif j == 10:
                         prod.brand = sheet.cell_value(i,j).encode("utf-8")
+                    elif j == 10:
+                        valor = sheet.cell_value(i,j)
+
+                        if type(valor) is unicode:
+                            prod.size = valor.encode("utf-8")
+                        else:
+                            prod.size = str(valor)
                     elif j == 11:
                         prod.delivery = sheet.cell_value(i,j).encode("utf-8")
                     elif j == 12:
@@ -188,7 +190,6 @@ class ProductLoadHandler(BaseHandler):
                 if debugMode:
                     if "error" in res_save:
                         print res_save["error"]
-
 
         if len(warnings) > 0:
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
@@ -252,8 +253,6 @@ class ProductOutHandler(BaseHandler):
         self.set_active(Menu.PRODUCTOS_CARGA_MASIVA)  # change menu active item
 
         dn = self.get_argument("dn", "f")
-
-        print dn
 
         filename = self.get_argument("filename", "")
 
@@ -357,101 +356,23 @@ class ProductMassiveOutputHandler(BaseHandler):
     @tornado.gen.engine
     def post(self):
 
-        if 'fnout' in vars() or 'fnout' in globals():
+        fn = self.get_argument("filename", "")
 
-            if fnout != "":
+        if fn != "":
 
-                doc = xlrd.open_workbook(dir_products + fnout)
+            doc = xlrd.open_workbook(dir_stock + fn)
 
-                sheet = doc.sheet_by_index(0)
+            sheet = doc.sheet_by_index(0)        
 
-                nrows = sheet.nrows
-                ncols = sheet.ncols
-                # self.write("{}".format(ncols))
+            for i in range(1, sheet.nrows): 
 
-                matriz = []
-                tallas = []
+                for j in range(sheet.ncols):  
 
-                prod = Product()
-                cellar = Cellar()
-
-                for i in range(nrows):  
-                    matriz.append([])
-                    for j in range(ncols):              
-                        if i == 1 and j > 11:
-                            tallas.append(sheet.cell_value(i,j))                
-
-                for i in range(nrows):  
-                    matriz.append([])
-                    for k in range(len(tallas)):
-                        for j in range(ncols):  
-
-                            matriz[i].append(sheet.cell_value(i,j))
-
-                            # try: 
-                            if i > 0 and i < nrows:
-                                prod.size = str(tallas[k]).split(",")
-                                size = str(tallas[k])
-
-                                if j == 0:
-                                    prod.category = matriz[i][j].encode('utf-8')
-                                elif j == 1:
-                                    prod.sku = str(matriz[i][j]).encode('utf-8')
-                                elif j == 2:
-                                    prod.name = matriz[i][j].encode('utf-8')
-                                elif j == 3:
-                                    prod.description = matriz[i][j].encode('utf-8')
-                                elif j == 4:                                        
-                                    prod.color = matriz[i][j].encode('utf-8').split(",")
-                                    color = matriz[i][j].encode('utf-8')
-                                elif j == 5:
-                                    prod.price = int(matriz[i][j])                                  
-                                elif j == 6:
-                                    prod.sell_price = int(matriz[i][j]) 
-                                elif j == 7:                                        
-                                    prod.manufacturer = matriz[i][j].encode('utf-8')
-                                elif j == 8:
-                                    cellar_name = matriz[i][j].encode('utf-8')
-                                elif j == 9:
-                                    prod.brand = matriz[i][j].encode('utf-8')
-                                elif j == 11:
-                                    try:
-                                        q = k + j
-                                        quantity = str(matriz[i][q])
-                                        # recovering identified
-
-                                        prod.InitWithSku(prod.sku)
-                                        # product_id=prod.identifier
-                                        operation = "sell"
-
-                                    # products stored for cellar
-
-                                        cellar.InitWithName(cellar_name)
-                                        cellar.RemoveProducts(prod.sku, quantity, prod.sell_price, size, color, operation, self.get_user_email() )
-                                    except:
-                                        pass    
-                            # except:
-                            #   dn="t3"
-                            #   self.redirect("/product?dn="+dn)                
-
-                    # product is saved
-                    # prod.Save()    
-
-                    # recovering identified
-                    # prod.InitWithSku(prod.sku)
-                    # product_id=prod.identifier
-
-                    # products stored for cellar
-                    # try:  
-                    #   cellar.InitWithName(cellar_name)
-                    #   cellar.RemoveProducts(prod.sku, quantity, price, size, color, operation) #mejorar salidas 
-                    # except:
-                    #   pass
-                # fnout = ""      
-                self.redirect("/product/out")
-            else:
-                dn = "t2"
-                self.redirect("/product/out?dn="+dn)
-        else:
-            dn = "t2"
-            self.redirect("/product/out?dn="+dn)
+                    if j == 0:
+                        sku = sheet.cell_value(i,j)
+                    elif j == 1:
+                        size = sheet.cell_value(i,j)
+                    elif j == 2:
+                        entrada = sheet.cell_value(i,j)
+                    elif j == 3:
+                        salida = sheet.cell_value(i,j)

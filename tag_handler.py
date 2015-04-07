@@ -116,7 +116,7 @@ class AddHandler(BaseHandler):
 
 		tag = Tag()
 		product = Product()
-		lista = product.get_product_list()
+		lista = product.get_product_list()["success"]
 		asociados = []
 		self.render("tag/save.html",tag=tag,mode="add",product_list=lista,dn="",asociados=asociados)
 

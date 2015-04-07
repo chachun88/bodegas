@@ -126,7 +126,14 @@ class CellarEasyInputHandler(BaseHandler):
         if "success" in res_tallas:
             tallas = res_tallas["success"]
 
-        self.render("cellar/easyinput.html",operation="Entradas ", opp="in", side_menu=self.side_menu, cellar=cellar, products=cellar.ListProducts(), product_list=lista, tallas=tallas)
+        self.render("cellar/easyinput.html", 
+                    operation="Entradas ", 
+                    opp="in", 
+                    side_menu=self.side_menu, 
+                    cellar=cellar, 
+                    products=cellar.ListProducts(), 
+                    product_list=lista, 
+                    tallas=tallas)
     
     @tornado.web.authenticated
     def post(self):

@@ -15,7 +15,7 @@ import glob
 from bson import json_util
 
 from basehandler import BaseHandler
-from globals import Menu
+from globals import Menu, debugMode
 from model.product import Product
 from model.category import Category
 from model.brand import Brand
@@ -274,9 +274,13 @@ class ProductEditHandler(BaseHandler):
 
         if "success" in res_sizes:
             sizes = res_sizes["success"]
+        elif debugMode:
+            print res_sizes["error"]
 
         if "success" in res_tags:
             tags = res_tags["success"]
+        elif debugMode:
+            print res_tags["error"]
 
         if "success" in res:
             self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)

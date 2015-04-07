@@ -55,12 +55,9 @@
 								<div class="controls form-group">
 									<div class="col-sm-12">
 										<select name="size">
-											<option value="35.0">35.0</option>
-											<option value="36.0">36.0</option>
-											<option value="37.0">37.0</option>
-											<option value="38.0">38.0</option>
-											<option value="39.0">39.0</option>
-											<option value="40.0">40.0</option>
+											{% for s in tallas %}
+											<option value="{{s['name']}}">{{s['name']}}</option>
+											{% end %}
 										</select>
 									</div>
 								</div>
