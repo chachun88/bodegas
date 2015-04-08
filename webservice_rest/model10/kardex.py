@@ -6,6 +6,8 @@ from basemodel import BaseModel
 import psycopg2
 import psycopg2.extras
 import datetime
+from product_size import Product_Size
+from size import Size
 
 class Kardex(BaseModel):
     def __init__(self):
@@ -233,6 +235,14 @@ class Kardex(BaseModel):
 
         response_prevkardex = self.GetPrevKardex()
 
+        product_size = Product_Size()
+        product_size.size_id = self.size_id
+        product_size.product_sku = self.product_sku
+        res_product_size_save = product_size.save()
+
+        if "error" in res_product_size_save:
+            return self.ShowError(res_product_size_save['error'])
+
         prev_kardex = Kardex()
 
         if "success" in response_prevkardex:
@@ -262,34 +272,33 @@ class Kardex(BaseModel):
         else:
             self.balance_units = prev_kardex.balance_units - self.units
             self.balance_total = prev_kardex.balance_total - self.total
- 
-        if self.balance_units != 0: ## prevent division by zero 
+
+        if self.balance_units != 0:  # prevent division by zero 
             self.balance_price = self.balance_total / self.balance_units
 
-        ## truncate
+        # truncate
         self.price = float(int(self.price * 100)) / 100.0
         self.total = round(float(int(self.total * 100)) / 100.0)
         self.balance_price = float(int(self.balance_price * 100)) / 100.0
         self.balance_total = round(float(int(self.balance_total * 100)) / 100.0)
 
-
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         parametros = {
-        "product_sku":self.product_sku,
-        "cellar_id":self.cellar_identifier,
-        "operation_type":self.operation_type,
-        "units":self.units,
-        "price":self.price,
-        "sell_price":self.sell_price,
-        "size_id":self.size_id,
-        "color":self.color,
-        "total":self.total,
-        "balance_units":self.balance_units,
-        "balance_price":self.balance_price,
-        "balance_total":self.balance_total,
-        "date":self.date,
-        "user":self.user
+            "product_sku":self.product_sku,
+            "cellar_id":self.cellar_identifier,
+            "operation_type":self.operation_type,
+            "units":self.units,
+            "price":self.price,
+            "sell_price":self.sell_price,
+            "size_id":self.size_id,
+            "color":self.color,
+            "total":self.total,
+            "balance_units":self.balance_units,
+            "balance_price":self.balance_price,
+            "balance_total":self.balance_total,
+            "date":self.date,
+            "user":self.user
         }
 
         try:

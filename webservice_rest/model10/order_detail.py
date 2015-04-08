@@ -112,15 +112,18 @@ class OrderDetail(BaseModel):
         try:
             query = '''select od.*, o.state, p.name, p.sell_price, p.promotion_price, p.color, s.name as product_size, p.sku, p.price from "Order_Detail" od 
             inner join "Product" p on od.product_id = p.id 
-            inner join sizes s on s.product_sku = p.sku
+            inner join "Product_Size" ps on ps.product_sku = p.sku
+            inner join "Size" s on s.id = ps.size_id
             inner join "Order" o on od.order_id = o.id 
             where od.order_id = %(order_id)s and s.name = od.size
             limit %(limit)s offset %(offset)s'''
+
             parameters = {
                 "order_id": order_id,
                 "limit": int(limit),
                 "offset": skip
             }
+            print cur.mogrify(query,parameters)
             cur.execute(query, parameters)
             order_detail = cur.fetchall()
             return self.ShowSuccessMessage(order_detail)

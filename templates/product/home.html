@@ -17,25 +17,25 @@
 		<i id="load" class="fa-spinner fa-spin"></i>
 	</span>
 </div>
-{% if dn == "t" %}
+{% if args["dn"] == "t" %}
 <div class="alert alert-success alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<strong><i class="fa fa-check"></i> Bien hecho!</strong> Se ha cargado excel correctamente.
 </div>
 {% end %}
-{% if dn == "t2" %}
+{% if args["dn"] == "t2" %}
 <div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong> Debe cargar excel antes de subir archivo.
 </div>
 {% end %}
-{% if dn == "t3" %}
+{% if args["dn"] == "t3" %}
 <div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<strong><i class="fa fa-check"></i> Excel erroneo!</strong> Excel contiene errores.
 </div>
 {% end %}
-{% for x in w %}
+{% for x in args['w'] %}
 <div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 	<strong><i class="fa fa-check"></i> Alerta!</strong> {{ x }}.
@@ -61,8 +61,10 @@
 			</div>
 			{% raw xsrf_form_html() %}
 		</form>
-		<form enctype="multipart/form-data" action="/product/load" method="post">
+		<form enctype="multipart/form-data" action="/product/massiveoutput" method="post">
 			<div class="load-products form-actions fileupload-buttonbar no-margin">
+				<input type="hidden" name="filename" value="{{args["filename"]}}">
+				<input type="hidden" name="dn" value="{{args['dn']}}">
 				<button type="submit" class="btn btn-primary btn-sm start">
 					<i class="fa fa-upload"></i>
 					<span>Cargar productos</span>
@@ -70,14 +72,13 @@
 			</div>
 			{% raw xsrf_form_html() %}
 		</form>
-
 		<div class="body">
 			<table class="table table-striped table-images">
 				<thead>
 					<tr>
 						{% try %}
-							{% for j in range(ncols) %} 
-								<th class="sorting" >{{matriz[0][j]}}</th>
+							{% for j in range(args['ncols']) %} 
+								<th class="sorting" >{{args['matriz'][0][j]}}</th>
 							{% end %}
 						{% except %}
 						{% end %}
@@ -85,10 +86,10 @@
 				</thead>
 				<tbody>
 					{% try %}
-						{% for i in range(1, nrows) %}
+						{% for i in range(1, args['nrows']) %}
 							<tr>
-							{% for j in range(ncols) %}
-								<td class="hidden-xs-portrait">{{matriz[i][j]}}</td>
+							{% for j in range(args['ncols']) %}
+								<td class="hidden-xs-portrait">{{args['matriz'][i][j]}}</td>
 							{% end %}	
 							</tr>
 						{% end %}

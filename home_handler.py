@@ -15,6 +15,7 @@ import urllib
 from basehandler import BaseHandler
 from model.product import Product
 from model.cellar import Cellar
+from model.kardex import Kardex
 from globals import Menu, dir_products, dir_stock, debugMode
 
 fn = ''
@@ -31,16 +32,26 @@ class HomeHandler(BaseHandler):
         self.set_active(Menu.PRODUCTOS_CARGA_STOCK)  # change menu active item
 
         dn = self.get_argument("dn", "f")
+        filename = self.get_argument("filename", "")
         w = []
 
         if self.get_argument("w", "") != "":
             w = self.get_argument("w", "").split( "," )
 
-        self.render("product/home.html", side_menu=self.side_menu, dn=dn, w=w)
+        args = {
+            "dn" : dn, 
+            "w" : w,
+            "side_menu" : self.side_menu,
+            "filename" : filename
+        }
+
+        self.render("product/home.html", args=args)
 
     @tornado.web.asynchronous
     @tornado.gen.engine
     def post(self):
+
+        filename = self.get_argument("filename", "")
 
         # upload file 
         try:  # Windows needs stdio set for binary mode.
@@ -51,22 +62,31 @@ class HomeHandler(BaseHandler):
             pass
 
         fileitem = ''
-        # A nested FieldStorage instance holds the file
+
         try:
+            # A nested FieldStorage instance holds the file
             fileitem = self.request.files['file'][0]
         except:
             pass
 
-        # strip leading path from file name to avoid directory traversal attacks        
+        # strip leading path from file name to avoid directory traversal attacks
 
         if fileitem != "":
 
-            fn = fileitem['filename']
-            open(dir_stock + fn, 'wb').write(fileitem["body"])
+            filename = fileitem['filename']
+
+            # chegk if directory exists
+            try:
+                os.stat( dir_stock )
+            except:
+                os.mkdir(dir_stock)
+
+            open(dir_stock + filename, 'wb').write(fileitem["body"])
+            # message = 'The file "' + fn + '" was uploaded successfully'
 
             try:
 
-                doc = xlrd.open_workbook(dir_stock + fn)
+                doc = xlrd.open_workbook(dir_stock + filename)
 
                 sheet = doc.sheet_by_index(0)
 
@@ -83,27 +103,28 @@ class HomeHandler(BaseHandler):
                         matriz[i].append(sheet.cell_value(i,j))
 
                 args = {
-                    "side_menu" : self.side_menu, 
-                    "matriz" : matriz, 
-                    "nrows" : nrows, 
-                    "ncols" : ncols, 
-                    "dn" : "t", 
-                    "w" : "",
-                    "filename" : fn
+                    "side_menu" : self.side_menu,
+                    "dn" : "f",
+                    "matriz" : matriz,
+                    "nrows" : nrows,
+                    "ncols" : ncols,
+                    "filename" : filename,
+                    "w" : []
                 }
 
                 self.render("product/home.html", args=args)
 
             except ImportError:
                 pass
-
         else:
             args = {
-                "side_menu" : self.side_menu, 
-                "ncols" : ncols, 
-                "dn" : "t2", 
-                "w" : "",
-                "filename" : ""
+                "side_menu" : self.side_menu,
+                "dn" : "t2",
+                "matriz" : matriz,
+                "nrows" : nrows,
+                "ncols" : ncols,
+                "filename" : filename,
+                "w" : []
             }
             self.render("product/home.html", args)
 
@@ -356,23 +377,80 @@ class ProductMassiveOutputHandler(BaseHandler):
     @tornado.gen.engine
     def post(self):
 
+        warnings = []
+
         fn = self.get_argument("filename", "")
 
         if fn != "":
 
-            doc = xlrd.open_workbook(dir_stock + fn)
+            doc = xlrd.open_workbook(dir_stock + fn, formatting_info=False)
 
             sheet = doc.sheet_by_index(0)        
 
-            for i in range(1, sheet.nrows): 
+            for i in range(1, sheet.nrows):
+
+                kardex = Kardex()
+                cellar = Cellar()
+
+                sku = ''
+                size = ''
+                entrada = 0
+                price = 0
+                salida = 0
+                sell_price = 0
 
                 for j in range(sheet.ncols):  
 
                     if j == 0:
                         sku = sheet.cell_value(i,j)
                     elif j == 1:
-                        size = sheet.cell_value(i,j)
+                        size = str(int(sheet.cell_value(i,j)))
                     elif j == 2:
-                        entrada = sheet.cell_value(i,j)
+                        val = sheet.cell_value(i,j)
+                        if val != "":
+                            entrada = str(int(val))
                     elif j == 3:
-                        salida = sheet.cell_value(i,j)
+                        val = sheet.cell_value(i,j)
+                        if val != "":
+                            price = str(int(val))
+                    elif j == 4:
+                        val = sheet.cell_value(i,j)
+                        if val != "":
+                            salida = str(int(val))
+                    elif j == 5:
+                        val = sheet.cell_value(i,j)
+                        if val != "":
+                            sell_price = str(int(val))
+                    elif j == 6:
+                        cellar_name = sheet.cell_value(i,j)
+                        cellar.InitWithName(cellar_name)
+                        kardex.identifier = cellar.identifier
+
+                if sku == '' or size == '':
+                    warnings.append("sku y talla no pueden ser vacios")
+
+                if entrada > 0 and price > 0:
+                    res_add = kardex.AddProducts(sku, entrada, price, size, '', 'buy', self.current_user["email"])
+
+                    if "error" in res_add:
+                        warnings.append(res_add["error"].encode("utf-8"))
+
+                if salida > 0 and sell_price > 0:
+                    res_remove = kardex.RemoveProducts(sku, salida, price, size, '', 'sell', self.current_user["email"])
+
+                    if "error" in res_remove:
+                        warnings.append(res_remove['error'].encode("utf-8"))
+
+            if len(warnings) > 0:
+
+                args = {
+                    "w" : ",".join(warnings),
+                    "dn" : ""
+                }
+                self.redirect("/product?w=" + urllib.urlencode(args))
+            else:
+                self.redirect("/product?dn=t")
+
+        else:
+
+            self.redirect("/product?dn=t2")

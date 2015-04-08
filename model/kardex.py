@@ -82,39 +82,52 @@ class Kardex(BaseModel):
 
         json_string = urllib.urlopen(url).read()
         return json_util.loads(json_string)
-    
+
     def AddProducts(self, product_sku, quantity, price, size, color, operation, user):
-        url = self.wsurl() + "/cellar/products/add?token=" + self.token
-        url += "&cellar_id=" + self.identifier
-        url += "&product_sku=" + product_sku 
-        url += "&operation=buy"
-        url += "&quantity=" + quantity
-        url += "&price=" + price
-        url += "&size=" + size
-        url += "&color=" + color
-        url += "&user=" + user
+        url = self.wsurl() + "/cellar/products/add"
 
-        json_string = urllib.urlopen(url).read()
+        data = {
+            "token": self.token,
+            "cellar_id": self.identifier,
+            "product_sku": product_sku,
+            "operation" : 'buy',
+            "quantity" : quantity,
+            "price" : price,
+            "size" : size,
+            "color" : color,
+            "user" : user
+        }
 
-        return json_util.loads(json_string)
+        post_data = urllib.urlencode(data)
+
+        response_str = urllib.urlopen(url, post_data).read()
+
+        response_obj = json_util.loads(response_str)
+
+        return response_obj
 
     def RemoveProducts(self, product_sku, quantity, price, size, color, operation, user):
-        url = self.wsurl() + "/cellar/products/remove?token=" + self.token
+        url = self.wsurl() + "/cellar/products/remove"
 
-        url += "&cellar_id=" + self.identifier
-        url += "&product_sku=" + product_sku
-        url += "&operation=sell"
-        url += "&quantity=" + quantity
-        url += "&price=" + price
-        url += "&size=" + size
-        url += "&color=" + color
-        url += "&user=" + user
+        data = {
+            "token": self.token,
+            "cellar_id": self.identifier,
+            "product_sku": product_sku,
+            "operation" : 'sell',
+            "quantity" : quantity,
+            "price" : price,
+            "size" : size,
+            "color" : color,
+            "user" : user
+        }
 
-        json_string = urllib.urlopen(url).read()
+        post_data = urllib.urlencode(data)
 
-        # print json_string
+        response_str = urllib.urlopen(url, post_data).read()
 
-        return json_util.loads(json_string)
+        response_obj = json_util.loads(response_str)
+
+        return response_obj
 
     def stockByProductId(self, product_sku, size_id):
 
