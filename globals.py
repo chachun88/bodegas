@@ -34,6 +34,9 @@ email_giani = "contacto@gianidafirenze.cl"
 dir_products = 'uploads/salidas_masivas/'
 dir_stock = 'uploads/entradas_masivas/'
 
+usuario_sendgrid = 'nailuj41'
+pass_sendgrid = 'Equipo_2112'
+
 # setting vars
 if debugMode:
     userMode = "test"

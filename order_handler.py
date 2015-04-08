@@ -7,7 +7,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from globals import Menu, email_giani, url_local
+from globals import Menu, email_giani, url_local, usuario_sendgrid, pass_sendgrid
 
 from basehandler import BaseHandler
 from model.order import Order
@@ -580,7 +580,7 @@ def SendConfirmedMail(email,name,id_orden):
         </body></html>
                 """.format(name=name, order_id=id_orden, url_local=url_local)
 
-    sg = sendgrid.SendGridClient('nailuj41', 'Equipo_1234')
+    sg = sendgrid.SendGridClient(usuario_sendgrid, pass_sendgrid)
     message = sendgrid.Mail()
     message.set_from("{nombre} <{mail}>".format(nombre="Giani Da Firenze",mail=email_giani))
     message.add_to(email)

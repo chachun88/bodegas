@@ -9,7 +9,7 @@ import sendgrid
 from model.order import Order
 from model.order_detail import OrderDetail
 from model.contact import Contact
-from globals import email_giani
+from globals import email_giani, usuario_sendgrid, pass_sendgrid
 
 def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
 
@@ -535,7 +535,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
   
                   
 
-    sg = sendgrid.SendGridClient('nailuj41', 'Equipo_1234')
+    sg = sendgrid.SendGridClient(usuario_sendgrid, pass_sendgrid)
 
     message = sendgrid.Mail()
     message.set_from("{nombre} <{mail}>".format(nombre="Giani Da Firenze", mail=email_giani))
