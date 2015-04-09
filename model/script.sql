@@ -35,3 +35,20 @@ CREATE OR REPLACE VIEW sizes AS
   ORDER BY k.product_sku, k.size_id DESC;
 
 alter table "Product" add column "bulk_price" integer not null default 0;
+
+CREATE TABLE "Product_Size"
+(
+  id serial NOT NULL,
+  size_id integer NOT NULL,
+  product_sku text NOT NULL,
+  CONSTRAINT pk_product_size PRIMARY KEY (size_id , product_sku )
+)
+
+ALTER TABLE "Kardex"
+  ADD CONSTRAINT "Kardex_product_sku_fkey" FOREIGN KEY (product_sku, size_id)
+      REFERENCES "Product_Size" (product_sku, size_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+INSERT INTO "Product_Size" (product_sku, size_id) SELECT distinct on(product_sku, size_id) product_sku, size_id FROM "Kardex";
+
+alter table "Product" add column "bulk_price" integer NOT NULL DEFAULT 0;
