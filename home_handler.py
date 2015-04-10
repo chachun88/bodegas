@@ -218,7 +218,7 @@ class ProductLoadHandler(BaseHandler):
         if len(warnings) > 0:
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
             args = {
-                "dn" : "t2",
+                "dn" : "",
                 "warnings" : warnings,
                 "filename" : ""
             }
