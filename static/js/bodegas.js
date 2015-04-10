@@ -439,3 +439,12 @@ var Send = function(form_id){
 		}
 	});
 }
+
+var validateFile = function(form_id){
+	if($("input:file").val().trim()==""){
+		alert("Debe seleccionar un excel");
+		return false;
+	} else {
+		$("#"+form_id).submit();
+	}
+}
