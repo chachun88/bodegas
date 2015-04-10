@@ -457,7 +457,7 @@ class ProductMassiveOutputHandler(BaseHandler):
                                 if "error" in res_remove:
                                     warnings.append(res_remove['error'].encode("utf-8"))
                         else:
-                            warnings.append("error al obtener identificador de bodega, {}".format(res_init_name["error"]))
+                            warnings.append("error al obtener identificador de bodega, {}".format(res_init_name["success"]))
 
             if len(warnings) > 0:
 
