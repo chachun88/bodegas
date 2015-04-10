@@ -409,7 +409,7 @@ class ProductMassiveOutputHandler(BaseHandler):
                 for j in range(sheet.ncols):  
 
                     if j == 0:
-                        sku = sheet.cell_value(i,j)
+                        sku = str(sheet.cell_value(i,j))
                     elif j == 1:
                         size = str(int(sheet.cell_value(i,j)))
                     elif j == 2:
