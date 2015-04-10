@@ -201,14 +201,12 @@ class CancelHandler(BaseHandler):
                         if "success" in details_res:
 
                             details = details_res["success"]
-                            
+
                             # recorre cada producto del detalle de orden y determina si la orden es cancelable
                             for d in details:
 
                                 k = Kardex()
                                 find_kardex = k.FindKardex(d["sku"], cellar_id, d['size'])
-
-                                balance_price = 0
 
                                 if "success" in find_kardex:
                                     units = k.balance_units  

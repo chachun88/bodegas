@@ -324,6 +324,8 @@ class Order(BaseModel):
         # for i in ids:
         #     od.Remove(i)
 
+        return self.ShowError(",".join(ids))
+
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
