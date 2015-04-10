@@ -88,7 +88,7 @@
 						</td>
 						<td>
 							{% if int(p["id"]) in current_user["cellar_permissions"] and reservation_cellar_id != p['id'] %}
-							<a type="button" href="/cellar/easyinput?id={{ str(p['id']) }}" cellar-id="{{ str(p['id']) }}" class="btn btn-success btn-sm" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+							<a type="button" href="/cellar/easyinput?id={{ str(p['id']) }}" cellar-id="{{ str(p['id']) }}" class="btn btn-info btn-sm" data-placement="top" data-original-title=".btn .btn-info .btn-sm">
 								Entrada Fácil
 							</a>
 							{% else %}
