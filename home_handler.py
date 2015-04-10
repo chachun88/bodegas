@@ -219,7 +219,7 @@ class ProductLoadHandler(BaseHandler):
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
             args = {
                 "dn" : "",
-                "warnings" : warnings,
+                "warnings" : ",".join(warnings),
                 "filename" : ""
             }
             self.redirect("/product/out?" + urllib.urlencode(args))
@@ -227,7 +227,7 @@ class ProductLoadHandler(BaseHandler):
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t",warnings=",".join(warnings)))
             args = {
                 "dn" : "t",
-                "warnings" : warnings,
+                "warnings" : ",".join(warnings),
                 "filename" : ""
             }
             self.redirect("/product/out?" + urllib.urlencode(args))
@@ -277,7 +277,7 @@ class ProductOutHandler(BaseHandler):
         self.set_active(Menu.PRODUCTOS_CARGA_MASIVA)  # change menu active item
 
         dn = self.get_argument("dn", "f")
-        warnings = self.get_arguments("warnings")
+        warnings = self.get_argument,("warnings","")
 
         filename = self.get_argument("filename", "")
 
