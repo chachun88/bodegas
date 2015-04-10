@@ -219,7 +219,7 @@ class ProductLoadHandler(BaseHandler):
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
             args = {
                 "dn" : "t2",
-                "warnings" : ",".join(warnings),
+                "warnings" : warnings,
                 "filename" : ""
             }
             self.redirect("/product/out?" + urllib.urlencode(args))
@@ -227,7 +227,7 @@ class ProductLoadHandler(BaseHandler):
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t",warnings=",".join(warnings)))
             args = {
                 "dn" : "t",
-                "warnings" : ",".join(warnings),
+                "warnings" : warnings,
                 "filename" : ""
             }
             self.redirect("/product/out?" + urllib.urlencode(args))
@@ -284,7 +284,7 @@ class ProductOutHandler(BaseHandler):
             "side_menu" : self.side_menu, 
             "dn": dn,
             "filename" : filename,
-            "warnings" : ""
+            "warnings" : []
         }
 
         self.render("product/out.html", args=args)
