@@ -152,8 +152,8 @@ class CellarEasyInputHandler(BaseHandler):
         product.InitWithSku(product_sku)
 
         product.size=size
-        product.description = product.description.encode("utf-8")
-        product.color = product.color.encode("utf-8")
+        product.description = product.description
+        product.color = product.color
         product.tags = ",".join(str(t) for t in product.tags)
         product.Save()
 
