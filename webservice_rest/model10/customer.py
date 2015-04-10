@@ -291,7 +291,7 @@ class Customer(BaseModel):
         }
 
         try:
-            print cur.mogrify(query, parameters)
+            # print cur.mogrify(query, parameters)
             cur.execute(query, parameters)
             pages = cur.fetchone()["pages"]
 
