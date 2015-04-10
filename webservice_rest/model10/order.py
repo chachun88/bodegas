@@ -377,7 +377,7 @@ class Order(BaseModel):
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''select ceil(count(*)/%(items)s) as pages from "Order"'''
+        query = '''select floor(count(*)::float/%(items)s) as pages from "Order"'''
         parameters = {"items": float(items)}
 
         try:
