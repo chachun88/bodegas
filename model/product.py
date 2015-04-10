@@ -460,9 +460,9 @@ class Product(BaseModel):
                 "tags": self.tags.encode("utf-8"),
                 "delivery": self.delivery.encode("utf-8"),
                 "which_size": self.which_size.encode("utf-8"),
-                "for_sale": self.for_sale.encode("utf-8"),
+                "for_sale": self.for_sale,
                 "promotion_price": self.promotion_price,
-                "size_id": self.size_id.encode("utf-8"),
+                "size_id": self.size_id,
                 "bulk_price" : self.bulk_price
             }
 
