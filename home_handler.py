@@ -407,6 +407,7 @@ class ProductMassiveOutputHandler(BaseHandler):
                 price = 0
                 salida = 0
                 sell_price = 0
+                cellar_name = ''
 
                 for j in range(sheet.ncols):  
 
@@ -457,7 +458,7 @@ class ProductMassiveOutputHandler(BaseHandler):
                                 if "error" in res_remove:
                                     warnings.append(res_remove['error'].encode("utf-8"))
                         else:
-                            warnings.append("error al obtener identificador de bodega, {}".format(res_init_name))
+                            warnings.append("error al obtener identificador de bodega {}".format(cellar_name))
 
             if len(warnings) > 0:
 

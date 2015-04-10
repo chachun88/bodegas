@@ -103,7 +103,7 @@ class Cellar(BaseModel):
         json_string = urllib.urlopen(url).read()
         json_data = json_util.loads(json_string)
 
-        if "success" in json_data:
+        if "error" not in json_data:
 
             self.identifier = str(json_data["id"])
             self.name = json_data["name"]
