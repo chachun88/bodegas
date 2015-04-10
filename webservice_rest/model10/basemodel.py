@@ -68,7 +68,7 @@ class BaseModel(object):
         try:
             cur.execute("select count(*) from \"{tabla}\"".format(tabla=self.table))
             total = float(cur.fetchone()[0])
-            paginas = math.ceil(total/items)
+            paginas = math.round(total/items)
             return paginas
         except Exception,e:
             print str(e)
