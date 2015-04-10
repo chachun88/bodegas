@@ -219,7 +219,7 @@ class ProductLoadHandler(BaseHandler):
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
             args = {
                 "dn" : "",
-                "warnings" : ",".join(warnings),
+                "warnings" : warnings,
                 "filename" : ""
             }
             self.redirect("/product/out?" + urllib.urlencode(args))
@@ -277,6 +277,7 @@ class ProductOutHandler(BaseHandler):
         self.set_active(Menu.PRODUCTOS_CARGA_MASIVA)  # change menu active item
 
         dn = self.get_argument("dn", "f")
+        warnings = self.get_arguments("warnings")
 
         filename = self.get_argument("filename", "")
 
@@ -284,7 +285,7 @@ class ProductOutHandler(BaseHandler):
             "side_menu" : self.side_menu, 
             "dn": dn,
             "filename" : filename,
-            "warnings" : []
+            "warnings" : warnings
         }
 
         self.render("product/out.html", args=args)
