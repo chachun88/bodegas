@@ -19,7 +19,7 @@
 {% if len(args["warnings"].split(",")) > 0 %}
 <div class="alert alert-warning">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong>{{warnings}}
+	<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong>{{args['warnings']}}
 </div>
 {% end %}
 <div class="col-md-12">
