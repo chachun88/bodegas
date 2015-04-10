@@ -10,6 +10,7 @@ ACCIONES_ELIMINAR = 1
 ACCIONES_ACEPTAR = 2
 ACCIONES_DESPACHADO = 3
 
+
 class Order(BaseModel):
 
     ESTADO_PENDIENTE = 1
@@ -319,28 +320,27 @@ class Order(BaseModel):
         url = self.wsurl() + "/order/cancel"
 
         data = {
-        "token": self.token,
-        "ids": ids
+            "token": self.token,
+            "ids": ids
         }
 
         post_data = urllib.urlencode(data)
         response = urllib.urlopen(url, post_data).read()
 
-        # print response
+        return {"error":response}
 
-        return json_util.loads(response)
-
+        # return json_util.loads(response)
 
     def getTotalPages(self, items):
 
         url = self.wsurl() + "/order/totalpages"
 
         data = {
-        "token": self.token,
-        "items": items
+            "token": self.token,
+            "items": items
         }
 
         post_data = urllib.urlencode(data)
         response = urllib.urlopen(url, post_data).read()
-        
+
         return json_util.loads(response)

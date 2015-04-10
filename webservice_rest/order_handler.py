@@ -181,7 +181,6 @@ class CancelHandler(BaseHandler):
 
             identificadores = []
 
-
             for identificador in ids.split(","):
 
                 order = Order()
