@@ -337,7 +337,7 @@ class Cellar(BaseModel):
 
         else:
 
-            return self.ShowError("item not found")
+            return self.ShowError("no existe la bodega {}".format(name))
 
     def InitById(self, idd):
 
