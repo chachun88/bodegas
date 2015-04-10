@@ -206,6 +206,7 @@ class CancelHandler(BaseHandler):
 
                                 k = Kardex()
                                 find_kardex = k.FindKardex(d["sku"], cellar_id, d['size'])
+                                units = 0
 
                                 if "success" in find_kardex:
                                     units = k.balance_units  

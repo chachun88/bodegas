@@ -327,9 +327,9 @@ class Order(BaseModel):
         post_data = urllib.urlencode(data)
         response = urllib.urlopen(url, post_data).read()
 
-        return {"error":response}
+        # return {"error":response}
 
-        # return json_util.loads(response)
+        return json_util.loads(response)
 
     def getTotalPages(self, items):
 
