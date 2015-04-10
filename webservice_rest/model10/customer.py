@@ -261,7 +261,7 @@ class Customer(BaseModel):
             inner join "User_Types" ut on ut.id = u.type_id where (u.type_id = 4 or u.type_id = 3) 
             and u.email <> '' 
             and u.deleted = 0 
-            order by id desc
+            order by u.id desc
             limit %(limit)s offset %(offset)s'''
             parametros = {
             "limit":items_per_page,
@@ -279,7 +279,7 @@ class Customer(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''select round(count(*)/%(items)s) as pages 
+        query = '''select floor(count(*)/%(items)s) as pages 
                 from "User" u 
                 inner join "User_Types" ut on ut.id = u.type_id 
                 where (u.type_id = 4 or u.type_id = 3) 
@@ -287,7 +287,7 @@ class Customer(BaseModel):
                 and u.deleted = 0'''
 
         parameters = {
-            "items" : items
+            "items" : float(items)
         }
 
         try:
