@@ -436,7 +436,7 @@ class ProductMassiveOutputHandler(BaseHandler):
                         kardex.identifier = cellar.identifier
 
                 if sku == '' or size == '':
-                    warnings.append("sku y talla no pueden ser vacios")
+                    warnings.append("sku y talla no pueden estar vacios")
                 else:
                     product = Product()
                     res_product = product.InitWithSku(sku)
