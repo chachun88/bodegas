@@ -16,10 +16,10 @@
 	<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong> Debe cargar excel antes de subir archivo.
 </div>
 {% end %}
-{% if len(args["warnings"].split(",")) > 0 %}
+{% for w in args["warnings"].split(",") %}
 <div class="alert alert-warning">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong>{{args['warnings']}}
+	<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong>{{w}}
 </div>
 {% end %}
 <div class="col-md-12">
