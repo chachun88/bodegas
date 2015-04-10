@@ -79,7 +79,7 @@ class HomeHandler(BaseHandler):
             try:
                 os.stat( dir_stock )
             except:
-                os.mkdir(dir_stock)
+                os.makedirs(dir_stock)
 
             open(dir_stock + filename, 'wb').write(fileitem["body"])
             # message = 'The file "' + fn + '" was uploaded successfully'
@@ -318,7 +318,7 @@ class ProductOutHandler(BaseHandler):
             try:
                 os.stat( dir_products )
             except:
-                os.mkdir(dir_products)
+                os.makedirs(dir_products)
 
             open(dir_products + filename, 'wb').write(fileitem["body"])
             # message = 'The file "' + fn + '" was uploaded successfully'
