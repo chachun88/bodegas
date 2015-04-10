@@ -283,7 +283,8 @@ class ProductOutHandler(BaseHandler):
         args = {
             "side_menu" : self.side_menu, 
             "dn": dn,
-            "filename" : filename
+            "filename" : filename,
+            "warnings" : ""
         }
 
         self.render("product/out.html", args=args)
@@ -350,7 +351,8 @@ class ProductOutHandler(BaseHandler):
                     "matriz" : matriz,
                     "nrows" : nrows,
                     "ncols" : ncols,
-                    "filename" : filename
+                    "filename" : filename,
+                    "warnings" : ""
                 }
 
                 self.render("product/out.html", args=args)
@@ -364,7 +366,8 @@ class ProductOutHandler(BaseHandler):
                 "matriz" : matriz,
                 "nrows" : nrows,
                 "ncols" : ncols,
-                "filename" : filename
+                "filename" : filename,
+                "warnings" : ""
             }
             self.render("product/out.html", args)
 
