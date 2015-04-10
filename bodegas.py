@@ -175,7 +175,7 @@ class Application(tornado.web.Application):
                                         {"class":"", "name":Menu.BODEGAS_AGREGAR, "link":"/cellar/add"},
                                         {"class":"", "name":Menu.PRODUCTOS_CARGA_STOCK, "link":"/product"}
                                         ]},
-                        {"class":"panel", "name":Menu.CONFIGURACION, "icon":"asterisk", "link":"/",
+                        {"class":"panel", "name":Menu.CONFIGURACION, "icon":"cog", "link":"/",
                             "sub_menu":[
                                         {"class":"", "name":Menu.BODEGAS_FORSALE, "link":"/cellar/selectforsale"},
                                         {"class":"", "name":Menu.BODEGAS_RESERVATION, "link":"/cellar/selectreservation"}
