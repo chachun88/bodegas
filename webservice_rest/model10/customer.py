@@ -279,7 +279,7 @@ class Customer(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''select floor(count(*)::float/%(items)s::float) as pages 
+        query = '''select ceil(count(*)::float/%(items)s::float) as pages 
                 from "User" u 
                 inner join "User_Types" ut on ut.id = u.type_id 
                 where (u.type_id = 4 or u.type_id = 3) 
@@ -291,6 +291,7 @@ class Customer(BaseModel):
         }
 
         try:
+            print cur.mogrify(query, parameters)
             cur.execute(query, parameters)
             pages = cur.fetchone()["pages"]
 
