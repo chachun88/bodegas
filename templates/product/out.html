@@ -47,11 +47,11 @@
 			</div>
 			{% raw xsrf_form_html() %}
 		</form>
-		<form enctype="multipart/form-data" action="/product/load" method="post">
+		<form enctype="multipart/form-data" action="/product/load" method="post" id="filename_form">
 			<div class="form-actions fileupload-buttonbar no-margin">
 				<input type="hidden" name="filename" value="{{args["filename"]}}">
 				<input type="hidden" name="dn" value="{{args['dn']}}">
-				<button type="submit" class="btn btn-primary btn-sm start">
+				<button type="button" class="btn btn-primary btn-sm start" onclick="validateFilename('filename_form')">
 					<i class="fa fa-upload"></i>
 					<span>Cargar productos</span>
 				</button>

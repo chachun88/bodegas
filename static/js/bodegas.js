@@ -448,3 +448,12 @@ var validateFile = function(form_id){
 		$("#"+form_id).submit();
 	}
 }
+
+var validateFilename = function(form_id){
+	if($("input[name=filename]").val().trim()==""){
+		alert("Debe seleccionar un excel");
+		return false;
+	} else {
+		$("#"+form_id).submit();
+	}
+}
