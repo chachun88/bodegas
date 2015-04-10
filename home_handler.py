@@ -431,8 +431,6 @@ class ProductMassiveOutputHandler(BaseHandler):
                     elif j == 6:
                         cellar_name = sheet.cell_value(i,j)
                         res_init_name = cellar.InitWithName(cellar_name)
-                        if "error" in res_init_name:
-                            warnings.append(res_init_name["error"])
                         kardex.identifier = cellar.identifier
 
                 if sku == '' or size == '':
@@ -444,17 +442,20 @@ class ProductMassiveOutputHandler(BaseHandler):
                     if "error" in res_product:
                         warnings.append("producto con el sku {} no existe".format(sku))
                     else:
-                        if entrada > 0 and price > 0:
-                            res_add = kardex.AddProducts(sku, entrada, price, size, '', 'buy', self.current_user["email"])
+                        if cellar.identifier != "":
+                            if entrada > 0 and price > 0:
+                                res_add = kardex.AddProducts(sku, entrada, price, size, '', 'buy', self.current_user["email"])
 
-                            if "error" in res_add:
-                                warnings.append(res_add["error"].encode("utf-8"))
+                                if "error" in res_add:
+                                    warnings.append(res_add["error"].encode("utf-8"))
 
-                        if salida > 0 and sell_price > 0:
-                            res_remove = kardex.RemoveProducts(sku, salida, price, size, '', 'sell', self.current_user["email"])
+                            if salida > 0 and sell_price > 0:
+                                res_remove = kardex.RemoveProducts(sku, salida, price, size, '', 'sell', self.current_user["email"])
 
-                            if "error" in res_remove:
-                                warnings.append(res_remove['error'].encode("utf-8"))
+                                if "error" in res_remove:
+                                    warnings.append(res_remove['error'].encode("utf-8"))
+                        else:
+                            warnings.append("error al obtener identificador de bodega")
 
             if len(warnings) > 0:
 
