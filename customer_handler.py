@@ -54,6 +54,8 @@ class CustomerHandler(BaseHandler):
         page = int(self.get_argument("page", 1))
         items = int(self.get_argument("items", 20))
 
+        total_pages = 1
+
         customer = Customer()
         clientes = customer.List(page, items)
 
