@@ -76,11 +76,7 @@
 									{{o["quantity"]}}
 								</td>
 								<td class="text-right">
-									{% if o["promotion_price"] > 0 and o["promotion_price"] >= int(o["subtotal"]) %}
-										{{money_format(o["promotion_price"])}}
-									{% else %}
-										{{money_format(o["sell_price"])}}
-									{% end %}
+									{{money_format(o["price"])}}
 								</td>
 								<td class="text-align-right">
 									{{money_format(o["subtotal"])}}

@@ -82,15 +82,28 @@ class OrderDetail(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''insert into "Order_Detail" (order_id,quantity,product_id,total,size) values (%(order_id)s,%(quantity)s,%(product_id)s,%(total)s,%(size)s)
-        returning id'''
+        query = '''\
+                insert into "Order_Detail" (order_id,
+                                            quantity,
+                                            product_id,
+                                            subtotal,
+                                            size,
+                                            price) 
+                values (%(order_id)s,
+                        %(quantity)s,
+                        %(product_id)s,
+                        %(subtotal)s,
+                        %(size)s,
+                        %(price)s) 
+                returning id'''
 
         parametros = {
-            "order_id": self.order_id,
-            "quantity": self.quantity,
-            "product_id": self.product_id,
-            "total": self.total,
-            "size": self.size
+            "order_id":self.order_id,
+            "quantity":self.quantity,
+            "product_id":self.product_id,
+            "subtotal":float(self.subtotal),
+            "size":self.size,
+            "price": self.price
         }
 
         try:
@@ -110,7 +123,7 @@ class OrderDetail(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         try:
-            query = '''select od.*, o.state, p.name, p.sell_price, p.promotion_price, p.color, s.name as product_size, p.sku, p.price from "Order_Detail" od 
+            query = '''select od.*, o.state, p.name, od.price, p.color, s.name as product_size, p.sku from "Order_Detail" od 
             inner join "Product" p on od.product_id = p.id 
             inner join "Product_Size" ps on ps.product_sku = p.sku
             inner join "Size" s on s.id = ps.size_id
@@ -123,7 +136,7 @@ class OrderDetail(BaseModel):
                 "limit": int(limit),
                 "offset": skip
             }
-            print cur.mogrify(query,parameters)
+
             cur.execute(query, parameters)
             order_detail = cur.fetchall()
             return self.ShowSuccessMessage(order_detail)
