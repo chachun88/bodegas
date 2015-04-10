@@ -448,22 +448,22 @@ class Product(BaseModel):
                 "bullet_1": self.bullet_1.encode("utf-8"),
                 "bullet_2": self.bullet_2.encode("utf-8"),
                 "bullet_3": self.bullet_3.encode("utf-8"),
-                "price": self.price.encode("utf-8"),
+                "price": self.price,
                 "image": self.image.encode("utf-8"),
                 "image_2": self.image_2.encode("utf-8"),
                 "image_3": self.image_3.encode("utf-8"),
                 "image_4": self.image_4.encode("utf-8"),
                 "image_5": self.image_5.encode("utf-8"),
                 "image_6": self.image_6.encode("utf-8"),
-                "sell_price": self.sell_price.encode("utf-8"),
+                "sell_price": self.sell_price,
                 "id": self.identifier.encode("utf-8"),
                 "tags": self.tags.encode("utf-8"),
                 "delivery": self.delivery.encode("utf-8"),
                 "which_size": self.which_size.encode("utf-8"),
                 "for_sale": self.for_sale.encode("utf-8"),
-                "promotion_price": self.promotion_price.encode("utf-8"),
+                "promotion_price": self.promotion_price,
                 "size_id": self.size_id.encode("utf-8"),
-                "bulk_price" : self.bulk_price.encode("utf-8")
+                "bulk_price" : self.bulk_price
             }
 
             post_data = urllib.urlencode(data)
