@@ -277,7 +277,7 @@ class ProductOutHandler(BaseHandler):
         self.set_active(Menu.PRODUCTOS_CARGA_MASIVA)  # change menu active item
 
         dn = self.get_argument("dn", "f")
-        warnings = self.get_argument,("warnings","")
+        warnings = self.get_argument("warnings","")
 
         filename = self.get_argument("filename", "")
 
