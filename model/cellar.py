@@ -109,6 +109,8 @@ class Cellar(BaseModel):
             self.name = json_data["name"]
             self.description = json_data["description"]
 
+        return json_data
+
 
     def List(self, page, items):
         url = self.wsurl() + "/cellar/list"
