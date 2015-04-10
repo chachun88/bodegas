@@ -185,7 +185,10 @@ class ProductLoadHandler(BaseHandler):
                         bulk_price = sheet.cell_value(i,j)
 
                         if bulk_price != "":
-                            prod.bulk_price = int(bulk_price)
+                            try:
+                                prod.bulk_price = int(bulk_price)
+                            except Exception, e:
+                                warnings.append(str(e))
 
                     elif j == 8:
                         prod.manufacturer = sheet.cell_value(i,j).encode("utf-8")
