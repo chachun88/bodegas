@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
 '''
 Created on 13/12/2012
 
@@ -69,16 +72,16 @@ class Menu:
     PRODUCTOS = "Productos"
 
     # sub_menu
-    PRODUCTOS_CARGA_STOCK = "Carga stock"
+    PRODUCTOS_CARGA_STOCK = "Carga masiva de stock"
     PRODUCTOS_CARGA_MASIVA = "Carga productos"
     PRODUCTOS_CARGA = "Agregar producto"
     PRODUCTOS_LISTA = "Maestro productos"
     # end sub_menu
 
-    BODEGAS = "Bodegas"
+    BODEGAS = "Stock"
 
     # sub_menu 
-    BODEGAS_LISTAR = "Lista de bodegas"
+    BODEGAS_LISTAR = "Todas las bodegas"
     BODEGAS_AGREGAR = "Agregar bodega"
     BODEGAS_FORSALE = "Seleccionar bodega web"
     BODEGAS_RESERVATION = "Seleccionar bodega de reserva online"
@@ -113,6 +116,7 @@ class Menu:
 
     SALIR = "Salir"
 
+    CONFIGURACION = "Configuración"
 
 # --- functions ---
 def tomoney(x):

@@ -157,10 +157,9 @@ class Application(tornado.web.Application):
                                         ]},
                         {"class":"panel", "name":Menu.PRODUCTOS, "icon":"home", "link":"/product", 
                             "sub_menu":[
-                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_STOCK, "link":"/product"},
-                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_MASIVA, "link":"/product/out"},
+                                        {"class":"", "name":Menu.PRODUCTOS_LISTA, "link":"/product/list"},
                                         {"class":"", "name":Menu.PRODUCTOS_CARGA, "link":"/product/add"},
-                                        {"class":"", "name":Menu.PRODUCTOS_LISTA, "link":"/product/list"}
+                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_MASIVA, "link":"/product/out"}
                                         ]},
                         {"class":"panel", "name":Menu.CLIENTES, "icon":"users", "link":"/",
                             "sub_menu":[
@@ -174,6 +173,10 @@ class Application(tornado.web.Application):
                             "sub_menu":[
                                         {"class":"", "name":Menu.BODEGAS_LISTAR, "link":"/cellar"},
                                         {"class":"", "name":Menu.BODEGAS_AGREGAR, "link":"/cellar/add"},
+                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_STOCK, "link":"/product"}
+                                        ]},
+                        {"class":"panel", "name":Menu.CONFIGURACION, "icon":"asterisk", "link":"/",
+                            "sub_menu":[
                                         {"class":"", "name":Menu.BODEGAS_FORSALE, "link":"/cellar/selectforsale"},
                                         {"class":"", "name":Menu.BODEGAS_RESERVATION, "link":"/cellar/selectreservation"}
                                         ]},
