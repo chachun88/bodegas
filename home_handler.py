@@ -430,7 +430,9 @@ class ProductMassiveOutputHandler(BaseHandler):
                             sell_price = str(int(val))
                     elif j == 6:
                         cellar_name = sheet.cell_value(i,j)
-                        cellar.InitWithName(cellar_name)
+                        res_init_name = cellar.InitWithName(cellar_name)
+                        if "error" in res_init_name:
+                            warnings.append(res_init_name["error"])
                         kardex.identifier = cellar.identifier
 
                 if sku == '' or size == '':
