@@ -219,7 +219,7 @@ class ProductLoadHandler(BaseHandler):
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
             args = {
                 "dn" : "",
-                "warnings" : warnings,
+                "warnings" : ",".join(warnings),
                 "filename" : ""
             }
             self.redirect("/product/out?" + urllib.urlencode(args))
