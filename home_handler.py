@@ -399,6 +399,8 @@ class ProductMassiveOutputHandler(BaseHandler):
                 kardex = Kardex()
                 cellar = Cellar()
 
+                res_init_name = {}
+
                 sku = ''
                 size = ''
                 entrada = 0
@@ -455,7 +457,7 @@ class ProductMassiveOutputHandler(BaseHandler):
                                 if "error" in res_remove:
                                     warnings.append(res_remove['error'].encode("utf-8"))
                         else:
-                            warnings.append("error al obtener identificador de bodega")
+                            warnings.append("error al obtener identificador de bodega, {}".format(res_init_name["error"]))
 
             if len(warnings) > 0:
 
