@@ -18,7 +18,7 @@
 {% end %}
 {% if len(args["warnings"]) > 0 %}
 	{% for w in args["warnings"].split(",") %}
-	<div class="alert alert-warning">
+	<div class="alert alert-warning alert-dismissible">
 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 		<strong><i class="fa fa-check"></i> Error de carga!</strong> {{w}}
 	</div>
