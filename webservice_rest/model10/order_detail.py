@@ -123,7 +123,7 @@ class OrderDetail(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         try:
-            query = '''select od.*, o.state, p.name, od.price, p.color, s.name as product_size, p.sku from "Order_Detail" od 
+            query = '''select od.*, o.state, p.name, od.price, p.color, s.name as product_size, p.sku, s.id as size_id from "Order_Detail" od 
             inner join "Product" p on od.product_id = p.id 
             inner join "Product_Size" ps on ps.product_sku = p.sku
             inner join "Size" s on s.id = ps.size_id

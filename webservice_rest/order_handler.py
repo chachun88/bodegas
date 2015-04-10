@@ -205,7 +205,7 @@ class CancelHandler(BaseHandler):
                             for d in details:
 
                                 k = Kardex()
-                                find_kardex = k.FindKardex(d["sku"], cellar_id, d['size'])
+                                find_kardex = k.FindKardex(d["sku"], cellar_id, d['size_id'])
                                 units = 0
 
                                 if "success" in find_kardex:
