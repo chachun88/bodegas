@@ -456,7 +456,7 @@ class Product(BaseModel):
                 "image_5": self.image_5.encode("utf-8"),
                 "image_6": self.image_6.encode("utf-8"),
                 "sell_price": self.sell_price,
-                "id": self.identifier.encode("utf-8"),
+                "id": self.identifier,
                 "tags": self.tags.encode("utf-8"),
                 "delivery": self.delivery.encode("utf-8"),
                 "which_size": self.which_size.encode("utf-8"),
