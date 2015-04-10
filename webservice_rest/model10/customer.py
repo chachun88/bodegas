@@ -279,7 +279,7 @@ class Customer(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''select floor(count(*)/%(items)s) as pages 
+        query = '''select floor(count(*)::float/%(items)s::float) as pages 
                 from "User" u 
                 inner join "User_Types" ut on ut.id = u.type_id 
                 where (u.type_id = 4 or u.type_id = 3) 
@@ -287,7 +287,7 @@ class Customer(BaseModel):
                 and u.deleted = 0'''
 
         parameters = {
-            "items" : float(items)
+            "items" : items
         }
 
         try:
