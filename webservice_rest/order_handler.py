@@ -211,25 +211,7 @@ class CancelHandler(BaseHandler):
                                 balance_price = 0
 
                                 if "success" in find_kardex:
-                                    balance_price = k.balance_price
-
-                                res_product_find = cellar.FindProductKardex(d["sku"], cellar_id, d["size"])
-
-                                buy=0
-                                sell=0
-
-                                if "success" in res_product_find:
-
-                                    product_find = res_product_find["success"]
-
-                                    for p in product_find:
-                                        if p["operation_type"] == Kardex.OPERATION_BUY or p["operation_type"] == Kardex.OPERATION_MOV_IN:
-                                            buy+=p["total"] 
-
-                                        if p["operation_type"] == Kardex.OPERATION_SELL or p["operation_type"] == Kardex.OPERATION_MOV_OUT:
-                                            sell+=p["total"]
-
-                                units=buy-sell      
+                                    units = k.balance_units  
 
                                 if int(units) < int(d['quantity']): 
 
