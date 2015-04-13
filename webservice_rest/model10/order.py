@@ -200,7 +200,7 @@ class Order(BaseModel):
             query = '''select o.*,
                     coalesce(c.name, '') || ' ' || coalesce(c.lastname, '') as customer,
                     c.*,
-                    ut.name as type,
+                    ut.name as tipo_cliente,
                     o.id as order_id,
                     ct.name as city 
                     from "Order" o 
