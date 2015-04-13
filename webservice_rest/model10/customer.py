@@ -346,9 +346,22 @@ class Customer(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         try:
-            query = '''update "User" set deleted = 1 where id = ANY(%(ids)s)'''
+            query = '''delete from "Contact" where user_id = ANY(%(ids)s)'''
             parametros = {
-            "ids":[int(n) for n in ids.split(",")]
+                "ids":[int(n) for n in ids.split(",")]
+            }
+            cur.execute(query,parametros)
+            self.connection.commit()
+            return self.ShowSuccessMessage("ok")
+        except Exception,e:
+            return self.ShowError(str(e))
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        try:
+            query = '''delete from "User" where id = ANY(%(ids)s)'''
+            parametros = {
+                "ids":[int(n) for n in ids.split(",")]
             }
             cur.execute(query,parametros)
             self.connection.commit()
