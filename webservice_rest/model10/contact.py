@@ -225,7 +225,7 @@ class Contact(BaseModel):
 			c.town,
 			c.rut,
 			ct.name as type, 
-			coleasce(city.name,'') as city 
+			coalesce(city.name,'') as city 
 			from "Contact" c 
 			inner join "Contact_Types" ct on ct.id = c.type_id 
 			inner join "City" city on city.id = c.city_id
