@@ -358,6 +358,7 @@ class Customer(BaseModel):
             }
             cur.execute(query,parametros)
             self.connection.commit()
+            return self.ShowSuccessMessage("Users has been deleted")
         except Exception,e:
             return self.ShowError(str(e))
         finally:
