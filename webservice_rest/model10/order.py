@@ -200,12 +200,14 @@ class Order(BaseModel):
             query = '''select o.*,
                     coalesce(c.name, '') || ' ' || coalesce(c.lastname, '') as customer,
                     c.*,
+                    ut.name as tipo_cliente,
                     o.id as order_id,
                     ct.name as city 
                     from "Order" o 
                     inner join "User" u on u.id = o.user_id 
                     inner join "Contact" c on c.id = o.billing_id 
                     inner join "City" ct on ct.id = c.city_id 
+                    inner join "User_Type" ut on ut.id = u.type_id
                     order by o.id desc 
                     limit %(items)s 
                     offset %(offset)s'''
