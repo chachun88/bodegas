@@ -414,7 +414,10 @@ class ProductMassiveOutputHandler(BaseHandler):
                     if j == 0:
                         sku = str(sheet.cell_value(i,j))
                     elif j == 1:
-                        size = str(int(sheet.cell_value(i,j)))
+                        try:
+                            size = str(int(sheet.cell_value(i,j)))
+                        except:
+                            size = str(sheet.cell_value(i,j))
                     elif j == 2:
                         val = sheet.cell_value(i,j)
                         if val != "":
