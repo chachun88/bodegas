@@ -355,6 +355,9 @@ class Customer(BaseModel):
             return self.ShowSuccessMessage("ok")
         except Exception,e:
             return self.ShowError(str(e))
+        finally:
+            cur.close()
+            self.connection.close()
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -368,6 +371,9 @@ class Customer(BaseModel):
             return self.ShowSuccessMessage("ok")
         except Exception,e:
             return self.ShowError(str(e))
+        finally:
+            cur.close()
+            self.connection.close()
 
     def GetTypes(self):
 
