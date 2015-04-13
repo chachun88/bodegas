@@ -213,7 +213,7 @@ class Contact(BaseModel):
 
 			query = '''select c.id,
 			c.user_id,
-			c.city_id,
+			coalesce(c.city_id,0),
 			c.name,
 			c.email,
 			c.address,
@@ -228,8 +228,8 @@ class Contact(BaseModel):
 			coalesce(city.name,'') as city 
 			from "Contact" c 
 			inner join "Contact_Types" ct on ct.id = c.type_id 
-			inner join "City" city on city.id = c.city_id
 			inner join "User" u on u.id = c.user_id 
+			left join "City" city on city.id = c.city_id
 			where c.user_id = %(user_id)s'''
 			
 			parametros = {
