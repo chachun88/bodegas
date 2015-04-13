@@ -98,11 +98,7 @@
 							{{p["customer"]}}
 						</td>
 						<td>
-							{% if int(p["type"]) == 1 %}
-								WEB
-							{% else %}
-								OTRO
-							{% end %}
+							{{ p["tipo_cliente"] }}
 						</td>
 						<td>
 							{{p["source"]}}
