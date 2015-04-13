@@ -870,7 +870,7 @@ class Product(BaseModel):
         items = int(items)
         offset = (page - 1) * items
 
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         try:
             q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
