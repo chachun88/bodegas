@@ -100,7 +100,7 @@
 						<td>
 							{% if int(p["type"]) == 1 %}
 								PERSONA
-							{% else %}
+							{% elif int(p["type"]) == 4 %}
 								EMPRESA
 							{% end %}
 						</td>
