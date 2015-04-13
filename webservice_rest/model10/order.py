@@ -207,7 +207,7 @@ class Order(BaseModel):
                     inner join "User" u on u.id = o.user_id 
                     inner join "Contact" c on c.id = o.billing_id 
                     inner join "City" ct on ct.id = c.city_id 
-                    inner join "User_Type" ut on ut.id = u.type_id
+                    inner join "User_Types" ut on ut.id = u.type_id
                     order by o.id desc 
                     limit %(items)s 
                     offset %(offset)s'''
