@@ -261,7 +261,7 @@ class Customer(BaseModel):
             inner join "User_Types" ut on ut.id = u.type_id where (u.type_id = 4 or u.type_id = 3) 
             and u.email <> '' 
             and u.deleted = 0 
-            order by u.id desc
+            order by u.registration_date desc
             limit %(limit)s offset %(offset)s'''
             parametros = {
             "limit":items_per_page,
