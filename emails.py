@@ -96,7 +96,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
               <td style="line-height: 2.5;margin-right: -1px;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">{size}</td>
               <td style="line-height: 2.5;margin-right: -1px;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">{price}</td>
               <td style="line-height: 2.5;margin-right: -1px;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-right: 1px;border-right-color: #d6d6d6; border-right-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">{subtotal}</td>
-            </tr>""".format(quantity=d["quantity"],name=d["name"].encode("utf-8"),size=d["size"],price=BaseHandler.money_format(d["sell_price"]),subtotal=BaseHandler.money_format(d["subtotal"]),color=d["color"].encode("utf-8"))
+            </tr>""".format(quantity=d["quantity"],name=d["name"].encode("utf-8"),size=d["size"],price=BaseHandler.money_format(d["price"]),subtotal=BaseHandler.money_format(d["subtotal"]),color=d["color"].encode("utf-8"))
 
     datos_compra = """\
     <table width="100%" align="center" border="0" cellspacing="0" cellpadding="0" class="full-width" bgcolor="#ffffff" style="background-color:#ffffff;margin-top:20px;"><tbody>

@@ -43,14 +43,14 @@ class Webpay(BaseModel):
     @fecha_contable.setter
     def fecha_contable(self, value):
         self._fecha_contable = value
-    
+
     @property
     def fecha_transaccion(self):
         return self._fecha_transaccion
     @fecha_transaccion.setter
     def fecha_transaccion(self, value):
         self._fecha_transaccion = value
-    
+
     @property
     def hora_transaccion(self):
         return self._hora_transaccion
