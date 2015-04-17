@@ -9,8 +9,22 @@
 	{% end %}
 {% end %}
 
-
 {% block body %}
+
+{% if dn == "t" %}
+<div class="alert alert-success alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> Usuario agregado correctamente.
+</div>
+{% end %}
+{% if warnings != "" %}
+	{% for w in warnings.split(",") %}
+	<div class="alert alert-warning alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		<strong><i class="fa fa-check"></i> Error!</strong> {{w}}
+	</div>
+	{% end %}
+{% end %}
 
 {% if int(5) in current_user["permissions"] %}
 <div class="col-md-7">

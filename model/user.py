@@ -9,219 +9,225 @@ import tornado.web
 import urllib
 import urllib2
 
-#from basehandler import BaseHandler
+# from basehandler import BaseHandler
 from bson import json_util
 
 from model.base_model import BaseModel
 
-## TOKEN=5334d6c29ec9a710f56d9ab5
+# TOKEN=5334d6c29ec9a710f56d9ab5
+
 
 class User(BaseModel):
 
-	def __init__(self):
-		BaseModel.__init__(self)
-		self._name = ""
-		self._surname = ""
-		self._email = ""
-		self._password = ""
-		self._permissions = ""
-		self._identifier = ""
-		self._salesman_id = ""
-		self._cellars = []
+    def __init__(self):
+        BaseModel.__init__(self)
+        self._name = ""
+        self._surname = ""
+        self._email = ""
+        self._password = ""
+        self._permissions = ""
+        self._identifier = ""
+        self._salesman_id = ""
+        self._cellars = []
 
 
-	####################
-	### Class fields ###
-	####################
+    ####################
+    ### Class fields ###
+    ####################
 
-	@property
-	def salesman_id(self):
-	    return self._salesman_id
-	@salesman_id.setter
-	def salesman_id(self, value):
-	    self._salesman_id = value
-	
+    @property
+    def salesman_id(self):
+        return self._salesman_id
 
-	@property
-	def identifier(self):
-	    return self._identifier
-	@identifier.setter
-	def identifier(self, value):
-	    self._identifier = value
+    @salesman_id.setter
+    def salesman_id(self, value):
+        self._salesman_id = value
+    
 
-	@property
-	def name(self):
-	    return self._name
-	@name.setter
-	def name(self, value):
-	    self._name = value
+    @property
+    def identifier(self):
+        return self._identifier
 
-	@property
-	def surname(self):
-	    return self._surname
-	@surname.setter
-	def surname(self, value):
-	    self._surname = value
-	
-	@property
-	def email(self):
-	    return self._email
-	@email.setter
-	def email(self, value):
-	    self._email = value
-	
-	@property
-	def password(self):
-	    return self._password
-	@password.setter
-	def password(self, value):
-	    self._password = value
-	
-	@property
-	def permissions(self):
-	    return self._permissions
-	@permissions.setter
-	def permissions(self, value):
-	    self._permissions = value
+    @identifier.setter
+    def identifier(self, value):
+        self._identifier = value
 
-	@property
-	def cellars(self):
-	    return self._cellars
-	@cellars.setter
-	def cellars(self, value):
-	    self._cellars = value
+    @property
+    def name(self):
+        return self._name
 
-	@property
-	def permissions_name(self):
-	    return self._permissions_name
-	@permissions_name.setter
-	def permissions_name(self, value):
-	    self._permissions_name = value
-	
-	@property
-	def cellars_name(self):
-	    return self._cellars_name
-	@cellars_name.setter
-	def cellars_name(self, value):
-	    self._cellars_name = value
-	
-	
+    @name.setter
+    def name(self, value):
+        self._name = value
 
-	#################
-	#### Methods ####
-	#################
+    @property
+    def surname(self):
+        return self._surname
 
-	# def SplitName(self, name):
+    @surname.setter
+    def surname(self, value):
+        self._surname = value
+    
+    @property
+    def email(self):
+        return self._email
 
-	# 	try:
-	# 		nm = name.split(" ")
+    @email.setter
+    def email(self, value):
+        self._email = value
+    
+    @property
+    def password(self):
+        return self._password
 
-	# 		self.name = nm[0]
+    @password.setter
+    def password(self, value):
+        self._password = value
+    
+    @property
+    def permissions(self):
+        return self._permissions
 
-	# 		if len(nm) > 1:
-	# 			self.surname = nm[1]
-	# 	except Exception, e:
-	# 		raise
+    @permissions.setter
+    def permissions(self, value):
+        self._permissions = value
 
-	def InitWithEmail(self, email):
-		url = self.wsurl() + "/salesman/find"
-		url += "?token=" + self.token
-		url += "&email=" + email
+    @property
+    def cellars(self):
+        return self._cellars
 
-		json_string = urllib.urlopen(url).read()
+    @cellars.setter
+    def cellars(self, value):
+        self._cellars = value
 
-		data_obj = json_util.loads(json_string)
+    @property
+    def permissions_name(self):
+        return self._permissions_name
 
-		if "success" in data_obj:
+    @permissions_name.setter
+    def permissions_name(self, value):
+        self._permissions_name = value
 
-			data = data_obj["success"]
+    @property
+    def cellars_name(self):
+        return self._cellars_name
 
-			self.name = data["name"]
-			self.surname = data["lastname"]
-			self.identifier = data["id"]
-			self.password = data["password"]
-			self.permissions = data["permissions"]
-			self.email = data["email"]
-			self.identifier = data["id"]
-			self.cellars = data["cellar_permissions"]
-			self.cellars_name = data["cellars_name"]
-			self.permissions_name = data["permissions_name"]
+    @cellars_name.setter
+    def cellars_name(self, value):
+        self._cellars_name = value
 
-		return data_obj
+    #################
+    #### Methods ####
+    #################
 
+    # def SplitName(self, name):
 
-	def InitWithId(self, idd):
-		url = self.wsurl() + "/salesman/find"
+    #   try:
+    #       nm = name.split(" ")
 
-		url += "?token=" + self.token
-		url += "&id=" + idd
+    #       self.name = nm[0]
 
-		json_string = urllib.urlopen(url).read()
-		data_obj = json_util.loads(json_string)
+    #       if len(nm) > 1:
+    #           self.surname = nm[1]
+    #   except Exception, e:
+    #       raise
 
-		if "success" in data_obj:
+    def InitWithEmail(self, email):
+        url = self.wsurl() + "/salesman/find"
+        url += "?token=" + self.token
+        url += "&email=" + email
 
-			data = data_obj["success"]
+        json_string = urllib.urlopen(url).read()
 
-			self.name = data["name"]
-			self.surname = data["lastname"]
-			self.identifier = idd
-			self.password = data["password"]
-			self.permissions = data["permissions"]
-			self.email = data["email"]
-			self.identifier = data["id"]
-			self.cellars = data["cellar_permissions"]
-			self.cellars_name = data["cellars_name"]
-			self.permissions_name = data["permissions_name"]
+        data_obj = json_util.loads(json_string)
 
-		return data_obj
+        if "success" in data_obj:
 
-	def Remove(self):
+            data = data_obj["success"]
 
-		if self.identifier != "":
-			url  =self.wsurl() + "/salesman/delete"
-			url += "?token=" + self.token
-			url += "&id={}".format(self.identifier)
+            self.name = data["name"]
+            self.surname = data["lastname"]
+            self.identifier = data["id"]
+            self.password = data["password"]
+            self.permissions = data["permissions"]
+            self.email = data["email"]
+            self.identifier = data["id"]
+            self.cellars = data["cellar_permissions"]
+            self.cellars_name = data["cellars_name"]
+            self.permissions_name = data["permissions_name"]
 
-			response = urllib.urlopen(url).read()
+        return data_obj
 
-			print response
+    def InitWithId(self, idd):
+        url = self.wsurl() + "/salesman/find"
 
-			# print "url : {}".format( url )
+        url += "?token=" + self.token
+        url += "&id=" + idd
 
-	def Save(self):
-		url = self.wsurl() + "/salesman/add?token=" + self.token
+        json_string = urllib.urlopen(url).read()
+        data_obj = json_util.loads(json_string)
 
-		url += "&name=" + self.name 
-		url += "&lastname=" + self.surname
-		url += "&password=" + self.password
-		url += "&email=" + self.email
+        if "success" in data_obj:
 
+            data = data_obj["success"]
 
-		if type(self.permissions) == list:
-			url += "&permissions=" + urllib.quote ( ",".join(self.permissions).encode("utf8") )
-		else:
-			url += "&permissions=" + urllib.quote ( self.permissions.encode("utf8") )
-		
+            self.name = data["name"]
+            self.surname = data["lastname"]
+            self.identifier = idd
+            self.password = data["password"]
+            self.permissions = data["permissions"]
+            self.email = data["email"]
+            self.identifier = data["id"]
+            self.cellars = data["cellar_permissions"]
+            self.cellars_name = data["cellars_name"]
+            self.permissions_name = data["permissions_name"]
 
-		if type(self.cellars) == list:
-			url += "&cellars=" + urllib.quote ( ",".join(self.cellars).encode("utf8") )
-		else:
-			url += "&cellars=" + urllib.quote ( self.cellars.encode("utf8") )
-		url += "&id=" + self.identifier
+        return data_obj
 
-		#url = urllib.urlencode(url)
-		return urllib.urlopen(url).read()
+    def Remove(self):
 
-	def get_users_list(self):
+        if self.identifier != "":
+            url = self.wsurl() + "/salesman/delete"
+            url += "?token=" + self.token
+            url += "&id={}".format(self.identifier)
 
-		# getting content from url
-		url = self.wsurl() + "/salesman/list?token=" + self.token + "&items=100"
-		content = urllib2.urlopen(url).read()
+            response = urllib.urlopen(url).read()
 
-		# parse content to array data
-		data = json_util.loads(content)
+            print response
 
-		self.identifier = data
+            # print "url : {}".format( url )
 
-		return data
+    def Save(self):
+        url = self.wsurl() + "/salesman/add?token=" + self.token
+
+        url += "&name=" + self.name 
+        url += "&lastname=" + self.surname
+        url += "&password=" + self.password
+        url += "&email=" + self.email
+
+        if type(self.permissions) == list:
+            url += "&permissions=" + urllib.quote( ",".join(self.permissions).encode("utf8") )
+        else:
+            url += "&permissions=" + urllib.quote( self.permissions.encode("utf8") )
+
+        if type(self.cellars) == list:
+            url += "&cellars=" + urllib.quote( ",".join(self.cellars).encode("utf8") )
+        else:
+            url += "&cellars=" + urllib.quote( self.cellars.encode("utf8") )
+        url += "&id=" + self.identifier
+
+        # url = urllib.urlencode(url)
+        return urllib.urlopen(url).read()
+
+    def get_users_list(self):
+
+        # getting content from url
+        url = self.wsurl() + "/salesman/list?token=" + self.token + "&items=100"
+        content = urllib2.urlopen(url).read()
+
+        # parse content to array data
+        data = json_util.loads(content)
+
+        self.identifier = data
+
+        return data
