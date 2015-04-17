@@ -4,175 +4,175 @@
 {% block caption %}se muestra una lista general de todos los productos{% end %}
 
 {% block body %}
-
-{% if dn == "bpf" %}
-<div class="alert alert-warning alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Problema al eliminar producto!</strong> aún quedan productos en bodega.
-</div>
-{% elif dn == "bpt" %}
-<div class="alert alert-success alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado producto.
-</div>
-{% end %}
-
-<div class="col-md-12">
-	<section class="widget">
-		<div class="body">
-			<table class="table table-hover table-condensed">
-				<thead>
-					<tr>
-						<th></th>
-						<th>Imagen</th>
-						<th class="hidden-xs " >Categor&iacutea</th>
-						<th class="hidden-xs " >SKU</th>
-						<th class="" >Nombre</th>
-						<th class="hidden-xs " >Marca</th>
-						<th class="hidden-xs">Proveedor</th>
-						<th class="hidden-xs">Tallas</th>
-						<th class="hidden-xs">Combinación</th>
-						<!--<th class="hidden-xs">Material</th>-->
-						<!-- <th class="hidden-xs">Viñeta 1</th>
-						<th class="hidden-xs">Viñeta 2</th>
-						<th class="hidden-xs">Viñeta 3</th>
-						<th class="hidden-xs " >Moneda</th> -->
-						<th class=" ">Precio de compra</th>
-						<th class="hidden-xs-portrait ">Precio de venta</th>
-						<th>Precio por mayor</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for p in product_list %}
-					<tr>
-						<th class="for_sale">
-							<a class="for_sale" onclick="for_sale('{{p["id"]}}')">
-								{% if int(p["for_sale"]) == 0 %}
-								<i class="fa fa-eye disabled" id="{{p['id']}}"></i>
-								{% else %}
-								<i class="fa fa-eye" id="{{p['id']}}"></i>
-								{% end %}
-							</a>
-						</th>
-						<td>
-							<img src="/image/{{ p["image"] }}?mw=60" width="60">
-							<!--<input type="checkbox" />-->
-						</td>
-						<td class="category-{{p['sku']}}">{{ p["category"] }}</td>
-						<td class="sku-{{p['sku']}}">{{ p["sku"] }}</td>
-						<td class="name-{{p['sku']}}">{{ p["name"] }}</td> 
-						<td class="brand-{{p['sku']}}">{{ p["brand"] }}</td>
-						<td class="manufacturer-{{p['sku']}}">{{ p["manufacturer"] }}</td>
-						<td>{{ p["size"] }}</td>	
-						<td class="color-{{p['sku']}}">{{ p["color"] }}</td>	
-						<td class="price-{{p['sku']}}">{{ p["price"] }}</td>
-						<td class="sell_price-{{p['sku']}}">{{p['sell_price']}}</td>
-						<td class="bulk_price-{{p['sku']}}">{{p['bulk_price']}}</td>
-						<td>
-							<a class="btn btn-sm btn-primary" href="/product/edit?id={{p['id']}}">
-								Editar
-							</a>
-							<br/>
-							<a class="btn btn-sm btn-danger" href="/product/remove?id={{p['id']}}" onclick="return confirm('¿Está seguro que desea eliminar el producto?');">
-								Eliminar
-							</a>
-							<br/>
-							<a class="btn btn-warning btn-sm" onclick="$('#{{p['sku']}}').slideToggle()">Edici&oacute;n R&aacute;pida</a>
-						</td>
-					</tr>
-					<tr class="special_row">
-						<td colspan="13" style="height: 0;">
-							<div id="{{p['sku']}}" class="panel-collapse collapse">
-								<form action="/product/fastedit" id="form-{{p['id']}}" class="form-horizontal" method="post" enctype="multipart/form-data">
-									<input type="hidden" name="id" class="form-control" value="{{p['id']}}">
-									
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Categor&iacute;a</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" name="category" value="{{p['category']}}" placeholder="Categor&iacute;a">
-										</div>
-									</div>
-									<!-- <div class="form-group col-sm-5">
-										<label class="col-sm-3">SKU</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" name="sku" value="{{p['sku']}}" placeholder="SKU">
-										</div>
-									</div> -->
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Nombre</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" name="name" value="{{p['name']}}" placeholder="Nombre">
-										</div>
-									</div>
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Descripci&oacute;n</label>
-										<div class="col-sm-7">
-											<input type="text" class="form-control" name="description" placeholder="Descripci&oacute;n" value="{{p['description']}}">
-										</div>
-									</div>
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Color</label>
-										<div class="col-sm-7">
-											<input type="text" class="form-control" name="color" placeholder="Combinaci&oacute;n" value="{{p['color']}}">
-										</div>
-									</div>
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Precio Venta</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" name="sell_price" value="{{p['sell_price']}}" placeholder="Precio Venta">
-										</div>
-									</div>
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Precio Compra</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" name="price" value="{{p['price']}}" placeholder="Precio Compra">
-										</div>
-									</div>
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Proveedor</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" name="manufacturer" value="{{p['manufacturer']}}" placeholder="Proveedor">
-										</div>
-									</div>
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Marca</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" name="brand" value="{{p['brand']}}" placeholder="Marca">
-										</div>
-									</div>
-									
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Precio Promoci&oacute;n</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" name="promotion_price" value="{{p['promotion_price']}}" placeholder="Precio Promoción">
-										</div>
-									</div>
-
-									<div class="form-group col-sm-5">
-										<label class="col-sm-3">Precio Por Mayor</label>
-										<div class="col-sm-7">
-											<input class="form-control" type="text" name="bulk_price" value="{{p['bulk_price']}}" placeholder="Precio Promoción">
-										</div>
-									</div>
-
-									<div class="form-group col-sm-5 text-right">
-										<div class="col-sm-3"></div>
-										<div class="col-sm-7">
-											<input type="button" class="btn btn-primary" onclick="FastEdit('#form-{{p['id']}}','{{p['sku']}}')" value="Guardar" />
-										</div>
-									</div>
-
-									{% raw xsrf_form_html() %}
-								</form>
-							</div>
-						</td>
-					</tr>
-					{% end %}
-				</tbody>
-			</table>
+	{% if int(2) in current_user["permissions"] %}
+		{% if dn == "bpf" %}
+		<div class="alert alert-warning alert-success-nohidden">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<strong><i class="fa fa-check"></i> Problema al eliminar producto!</strong> aún quedan productos en bodega.
 		</div>
-	</section>
-</div>
+		{% elif dn == "bpt" %}
+		<div class="alert alert-success alert-success-nohidden">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado producto.
+		</div>
+		{% end %}
 
+		<div class="col-md-12">
+			<section class="widget">
+				<div class="body">
+					<table class="table table-hover table-condensed">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Imagen</th>
+								<th class="hidden-xs " >Categor&iacutea</th>
+								<th class="hidden-xs " >SKU</th>
+								<th class="" >Nombre</th>
+								<th class="hidden-xs " >Marca</th>
+								<th class="hidden-xs">Proveedor</th>
+								<th class="hidden-xs">Tallas</th>
+								<th class="hidden-xs">Combinación</th>
+								<!--<th class="hidden-xs">Material</th>-->
+								<!-- <th class="hidden-xs">Viñeta 1</th>
+								<th class="hidden-xs">Viñeta 2</th>
+								<th class="hidden-xs">Viñeta 3</th>
+								<th class="hidden-xs " >Moneda</th> -->
+								<th class=" ">Precio de compra</th>
+								<th class="hidden-xs-portrait ">Precio de venta</th>
+								<th>Precio por mayor</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for p in product_list %}
+							<tr>
+								<th class="for_sale">
+									<a class="for_sale" onclick="for_sale('{{p["id"]}}')">
+										{% if int(p["for_sale"]) == 0 %}
+										<i class="fa fa-eye disabled" id="{{p['id']}}"></i>
+										{% else %}
+										<i class="fa fa-eye" id="{{p['id']}}"></i>
+										{% end %}
+									</a>
+								</th>
+								<td>
+									<img src="/image/{{ p["image"] }}?mw=60" width="60">
+									<!--<input type="checkbox" />-->
+								</td>
+								<td class="category-{{p['sku']}}">{{ p["category"] }}</td>
+								<td class="sku-{{p['sku']}}">{{ p["sku"] }}</td>
+								<td class="name-{{p['sku']}}">{{ p["name"] }}</td> 
+								<td class="brand-{{p['sku']}}">{{ p["brand"] }}</td>
+								<td class="manufacturer-{{p['sku']}}">{{ p["manufacturer"] }}</td>
+								<td>{{ p["size"] }}</td>	
+								<td class="color-{{p['sku']}}">{{ p["color"] }}</td>	
+								<td class="price-{{p['sku']}}">{{ p["price"] }}</td>
+								<td class="sell_price-{{p['sku']}}">{{p['sell_price']}}</td>
+								<td class="bulk_price-{{p['sku']}}">{{p['bulk_price']}}</td>
+								<td>
+									<a class="btn btn-sm btn-primary" href="/product/edit?id={{p['id']}}">
+										Editar
+									</a>
+									<br/>
+									<a class="btn btn-sm btn-danger" href="/product/remove?id={{p['id']}}" onclick="return confirm('¿Está seguro que desea eliminar el producto?');">
+										Eliminar
+									</a>
+									<br/>
+									<a class="btn btn-warning btn-sm" onclick="$('#{{p['sku']}}').slideToggle()">Edici&oacute;n R&aacute;pida</a>
+								</td>
+							</tr>
+							<tr class="special_row">
+								<td colspan="13" style="height: 0;">
+									<div id="{{p['sku']}}" class="panel-collapse collapse">
+										<form action="/product/fastedit" id="form-{{p['id']}}" class="form-horizontal" method="post" enctype="multipart/form-data">
+											<input type="hidden" name="id" class="form-control" value="{{p['id']}}">
+											
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Categor&iacute;a</label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" name="category" value="{{p['category']}}" placeholder="Categor&iacute;a">
+												</div>
+											</div>
+											<!-- <div class="form-group col-sm-5">
+												<label class="col-sm-3">SKU</label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" name="sku" value="{{p['sku']}}" placeholder="SKU">
+												</div>
+											</div> -->
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Nombre</label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" name="name" value="{{p['name']}}" placeholder="Nombre">
+												</div>
+											</div>
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Descripci&oacute;n</label>
+												<div class="col-sm-7">
+													<input type="text" class="form-control" name="description" placeholder="Descripci&oacute;n" value="{{p['description']}}">
+												</div>
+											</div>
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Color</label>
+												<div class="col-sm-7">
+													<input type="text" class="form-control" name="color" placeholder="Combinaci&oacute;n" value="{{p['color']}}">
+												</div>
+											</div>
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Precio Venta</label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" name="sell_price" value="{{p['sell_price']}}" placeholder="Precio Venta">
+												</div>
+											</div>
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Precio Compra</label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" name="price" value="{{p['price']}}" placeholder="Precio Compra">
+												</div>
+											</div>
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Proveedor</label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" name="manufacturer" value="{{p['manufacturer']}}" placeholder="Proveedor">
+												</div>
+											</div>
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Marca</label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" name="brand" value="{{p['brand']}}" placeholder="Marca">
+												</div>
+											</div>
+											
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Precio Promoci&oacute;n</label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" name="promotion_price" value="{{p['promotion_price']}}" placeholder="Precio Promoción">
+												</div>
+											</div>
+
+											<div class="form-group col-sm-5">
+												<label class="col-sm-3">Precio Por Mayor</label>
+												<div class="col-sm-7">
+													<input class="form-control" type="text" name="bulk_price" value="{{p['bulk_price']}}" placeholder="Precio Promoción">
+												</div>
+											</div>
+
+											<div class="form-group col-sm-5 text-right">
+												<div class="col-sm-3"></div>
+												<div class="col-sm-7">
+													<input type="button" class="btn btn-primary" onclick="FastEdit('#form-{{p['id']}}','{{p['sku']}}')" value="Guardar" />
+												</div>
+											</div>
+
+											{% raw xsrf_form_html() %}
+										</form>
+									</div>
+								</td>
+							</tr>
+							{% end %}
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+	{% end %}
 {% end %}
