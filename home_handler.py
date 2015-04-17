@@ -450,13 +450,13 @@ class ProductMassiveOutputHandler(BaseHandler):
                     else:
                         if cellar.identifier != "":
                             if entrada > 0 and price > 0:
-                                res_add = kardex.AddProducts(sku, entrada, price, size, '', 'buy', self.current_user["email"])
+                                res_add = kardex.AddProducts(sku, entrada, price, size, '', 'buy', 'Sistema - carga masiva stock')
 
                                 if "error" in res_add:
                                     warnings.append(res_add["error"].encode("utf-8"))
 
                             if salida > 0 and sell_price > 0:
-                                res_remove = kardex.RemoveProducts(sku, salida, price, size, '', 'sell', self.current_user["email"])
+                                res_remove = kardex.RemoveProducts(sku, salida, price, size, '', 'sell', 'Sistema - carga masiva stock')
 
                                 if "error" in res_remove:
                                     warnings.append(res_remove['error'].encode("utf-8"))
