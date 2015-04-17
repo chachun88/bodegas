@@ -283,7 +283,7 @@ class Salesman(BaseModel):
                 }
                 cur.execute(q,p)
                 self.connection.commit()
-                self.id = cur.fetchone()[0]
+                self.id = cur.fetchone()["id"]
 
                 return self.ShowSuccessMessage(str(self.id))
         except Exception,e:
