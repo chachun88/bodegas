@@ -197,6 +197,8 @@
 				$(".alert-success").show(animation_duration);
 				$("#period").html(response);
 
+				$("#upload").val($("#upload-period").val());
+
 				setTimeout(function() {
 					$(".alert-success").hide(animation_duration);
 				}, 3000);
@@ -209,7 +211,7 @@
 
 	$(".cargarExcel").click(function(){
 
-		var upload = $("input[name=upload]", $(this)).val();
+		var upload = $("input#upload", $(this)).val();
 
 		$.ajax({
 			url:"/report/upload" ,
