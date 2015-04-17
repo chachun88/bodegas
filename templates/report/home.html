@@ -1,11 +1,11 @@
 {% extends "../base.html" %}
 {% block title %}Informe de bodegas {% end %}
 {% block caption %}
-{% if int(6) in current_user["permissions"] %}
-	muestra las salidas realizadas
-{% else %}
-	sección no autorizada
-{% end %}
+	{% if int(6) in current_user["permissions"] %}
+		muestra las salidas realizadas
+	{% else %}
+		sección no autorizada
+	{% end %}
 {% end %}
 {% block body %}
 {% if int(6) in current_user["permissions"] %}
