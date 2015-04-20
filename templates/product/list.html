@@ -31,7 +31,6 @@
 							<tr>
 								<th></th>
 								<th>Imagen</th>
-								<th class="hidden-xs " >Categor&iacutea</th>
 								<th class="hidden-xs " >SKU</th>
 								<th class="" >Nombre</th>
 								<th class="hidden-xs " >Marca</th>
@@ -43,9 +42,7 @@
 								<th class="hidden-xs">Viñeta 2</th>
 								<th class="hidden-xs">Viñeta 3</th>
 								<th class="hidden-xs " >Moneda</th> -->
-								<th class=" ">Precio de compra</th>
 								<th class="hidden-xs-portrait ">Precio de venta</th>
-								<th>Precio por mayor</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -65,16 +62,13 @@
 									<img src="/image/{{ p["image"] }}?mw=60" width="60">
 									<!--<input type="checkbox" />-->
 								</td>
-								<td class="category-{{p['sku']}}">{{ p["category"] }}</td>
 								<td class="sku-{{p['sku']}}">{{ p["sku"] }}</td>
 								<td class="name-{{p['sku']}}">{{ p["name"] }}</td> 
 								<td class="brand-{{p['sku']}}">{{ p["brand"] }}</td>
 								<td class="manufacturer-{{p['sku']}}">{{ p["manufacturer"] }}</td>
 								<td>{{ p["size"] }}</td>	
 								<td class="color-{{p['sku']}}">{{ p["color"] }}</td>	
-								<td class="price-{{p['sku']}}">{{ p["price"] }}</td>
 								<td class="sell_price-{{p['sku']}}">{{p['sell_price']}}</td>
-								<td class="bulk_price-{{p['sku']}}">{{p['bulk_price']}}</td>
 								<td>
 									<a class="btn btn-sm btn-primary" href="/product/edit?id={{p['id']}}">
 										Editar

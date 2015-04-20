@@ -382,11 +382,10 @@ var FastEdit = function(form_id,sku){
 			if(obj.success){
 				$(".name-"+sku).html($(form_id+" input[name='name']").val());
 				$(".sell_price-"+sku).html($(form_id+" input[name='sell_price']").val());
-				$(".category-"+sku).html($(form_id+" input[name='category']").val());
 				$(".sku-"+sku).html($(form_id+" input[name='sku']").val());
 				$(".brand-"+sku).html($(form_id+" input[name='brand']").val());
 				$(".manufacturer-"+sku).html($(form_id+" input[name='manufacturer']").val());
-				$(".price-"+sku).html($(form_id+" input[name='price']").val());
+				$(".sell_price-"+sku).html($(form_id+" input[name='sell_price']").val());
 				$(".color-"+sku).html($(form_id+" input[name='color']").val());
 				$('#'+sku).slideToggle();
 			} else {
