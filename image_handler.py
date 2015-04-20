@@ -14,6 +14,8 @@ import os
 import glob
 import os.path
 
+from globals import *
+
 from basehandler import BaseHandler
 
 DEFAULT_IMAGE = "static/default_image.jpg"
@@ -26,7 +28,7 @@ def getIamgeBuffer(handler, image_name):
 	if wwidth == -1:
 		### show full image
 		try:
-			image_path = "uploads/images/" + image_name
+			image_path = dir_img + image_name
 			f = open(image_path, "rb")
 			buff = f.read()
 			f.close()
@@ -39,7 +41,7 @@ def getIamgeBuffer(handler, image_name):
 	else:
 		## show scaled image
 		try: # detect if image exist
-			f = open("uploads/images/{}{}".format(wwidth, image_name), "rb")
+			f = open( dir_img + "{}{}".format(wwidth, image_name), "rb")
 			buff = f.read()
 			f.close()
 
@@ -48,10 +50,10 @@ def getIamgeBuffer(handler, image_name):
 			#print str(ex)
 			try:
 				##image doesnt exist so i create it
-				image_path = "uploads/images/{}{}".format(wwidth, image_name)
+				image_path = dir_img + "{}{}".format(wwidth, image_name)
 
 				## getting variables
-				orig = Image.open("uploads/images/" + image_name)
+				orig = Image.open( dir_img + image_name)
 				width = int(orig.size[0])
 				height = int(orig.size[1])
 				max_width = int(handler.get_argument("mw", "{}".format(width)))
@@ -62,7 +64,7 @@ def getIamgeBuffer(handler, image_name):
 				# convert pil image to bytes buffer
 				buf= StringIO.StringIO()
 				im.save(buf, format= 'PNG')
-				im.save("uploads/images/{}{}".format(wwidth, image_name), format='PNG')
+				im.save( dir_img + "{}{}".format(wwidth, image_name), format='PNG')
 				jpeg= buf.getvalue()
 
 				#print "creo thumbnail"
@@ -133,7 +135,7 @@ class ImageDeleteHandler(BaseHandler):
 
 		print "files"
 		if image_name != "":
-			os.chdir( "uploads/images" )
+			os.chdir( dir_img )
 
 			for file in glob.glob("*" + image_name):
 				try:

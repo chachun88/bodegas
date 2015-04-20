@@ -36,6 +36,8 @@ email_giani = "contacto@gianidafirenze.cl"
 
 dir_products = 'uploads/salidas_masivas/'
 dir_stock = 'uploads/entradas_masivas/'
+dir_img = 'uploads/images/'
+
 
 usuario_sendgrid = 'nailuj41'
 pass_sendgrid = 'Equipo_2112'
@@ -43,13 +45,11 @@ pass_sendgrid = 'Equipo_2112'
 # setting vars
 if debugMode:
     userMode = "test"
-    carpeta_img = 'C:\Python27\tellmecuando\static\img'
     port = BODEGA_DEBUG_PORT
     ws_port = DEBUG_WS_PORT
     url_local = "http://giani.ondev.today"
 else:
     userMode = "prod"
-    carpeta_img = '/var/www/tellmecuando/static/img'
     port = BODEGA_PORT
     ws_port = WS_PORT
     url_local = "http://www.gianidafirenze.cl"

@@ -15,7 +15,7 @@ import glob
 from bson import json_util
 
 from basehandler import BaseHandler
-from globals import Menu, debugMode
+from globals import *
 from model.product import Product
 from model.category import Category
 from model.brand import Brand
@@ -54,7 +54,7 @@ class ProductAddHandler(BaseHandler):
 
         try:
 
-            file_path = 'uploads/images/' + final_name
+            file_path = dir_img + final_name
 
             self.deleteOtherImages( final_name )
 
@@ -76,7 +76,7 @@ class ProductAddHandler(BaseHandler):
         # print "files {}".format( image_name )
 
         if image_name != "":
-            os.chdir( "uploads/images/" )
+            os.chdir( dir_img )
             for file in glob.glob("*" + image_name):
                 try:
                     os.remove( file )
