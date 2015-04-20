@@ -58,6 +58,11 @@ class ProductAddHandler(BaseHandler):
 
             self.deleteOtherImages( final_name )
 
+            try:
+                os.stat( file_path )
+            except:
+                os.makedirs(file_path)
+
             open(file_path, 'wb').write(imagedata["body"])
 
         except Exception, e:
