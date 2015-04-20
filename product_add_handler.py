@@ -76,7 +76,7 @@ class ProductAddHandler(BaseHandler):
         # print "files {}".format( image_name )
 
         if image_name != "":
-            if os.isdir(dir_img):
+            if os.path.isdir(dir_img):
                 os.chdir( dir_img )
                 for file in glob.glob("*" + image_name):
                     try:
@@ -90,7 +90,7 @@ class ProductAddHandler(BaseHandler):
                 self.write("imagen eliminada")
             else:
                 os.makedirs(dir_img)
-                self.write("directorio de imagen acaba de ser creado")
+                self.write("directorio de imagen acaba de ser")
         else:
             self.write( "imagen no existe " )
 
