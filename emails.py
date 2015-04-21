@@ -48,7 +48,13 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
       <th style="line-height: 2.5;margin-right: -1px;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-right: 1px;border-right-color: #d6d6d6; border-right-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">Correo</th>
       <td style="line-height: 2.5;margin-left: -1px;height: 30px;border-right: 1px;border-right-color: #d6d6d6; border-right-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">{email}</td>
     </tr>
-    </tbody></table>""".format(order_id=order_id,name=contact.name,address=contact.address,town=contact.town,city=contact.city,telephone=contact.telephone,email=contact.email)
+    </tbody></table>""".format( order_id=order_id,
+                                name=contact.name,
+                                address=contact.address.encode("utf-8"),
+                                town=contact.town.encode("utf-8"),
+                                city=contact.city,
+                                telephone=contact.telephone,
+                                email=contact.email.encode("utf-8"))
     
 
     contact.InitById(order.shipping_id)
@@ -78,7 +84,13 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
       <th style="line-height: 2.5;margin-right: -1px;height: 30px;border-left: 1px;border-left-color: #d6d6d6; border-left-style: solid;border-right: 1px;border-right-color: #d6d6d6; border-right-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">Correo</th>
       <td style="line-height: 2.5;margin-left: -1px;height: 30px;border-right: 1px;border-right-color: #d6d6d6; border-right-style: solid;border-bottom: 1px; border-bottom-style: solid;border-bottom-color: #d6d6d6;">{email}</td>
     </tr>
-    </tbody></table>""".format(order_id=order_id,name=contact.name,address=contact.address,town=contact.town,city=contact.city,telephone=contact.telephone,email=contact.email)
+    </tbody></table>""".format( order_id=order_id,
+                                name=contact.name.encode("utf-8"),
+                                address=contact.address.encode("utf-8"),
+                                town=contact.town.encode("utf-8"),
+                                city=contact.city,
+                                telephone=contact.telephone,
+                                email=contact.email.encode("utf-8"))
 
 
     items_compra = ""

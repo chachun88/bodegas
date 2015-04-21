@@ -50,7 +50,11 @@ $(document).ready(function(){
 
             addUser(chkArray);
 
-            $('#myModal').modal('show');
+            if (chkArray.length > 0){
+                $('#myModal').modal('show');
+            } else{
+                alert("Por favor seleccione pedidos no despachados");
+            }
 
         } else {
 

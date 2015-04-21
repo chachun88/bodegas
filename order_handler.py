@@ -119,28 +119,51 @@ class OrderActionsHandler(BaseHandler):
 
         elif accion == ACCIONES_CONFIRMAR:
 
-            response = order.ChangeStateOrders(valores,Order.ESTADO_CONFIRMADO)
+            pedidos_erroneos = []
 
             for v in valores.split(","):
                 _order = Order()
                 res_order = _order.InitWithId(v)
 
                 if "success" in res_order:
-                    if _order.payment_type == 1:
-                        if _order.state != Order.ESTADO_DESPACHADO or _order.state != Order.ESTADO_CANCELADO:
-                            SendConfirmedMail(_order.customer_email, _order.customer, v)
-                        else:
-                            self.write(json_util.dumps({"error": "Pedidos despachados o cancelados no pueden ser confirmados"}))
+                    if _order.state == Order.ESTADO_PENDIENTE and _order.payment_type == 1:
+                        order.ChangeStateOrders(v ,Order.ESTADO_CONFIRMADO)
+                        SendConfirmedMail(_order.customer_email, _order.customer, v)
+                    else:
+                        pedidos_erroneos.append(str(_order.id))
                 else:
                     print res_order["error"]
 
-            self.write(json_util.dumps(response))
+            if len(pedidos_erroneos) > 0:
+                self.write(json_util.dumps({"error": "Pedido/os {pedidos} no puede/en ser confirmado/os".format(pedidos=",".join(pedidos_erroneos))}))
+            else:
+                self.write(json_util.dumps({"success":"ok"}))
 
         elif accion == ACCIONES_PARA_DESPACHO:
 
-            response = order.ChangeStateOrders(valores,Order.ESTADO_PARA_DESPACHO)
+            pedidos_erroneos = []
 
-            self.write(json_util.dumps(response))
+            for v in valores.split(","):
+                _order = Order()
+                res_order = _order.InitWithId(v)
+
+                if "success" in res_order:
+                    if _order.state == Order.ESTADO_CONFIRMADO:
+                        order.ChangeStateOrders(v ,Order.ESTADO_PARA_DESPACHO)
+                        SendConfirmedMail(_order.customer_email, _order.customer, v)
+                    else:
+                        pedidos_erroneos.append(str(_order.id))
+                else:
+                    print res_order["error"]
+
+            if len(pedidos_erroneos) > 0:
+                self.write(json_util.dumps({"error": "Pedido/os {pedidos} no puede/en ser preparado/os para ser despachado/os".format(pedidos=",".join(pedidos_erroneos))}))
+            else:
+                self.write(json_util.dumps({"success":"ok"}))
+
+            # response = order.ChangeStateOrders(valores,Order.ESTADO_PARA_DESPACHO)
+
+            # self.write(json_util.dumps(response))
 
         elif accion == ACCIONES_CANCELADO:
 
