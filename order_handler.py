@@ -118,7 +118,7 @@ class OrderActionsHandler(BaseHandler):
             self.write(json_util.dumps(response))
 
         elif accion == ACCIONES_CONFIRMAR:
-            
+
             response = order.ChangeStateOrders(valores,Order.ESTADO_CONFIRMADO)
 
             for v in valores.split(","):
@@ -127,10 +127,13 @@ class OrderActionsHandler(BaseHandler):
 
                 if "success" in res_order:
                     if _order.payment_type == 1:
-                        SendConfirmedMail(_order.customer_email, _order.customer, v)
+                        if _order.state != Order.ESTADO_DESPACHADO or _order.state != Order.ESTADO_CANCELADO:
+                            SendConfirmedMail(_order.customer_email, _order.customer, v)
+                        else:
+                            self.write(json_util.dumps({"error": "Pedidos despachados o cancelados no pueden ser confirmados"}))
                 else:
                     print res_order["error"]
-            
+
             self.write(json_util.dumps(response))
 
         elif accion == ACCIONES_PARA_DESPACHO:
