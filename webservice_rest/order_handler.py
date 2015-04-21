@@ -240,7 +240,7 @@ class CancelHandler(BaseHandler):
                                 identificadores.append({"identificador":identificador,"error":details_res["error"]})
                     elif o["state"] == Order.ESTADO_DESPACHADO:
                         if identificador not in identificadores:
-                            identificadores.append(identificadores.append({"identificador":identificador,"error":"Pedido ya esta despachado"}))
+                            identificadores.append(identificadores.append({"identificador":identificador,"error":"Pedido no puede ser cancelado, ya que se encuentra despachado"}))
                     else:
                         if identificador not in identificadores:
                             identificadores.append(identificadores.append({"identificador":identificador,"error":"Pedido ya esta cancelado"}))
