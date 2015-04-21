@@ -190,11 +190,20 @@ class CellarEasyOutputHandler(BaseHandler):
         if "success" in res_tallas:
             tallas = res_tallas["success"]
 
+        c = Cellar()
+        res_reservation = c.GetReservationCellar()
+
+        reservation_cellar_id = None
+
+        if "success" in res_reservation:
+            reservation_cellar_id = res_reservation["success"]
+
         self.render("cellar/easyoutput.html", 
             cellar=cellar, 
             products=cellar.ListProducts(), 
             cellarList=data,
-            tallas=tallas)
+            tallas=tallas,
+            reservation_cellar_id=reservation_cellar_id)
 
     @tornado.web.authenticated
     def post(self):

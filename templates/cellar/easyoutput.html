@@ -98,8 +98,10 @@
 												<div class="col-sm-12">
 													<select name="new_cellar" class="form-control">
 													{% for c in cellarList %}
-													<option value="{{ c['id'] }}"> {{ c["name"] }}</option>
-													{{ cellar_name=c["name"] }}
+														{% if reservation_cellar_id != c['id'] %}
+														<option value="{{ c['id'] }}"> {{ c["name"] }}</option>
+														{{ cellar_name=c["name"] }}
+														{% end %}
 													{% end %}
 													</select>
 												</div>
