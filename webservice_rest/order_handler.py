@@ -192,7 +192,7 @@ class CancelHandler(BaseHandler):
 
                     o = res_order["success"]
 
-                    if o["state"] != Order.ESTADO_CANCELADO:
+                    if o["state"] != Order.ESTADO_CANCELADO and o["state"] != Order.ESTADO_DESPACHADO:
 
                         order_detail = OrderDetail()
                         details_res = order_detail.ListByOrderId(identificador)
