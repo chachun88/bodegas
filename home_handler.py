@@ -174,7 +174,7 @@ class ProductLoadHandler(BaseHandler):
             # self.write("{}".format(ncols))
 
             # fila
-            for i in range(1, nrows):
+            for i in range(3, nrows):
 
                 prod = Product()
                 tallas = []
