@@ -476,9 +476,9 @@ class ProductMassiveOutputHandler(BaseHandler):
                                 if "error" in res_remove:
                                     warnings.append(res_remove['error'].encode("utf-8"))
                         else:
-                            warnings.append('''No se reconoce nombre de la bodega, Tip: vaya a "stock/todas las bodegas",
+                            warnings.append('''No se reconoce la bodega '{}', Tip: vaya a "stock/todas las bodegas",
                               y copie el nombre de la bodega a la cual desea relacionar el movimiento de stock, 
-                              luego peguelo en la planilla excel, asi no correra riesgos de error de tipeo''')
+                              luego peguelo en la planilla excel, asi no correra riesgos de error de tipeo'''.format(cellar_name))
 
             if len(warnings) > 0:
 
