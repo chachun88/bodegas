@@ -55,8 +55,8 @@
                                 <div class="controls form-group">
                                     <!-- <div class="col-sm-8"><input placeholder="type" name="type" type="text" class="form-control" value="{{customer.type}}"></div> -->
                                     <select name="type">
+                                        <option value="">---Seleccione---</option>
                                         {% for t in types %}
-                                            <option value="">---Seleccione---</option>
                                             {% if t["name"] == customer.type %}
                                             <option value="{{t['id']}}" selected>{{t["name"]}}</option>
                                             {% else %}

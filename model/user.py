@@ -67,7 +67,7 @@ class User(BaseModel):
     @surname.setter
     def surname(self, value):
         self._surname = value
-    
+
     @property
     def email(self):
         return self._email
@@ -75,7 +75,7 @@ class User(BaseModel):
     @email.setter
     def email(self, value):
         self._email = value
-    
+
     @property
     def password(self):
         return self._password
@@ -83,7 +83,7 @@ class User(BaseModel):
     @password.setter
     def password(self, value):
         self._password = value
-    
+
     @property
     def permissions(self):
         return self._permissions
@@ -115,6 +115,22 @@ class User(BaseModel):
     @cellars_name.setter
     def cellars_name(self, value):
         self._cellars_name = value
+
+    @property
+    def type(self):
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        self._type = value
+
+    @property
+    def type_id(self):
+        return self._type_id
+
+    @type_id.setter
+    def type_id(self, value):
+        self._type_id = value
 
     #################
     #### Methods ####
@@ -155,6 +171,8 @@ class User(BaseModel):
             self.cellars = data["cellar_permissions"]
             self.cellars_name = data["cellars_name"]
             self.permissions_name = data["permissions_name"]
+            self.type_id = data["type_id"]
+            self.type = data["type"]
 
         return data_obj
 
@@ -181,6 +199,8 @@ class User(BaseModel):
             self.cellars = data["cellar_permissions"]
             self.cellars_name = data["cellars_name"]
             self.permissions_name = data["permissions_name"]
+            self.type_id = data["type_id"]
+            self.type = data["type"]
 
         return data_obj
 
@@ -204,11 +224,7 @@ class User(BaseModel):
         url += "&lastname=" + self.surname
         url += "&password=" + self.password
         url += "&email=" + self.email
-
-        if type(self.permissions) == list:
-            url += "&permissions=" + urllib.quote( ",".join(self.permissions).encode("utf8") )
-        else:
-            url += "&permissions=" + urllib.quote( self.permissions.encode("utf8") )
+        url += "&type_id={}".format(self.type_id)
 
         if type(self.cellars) == list:
             url += "&cellars=" + urllib.quote( ",".join(self.cellars).encode("utf8") )

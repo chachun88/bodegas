@@ -8,7 +8,7 @@ import psycopg2.extras
 
 class Order(BaseModel):
 
-    ESTADO_PENDIENTE = 1
+    ESTADO_PENDIENTE = 1  # rechazado si es webpay
     ESTADO_CONFIRMADO = 2
     ESTADO_PARA_DESPACHO = 3
     ESTADO_DESPACHADO = 4

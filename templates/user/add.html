@@ -1,11 +1,17 @@
 {% extends "../base.html" %}
 
-{% block title %}Agregar {% end %}
+{% block title %}
+{% if dn == "t1" %}
+	Editar
+{% else %}
+	Agregar
+{% end %}
+{% end %}
 {% block caption %}
 	{% if int(5) in current_user["permissions"] %}
-	agrega un nuevo usuario
+		un usuario
 	{% else %}
-	sección no autorizada
+		sección no autorizada
 	{% end %}
 {% end %}
 
@@ -67,21 +73,14 @@
 				</style>
 				<div class="control-group">
 					<label for="" class="control-label">Permisos</label>
-
-					<input type="hidden" name="permissions" >
 					<div class="controls form-group">
 						<div class="col-sm-8">
-							<div id="perm" class="form-control" >
-								{% set permiso = ["acceso a api","cargar productos nuevos","vender","modificar bodegas","administrar usuarios","ver informes"] %}
-								{% for i in range(0,len(permiso)) %} 
-									<a id="perm_top{{ i + 1 }}" class="btn-sm btn-primary btn-perm" onclick="removeElement({{ i + 1 }})">{{ permiso[i] }}</a>
-								{% end %}
-							</div>
-							<div id="perm_bot">
-								{% for i in range(0,len(permiso)) %} 
-									<a id="perm_{{ i + 1 }}" class="btn-sm btn-primary btn-perm-bot" onclick="addElement({{ i + 1 }})">{{ permiso[i] }}</a>
-								{% end %}
-							</div>
+							<select name="type_id">
+								<option value="">---Seleccione---</option>
+								<option value="2">Administrador</option>
+								<option value="1">Gestion</option>
+								<option value="6">Bodega</option>
+							</select>
 						</div>
 					</div>
 				</div>

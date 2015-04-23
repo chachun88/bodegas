@@ -84,6 +84,7 @@ class CustomerSaveHandler(BaseHandler):
 
         if "success" in response:
             types = response["success"]
+            print types
 
         if user_id == "":
             self.render("customer/save.html",dn="",mode="add", customer=customer,types=types)

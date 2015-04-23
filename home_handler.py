@@ -17,6 +17,21 @@ from model.product import Product
 from model.cellar import Cellar
 from model.kardex import Kardex
 from globals import Menu, dir_products, dir_stock, debugMode
+import math
+
+
+def cast(t):
+
+    if type(t) is float:
+        if t.is_integer():
+            return str(int(t))
+        else:
+            return str(t)
+    elif type(t) is unicode:
+        try:
+            return str(int(float(t.encode("utf-8"))))
+        except:
+            return str(t)
 
 fn = ''
 fnout = ''
@@ -155,13 +170,14 @@ class ProductLoadHandler(BaseHandler):
 
             nrows = sheet.nrows
             ncols = sheet.ncols
-            print ncols
+            # print ncols
             # self.write("{}".format(ncols))
 
             # fila
-            for i in range(1, nrows):
+            for i in range(3, nrows):
 
                 prod = Product()
+                tallas = []
 
                 # columna
                 for j in range(ncols):
@@ -173,9 +189,9 @@ class ProductLoadHandler(BaseHandler):
                     elif j == 2:
                         prod.name = sheet.cell_value(i,j).encode("utf-8")
                     elif j == 3:
-                        prod.description = sheet.cell_value(i,j).encode("utf-8")
+                        prod.description = sheet.cell_value(i,j)
                     elif j == 4:                                        
-                        prod.color = sheet.cell_value(i,j).encode("utf-8")
+                        prod.color = sheet.cell_value(i,j)
                     elif j == 5:                                        
                         prod.price = int(sheet.cell_value(i,j))
                     elif j == 6:
@@ -195,20 +211,19 @@ class ProductLoadHandler(BaseHandler):
                     elif j == 9:
                         prod.brand = sheet.cell_value(i,j).encode("utf-8")
                     elif j == 10:
-                        valor = sheet.cell_value(i,j)
-
-                        if type(valor) is unicode:
-                            prod.size = valor.encode("utf-8")
-                        else:
-                            prod.size = str(valor)
-                    elif j == 11:
                         prod.delivery = sheet.cell_value(i,j).encode("utf-8")
-                    elif j == 12:
+                    elif j == 11:
                         prod.which_size = sheet.cell_value(i,j).encode("utf-8")
+                    elif j > 11 and j < ncols:
+                        valor = sheet.cell_value(i,j)
+                        if valor != "":
+                            tallas.append(cast(valor))
 
-                if debugMode:
-                    print "product name : {}".format(prod.name)
+                # if debugMode:
+                #     print "product name : {}".format(prod.name)
 
+                prod.size = ",".join(tallas)
+                print prod.size
                 res_save = prod.Save("one")
 
                 if debugMode:
@@ -461,7 +476,9 @@ class ProductMassiveOutputHandler(BaseHandler):
                                 if "error" in res_remove:
                                     warnings.append(res_remove['error'].encode("utf-8"))
                         else:
-                            warnings.append("error al obtener identificador de bodega {}".format(cellar_name))
+                            warnings.append('''No se reconoce nombre de la bodega, Tip: vaya a "stock/todas las bodegas",
+                              y copie el nombre de la bodega a la cual desea relacionar el movimiento de stock, 
+                              luego peguelo en la planilla excel, asi no correra riesgos de error de tipeo''')
 
             if len(warnings) > 0:
 

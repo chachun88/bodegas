@@ -34,7 +34,6 @@
 						<th></th>
 						<th>estado</th>
 						<th>nombre</th>
-						<th>apellido</th>
 						<th>rut</th>
 						<th>tipo</th>
 						<th>giro</th>
@@ -62,9 +61,6 @@
 							{{c["name"]}}
 						</td>
 						<td>
-							{{c["lastname"]}}
-						</td>
-						<td>
 							{{c["rut"]}}
 						</td>
 						<td>
@@ -80,9 +76,15 @@
 							{{CustomDateFormat(c["last_view"])}}
 						</td>
 						<td>
-							<a class="btn btn-sm btn-info" href="/customer/view_contact?user_id={{c['id']}}">Ver Contactos</a>
-							<a class="btn btn-sm btn-default" href="/customer/add_contact?user_id={{c['id']}}">Agregar Contacto</a>
-							<a class="btn btn-sm btn-primary" href="/customer/save?id={{c['id']}}">Editar</a>
+							<p>
+								<a class="btn btn-sm btn-success" href="/customer/view_contact?user_id={{c['id']}}">Ver Contactos</a>
+							</p>
+							<p>
+								<a class="btn btn-sm btn-info" href="/customer/add_contact?user_id={{c['id']}}">Agregar Contacto</a>
+							</p>
+							<p>
+								<a class="btn btn-sm btn-primary" href="/customer/save?id={{c['id']}}">Editar</a>
+							</p>
 						</td>
 					</tr>
 					{% end %}
