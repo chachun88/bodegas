@@ -7,9 +7,8 @@ import psycopg2.extras
 
 
 class UserType():
-    VENDEDOR = 1
-    GESTION = 6
-    BODEGA = 7
+    GESTION = 1
+    BODEGA = 6
     ADMINISTRADOR = 2
 
 
@@ -164,7 +163,7 @@ class Salesman(BaseModel):
         p = {
             "email":username,
             "password":password,
-            "user_type": [UserType.ADMINISTRADOR, UserType.VENDEDOR, UserType.GESTION, UserType.BODEGA]
+            "user_type": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
         }
         try:
             cur.execute(q,p)
@@ -194,7 +193,7 @@ class Salesman(BaseModel):
             group by u.id, ut.name, ut.id limit 1'''
         p = {
             "email":email,
-            "user_type": [UserType.ADMINISTRADOR, UserType.VENDEDOR, UserType.GESTION, UserType.BODEGA]
+            "user_type": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
         }
         try:
             cur.execute(q,p)
@@ -224,7 +223,7 @@ class Salesman(BaseModel):
             group by u.id, ut.name, ut.id limit 1'''
         p = {
             "id":idd,
-            "user_type": [UserType.ADMINISTRADOR, UserType.VENDEDOR, UserType.GESTION, UserType.BODEGA]
+            "user_type": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
         }
         try:
             cur.execute(q,p)
@@ -365,7 +364,7 @@ class Salesman(BaseModel):
             p = {
                 "limit":items,
                 "offset":offset,
-                "user_type": [UserType.ADMINISTRADOR, UserType.VENDEDOR, UserType.GESTION, UserType.BODEGA]
+                "user_type": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
             }
             cur.execute(q,p)
 
