@@ -355,7 +355,7 @@
  					var cantidad = parseInt(json_response.success);
 
  					if( cantidad > 0 ){
- 						alert("esta talla sigue en stock");
+ 						alert("esta talla aun tiene stock, debes sacar el stock remanente para poder quitarla del maestro de productos");
  						obj.prop("checked", true);
  					}
  				}

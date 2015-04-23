@@ -396,8 +396,6 @@ class Cellar(BaseModel):
 
                     res_size_id = size.initById()
 
-                    size_name = ""
-
                     if "success" in res_size_id:
 
                         prod_print["balance_units"] = kardex.balance_units
@@ -408,17 +406,16 @@ class Cellar(BaseModel):
 
                         rtn_data.append(prod_print)
 
-                    else:
-                        return res_size_id
+                    # else:
+                    #     return res_size_id
 
                 else:
                     return response_obj
 
             else:
-                print response_obj["error"]
-                # return response_obj
+                return response_obj
 
-        return rtn_data
+        return {"success": rtn_data}
 
     def ListKardex(self, page, items, day, fromm, until):
 

@@ -20,7 +20,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for p in cellar.ListProducts() %}
+					{% for p in productos %}
 						{% if int(p["balance_units"]) > 0%}
 						<tr>
 							<td>{{ p["sku"]}}</td>

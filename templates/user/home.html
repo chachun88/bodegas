@@ -41,6 +41,7 @@
 						<th>Nombre</th>
 						<th>Email</th>
 						<th>Permisos</th>
+						<th>Tipo Usuario</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -50,12 +51,15 @@
 						<td>{{ u["name"] }}</td>
 						<td>{{ u["email"] }}</td>
 						<td>{{ u["permissions_name"] }}</td>
+						<td>{{ u['type'] }}</td>
 						<td>
 						{% if int(5) in current_user["permissions"] %}
-							<a class="btn btn-success" href="/user/edit?id={{ u['id'] }}">
+							<a class="btn btn-sm btn-success" href="/user/edit?id={{ u['id'] }}">
 								Editar
 							</a>
-							<a class="btn btn-danger" href="/user/remove?id={{ u['id'] }}" onclick="return confirm('¿Está seguro que desea eliminar al usuario?');">
+							<br/>
+							<br/>
+							<a class="btn btn-sm btn-danger" href="/user/remove?id={{ u['id'] }}" onclick="return confirm('¿Está seguro que desea eliminar al usuario?');">
 								Eliminar
 							</a>
 						{% end %}

@@ -358,9 +358,15 @@ class CellarDetailHandler(BaseHandler):
 
         cellar = Cellar()
         cellar.InitWithId(idd)
-        cellar.ListProducts()
+        res = cellar.ListProducts()
+        productos = []
 
-        self.render("cellar/detail.html", side_menu=self.side_menu, cellar=cellar)
+        if "success" in res:
+            productos = res["success"]
+        else:
+            print res
+
+        self.render("cellar/detail.html", side_menu=self.side_menu, cellar=cellar, productos=productos)
 
     @tornado.web.authenticated
     def post(self):

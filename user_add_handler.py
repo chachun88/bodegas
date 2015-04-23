@@ -78,16 +78,13 @@ class UserAddHandler(BaseHandler):
             password = m.hexdigest()
             usr.password    = password
 
-        usr.permissions = self.get_argument("permissions", "").encode("utf-8")
+        usr.type_id = self.get_argument("type_id", "")
         usr.identifier  = self.get_argument("id", "").encode("utf-8")
         usr.cellars     = self.get_argument("cellars","").encode("utf-8")
 
-        if usr.permissions == "":
-            self.redirect("/user/add?dn=t3")
-        else:
-            response = json_util.loads(usr.Save())
+        response = json_util.loads(usr.Save())
 
-            if "success" in response:
-                self.redirect("/user/add?dn=t&warnings=")
-            else:
-                self.redirect("/user/add?dn=warnings=" + response["error"])
+        if "success" in response:
+            self.redirect("/user/add?dn=t&warnings=")
+        else:
+            self.redirect("/user/add?dn=warnings=" + response["error"])
