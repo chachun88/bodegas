@@ -51,7 +51,7 @@ class HomeHandler(BaseHandler):
         w = []
 
         if self.get_argument("w", "") != "":
-            w = self.get_argument("w", "").split( "," )
+            w = self.get_argument("w", "").split( ";;" )
 
         args = {
             "dn" : dn, 
