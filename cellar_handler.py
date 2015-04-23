@@ -126,12 +126,18 @@ class CellarEasyInputHandler(BaseHandler):
         if "success" in res_tallas:
             tallas = res_tallas["success"]
 
+        res = cellar.ListProducts()
+        productos = []
+
+        if "success" in res:
+            productos = res["success"]
+
         self.render("cellar/easyinput.html", 
                     operation="Entradas ", 
                     opp="in", 
                     side_menu=self.side_menu, 
                     cellar=cellar, 
-                    products=cellar.ListProducts()["success"], 
+                    products=productos, 
                     product_list=lista, 
                     tallas=tallas)
     
@@ -198,9 +204,15 @@ class CellarEasyOutputHandler(BaseHandler):
         if "success" in res_reservation:
             reservation_cellar_id = res_reservation["success"]
 
+        res = cellar.ListProducts()
+        productos = []
+
+        if "success" in res:
+            productos = res["success"]
+
         self.render("cellar/easyoutput.html", 
             cellar=cellar, 
-            products=cellar.ListProducts()["success"], 
+            products=productos, 
             cellarList=data,
             tallas=tallas,
             reservation_cellar_id=reservation_cellar_id)
