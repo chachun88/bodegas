@@ -34,6 +34,7 @@ class UserAddHandler(BaseHandler):
             response = usr.InitWithId(user_id)
 
             if "success" in response:
+                dn = "t1"
                 self.render("user/add.html", 
                     side_menu=self.side_menu, 
                     user=usr, 

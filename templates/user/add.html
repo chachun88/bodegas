@@ -1,11 +1,17 @@
 {% extends "../base.html" %}
 
-{% block title %}Agregar {% end %}
+{% block title %}
+{% if dn == "t1" %}
+	Editar
+{% else %}
+	Agregar
+{% end %}
+{% end %}
 {% block caption %}
 	{% if int(5) in current_user["permissions"] %}
-	agrega un nuevo usuario
+		un usuario
 	{% else %}
-	sección no autorizada
+		sección no autorizada
 	{% end %}
 {% end %}
 
