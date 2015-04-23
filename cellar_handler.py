@@ -200,7 +200,7 @@ class CellarEasyOutputHandler(BaseHandler):
 
         self.render("cellar/easyoutput.html", 
             cellar=cellar, 
-            products=cellar.ListProducts(), 
+            products=cellar.ListProducts()["success"], 
             cellarList=data,
             tallas=tallas,
             reservation_cellar_id=reservation_cellar_id)
