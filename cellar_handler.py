@@ -131,7 +131,7 @@ class CellarEasyInputHandler(BaseHandler):
                     opp="in", 
                     side_menu=self.side_menu, 
                     cellar=cellar, 
-                    products=cellar.ListProducts(), 
+                    products=cellar.ListProducts()["success"], 
                     product_list=lista, 
                     tallas=tallas)
     
