@@ -234,7 +234,7 @@ class ProductLoadHandler(BaseHandler):
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
             args = {
                 "dn" : "",
-                "warnings" : ",".join(warnings),
+                "warnings" : ";;".join(warnings),
                 "filename" : ""
             }
             self.redirect("/product/out?" + urllib.urlencode(args))
@@ -242,7 +242,7 @@ class ProductLoadHandler(BaseHandler):
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t",warnings=",".join(warnings)))
             args = {
                 "dn" : "t",
-                "warnings" : ",".join(warnings),
+                "warnings" : ";;".join(warnings),
                 "filename" : ""
             }
             self.redirect("/product/out?" + urllib.urlencode(args))
@@ -483,7 +483,7 @@ class ProductMassiveOutputHandler(BaseHandler):
             if len(warnings) > 0:
 
                 args = {
-                    "w" : ",".join(warnings),
+                    "w" : ";;".join(warnings),
                     "dn" : ""
                 }
                 self.redirect("/product?w=" + urllib.urlencode(args))
