@@ -8,7 +8,7 @@ import tornado.options
 import tornado.web
 
 from basehandler import BaseHandler
-from model.user import User
+from model10.user import User
 
 from globals import Menu
 

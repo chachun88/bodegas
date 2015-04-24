@@ -13,7 +13,7 @@ import hashlib
 
 from lp_email_tool import lpEmailTool
 
-from model.user import User
+from model10.user import User
 
 class LoginHandler(BaseHandler):
 

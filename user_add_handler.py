@@ -9,8 +9,8 @@ import tornado.web
 
 from basehandler import BaseHandler
 from globals import Menu
-from model.user import User
-from model.cellar import Cellar
+from model10.user import User
+from model10.cellar import Cellar
 
 from bson import json_util
 

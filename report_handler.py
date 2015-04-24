@@ -12,8 +12,8 @@ import csv
 from bson import json_util
 from basehandler import BaseHandler
 from globals import Menu
-from model.cellar import Cellar
-from model.product import Product
+from model10.cellar import Cellar
+from model10.product import Product
 
 
 class ReportHandler(BaseHandler):
@@ -22,35 +22,35 @@ class ReportHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
-        self.set_active(Menu.INFORMES_POR_BODEGA)
-        global data
-        try:
-            day = self.get_argument("day")
-        except:
-            day = "today"
 
-        # data = Cellar().List(1, 10)
-        fromm = "from"
-        until = "until"
-        cellar = Cellar().List(1, 100)
+        self.set_active(Menu.INFORMES_POR_BODEGA)
+
+        day = self.get_argument("day", "today")
+        fromm = self.get_argument("from", "from")
+        until = self.get_argument("until", "until")
+
         data = Cellar().ListKardex(day, fromm, until)
-        product = Product().get_product_list()
-        self.render("report/home.html", side_menu=self.side_menu, data=data,
-                    product=product, cellar=cellar, data_str=json_util.dumps(data))
+
+        self.render("report/home.html", 
+                    side_menu=self.side_menu, 
+                    data=data,
+                    data_str=json_util.dumps(data))
 
     @tornado.web.authenticated
     def post(self):
-        global data
+
+        self.set_active(Menu.INFORMES_POR_BODEGA)
+
         day = self.get_argument("day", "")
         fromm = self.get_argument("from", "")
         until = self.get_argument("until", "")
 
-        cellar = Cellar().List(1, 100)
         data = Cellar().ListKardex(day, fromm, until)
-        product = Product().get_product_list()
-        self.render("report/period.html", side_menu=self.side_menu, data=data,
-                    product=product, cellar=cellar, data_str=json_util.dumps(data))
-        # self.redirect("/")
+
+        self.render("report/period.html", 
+                    side_menu=self.side_menu, 
+                    data=data, 
+                    data_str=json_util.dumps(data))
 
     def check_xsrf_cookie(self):
         pass

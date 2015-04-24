@@ -13,8 +13,8 @@ from basehandler import BaseHandler
 
 from bson import json_util
 
-from model.tag import Tag
-from model.product import Product
+from model10.tag import Tag
+from model10.product import Product
 
 class TagHandler(BaseHandler):
 

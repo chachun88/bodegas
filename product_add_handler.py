@@ -16,12 +16,12 @@ from bson import json_util
 
 from basehandler import BaseHandler
 from globals import *
-from model.product import Product
-from model.category import Category
-from model.brand import Brand
-from model.tag import Tag
-from model.kardex import Kardex
-from model.size import Size
+from model10.product import Product
+from model10.category import Category
+from model10.brand import Brand
+from model10.tag import Tag
+from model10.kardex import Kardex
+from model10.size import Size
 
 
 class ProductAddHandler(BaseHandler):
@@ -271,7 +271,7 @@ class ProductEditHandler(BaseHandler):
         self.set_active(Menu.PRODUCTOS_CARGA)
 
         prod = Product()
-        res = prod.InitWithId(self.get_argument("id", ""))
+        res = prod.InitById(self.get_argument("id", ""))
 
         tags = []
         tag = Tag()
@@ -304,40 +304,24 @@ class FastEditHandler(BaseHandler):
 
         prod = Product()
 
-        res = prod.InitWithId(self.get_argument("id", ""))
+        res = prod.InitById(self.get_argument("id", ""))
 
         if "success" in res:
 
-            prod.name = self.get_argument("name", "").encode('utf-8')
+            prod.name = self.get_argument("name", "")
             prod.description = self.get_argument("description", "")
             prod.color = self.get_argument("color", "")
-            prod.price = self.get_argument("price", "").encode('utf-8')
-            prod.sell_price     = self.get_argument("sell_price", "").encode('utf-8')
-            prod.category = self.get_argument("category","").encode("utf-8")
-            prod.sku = prod.sku.encode("utf-8")
-            prod.manufacturer = self.get_argument("manufacturer","").encode("utf-8")
-            prod.brand = self.get_argument("brand","").encode("utf-8")
-            prod.delivery = self.get_argument("delivery","").encode("utf-8")
-            prod.which_size = self.get_argument("which_size","").encode("utf-8")
+            prod.price = self.get_argument("price", "")
+            prod.sell_price     = self.get_argument("sell_price", "")
+            prod.category = self.get_argument("category","")
+            prod.sku = prod.sku
+            prod.manufacturer = self.get_argument("manufacturer","")
+            prod.brand = self.get_argument("brand","")
+            prod.delivery = self.get_argument("delivery","")
+            prod.which_size = self.get_argument("which_size","")
             prod.for_sale = self.get_argument("for_sale",0)
-            prod.upc = prod.upc.encode("utf-8")
-            prod.size = prod.size.encode("utf-8")
-            prod.size_id = ','.join(str(v) for v in prod.size_id)
-            prod.material = prod.material.encode("utf-8")
-            prod.bullet_1 = prod.bullet_1.encode("utf-8")
-            prod.bullet_2 = prod.bullet_2.encode("utf-8")
-            prod.bullet_3 = prod.bullet_3.encode("utf-8")
-            prod.currency = prod.currency.encode("utf-8")
-            prod.image = prod.image.encode("utf-8")
-            prod.image_2 = prod.image_2.encode("utf-8")
-            prod.image_3 = prod.image_3.encode("utf-8")
-            prod.image_4 = prod.image_4.encode("utf-8")
-            prod.image_5 = prod.image_5.encode("utf-8")
-            prod.image_6 = prod.image_6.encode("utf-8")
             prod.promotion_price = self.get_argument("promotion_price",0)
             prod.bulk_price = self.get_argument("bulk_price", 0)
-
-            # print "type:{} value:{}".format(type(prod.tags),prod.tags)
 
             prod.tags = ','.join(str(v) for v in prod.tags)
 

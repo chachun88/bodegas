@@ -10,10 +10,10 @@ import tornado.web
 from globals import Menu, email_giani, url_local, usuario_sendgrid, pass_sendgrid
 
 from basehandler import BaseHandler
-from model.order import Order
-from model.product import Product
-from model.shipping import Shipping
-from model.customer import Customer
+from model10.order import Order
+from model10.product import Product
+from model10.shipping import Shipping
+from model10.customer import Customer
 from emails import TrackingCustomer
 
 from datetime import datetime

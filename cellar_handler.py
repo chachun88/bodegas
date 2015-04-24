@@ -10,10 +10,10 @@ import tornado.web
 from globals import Menu, debugMode
 
 from basehandler import BaseHandler
-from model.cellar import Cellar
-from model.product import Product
-from model.size import Size
-from model.kardex import Kardex
+from model10.cellar import Cellar
+from model10.product import Product
+from model10.size import Size
+from model10.kardex import Kardex
 
 from bson import json_util
 
@@ -113,7 +113,7 @@ class CellarEasyInputHandler(BaseHandler):
         cellar.InitWithId(self.get_argument("id", ""))
 
         product = Product()
-        res_lista = product.get_product_list()
+        res_lista = product.GetList()
         lista = []
 
         if "success" in res_lista:
@@ -357,7 +357,7 @@ class CellarDetailHandler(BaseHandler):
         idd = self.get_argument("id", "")
 
         cellar = Cellar()
-        cellar.InitWithId(idd)
+        cellar.InitById(idd)
         res = cellar.ListProducts()
         productos = []
 

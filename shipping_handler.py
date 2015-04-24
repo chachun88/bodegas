@@ -3,12 +3,12 @@
 
 import tornado.web
 from basehandler import BaseHandler
-from model.city import City
-from model.shipping import Shipping
+from model10.city import City
+from model10.shipping import Shipping
 from bson import json_util
 from emails import TrackingCustomer
-from model.customer import Customer
-from model.order import Order
+from model10.customer import Customer
+from model10.order import Order
 
 from globals import Menu, reserve_cellar_id
 

@@ -6,9 +6,9 @@ from basehandler import BaseHandler
 from bson import json_util
 import sendgrid
 
-from model.order import Order
-from model.order_detail import OrderDetail
-from model.contact import Contact
+from model10.order import Order
+from model10.order_detail import OrderDetail
+from model10.contact import Contact
 from globals import email_giani, usuario_sendgrid, pass_sendgrid
 
 def TrackingCustomer(email,name,tracking_code,provider_name,order_id):

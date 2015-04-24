@@ -12,7 +12,7 @@ import urllib2
 from basehandler import BaseHandler
 from bson import json_util
 
-from model.base_model import BaseModel
+from model10.base_model import BaseModel
 
 class Brand(BaseModel):
 

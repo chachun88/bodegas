@@ -13,9 +13,9 @@ import os
 import urllib
 
 from basehandler import BaseHandler
-from model.product import Product
-from model.cellar import Cellar
-from model.kardex import Kardex
+from model10.product import Product
+from model10.cellar import Cellar
+from model10.kardex import Kardex
 from globals import Menu, dir_products, dir_stock, debugMode
 import math
 
@@ -254,35 +254,36 @@ class ProductRemoveHandler(BaseHandler):
     def get(self):
 
         prod = Product()
-        prod.InitWithId(self.get_argument("id", ""))
+        prod.InitById(self.get_argument("id", ""))
 
         cellar_id = "remove"
         size = "remove"
 
         cellar = Cellar()       
-        product_find = cellar.ProductKardex(prod.sku, cellar_id, size)
+        product_find = cellar.FindProductKardex(prod.sku, cellar_id, size)
 
-        buy = 0
-        sell = 0
+        units = 0
 
-        for p in product_find:
+        if "success" in product_find:
+            units = product_find["success"]
 
-            if p["operation_type"] == "buy":
-                buy = p["total"]  
+        product_list = []
 
-            if p["operation_type"] == "sell":
-                sell = p["total"]
+        res_product_list = prod.GetList()
 
-        units = buy-sell  
+        if "success" in res_product_list:
+            product_list = res_product_list["success"]
 
         if units > 0:
-            self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=prod.get_product_list())  
+            self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=product_list)
         else:
 
-            prod.Remove()   
+            res_remove = prod.Remove()
 
-            self.render("product/list.html", dn="bpt", side_menu=self.side_menu, product_list=prod.get_product_list())
-            # self.redirect("/product/list")
+            if "success" in res_remove:
+                self.redirect("/product/list")
+            else:
+                self.render("product/list.html", dn="bpe", side_menu=self.side_menu, product_list=product_list, message=res_remove["error"])
 
 
 class ProductOutHandler(BaseHandler):

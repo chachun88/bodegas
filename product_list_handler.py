@@ -9,7 +9,7 @@ import tornado.web
 
 from basehandler import BaseHandler
 from globals import Menu
-from model.product import Product
+from model10.product import Product
 
 
 class ProductListHandler(BaseHandler):
@@ -21,7 +21,7 @@ class ProductListHandler(BaseHandler):
         product = Product()
         product_list = []
 
-        res_list = product.get_product_list()
+        res_list = product.GetList()
 
         if "success" in res_list:
             product_list = res_list["success"]

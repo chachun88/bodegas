@@ -11,9 +11,9 @@ from globals import Menu
 
 from basehandler import BaseHandler
 
-from model.cellar import Cellar
-from model.user import User
-from model.city import City
+from model10.cellar import Cellar
+from model10.user import User
+from model10.city import City
 
 class CellarAddHandler(BaseHandler):
 	@tornado.web.authenticated

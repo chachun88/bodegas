@@ -7,7 +7,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from model.product import Product
+from model10.product import Product
 
 from basehandler import BaseHandler
 
