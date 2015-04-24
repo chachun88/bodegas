@@ -275,7 +275,6 @@ class Salesman(BaseModel):
                            ]
             elif UserType.GESTION == int(self.type_id):
                 permisos = [
-                            Permission.ADM_USER, 
                             Permission.MOD_CELLAR, 
                             Permission.SELL, 
                             Permission.REPORT
