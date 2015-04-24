@@ -234,112 +234,146 @@ class Salesman(BaseModel):
 
     def Save(self):
 
+        permisos = []
+
+        if self.type_id == '':
+            return self.ShowError("Debe seleccionar tipo de usuario")
+
+        if UserType.ADMINISTRADOR == int(self.type_id):
+            permisos = [
+                        Permission.ADM_USER, 
+                        Permission.API, 
+                        Permission.MOD_CELLAR, 
+                        Permission.SELL, 
+                        Permission.NEW_PROD,
+                        Permission.REPORT
+                       ]
+        elif UserType.BODEGA == int(self.type_id):
+            permisos = [
+                        Permission.MOD_CELLAR
+                       ]
+        elif UserType.GESTION == int(self.type_id):
+            permisos = [
+                        Permission.MOD_CELLAR, 
+                        Permission.SELL, 
+                        Permission.REPORT
+                       ]
+
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         q = '''select id from "Cellar" where name = any(%(cellars)s)'''
         p = {
             "cellars":self.cellars
         }
-        cur.execute(q,p)
+
         bodegas = []
 
-        for i in cur.fetchall():
-            bodegas.append(i["id"])
-
-        q = '''select * from "User" where email = %(email)s limit 1'''
-        p = {
-            "email":self.email
-        }
-        cur.execute(q,p)
-        usuario = cur.fetchone()
-
-        permisos = []
-
         try:
+            cur.execute(q,p)
 
-            if self.type_id == '':
-                return self.ShowError("Debe seleccionar tipo de usuario")
+            for i in cur.fetchall():
+                bodegas.append(i["id"])
+            self.connection.commit()
+        except Exception, e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
 
-            if UserType.ADMINISTRADOR == int(self.type_id):
-                permisos = [
-                            Permission.ADM_USER, 
-                            Permission.API, 
-                            Permission.MOD_CELLAR, 
-                            Permission.SELL, 
-                            Permission.NEW_PROD,
-                            Permission.REPORT
-                           ]
-            elif UserType.BODEGA == int(self.type_id):
-                permisos = [
-                            Permission.MOD_CELLAR
-                           ]
-            elif UserType.GESTION == int(self.type_id):
-                permisos = [
-                            Permission.MOD_CELLAR, 
-                            Permission.SELL, 
-                            Permission.REPORT
-                           ]
+        usuario = []
 
-            print permisos
-            if cur.rowcount > 0:
+        if self.id != "":
 
-                self.id = usuario['id']
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-                q = '''update "User" set name = %(name)s,
-                                         lastname = %(lastname)s,
-                                         password = %(password)s,
-                                         email = %(email)s,
-                                         permissions = %(permissions)s,
-                                         type_id = %(type_id)s, 
-                                         cellar_permissions = %(cellar_permissions)s 
-                        where id = %(id)s'''
-                p = {
-                    "name":self.name,
-                    "email":self.email,
-                    "permissions":permisos,
-                    "password":self.password,
-                    "id":self.id,
-                    "type_id": self.type_id,
-                    "cellar_permissions":bodegas,
-                    "lastname":self.lastname
-                }
+            q = '''select * from "User" where id = %(id)s limit 1'''
+            p = {
+                "id":self.id
+            }
+
+            try:
+                cur.execute(q,p)
+                usuario = cur.fetchall()
+                self.connection.commit()
+            except Exception, e:
+                return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cur.close()
+
+        if len(usuario) > 0:
+
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            q = '''update "User" set name = %(name)s,
+                                     lastname = %(lastname)s,
+                                     password = %(password)s,
+                                     email = %(email)s,
+                                     permissions = %(permissions)s,
+                                     type_id = %(type_id)s, 
+                                     cellar_permissions = %(cellar_permissions)s 
+                    where id = %(id)s'''
+            p = {
+                "name":self.name,
+                "email":self.email,
+                "permissions":permisos,
+                "password":self.password,
+                "id":self.id,
+                "type_id": self.type_id,
+                "cellar_permissions":bodegas,
+                "lastname":self.lastname
+            }
+
+            try:
                 cur.execute(q,p)
                 self.connection.commit()
                 return self.ShowSuccessMessage(str(self.id))
-            else:
+            except Exception, e:
+                return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cur.close()
+        else:
 
-                q = '''\
-                    insert into "User" (name,
-                                        password,
-                                        email,
-                                        permissions,
-                                        type_id,
-                                        cellar_permissions,
-                                        lastname) 
-                    values (%(name)s,
-                            %(password)s,
-                            %(email)s,
-                            %(permissions)s,
-                            %(type_id)s,
-                            %(cellar_permissions)s,
-                            %(lastname)s) 
-                    returning id'''
-                p = {
-                    "name":self.name,
-                    "lastname":self.lastname,
-                    "email":self.email,
-                    "permissions":permisos,
-                    "password":self.password,
-                    "type_id": self.type_id,
-                    "cellar_permissions":bodegas
-                }
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            q = '''\
+                insert into "User" (name,
+                                    password,
+                                    email,
+                                    permissions,
+                                    type_id,
+                                    cellar_permissions,
+                                    lastname) 
+                values (%(name)s,
+                        %(password)s,
+                        %(email)s,
+                        %(permissions)s,
+                        %(type_id)s,
+                        %(cellar_permissions)s,
+                        %(lastname)s) 
+                returning id'''
+            p = {
+                "name":self.name,
+                "lastname":self.lastname,
+                "email":self.email,
+                "permissions":permisos,
+                "password":self.password,
+                "type_id": self.type_id,
+                "cellar_permissions":bodegas
+            }
+
+            try:
                 cur.execute(q,p)
                 self.connection.commit()
                 self.id = cur.fetchone()["id"]
-
                 return self.ShowSuccessMessage(str(self.id))
-        except Exception,e:
-            return self.ShowError("failed to save user {}, error:{}".format(self.email,str(e)))
+            except Exception, e:
+                return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cur.close()
+
 
     def GetList(self, page, items):
 
