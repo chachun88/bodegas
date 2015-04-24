@@ -29,6 +29,7 @@ class User(BaseModel):
         self._identifier = ""
         self._salesman_id = ""
         self._cellars = []
+        self._cellars_name = []
 
 
     ####################
@@ -225,11 +226,7 @@ class User(BaseModel):
         url += "&password=" + self.password
         url += "&email=" + self.email
         url += "&type_id={}".format(self.type_id)
-
-        if type(self.cellars) == list:
-            url += "&cellars=" + urllib.quote( ",".join(self.cellars).encode("utf8") )
-        else:
-            url += "&cellars=" + urllib.quote( self.cellars.encode("utf8") )
+        url += "&cellars={}".format(self.cellars)
         url += "&id=" + self.identifier
 
         # url = urllib.urlencode(url)

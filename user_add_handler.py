@@ -81,7 +81,8 @@ class UserAddHandler(BaseHandler):
 
         usr.type_id = self.get_argument("type_id", "")
         usr.identifier  = self.get_argument("id", "").encode("utf-8")
-        usr.cellars     = self.get_argument("cellars","").encode("utf-8")
+        cellars     = self.get_arguments("cellars","")
+        usr.cellars = ",".join([i.encode("utf-8") for i in cellars])
 
         response = json_util.loads(usr.Save())
 

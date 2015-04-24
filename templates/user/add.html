@@ -87,20 +87,16 @@
 
 				<div class="control-group">
 					<label for="" class="control-label">Bodegas</label>
-
-					<input type="hidden" name="cellars" >
 					<div class="controls form-group">
 						<div class="col-sm-8">
-							<div id="cellars" name="cellars" type="" class="form-control" >
-								{% for c in cellars %}
-									<a id="cellars_top{{ c['id'] }}" class="btn-sm btn-primary btn-cellars" onclick="removeElementCellars({{ c['id'] }})">{{ c["name"] }}</a>
+							{% for c in cellars %}
+								{% if str(c['id']) in user.cellars_name %}
+									<input type="checkbox" name="cellars" value="{{c['id']}}" class="btn-sm btn-primary" checked> {{ c["name"] }}
+								{% else %}
+									<input type="checkbox" name="cellars" value="{{c['id']}}" class="btn-sm btn-primary"> {{ c["name"] }}
 								{% end %}
-							</div>
-							<div id="cellars_bot">
-								{% for c in cellars %}
-									<a id="cellars_{{ c['id'] }}" class="btn-sm btn-primary btn-cellars-bot" onclick="addElementCellars({{ c['id'] }})">{{ c["name"] }}</a>
-								{% end %}
-							</div>
+								<br/>
+							{% end %}
 						</div>
 					</div>
 				</div>
@@ -117,109 +113,10 @@
 
 <script type="text/javascript">
 
-$(document).ready(function(){
-
-	function exist_permission( permission )
-	{
-		$(".btn-perm").each(function(){
-			if ($(this).attr("id") == "perm_top" + permission ) {
-				$(this).css("display", "inline");
-			};
-		});
-
-		$(".btn-perm-bot").each(function(){
-			if ($(this).attr("id") == "perm_" + permission) {
-				$(this).css("display", "none");
-			}
-		});
-	}
-
-	// loading user current permissions
-	var current_permissions = {% if user.permissions == "" %}{}{% else %}{{ user.permissions }}{% end %};
-
-	for (var i = 0; i <= current_permissions.length - 1; i++) {
-		console.log(current_permissions[i]);
-
-		exist_permission(current_permissions[i]);
-	};
-
-	function exist_cellar( permission )
-	{
-		$(".btn-cellars").each(function(){
-			if ($(this).attr("id") == "cellars_top" + permission ) {
-				$(this).css("display", "inline");
-			};
-		});
-
-		$(".btn-cellars-bot").each(function(){
-			if ($(this).attr("id") == "cellars_" + permission) {
-				$(this).css("display", "none");
-			}
-		});
-	}
-
-	
-	var current_cellars = {{user.cellars }};
-
-	for (var i = 0; i <= current_cellars.length - 1; i++) {
-		console.log(current_cellars[i]);
-
-		exist_cellar(current_cellars[i]);
-	};
-
+$(document).ready(function() {
 
 	// ssetting permissions logic for form
-	$("#user-form").submit(function(){
-
-		// setting vars
-		var hidden_permissions = $("input[name=permissions]");
-		var is_first = true;
-
-
-		// clear
-		hidden_permissions.val("");
-
-		$(".btn-perm").each(function(){
-
-			if ($(this).css("display") != "none") 
-			{
-				// refill separated by comma
-				if (is_first){
-					hidden_permissions.val( hidden_permissions.val() + $(this).html() );
-					is_first = false;
-				}
-				else{
-					hidden_permissions.val( hidden_permissions.val() + "," + $(this).html() );
-				}
-
-			}
-			console.log($(this).css("display"));
-		});	
-
-		// setting vars
-		var hidden_cellars = $("input[name=cellars]");
-		is_first = true;
-
-
-		// clear
-		hidden_cellars.val("");
-
-		$(".btn-cellars").each(function(){
-
-			if ($(this).css("display") != "none") 
-			{
-				// refill separated by comma
-				if (is_first){
-					hidden_cellars.val( hidden_cellars.val() + $(this).html() );
-					is_first = false;
-				}
-				else{
-					hidden_cellars.val( hidden_cellars.val() + "," + $(this).html() );
-				}
-
-			}
-			console.log($(this).css("display"));
-		});	
+	$("#user-form").submit(function() {
 
 		var p1 = document.getElementById("pass_1").value;
 		var p2 = document.getElementById("pass_2").value;
@@ -234,65 +131,65 @@ $(document).ready(function(){
 		}
 
 		if (espacios) {
-			alert ("La contraseña no puede contener espacios en blanco");
+			alert("La contraseña no puede contener espacios en blanco");
 			return false;
 		}
 
 		if (p1.length == 0 || p2.length == 0) {
-		  alert("Los campos de la password no pueden quedar vacios");
-		  return false;
+			alert("Los campos de la password no pueden quedar vacios");
+			return false;
 		}
 
 		return true;
 	});
 
 	var intputElements = document.getElementsByTagName("INPUT");
-    for (var i = 0; i < intputElements.length; i++) {
-        intputElements[i].oninvalid = function (e) {
-            e.target.setCustomValidity("");
-            if (!e.target.validity.valid) {
-                if (e.target.name == "re_password") {
-                    e.target.setCustomValidity("La contraseña ingresada no coincide con la anterior");
-                }
-            }
-        };
-    }
-$('#pass_1').keyup(function(){
-        var _this = $('#pass_1');
-        var pass_1 = $('#pass_1').val();
-                _this.attr('style', 'background:white');
-        if(pass_1.charAt(0) == ' '){
-            _this.attr('style', 'background:#FF4A4A');
-        }
- 
-        if(_this.val() == ''){
-            _this.attr('style', 'background:#FF4A4A');
-        }
-    });
- 
- $('#pass_2').keyup(function(){
-        var pass_1 = $('#pass_1').val();
-        var pass_2 = $('#pass_2').val();
-        var _this = $('#pass_2');
-                _this.attr('style', 'background:white');
-        if(pass_1 != pass_2 && pass_2 != ''){
-            _this.attr('style', 'background:#FF4A4A');
-        }
-    });
+	for (var i = 0; i < intputElements.length; i++) {
+		intputElements[i].oninvalid = function(e) {
+			e.target.setCustomValidity("");
+			if (!e.target.validity.valid) {
+				if (e.target.name == "re_password") {
+					e.target.setCustomValidity("La contraseña ingresada no coincide con la anterior");
+				}
+			}
+		};
+	}
+	$('#pass_1').keyup(function() {
+		var _this = $('#pass_1');
+		var pass_1 = $('#pass_1').val();
+		_this.attr('style', 'background:white');
+		if (pass_1.charAt(0) == ' ') {
+			_this.attr('style', 'background:#FF4A4A');
+		}
 
- $('#email').keyup(function(){
-        var _this = $('#email');
-        var _email = $('#email').val();
- 
-        var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-        var valid = re.test(_email);
- 
-        if(valid){
-            _this.attr('style', 'background:white');
-        } else {
-            _this.attr('style', 'background:#FF4A4A');
-        }
-    });
+		if (_this.val() == '') {
+			_this.attr('style', 'background:#FF4A4A');
+		}
+	});
+
+	$('#pass_2').keyup(function() {
+		var pass_1 = $('#pass_1').val();
+		var pass_2 = $('#pass_2').val();
+		var _this = $('#pass_2');
+		_this.attr('style', 'background:white');
+		if (pass_1 != pass_2 && pass_2 != '') {
+			_this.attr('style', 'background:#FF4A4A');
+		}
+	});
+
+	$('#email').keyup(function() {
+		var _this = $('#email');
+		var _email = $('#email').val();
+
+		var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		var valid = re.test(_email);
+
+		if (valid) {
+			_this.attr('style', 'background:white');
+		} else {
+			_this.attr('style', 'background:#FF4A4A');
+		}
+	});
 
 });
 

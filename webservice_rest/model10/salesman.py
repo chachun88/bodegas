@@ -182,7 +182,7 @@ class Salesman(BaseModel):
         q = '''\
             select  u.*, 
                     STRING_AGG(distinct p.name, ',') as permissions_name, 
-                    STRING_AGG(distinct c.name, ',') as cellars_name,
+                    STRING_AGG(distinct c.id::text, ',') as cellars_name,
                     ut.name as type,
                     ut.id as type_id
             from "User" u 
@@ -212,7 +212,7 @@ class Salesman(BaseModel):
         q = '''\
             select  u.*, 
                     STRING_AGG(distinct p.name, ',') as permissions_name, 
-                    STRING_AGG(distinct c.name, ',') as cellars_name,
+                    STRING_AGG(distinct c.id::text, ',') as cellars_name,
                     ut.name as type,
                     ut.id as type_id 
             from "User" u 
@@ -259,27 +259,6 @@ class Salesman(BaseModel):
                         Permission.REPORT
                        ]
 
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-        q = '''select id from "Cellar" where name = any(%(cellars)s)'''
-        p = {
-            "cellars":self.cellars
-        }
-
-        bodegas = []
-
-        try:
-            cur.execute(q,p)
-
-            for i in cur.fetchall():
-                bodegas.append(i["id"])
-            self.connection.commit()
-        except Exception, e:
-            return self.ShowError(str(e))
-        finally:
-            self.connection.close()
-            cur.close()
-
         usuario = []
 
         if self.id != "":
@@ -320,7 +299,7 @@ class Salesman(BaseModel):
                 "password":self.password,
                 "id":self.id,
                 "type_id": self.type_id,
-                "cellar_permissions":bodegas,
+                "cellar_permissions":self.cellars,
                 "lastname":self.lastname
             }
 
@@ -360,7 +339,7 @@ class Salesman(BaseModel):
                 "permissions":permisos,
                 "password":self.password,
                 "type_id": self.type_id,
-                "cellar_permissions":bodegas
+                "cellar_permissions":self.cellars
             }
 
             try:
@@ -385,7 +364,7 @@ class Salesman(BaseModel):
             q = '''\
                 select  u.*, 
                         STRING_AGG(distinct p.name, ',') as permissions_name, 
-                        STRING_AGG(distinct c.name, ',') as cellars_name,
+                        STRING_AGG(distinct c.id::text, ',') as cellars_name,
                         ut.name as type,
                         ut.id as type_id
                 from "User" u 
