@@ -4,71 +4,73 @@
 {% block caption %}muestra la lista de vendedores{% end %}
 
 {% block body %}
-{% if dn == "t" %}
-<div class="alert alert-success">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Bien hecho!</strong> usuario creado correctamente.
-</div>
-{% end %}
-{% if dn == "t2" %}
-<div class="alert alert-warning">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Usuario borrado!</strong> se ha borrado correctamente al usuario.
-</div>
-{% end %}
-{% if dn == "t3" %}
-<div class="alert alert-warning">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> No se ha guardado usuario!</strong> falta agregar permiso.
-</div>
-{% end %}
-<div class="col-md-12">
-	<section class="widget">
-		<div class="body">
-			<div class="well">
-				<div class="row">
-					<div class="col-xs-2">
-						<a class="btn btn-success" href="/user/add" >
-							+ Agregar usuario
-						</a>
+{% if int(5) in current_user["permissions"] %}
+	{% if dn == "t" %}
+	<div class="alert alert-success">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		<strong><i class="fa fa-check"></i> Bien hecho!</strong> usuario creado correctamente.
+	</div>
+	{% end %}
+	{% if dn == "t2" %}
+	<div class="alert alert-warning">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		<strong><i class="fa fa-check"></i> Usuario borrado!</strong> se ha borrado correctamente al usuario.
+	</div>
+	{% end %}
+	{% if dn == "t3" %}
+	<div class="alert alert-warning">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+		<strong><i class="fa fa-check"></i> No se ha guardado usuario!</strong> falta agregar permiso.
+	</div>
+	{% end %}
+	<div class="col-md-12">
+		<section class="widget">
+			<div class="body">
+				<div class="well">
+					<div class="row">
+						<div class="col-xs-2">
+							<a class="btn btn-success" href="/user/add" >
+								+ Agregar usuario
+							</a>
+						</div>
+						<div class="col-xs-10"></div>
 					</div>
-					<div class="col-xs-10"></div>
 				</div>
-			</div>
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>Nombre</th>
-						<th>Email</th>
-						<th>Permisos</th>
-						<th>Tipo Usuario</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for u in user_list %}
-					<tr>
-						<td>{{ u["name"] }}</td>
-						<td>{{ u["email"] }}</td>
-						<td>{{ u["permissions_name"] }}</td>
-						<td>{{ u['type'] }}</td>
-						<td>
-						{% if int(5) in current_user["permissions"] %}
-							<a class="btn btn-sm btn-success" href="/user/edit?id={{ u['id'] }}">
-								Editar
-							</a>
-							<br/>
-							<br/>
-							<a class="btn btn-sm btn-danger" href="/user/remove?id={{ u['id'] }}" onclick="return confirm('¿Está seguro que desea eliminar al usuario?');">
-								Eliminar
-							</a>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Nombre</th>
+							<th>Email</th>
+							<th>Permisos</th>
+							<th>Tipo Usuario</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for u in user_list %}
+						<tr>
+							<td>{{ u["name"] }}</td>
+							<td>{{ u["email"] }}</td>
+							<td>{{ u["permissions_name"] }}</td>
+							<td>{{ u['type'] }}</td>
+							<td>
+							{% if int(5) in current_user["permissions"] %}
+								<a class="btn btn-sm btn-success" href="/user/edit?id={{ u['id'] }}">
+									Editar
+								</a>
+								<br/>
+								<br/>
+								<a class="btn btn-sm btn-danger" href="/user/remove?id={{ u['id'] }}" onclick="return confirm('¿Está seguro que desea eliminar al usuario?');">
+									Eliminar
+								</a>
+							{% end %}
+							</td>
+						</tr>
 						{% end %}
-						</td>
-					</tr>
-					{% end %}
-				</tbody>
-			</table>
-		</div>
-	</section>
-</div>
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</div>
+	{% end %}
 {% end %}
