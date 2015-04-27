@@ -172,7 +172,7 @@ class ProductAddHandler(BaseHandler):
 
         prod = Product()
 
-        res = prod.InitWithSku(self.get_argument("sku", ""))
+        res = prod.InitBySku(self.get_argument("sku", ""))
 
         # print res
 
@@ -211,7 +211,7 @@ class ProductAddHandler(BaseHandler):
 
             # print self.get_arguments("tags")
 
-            res_save = prod.Save("one")
+            res_save = prod.Save()
 
             if "success" in res_save:
                 self.redirect("/product/list")
@@ -367,7 +367,7 @@ class CheckStockHandler(BaseHandler):
                 if "success" in res_size_name:
 
                     kardex = Kardex()
-                    res_stock = kardex.stockByProductId(product_sku, size.identifier)
+                    res_stock = kardex.stockByProductSku(product_sku, size.id)
 
                     self.write(json_util.dumps(res_stock))
 
