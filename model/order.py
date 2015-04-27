@@ -196,6 +196,14 @@ class Order(BaseModel):
     @telephone.setter
     def telephone(self, value):
         self._telephone = value
+
+    @property
+    def voucher(self):
+        return self._voucher
+
+    @voucher.setter
+    def voucher(self, value):
+        self._voucher = value
     
 
     def __init__(self):
@@ -222,6 +230,7 @@ class Order(BaseModel):
         self._shipping_id            = ""
         self._customer_email         = ""
         self._telephone              = ""
+        self._voucher                = ""
 
     def Save(self):
         url = self.wsurl() + "/order/add"
@@ -292,6 +301,7 @@ class Order(BaseModel):
             self.billing_id             = data["billing_id"]
             self.shipping_id            = data["shipping_id"]
             self.customer_email         = data["email"]
+            self.voucher                = data["voucher"]
 
         return json_data
 

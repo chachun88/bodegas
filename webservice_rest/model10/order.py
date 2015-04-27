@@ -166,6 +166,15 @@ class Order(BaseModel):
     def shipping_id(self, value):
         self._shipping_id = value
 
+    @property
+    def voucher(self):
+        return self._voucher
+
+    @voucher.setter
+    def voucher(self, value):
+        self._voucher = value
+    
+
     def __init__(self):
         BaseModel.__init__(self)
         self.table = "Order"
@@ -189,6 +198,7 @@ class Order(BaseModel):
         self._payment_type = ""
         self._billing_id = ""
         self._shipping_id = ""
+        self._voucher = ""
 
     def GetList(self, page, items):
 

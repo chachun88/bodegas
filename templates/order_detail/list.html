@@ -32,20 +32,31 @@
 					<h3>Datos del Cliente</h3>
 					<table class="table table-bordered">
 						<thead>
-							<th>Cliente</th>
-							<th>Email</th>
-							<th>Tel&eacute;fono</th>
-							<th>Direcci&oacute;n</th>
-							<th>Comuna</th>
-							<th>Ciudad</th>
+							<tr>
+								<th>Cliente</th>
+								<th>Email</th>
+								<th>Tel&eacute;fono</th>
+								<th>Direcci&oacute;n</th>
+								<th>Comuna</th>
+								<th>Ciudad</th>
+							</tr>
 						</thead>
 						<tbody>
-							<td>{{order.customer}}</td>
-							<td>{{order.customer_email}}</td>
-							<td>{{order.telephone}}</td>
-							<td>{{order.address}}</td>
-							<td>{{order.town}}</td>
-							<td>{{order.city}}</td>
+							<tr>
+								<td>{{order.customer}}</td>
+								<td>{{order.customer_email}}</td>
+								<td>{{order.telephone}}</td>
+								<td>{{order.address}}</td>
+								<td>{{order.town}}</td>
+								<td>{{order.city}}</td>
+							</tr>
+							{% if order.voucher != '' %}
+							<tr>
+								<td colspan="6">
+									<img src="/image/{{order.voucher}}?mw=400">
+								</td>
+							</tr>
+							{% end %}
 						</tbody>
 					</table>
 				</div>
