@@ -44,12 +44,13 @@ class SaveHandler(BaseHandler):
         customer.id = self.get_argument("id","")
         customer.username = self.get_argument("username","")
         customer.password = self.get_argument("password","")
+        customer.email = self.get_argument("email","")
 
         #saving the current customer
         if customer.id == "":
-            oid = customer.Save()
+            self.write(json_util.dumps(customer.Save()))
         else:
-            oid = customer.Edit()
+            self.write(json_util.dumps(customer.Edit()))
 
         # contact.name = self.get_argument("contact_name","")
         # contact.type = self.get_argument("contact_type","")
@@ -59,7 +60,7 @@ class SaveHandler(BaseHandler):
 
         # contact.Save()
 
-        self.write(oid)
+        # self.write(oid)
 
 
 class EditHandler(BaseHandler):
@@ -86,6 +87,7 @@ class EditHandler(BaseHandler):
         customer.last_view = self.get_argument("last_view","")
         customer.username = self.get_argument("username","")
         customer.password = self.get_argument("password","")
+        customer.email = self.get_argument("email","")
 
         #saving the current customer
         oid = customer.Edit()
@@ -100,7 +102,9 @@ class RemoveHandler(BaseHandler):
             return
 
         customer = Customer()
-        customer.Remove(self.get_argument("ids", ""))
+        response = customer.Remove(self.get_argument("ids", ""))
+
+        self.write(json_util.dumps(response))
 
 
 class GetOrderHandler(BaseHandler):
@@ -134,6 +138,9 @@ class ListHandler(BaseHandler):
         
         self.write(json_util.dumps(customer.List(current_page, items_per_page)))
 
+    def get(self):
+        self.post()
+
 class ChangeStateHandler(BaseHandler):
 
     def post(self):
@@ -149,4 +156,28 @@ class ChangeStateHandler(BaseHandler):
             return
 
         customer = Customer()
-        customer.ChangeState(ids,state)
+        self.write(json_util.dumps(customer.ChangeState(ids,state)))
+
+class GetTypesHandler(BaseHandler):
+
+    def post(self):
+
+        if not self.ValidateToken():
+            return
+
+        customer = Customer()
+        self.write(json_util.dumps(customer.GetTypes()))
+
+
+class GetTotalPagesHandler(BaseHandler):
+    """ get total pages with items """
+
+    def post(self):
+
+        items = self.get_argument("items", 20)
+        page = self.get_argument("page", 1)
+
+        customer = Customer()
+        total = customer.getTotalPages(page, items)
+
+        self.write(json_util.dumps(total))

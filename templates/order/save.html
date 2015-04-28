@@ -7,7 +7,7 @@
     {% end %}
 {% end %}
 {% block caption %}
-    {% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+    {% if int(2) in current_user["permissions"] %}
         {% if mode == "edit" %}
             permite editar un detalle para un pedido
         {% elif mode == "add" %}
@@ -18,7 +18,7 @@
     {% end %}
 {% end %}           
 {% block body %}
-    {% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+    {% if int(2) in current_user["permissions"] %}
         {% if dn == "bpf" %}
         <div class="alert alert-warning alert-success-nohidden">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

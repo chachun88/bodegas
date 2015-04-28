@@ -1,9 +1,9 @@
 {% extends "../base.html" %}
 
-{% block title %}Entradas Masivas {% end %}
+{% block title %}Carga Stock{% end %}
 
 {% block caption %} 
-	{% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
+	{% if int(4) in current_user["permissions"] %}
 	 permite cargar un archivo excel
 	{% else %}
 	 sección no autorizada
@@ -11,100 +11,98 @@
 {% end %}
 
 {% block body %}
-{% if "cargar productos nuevos" in ",".join(current_user.permissions) %}
-<div class="loader animated fadeIn">
-	<span class="spinner" style="top:30%; font-size: 40px;">
-		<i id="load" class="fa-spinner fa-spin"></i>
-	</span>
-</div>
-{% if dn == "t" %}
-<div class="alert alert-success alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Bien hecho!</strong> Se ha cargado excel correctamente.
-</div>
-{% end %}
-{% if dn == "t2" %}
-<div class="alert alert-warning alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong> Debe cargar excel antes de subir archivo.
-</div>
-{% end %}
-{% if dn == "t3" %}
-<div class="alert alert-warning alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Excel erroneo!</strong> Excel contiene errores.
-</div>
-{% end %}
-{% for x in w %}
-<div class="alert alert-warning alert-success-nohidden">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Alerta!</strong> {{ x }}.
-</div>
-{% end %}
-<div class="col-md-12">
-	<section class="widget">
-		<form enctype="multipart/form-data" action="" method="post">
-			<div class="form-actions fileupload-buttonbar no-margin" action="/" method="post" enctype="multipart/form-data">
-				<span class="btn btn-sm btn-default fileinput-button">
-					<i class="fa fa-plus"></i>
-					<span>Cargar excel...</span>
-					<input type="file" name="file" multiple="">
-				</span>
-				<button type="submit" class="btn btn-primary btn-sm start">
-					<i class="fa fa-upload"></i>
-					<span>Subir Archivo</span>
-				</button>
-				<button type="reset" class="btn btn-inverse btn-sm cancel">
-					<i class="fa fa-ban"></i>
-					<span>Cancelar</span>
-				</button>
-			</div>
-			{% raw xsrf_form_html() %}
-		</form>
-		<form enctype="multipart/form-data" action="/product/load" method="post">
-			<div class="load-products form-actions fileupload-buttonbar no-margin">
-				<button type="submit" class="btn btn-primary btn-sm start">
-					<i class="fa fa-upload"></i>
-					<span>Cargar productos</span>
-				</button>
-			</div>
-			{% raw xsrf_form_html() %}
-		</form>
-
-		<div class="body">
-			<table class="table table-striped table-images">
-				<thead>
-					<tr>
-						{% try %}
-							{% for j in range(ncols) %} 
-								<th class="sorting" >{{matriz[3][j]}}</th>
-							{% end %}
-						{% except %}
-						{% end %}
-					</tr>
-				</thead>
-				<tbody>
-					{% try %}
-						{% for i in range(4, nrows) %}
+	{% if int(4) in current_user["permissions"] %}
+		<div class="loader animated fadeIn">
+			<span class="spinner" style="top:30%; font-size: 40px;">
+				<i id="load" class="fa-spinner fa-spin"></i>
+			</span>
+		</div>
+		{% if args["dn"] == "t" %}
+		<div class="alert alert-success alert-success-nohidden">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<strong><i class="fa fa-check"></i> Bien hecho!</strong> Se ha cargado excel correctamente.
+		</div>
+		{% end %}
+		{% if args["dn"] == "t2" %}
+		<div class="alert alert-warning alert-success-nohidden">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<strong><i class="fa fa-check"></i> No se ha cargado excel!</strong> Debe cargar excel antes de subir archivo.
+		</div>
+		{% end %}
+		{% if args["dn"] == "t3" %}
+		<div class="alert alert-warning alert-success-nohidden">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<strong><i class="fa fa-check"></i> Excel erroneo!</strong> Excel contiene errores.
+		</div>
+		{% end %}
+		{% for x in args['w'] %}
+		<div class="alert alert-warning alert-success-nohidden">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<strong><i class="fa fa-check"></i> Alerta!</strong> {{ x }}.
+		</div>
+		{% end %}
+		<div class="col-md-12">
+			<section class="widget">
+				<p class="text-right">
+					<a class="btn btn-sm btn-primary" href="/static/stock.xlsx">Descargar plantilla</a>
+				</p>
+				<div class="form-actions fileupload-buttonbar no-margin" action="/" method="post" enctype="multipart/form-data">
+					<form enctype="multipart/form-data" id="archivo" method="post" style="display:inline-block;">
+						<span class="btn btn-sm btn-info fileinput-button">
+							<i class="fa fa-plus"></i>
+							<span>Cargar excel...</span>
+							<input type="file" name="file" multiple="">
+						</span>
+						<button type="button" class="btn btn-success btn-sm start" onclick="validateFile('archivo')">
+							<i class="fa fa-upload"></i>
+							<span>Subir Archivo</span>
+						</button>
+						{% raw xsrf_form_html() %}
+					</form>
+					<form enctype="multipart/form-data" action="/product/massiveoutput" method="post" id="filename_form" style="display:inline-block;">
+						<input type="hidden" name="filename" value="{{args["filename"]}}">
+						<input type="hidden" name="dn" value="{{args['dn']}}">
+						<button type="button" class="btn btn-warning btn-sm start" onclick="validateFilename('filename_form')">
+							<i class="fa fa-upload"></i>
+							<span>Cargar productos</span>
+						</button>
+						{% raw xsrf_form_html() %}
+					</form>
+				</div>
+				<div class="body">
+					<table class="table table-striped table-images">
+						<thead>
 							<tr>
-							{% for j in range(ncols) %}
-								<td class="hidden-xs-portrait">{{matriz[i][j]}}</td>
-							{% end %}	
+								{% try %}
+									{% for j in range(args['ncols']) %} 
+										<th class="sorting" >{{args['matriz'][0][j]}}</th>
+									{% end %}
+								{% except %}
+								{% end %}
 							</tr>
-						{% end %}
-					{% except %}
-					{% end %}	
-				</tbody>
-			</table>
+						</thead>
+						<tbody>
+							{% try %}
+								{% for i in range(1, args['nrows']) %}
+									<tr>
+									{% for j in range(args['ncols']) %}
+										<td class="hidden-xs-portrait">{{args['matriz'][i][j]}}</td>
+									{% end %}	
+									</tr>
+								{% end %}
+							{% except %}
+							{% end %}	
+						</tbody>
+					</table>
+				</div>
+			</section>
 		</div>
-	</section>
-</div>
-{% else %}
-<div class="col-md-12">
-	<section class="widget">
-		<div style="float:right;">
-		</div>
-	</section>
-</div>
-{% end %}
+	{% else %}
+	<div class="col-md-12">
+		<section class="widget">
+			<div style="float:right;">
+			</div>
+		</section>
+	</div>
+	{% end %}
 {% end %}

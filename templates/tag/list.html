@@ -1,0 +1,54 @@
+{% extends "../base.html" %}
+
+{% block title %}Listado de tags {% end %}
+{% block caption %}se muestra una lista general de todos los tags{% end %}
+
+{% block body %}
+
+{% if dn == "error" %}
+<div class="alert alert-warning alert-warning-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Error!</strong> {{mensaje}}
+</div>
+{% end %}
+
+<div class="col-md-12">
+	<section class="widget">
+		<div class="body">
+			<table class="table table-striped table-images">
+				<thead>
+					<tr>
+						<th>Nombre</th>
+						<th>Visible</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for tag in lista %}
+					<tr>
+						<th>{{tag["name"]}}</th>
+						<th>
+							{% if int(tag["visible"]) == 0 %}
+								<i class="fa fa-times"></i>
+							{% else %}
+								<i class="fa fa-check"></i>
+							{% end %}
+						</th>
+						<th>
+							{% if int(tag["visible"]) == 0 %}
+							<a class="btn btn-success" href="/tag/hideshow?id={{tag['id']}}&visible=1">Mostrar</a>
+							{% else %}
+							<a class="btn btn-success" href="/tag/hideshow?id={{tag['id']}}&visible=0">Ocultar</a>
+							{% end %}
+							<a class="btn btn-primary" href="/tag/edit?id={{tag['id']}}">Editar</a>
+							<a class="btn btn-danger" href="/tag/remove?id={{tag['id']}}">Eliminar</a>
+						</th>
+					</tr>
+					{% end %}
+				</tbody>
+			</table>
+		</div>
+	</section>
+</div>
+
+{% end %}

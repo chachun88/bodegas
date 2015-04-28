@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
 '''
 Created on 13/12/2012
 
@@ -8,53 +11,55 @@ Jueves 12 dic 2012
 reutilizado por chinostroza en tellmecuando
 reutilizado por estefy en bodegas
 '''
-debugMode = False
 
-token = "5334d6c29ec9a710f56d9ab5"
+import os
+
+if os.name == "nt":
+    debugMode = True
+else:
+    debugMode = False
+
+BODEGA_PORT = 9007
+WS_PORT = 8890
+BODEGA_DEBUG_PORT = 9008
+DEBUG_WS_PORT = 8891
+
+appid = 100
+
 webservice_url = "http://localhost"
+url_local = "http://www.gianidafirenze.cl"
 port = 0
 ws_port = 0
 
+reserve_cellar_id = 12
+email_giani = "contacto@gianidafirenze.cl"
 
-### reading config file
-config_file = open("CONFIG.txt", "r")
-config_data = config_file.read()
-
-config = {}
-
-for x in config_data.split("\n"):
-
-    sp = x.split("=")
-    key = sp[0]
-    val = sp[1]
-
-    config[key] = val
+dir_products = 'uploads/salidas_masivas/'
+dir_stock = 'uploads/entradas_masivas/'
+dir_img = 'uploads/images/'
 
 
-### setting config values
-if config["DEBUG"] == "True":
-    debugMode = True
+usuario_sendgrid = 'nailuj41'
+pass_sendgrid = 'Equipo_2112'
 
-### setting vars
-if (debugMode):
-    userMode="test"
-    carpeta_img = 'C:\Python27\tellmecuando\static\img'
+# setting vars
+if debugMode:
+    userMode = "test"
+    port = BODEGA_DEBUG_PORT
+    ws_port = DEBUG_WS_PORT
+    url_local = "http://giani.ondev.today"
 else:
-    userMode="prod"
-    carpeta_img = '/var/www/tellmecuando/static/img'
+    userMode = "prod"
+    port = BODEGA_PORT
+    ws_port = WS_PORT
+    url_local = "http://www.gianidafirenze.cl"
 
+webservice_url += ":{}".format(ws_port)
 
-if (debugMode):
-    port = config["DEBUG_PORT"]
-    ws_port = config["DEBUG_WS_PORT"]
-else:
-    port = config["PORT"]
-    ws_port = config["WS_PORT"]
+# print "{}".format(debugMode)
 
-webservice_url += ":" + ws_port
+# --- menu ---
 
-
-#### menu #####
 
 class Menu:
 
@@ -67,17 +72,19 @@ class Menu:
     PRODUCTOS = "Productos"
 
     # sub_menu
-    PRODUCTOS_CARGA_MASIVA = "Carga masiva"
-    PRODUCTOS_SALIDA_MASIVA = "Salida masiva"
+    PRODUCTOS_CARGA_STOCK = "Carga masiva de stock"
+    PRODUCTOS_CARGA_MASIVA = "Carga productos"
     PRODUCTOS_CARGA = "Agregar producto"
     PRODUCTOS_LISTA = "Maestro productos"
     # end sub_menu
 
-    BODEGAS = "Bodegas"
+    BODEGAS = "Stock"
 
     # sub_menu 
-    BODEGAS_LISTAR = "Lista de bodegas"
+    BODEGAS_LISTAR = "Todas las bodegas"
     BODEGAS_AGREGAR = "Agregar bodega"
+    BODEGAS_FORSALE = "Seleccionar bodega web"
+    BODEGAS_RESERVATION = "Seleccionar bodega de reserva online"
     # end sub_menu
 
     USUARIOS = "Usuarios"
@@ -99,10 +106,19 @@ class Menu:
     CLIENTES_LISTAR = "Lista de clientes"
     # end sub_menu
 
+    TAGS = "Tags"
+    TAGS_LISTAR = "Lista de Tags"
+    TAGS_ADD = "Agregar tag"
+
+    SHIPPING = "Despacho"
+    SHIPPING_LIST = "Lista de precios"
+    SHIPPING_SAVE = "Agregar precio"
+
     SALIR = "Salir"
 
+    CONFIGURACION = "Configuración"
 
-#### functions #####
+# --- functions ---
 def tomoney(x):
     if x != "":
         flotante = '{:20,.0f}'.format(float(x))
@@ -110,8 +126,10 @@ def tomoney(x):
         return "$"+price.strip()
     else:
         return ""
-    
+
+
 def roundfloat(x):
+
     flotante = ("{0:.0f}".format(round(x,2)))
     price = flotante.replace(",",".")
     return price.strip() 

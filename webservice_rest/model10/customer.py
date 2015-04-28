@@ -3,8 +3,10 @@
 
 from bson import json_util
 from bson.objectid import ObjectId
-from basemodel import BaseModel, db
+from basemodel import BaseModel
 from contact import Contact
+import psycopg2
+import psycopg2.extras
 
 from datetime import datetime
 
@@ -111,8 +113,16 @@ class Customer(BaseModel):
     def password(self, value):
         self._password = value
 
+    @property
+    def email(self):
+        return self._email
+    @email.setter
+    def email(self, value):
+        self._email = value
+    
+
     def __init__(self):
-        self.collection = db.customer
+        BaseModel.__init__(self)
         self._id = ""
         self._name = ""
         self._lastname = ""
@@ -127,32 +137,46 @@ class Customer(BaseModel):
         self._last_view = ""
         self._username = ""
         self._password = ""
+        self._email = ""
     
     def InitById(self, _id):
 
-        customer = self.collection.find_one({"id":int(_id)})
+        # customer = self.collection.find_one({"id":int(_id)})
 
-        if customer:
+        # if customer:
 
-            return customer
+        #     return customer
 
-        else:
+        # else:
 
-            return {}
+        #     return {}
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        query = '''select u.*,ut.name as type from "User" u left join "User_Types" ut on ut.id = u.type_id where u.id = %(id)s limit 1'''
+
+        parametros = {
+        "id":_id
+        }
+
+        try:
+            cur.execute(query,parametros)
+            customer = cur.fetchone()
+            return self.ShowSuccessMessage(customer)
+        except Exception,e:
+            return self.ShowError(str(e))
 
     def Save(self):
 
-        new_id = db.seq.find_and_modify(query={'seq_name':'customer_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
+        # new_id = db.seq.find_and_modify(query={'seq_name':'customer_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
 
         # print self.contact
 
         customer = {
-        "id": new_id,
         "name": self.name,
         "lastname": self.lastname,
         "type": self.type,
         "rut": self.rut,
-        # "contact": self.contact,
         "bussiness": self.bussiness,
         "approval_date": self.approval_date,
         "registration_date": self.registration_date,
@@ -160,18 +184,33 @@ class Customer(BaseModel):
         "first_view": self.first_view,
         "last_view": self.last_view,
         "username": self.username,
-        "password": self.password
+        "password": self.password,
+        "email": self.email
         }
 
+        # try:
+
+        #     self.collection.insert(customer)
+
+        #     return str(new_id)
+
+        # except Exception, e:
+
+        #     return str(e)
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        query = '''insert into "User" (name,lastname,type,rut,bussiness,approval_date,registration_date,status,first_view,last_view,username,password, email)
+        values (%(name)s,%(lastname)s,%(type)s,%(rut)s,%(bussiness)s,%(approval_date)s,%(registration_date)s,%(status)s,%(first_view)s,%(last_view)s,%(username)s,%(password)s,%(email)s)
+         returning id'''
+
         try:
-
-            self.collection.insert(customer)
-
-            return str(new_id)
-
-        except Exception, e:
-
-            return str(e)
+            cur.execute(query,customer)
+            self.connection.commit()
+            customer_id = cur.fetchone()[0]
+            return self.ShowSuccessMessage(customer_id)
+        except Exception,e:
+            return self.ShowError(str(e))
 
     def Edit(self):
 
@@ -179,34 +218,162 @@ class Customer(BaseModel):
         "name": self.name,
         "lastname": self.lastname,
         "type": self.type,
-        "bussiness": self.bussiness
+        "bussiness": self.bussiness,
+        "id":self.id,
+        "email":self.email
         }
 
+        # try:
+
+        #     self.collection.update({"id":int(self.id)},{"$set":customer})
+
+        #     return str(self.id)
+
+        # except Exception, e:
+
+        #     return str(e)
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        query = '''update "User" set name = %(name)s, lastname = %(lastname)s, type_id = %(type)s, bussiness = %(bussiness)s, email = %(email)s where id = %(id)s'''
+
         try:
+            cur.execute(query,customer)
+            self.connection.commit()
+            
+            return self.ShowSuccessMessage(self.id)
 
-            self.collection.update({"id":int(self.id)},{"$set":customer})
-
-            return str(self.id)
-
-        except Exception, e:
-
-            return str(e)
+        except Exception,e:
+            return self.ShowError(str(e))
 
     def List(self, current_page=1, items_per_page=20):
 
         skip = int(items_per_page) * ( int(current_page) - 1 )
 
-        lista = self.collection.find().skip(skip).limit(int(items_per_page))
+        #lista = self.collection.find().skip(skip).limit(int(items_per_page))
+
+        lista = {}
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        try:
+            query = '''select u.*,ut.name as type from "User" u 
+            inner join "User_Types" ut on ut.id = u.type_id where (u.type_id = 4 or u.type_id = 3) 
+            and u.email <> '' 
+            and u.deleted = 0 
+            order by u.registration_date desc
+            limit %(limit)s offset %(offset)s'''
+            parametros = {
+            "limit":items_per_page,
+            "offset":skip
+            }
+            cur.execute(query,parametros)
+            lista = cur.fetchall()
+
+        except:
+            pass
 
         return lista
 
+    def getTotalPages(self, page, items):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''select ceil(count(*)::float/%(items)s::float) as pages 
+                from "User" u 
+                inner join "User_Types" ut on ut.id = u.type_id 
+                where (u.type_id = 4 or u.type_id = 3) 
+                and u.email <> '' 
+                and u.deleted = 0'''
+
+        parameters = {
+            "items" : items
+        }
+
+        try:
+            # print cur.mogrify(query, parameters)
+            cur.execute(query, parameters)
+            pages = cur.fetchone()["pages"]
+
+            return self.ShowSuccessMessage(pages)
+
+        except Exception, e:
+
+            return self.ShowError(str(e))
+
+
     def ChangeState(self,ids,state):
-        print ids.split(",")
+        
+        results = ids.split(",")
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
         if int(state) == ESTADO_ACEPTADO:
-            self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state,"approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')}},multi=True)
+
+            try:
+                query = '''update "User" set status = %(status)s, approval_date = to_date(%(approval_date)s,'DD-MM-YYYY HH24:MI:SS') where id = ANY(%(ids)s)'''
+                parametros = {
+                "ids":map(int, results),
+                "status":int(state),
+                "approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+                }
+                print cur.mogrify(query,parametros)
+                cur.execute(query,parametros)
+                self.connection.commit()
+                return self.ShowSuccessMessage("users {} status has been changed to acepted".format(ids))
+            except Exception,e:
+                return self.ShowError(str(e))
+            
+            #self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state,"approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')}},multi=True)
         else:
-            self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state}},multi=True)
+            # self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state}},multi=True)
+
+            try:
+                query = '''update "User" set status = %(status)s where id = ANY(%(ids)s)'''
+                parametros = {
+                "ids":map(int, results),
+                "status":int(state)
+                }
+                print cur.mogrify(query,parametros)
+                cur.execute(query,parametros)
+                self.connection.commit()
+                return self.ShowSuccessMessage("users {} status has been changed to {}".format(ids,state))
+            except Exception,e:
+                return self.ShowError(str(e))
 
     def Remove(self,ids):
-        print ids
-        self.collection.remove({"id":{"$in":[int(n) for n in ids.split(",")]}})
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        try:
+            query = '''delete from "Contact" where user_id = ANY(%(ids)s)'''
+            parametros = {
+                "ids":[int(n) for n in ids.split(",")]
+            }
+            cur.execute(query,parametros)
+
+            query = '''delete from "User" where id = ANY(%(ids)s)'''
+            parametros = {
+                "ids":[int(n) for n in ids.split(",")]
+            }
+            cur.execute(query,parametros)
+            self.connection.commit()
+            return self.ShowSuccessMessage("Users has been deleted")
+        except Exception,e:
+            return self.ShowError(str(e))
+        finally:
+            cur.close()
+            self.connection.close()
+
+    def GetTypes(self):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        query = '''select * from "User_Types"'''
+
+        try:
+            cur.execute(query)
+            tipos = cur.fetchall()
+            return self.ShowSuccessMessage(tipos)
+        except Exception,e:
+            return self.ShowError(str(e))

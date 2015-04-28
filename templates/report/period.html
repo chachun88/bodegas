@@ -3,8 +3,6 @@
 				<thead>
 					<tr>
 						<th>SKU</th>
-<!-- 						<th>Nombre</th>
-						<th>Descripción</th> -->
 						<th>Talla</th>
 						<th>Precio U. Compra</th>
 						<th>Precio U. Venta</th>
@@ -18,12 +16,6 @@
 				{% for p in data %}
 					<tr>
 						<td>{{ p["product_sku"] }}</td>
-<!-- 					{% for pro in product %}
-						{% if p["product_sku"] == pro["sku"] %}
-						<td>{{ pro["name"] }}</td>
-						<td>{{ pro["description"] }}</td>
-						{% end %}
-					{% end %}	 -->
 						<td>{{ p["size"]}}</td>
 						<td>{{ p["balance_price"]}}</td>
 						{% try %}
@@ -38,13 +30,11 @@
 						<td>
 							{% if "user" in p %}{{ p["user"] }}{% end %}
 						</td>
-					{% for c in cellar %}
-						{% if p["cellar_identifier"] == str(c["_id"]) %}	
-						<td>{{ c["name"] }}</td>
-						{% end %}
-					{% end %}							
+						<td>{{ p["name"] }}</td>						
 					</tr>
 				{% end %}	
 				</tbody>
 			</table>
 		</div>
+
+		<input type="hidden" name="upload-period" value="{{ data_str }}" id="upload-period">

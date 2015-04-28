@@ -20,15 +20,17 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for p in cellar.ListProducts() %}
-					<tr>
-						<td>{{ p["sku"]}}</td>
-						<td>{{ p["name"] }}</td>
-						<td>{{ ", ".join(p["size"]) }}</td>
-						<td>{{ ", ".join(p["color"]) }}</td>
-						<td>{{ int(p["balance_units"]) }}</td>
-						<td>{{ MoneyFormat(p["balance_total"]) }}</td>	
-					</tr>
+					{% for p in productos %}
+						{% if int(p["balance_units"]) > 0%}
+						<tr>
+							<td>{{ p["sku"]}}</td>
+							<td>{{ p["name"] }}</td>
+							<td>{{ p["size"] }}</td>
+							<td>{{ p["color"] }}</td>
+							<td>{{ int(p["balance_units"]) }}</td>
+							<td>{{ MoneyFormat(p["balance_total"]) }}</td>	
+						</tr>
+						{% end %}
 					{% end %}
 				</tbody>
 			</table>

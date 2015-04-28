@@ -1,477 +1,495 @@
- #!/usr/bin/python
+#!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
 import os.path
-
-import pymongo
-
 import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
 
-import xlrd #lib excel
+import xlrd  # lib excel
 import os
-import commands
-import cgi, cgitb
-import cgi, os
-import cgitb; cgitb.enable()
-import sys
-
-from tornado.options import define, options
+import urllib
 
 from basehandler import BaseHandler
 from model.product import Product
 from model.cellar import Cellar
-from globals import port, debugMode, carpeta_img, userMode, Menu
+from model.kardex import Kardex
+from globals import Menu, dir_products, dir_stock, debugMode
+import math
+
+
+def cast(t):
+
+    if type(t) is float:
+        if t.is_integer():
+            return str(int(t))
+        else:
+            return str(t)
+    elif type(t) is unicode:
+        t = t.replace(",",".")
+        try:
+            return str(int(float(t.encode("utf-8"))))
+        except:
+            return str(t)
+
+fn = ''
+fnout = ''
+
 
 class HomeHandler(BaseHandler):
 
-	fn =''
-	fnout =''
+    @tornado.web.authenticated
+    @tornado.web.asynchronous
+    @tornado.gen.engine
+    def get(self):
 
-	@tornado.web.authenticated
-	@tornado.web.asynchronous
-	@tornado.gen.engine
-	def get(self):
-		self.set_active(Menu.PRODUCTOS_CARGA_MASIVA) #change menu active item
+        self.set_active(Menu.PRODUCTOS_CARGA_STOCK)  # change menu active item
 
-		dn = self.get_argument("dn", "f")
-		w = []
+        dn = self.get_argument("dn", "f")
+        filename = self.get_argument("filename", "")
+        w = []
 
-		if self.get_argument("w", "") != "":
-			w = self.get_argument("w", "").split( "," )
+        if self.get_argument("w", "") != "":
+            w = self.get_argument("w", "").split( ";;" )
 
-		self.render("product/home.html", side_menu=self.side_menu, dn=dn, w=w)
+        args = {
+            "dn" : dn, 
+            "w" : w,
+            "side_menu" : self.side_menu,
+            "filename" : filename
+        }
 
-	@tornado.web.asynchronous
-	@tornado.gen.engine
-	def post(self):
-		
-		#upload file 
-		try: # Windows needs stdio set for binary mode.
-		    import msvcrt
-		    msvcrt.setmode (0, os.O_BINARY) # stdin  = 0
-		    msvcrt.setmode (1, os.O_BINARY) # stdout = 1
-		except ImportError:
-		    pass
+        self.render("product/home.html", args=args)
 
-		  
-		form = cgi.FieldStorage()
-		
-		fileitem=''
-		# A nested FieldStorage instance holds the file
-		try:
-			fileitem = self.request.files['file'][0]
-		except:
-			pass
-	
-		# strip leading path from file name to avoid directory traversal attacks		
+    @tornado.web.asynchronous
+    @tornado.gen.engine
+    def post(self):
 
-		if fileitem != "":
-			global fn 
-			
-			fn = fileitem['filename']
-			open('uploads/entradas_masivas/' + fn, 'wb').write(fileitem["body"])
-			#message = 'The file "' + fn + '" was uploaded successfully'
+        filename = self.get_argument("filename", "")
 
-			if os.name == "nt":
+        # upload file 
+        try:  # Windows needs stdio set for binary mode.
+            import msvcrt
+            msvcrt.setmode(0, os.O_BINARY)  # stdin  = 0
+            msvcrt.setmode(1, os.O_BINARY)  # stdout = 1
+        except ImportError:
+            pass
 
-				try:
-					#dn = self.get_argument("dn", "t")
-					dn="t"
-				
-					doc = xlrd.open_workbook('uploads/entradas_masivas/'+fn)
+        fileitem = ''
 
-					sheet = doc.sheet_by_index(0)
+        try:
+            # A nested FieldStorage instance holds the file
+            fileitem = self.request.files['file'][0]
+        except:
+            pass
 
-					nrows = sheet.nrows
-					ncols = sheet.ncols
-					#print ncols
-					#self.write("{}".format(ncols))
+        # strip leading path from file name to avoid directory traversal attacks
 
-					matriz=[]
+        if fileitem != "":
 
-					for i in range(nrows):
-						matriz.append([])
-						for j in range(ncols):
-							matriz[i].append(sheet.cell_value(i,j))	
+            filename = fileitem['filename']
 
-					#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
-					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn="", w="")
+            # chegk if directory exists
+            try:
+                os.stat( dir_stock )
+            except:
+                os.makedirs(dir_stock)
 
-				except ImportError:
-					pass
-			else:
-				try:
-					#dn = self.get_argument("dn", "t")
-					dn="t"
-				
-					doc = xlrd.open_workbook('uploads/entradas_masivas/'+fn)
+            open(dir_stock + filename, 'wb').write(fileitem["body"])
+            # message = 'The file "' + fn + '" was uploaded successfully'
 
-					sheet = doc.sheet_by_index(0)
+            try:
 
-					nrows = sheet.nrows
-					ncols = sheet.ncols
-					#print ncols
-					#self.write("{}".format(ncols))
+                doc = xlrd.open_workbook(dir_stock + filename)
 
-					matriz=[]
+                sheet = doc.sheet_by_index(0)
 
-					for i in range(nrows):
-						matriz.append([])
-						for j in range(ncols):
-							matriz[i].append(sheet.cell_value(i,j))	
+                nrows = sheet.nrows
+                ncols = sheet.ncols
+                # print ncols
+                # self.write("{}".format(ncols))
 
-					#self.redirect("/product?dn="+dn+"&matriz="+matriz+"&nrows="+nrows+"&ncols="+ncols)
-					self.render("product/home.html", side_menu=self.side_menu, matriz=matriz, nrows=nrows, ncols=ncols, dn="",  w="")
+                matriz = []
 
-				except ImportError:
-					pass	
+                for i in range(nrows):
+                    matriz.append([])
+                    for j in range(ncols):
+                        matriz[i].append(sheet.cell_value(i,j))
 
-		else:
-			dn="t2"
-			self.render("product/home.html", side_menu=self.side_menu, dn=dn, w="")
+                args = {
+                    "side_menu" : self.side_menu,
+                    "dn" : "f",
+                    "matriz" : matriz,
+                    "nrows" : nrows,
+                    "ncols" : ncols,
+                    "filename" : filename,
+                    "w" : []
+                }
 
+                self.render("product/home.html", args=args)
 
+            except ImportError:
+                pass
+        else:
+            args = {
+                "side_menu" : self.side_menu,
+                "dn" : "t2",
+                "matriz" : matriz,
+                "nrows" : nrows,
+                "ncols" : ncols,
+                "filename" : filename,
+                "w" : []
+            }
+            self.render("product/home.html", args)
 
 
 class ProductLoadHandler(BaseHandler):
-	@tornado.web.authenticated
-	def get(self):
-		pass
 
-	@tornado.web.authenticated
-	@tornado.web.asynchronous
-	@tornado.gen.engine
-	def post(self):	
+    @tornado.web.authenticated
+    def get(self):
+        pass
 
-		warnings = []
+    @tornado.web.authenticated
+    @tornado.web.asynchronous
+    @tornado.gen.engine
+    def post(self): 
 
-		if 'fn' in vars() or 'fn' in globals():
+        warnings = []
 
-			if fn != "":
+        fn = self.get_argument("filename", "")
 
-				doc = xlrd.open_workbook('uploads/entradas_masivas/'+fn)
+        if debugMode:
+            print fn
 
-				sheet = doc.sheet_by_index(0)
+        if fn != "":
 
-				nrows = sheet.nrows
-				ncols = sheet.ncols
-				#print ncols
-				#self.write("{}".format(ncols))
+            doc = xlrd.open_workbook(dir_products + fn)
 
-				matriz=[]
-				tallas=[]
+            sheet = doc.sheet_by_index(0)
 
-				prod = Product()
-				cellar=Cellar()
+            nrows = sheet.nrows
+            ncols = sheet.ncols
+            # print ncols
+            # self.write("{}".format(ncols))
 
-				for i in range(nrows):	
-					matriz.append([])
-					for j in range(ncols):				
-						if i == 3 and j > 9:
-							tallas.append(sheet.cell_value(i,j))				
+            # fila
+            for i in range(3, nrows):
 
-				try:			
-					for i in range(nrows):	
-						matriz.append([])
-						for k in range(len(tallas)):
-							for j in range(ncols):	
+                prod = Product()
+                tallas = []
 
-								matriz[i].append(sheet.cell_value(i,j))
-								
-								try: 
-									if i > 3 and i < nrows:
-										prod.size=str(tallas[k]).split(",")
-										size=str(tallas[k])
-										if j == 0:
-											prod.category = matriz[i][j].encode('utf-8')
-										elif j == 1:
-											prod.sku = matriz[i][j].encode('utf-8')
-										elif j == 2:
-											prod.name = matriz[i][j].encode('utf-8')
-										elif j == 3:
-											prod.description = matriz[i][j].encode('utf-8')
-										elif j == 4:										
-											prod.color=matriz[i][j].encode('utf-8').split(",")
-											color=matriz[i][j].encode('utf-8')
-										elif j == 5:
-											price = str(int(matriz[i][j]))
-										elif j == 6:
-											prod.manufacturer = matriz[i][j].encode('utf-8')
-										elif j == 7:
-											cellar_name= matriz[i][j].encode('utf-8')
-										elif j == 8:
-											prod.brand = matriz[i][j].encode('utf-8')
-										elif j == 10:
-											try:
-												q = k +j
-												quantity=str(int(matriz[i][q]))
-				
-												prod.Save("masive")		
-												# prod.InitWithSku(prod.sku)
-												# product_id=prod.identifier
-												operation="buy"
+                # columna
+                for j in range(ncols):
 
-												#products stored for cellar
-												if cellar.CellarExist( cellar_name ):
-													cellar.InitWithName(cellar_name)
-													cellar.AddProducts(prod.sku, quantity, price, size, color, operation, self.get_user_email() )
-												else:
-													error_name = "No existe la bodega \"" + cellar_name + "\""
-													if error_name not in warnings:
-														warnings.append( error_name )
-											except Exception, e:
-												print str(e)
-												pass	
+                    if j == 0:
+                        prod.category = sheet.cell_value(i,j).encode("utf-8")
+                    elif j == 1:
+                        prod.sku = sheet.cell_value(i,j).encode("utf-8")
+                    elif j == 2:
+                        prod.name = sheet.cell_value(i,j).encode("utf-8")
+                    elif j == 3:
+                        prod.description = sheet.cell_value(i,j)
+                    elif j == 4:                                        
+                        prod.color = sheet.cell_value(i,j)
+                    elif j == 5:                                        
+                        prod.price = int(sheet.cell_value(i,j))
+                    elif j == 6:
+                        prod.sell_price = int(sheet.cell_value(i,j))
+                    elif j == 7:
 
-								except Exception, e:
-									# print "jjjjjjjjjj "+str(j)+" "+str(e)
-									dn="t3"
-									self.redirect("/product?dn="+dn + "&w=" + ",".join(warnings))
-									return
-				except Exception, e:
-					print "fiiiiiiinnnnnnn "+str(j)+" "+str(e)			#product is stored
+                        bulk_price = sheet.cell_value(i,j)
 
+                        if bulk_price != "":
+                            try:
+                                prod.bulk_price = int(bulk_price)
+                            except Exception, e:
+                                warnings.append(str(e))
 
-				dn="t"
-				#self.redirect("/product?dn="+dn)
-				#self.render("product/home.html", side_menu=self.side_menu, dn=dn)
+                    elif j == 8:
+                        prod.manufacturer = sheet.cell_value(i,j).encode("utf-8")
+                    elif j == 9:
+                        prod.brand = sheet.cell_value(i,j).encode("utf-8")
+                    elif j == 10:
+                        prod.delivery = sheet.cell_value(i,j).encode("utf-8")
+                    elif j == 11:
+                        prod.which_size = sheet.cell_value(i,j).encode("utf-8")
+                    elif j > 11 and j < ncols:
+                        valor = sheet.cell_value(i,j)
+                        if valor != "":
+                            tallas.append(cast(valor))
 
+                # if debugMode:
+                #     print "product name : {}".format(prod.name)
 
-			else:
-				dn="t2"
-		else:
-			dn="t2"
-		
+                prod.size = ",".join(tallas)
+                print prod.size
+                res_save = prod.Save("one")
 
-		self.redirect("/product?dn="+dn + "&w=" + ",".join(warnings))
+                if debugMode:
+                    if "error" in res_save:
+                        print res_save["error"]
+
+        if len(warnings) > 0:
+            # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
+            args = {
+                "dn" : "",
+                "warnings" : ";;".join(warnings),
+                "filename" : ""
+            }
+            self.redirect("/product/out?" + urllib.urlencode(args))
+        else:
+            # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t",warnings=",".join(warnings)))
+            args = {
+                "dn" : "t",
+                "warnings" : ";;".join(warnings),
+                "filename" : ""
+            }
+            self.redirect("/product/out?" + urllib.urlencode(args))
+
 
 class ProductRemoveHandler(BaseHandler):
-	
-	@tornado.web.authenticated
-	def get(self):
 
-		prod = Product()
-		prod.InitWithId(self.get_argument("id", ""))
-		print "skuuuuuuuuuuuuuu " + prod.sku 
+    @tornado.web.authenticated
+    def get(self):
 
-		cellar_id="remove"
-		size="remove"
+        prod = Product()
+        prod.InitWithId(self.get_argument("id", ""))
 
-		cellar = Cellar()		
-		product_find =cellar.ProductKardex(prod.sku, cellar_id, size)
+        cellar_id = "remove"
+        size = "remove"
 
-		buy=0
-		sell=0
+        cellar = Cellar()       
+        product_find = cellar.ProductKardex(prod.sku, cellar_id, size)
 
-		for p in product_find:
-			if p["_id"] == "buy":
-				buy=p["total"]	
+        buy = 0
+        sell = 0
 
-			if p["_id"] == "sell":
-				sell=p["total"]
+        for p in product_find:
 
-		units=buy-sell	
+            if p["operation_type"] == "buy":
+                buy = p["total"]  
 
-		if units > 0:
-			self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=prod.get_product_list())	
-		else:
-			prod.Remove()	
+            if p["operation_type"] == "sell":
+                sell = p["total"]
 
-			self.render("product/list.html", dn="bpt", side_menu=self.side_menu, product_list=prod.get_product_list())
-			#self.redirect("/product/list")
+        units = buy-sell  
+
+        if units > 0:
+            self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=prod.get_product_list())  
+        else:
+
+            prod.Remove()   
+
+            self.render("product/list.html", dn="bpt", side_menu=self.side_menu, product_list=prod.get_product_list())
+            # self.redirect("/product/list")
+
 
 class ProductOutHandler(BaseHandler):
 
-	@tornado.web.authenticated
-	def get(self):
-		self.set_active(Menu.PRODUCTOS_SALIDA_MASIVA) #change menu active item
+    @tornado.web.authenticated
+    def get(self):
+        self.set_active(Menu.PRODUCTOS_CARGA_MASIVA)  # change menu active item
 
-		dn = self.get_argument("dn", "f")
+        dn = self.get_argument("dn", "f")
+        warnings = self.get_argument("warnings","")
 
-		self.render("product/out.html", side_menu=self.side_menu, dn=dn)
+        filename = self.get_argument("filename", "")
 
-	@tornado.web.authenticated
-	@tornado.web.asynchronous
-	@tornado.gen.engine
-	def post(self):
+        args = {
+            "side_menu" : self.side_menu, 
+            "dn": dn,
+            "filename" : filename,
+            "warnings" : warnings
+        }
 
-		#upload file 
-		try: # Windows needs stdio set for binary mode.
-		    import msvcrt
-		    msvcrt.setmode (0, os.O_BINARY) # stdin  = 0
-		    msvcrt.setmode (1, os.O_BINARY) # stdout = 1
-		except ImportError:
-		    pass
+        self.render("product/out.html", args=args)
 
-		  
-		form = cgi.FieldStorage()
-		
-		fileitem=''
-		try:
-			# A nested FieldStorage instance holds the file
-			fileitem = self.request.files['file'][0]
-		except:
-			pass
-	
-		# strip leading path from file name to avoid directory traversal attacks
+    @tornado.web.authenticated
+    @tornado.web.asynchronous
+    @tornado.gen.engine
+    def post(self):
 
-		
-		if fileitem != "":
+        filename = self.get_argument("filename", "")
 
-			global fnout 
+        # upload file 
+        try:  # Windows needs stdio set for binary mode.
+            import msvcrt
+            msvcrt.setmode(0, os.O_BINARY)  # stdin  = 0
+            msvcrt.setmode(1, os.O_BINARY)  # stdout = 1
+        except ImportError:
+            pass
 
-			fnout = fileitem['filename']
+        fileitem = ''
 
-			dir = "uploads/salidas_masivas/"
+        try:
+            # A nested FieldStorage instance holds the file
+            fileitem = self.request.files['file'][0]
+        except:
+            pass
 
-			## chegk if directory exists
-			try:
-				os.stat( dir )
-			except:
-				os.mkdir(dir)
+        # strip leading path from file name to avoid directory traversal attacks
 
-			open('uploads/salidas_masivas/' + fnout, 'wb').write(fileitem["body"])
-			#message = 'The file "' + fn + '" was uploaded successfully'
+        if fileitem != "":
 
-			try:
-				dn = self.get_argument("dn", "f")
-			
-				doc = xlrd.open_workbook('uploads/salidas_masivas/'+fnout)
+            filename = fileitem['filename']
 
-				sheet = doc.sheet_by_index(0)
+            # chegk if directory exists
+            try:
+                os.stat( dir_products )
+            except:
+                os.makedirs(dir_products)
 
-				nrows = sheet.nrows
-				ncols = sheet.ncols
-				#print ncols
-				#self.write("{}".format(ncols))
+            open(dir_products + filename, 'wb').write(fileitem["body"])
+            # message = 'The file "' + fn + '" was uploaded successfully'
 
-				matriz=[]
+            try:
 
-				for i in range(nrows):
-					matriz.append([])
-					for j in range(ncols):
-						matriz[i].append(sheet.cell_value(i,j))
+                doc = xlrd.open_workbook(dir_products + filename)
 
-				self.render("product/out.html", side_menu=self.side_menu, dn=dn, matriz=matriz, nrows=nrows, ncols=ncols)
+                sheet = doc.sheet_by_index(0)
 
-			except ImportError:
-				pass
-		else:
-			dn="t2"
-			self.render("product/out.html", side_menu=self.side_menu, dn=dn)
+                nrows = sheet.nrows
+                ncols = sheet.ncols
+                # print ncols
+                # self.write("{}".format(ncols))
+
+                matriz = []
+
+                for i in range(nrows):
+                    matriz.append([])
+                    for j in range(ncols):
+                        matriz[i].append(sheet.cell_value(i,j))
+
+                args = {
+                    "side_menu" : self.side_menu,
+                    "dn" : "f",
+                    "matriz" : matriz,
+                    "nrows" : nrows,
+                    "ncols" : ncols,
+                    "filename" : filename,
+                    "warnings" : ""
+                }
+
+                self.render("product/out.html", args=args)
+
+            except ImportError:
+                pass
+        else:
+            args = {
+                "side_menu" : self.side_menu,
+                "dn" : "t2",
+                "matriz" : matriz,
+                "nrows" : nrows,
+                "ncols" : ncols,
+                "filename" : filename,
+                "warnings" : ""
+            }
+            self.render("product/out.html", args)
+
 
 class ProductMassiveOutputHandler(BaseHandler):
 
-	@tornado.web.authenticated
-	def get(self):
-		pass
+    @tornado.web.authenticated
+    def get(self):
+        pass
 
-	@tornado.web.authenticated
-	@tornado.web.asynchronous
-	@tornado.gen.engine
-	def post(self):
+    @tornado.web.authenticated
+    @tornado.web.asynchronous
+    @tornado.gen.engine
+    def post(self):
 
-		if 'fnout' in vars() or 'fnout' in globals():
+        warnings = []
 
-			if fnout != "":
+        fn = self.get_argument("filename", "")
 
-				doc = xlrd.open_workbook('uploads/salidas_masivas/'+fnout)
+        if fn != "":
 
-				sheet = doc.sheet_by_index(0)
+            doc = xlrd.open_workbook(dir_stock + fn, formatting_info=False)
 
-				nrows = sheet.nrows
-				ncols = sheet.ncols
-				#self.write("{}".format(ncols))
+            sheet = doc.sheet_by_index(0)        
 
-				matriz=[]
-				tallas=[]
+            for i in range(1, sheet.nrows):
 
-				prod = Product()
-				cellar=Cellar()
+                kardex = Kardex()
+                cellar = Cellar()
 
-				for i in range(nrows):	
-					matriz.append([])
-					for j in range(ncols):				
-						if i == 3 and j > 11:
-							tallas.append(sheet.cell_value(i,j))				
+                res_init_name = {}
 
-				for i in range(nrows):	
-					matriz.append([])
-					for k in range(len(tallas)):
-						for j in range(ncols):	
+                sku = ''
+                size = ''
+                entrada = 0
+                price = 0
+                salida = 0
+                sell_price = 0
+                cellar_name = ''
 
-							matriz[i].append(sheet.cell_value(i,j))
-							
-							# try: 
-							if i > 3 and i < nrows:
-								prod.size=str(tallas[k]).split(",")
-								size=str(tallas[k])
-								if j == 0:
-									prod.category = matriz[i][j].encode('utf-8')
-								elif j == 1:
-									prod.sku = str(matriz[i][j]).encode('utf-8')
-								elif j == 2:
-									prod.name = matriz[i][j].encode('utf-8')
-								elif j == 3:
-									prod.description = matriz[i][j].encode('utf-8')
-								elif j == 4:										
-									prod.color=matriz[i][j].encode('utf-8').split(",")
-									color=matriz[i][j].encode('utf-8')
-								#elif j == 5:
-								#	try:
-								#		price = str(int(matriz[i][j]))
-								#	except:
-								#		price = 0
-								elif j == 5:
-									price_sell = str(int(matriz[i][j]))										
-								elif j == 6:
-									prod.manufacturer = matriz[i][j].encode('utf-8')	
-								elif j == 8:
-									cellar_name= matriz[i][j].encode('utf-8')
-								elif j == 9:
-									prod.brand = matriz[i][j].encode('utf-8')
-								elif j == 11:
-									try:
-										q = k + j
-										quantity=str(int(matriz[i][q]))
-										#recovering identified
+                for j in range(sheet.ncols):  
 
-										prod.InitWithSku(prod.sku)
-										# product_id=prod.identifier
-										operation="sell"
+                    if j == 0:
+                        sku = str(sheet.cell_value(i,j))
+                    elif j == 1:
+                        valor = sheet.cell_value(i,j)
+                        if valor != "":
+                            size = cast(valor)
+                    elif j == 2:
+                        val = sheet.cell_value(i,j)
+                        if val != "":
+                            entrada = str(int(val))
+                    elif j == 3:
+                        val = sheet.cell_value(i,j)
+                        if val != "":
+                            price = str(int(val))
+                    elif j == 4:
+                        val = sheet.cell_value(i,j)
+                        if val != "":
+                            salida = str(int(val))
+                    elif j == 5:
+                        val = sheet.cell_value(i,j)
+                        if val != "":
+                            sell_price = str(int(val))
+                    elif j == 6:
+                        cellar_name = sheet.cell_value(i,j)
+                        res_init_name = cellar.InitWithName(cellar_name)
+                        kardex.identifier = cellar.identifier
 
-									#products stored for cellar
-									
-										cellar.InitWithName(cellar_name)
-										cellar.RemoveProducts(prod.sku, quantity, price_sell, size, color, operation, self.get_user_email() )
-									except:
-										pass	
-							# except:
-							# 	dn="t3"
-							# 	self.redirect("/product?dn="+dn)				
-					
-					#product is saved
-					#prod.Save()	
+                if sku == '' or size == '':
+                    warnings.append("sku y talla no pueden estar vacios")
+                else:
+                    product = Product()
+                    res_product = product.InitWithSku(sku)
 
-					#recovering identified
-					# prod.InitWithSku(prod.sku)
-					# product_id=prod.identifier
+                    if "error" in res_product:
+                        warnings.append("producto con el sku {} no existe".format(sku))
+                    else:
+                        if cellar.identifier != "":
+                            if entrada > 0 and price > 0:
+                                res_add = kardex.AddProducts(sku, entrada, price, size, '', 'buy', 'Sistema - carga masiva stock')
 
-					# #products stored for cellar
-					# try:	
-					# 	cellar.InitWithName(cellar_name)
-					# 	cellar.RemoveProducts(prod.sku, quantity, price, size, color, operation) #mejorar salidas 
-					# except:
-					# 	pass
-				# fnout=""		
-				self.redirect("/product/out")
-			else:
-				dn="t2"
-				self.redirect("/product/out?dn="+dn)
-		else:
-			dn="t2"
-			self.redirect("/product/out?dn="+dn)
+                                if "error" in res_add:
+                                    warnings.append(res_add["error"].encode("utf-8"))
+
+                            if salida > 0 and sell_price > 0:
+                                res_remove = kardex.RemoveProducts(sku, salida, price, size, '', 'sell', 'Sistema - carga masiva stock')
+
+                                if "error" in res_remove:
+                                    warnings.append(res_remove['error'].encode("utf-8"))
+                        else:
+                            warnings.append('''No se reconoce la bodega '{}', Tip: vaya a "stock/todas las bodegas",
+                              y copie el nombre de la bodega a la cual desea relacionar el movimiento de stock, 
+                              luego peguelo en la planilla excel, asi no correra riesgos de error de tipeo'''.format(cellar_name))
+
+            if len(warnings) > 0:
+
+                args = {
+                    "w" : ";;".join(warnings),
+                    "dn" : ""
+                }
+                self.redirect("/product?w=" + urllib.urlencode(args))
+            else:
+                self.redirect("/product?dn=t")
+
+        else:
+
+            self.redirect("/product?dn=t2")

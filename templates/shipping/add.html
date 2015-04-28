@@ -1,0 +1,114 @@
+{% extends "../base.html" %}
+
+{% block title %}
+	Precios de despachos
+{% end %}
+
+{% block caption %}
+	Administrador de precios de despachos
+{% end %}			
+{% block body %}
+{% if dn == "error" %}
+<div class="alert alert-danger alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Error!</strong> {{mensaje}}
+</div>
+{% end %}
+<div class="col-md-8">
+	<section class="widget">
+		<div class="body">
+			<form role="form" class="form-horizontal" action="/shipping/savecity" method="post">
+				<div class="control-group">
+					<label for="Nombre" class="col-md-3">Agregar una ciudad</label>
+					<div class="col-md-5">
+						<input type="text" name="name" class="form-control" id="Nombre" placeholder="Nombre">
+					</div>
+				</div>
+
+				<div class="control-group body">
+					<div class="col-md-8 text-right">
+						<input type="submit" class="btn btn-primary" value="Guardar">
+					</div>
+				</div>
+				<input type="hidden" name="identifier" value="{{shipping.identifier}}">
+				{% raw xsrf_form_html() %}
+			</form>
+			<form role="form" class="form-horizontal" action="/shipping/save" method="post">
+				<div class="control-group body">
+					<label for="Ciudad_From" class="col-md-3">Ciudad Origen</label>
+					<div class="col-md-5">
+						<select name="from_city_id" class="form-control">
+							{% for c in cities %}
+								{% if int(shipping.from_city_id) == 0 %}
+									{% if c['name'] == "Santiago" %}
+									<option value="{{c['id']}}" selected>{{c['name']}}</option>
+									{% else %}
+									<option value="{{c['id']}}">{{c['name']}}</option>
+									{% end %}
+								{% else %}
+									{% if int(c['id']) == int(shipping.from_city_id) %}
+									<option value="{{c['id']}}" selected>{{c['name']}}</option>
+									{% else %}
+									<option value="{{c['id']}}">{{c['name']}}</option>
+									{% end %}
+								{% end %}
+							{% end %}
+						</select>
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="Ciudad_To" class="col-md-3">Ciudad Destino</label>
+					<div class="col-md-5">
+						<select name="to_city_id" class="form-control">
+							{% for c in cities %}
+								{% if int(shipping.to_city_id) == 0 %}
+									<option value="{{c['id']}}">{{c['name']}}</option>
+								{% else %}
+									{% if int(c['id']) == int(shipping.to_city_id) %}
+									<option value="{{c['id']}}" selected>{{c['name']}}</option>
+									{% else %}
+									<option value="{{c['id']}}">{{c['name']}}</option>
+									{% end %}
+								{% end %}
+							{% end %}
+						</select>
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="PrecioCorreos" class="col-md-3">Precio Correos</label>
+					<div class="col-md-5">
+						<input type="text" name="correos_price" class="form-control" value="{{shipping.correos_price}}">
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="PrecioChilexpress" class="col-md-3">Precio Chilexpress</label>
+					<div class="col-md-5">
+						<input type="text" name="chilexpress_price" class="form-control" value="{{shipping.chilexpress_price}}">
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="PrecioGiani" class="col-md-3">Precio Giani</label>
+					<div class="col-md-5">
+						<input type="text" name="price" class="form-control" value="{{shipping.price}}">
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="charge_type" class="col-md-3">Tipo de Cobro</label>
+					<div class="col-md-5">
+						<input type="radio" name="charge_type" value="1">Por items<br>
+						<input type="radio" name="charge_type" value="2">Por venta
+					</div>
+					<input type="hidden" id="selected_charge_type" value="{{shipping.charge_type}}">
+				</div>
+				<div class="control-group body">
+					<div class="col-md-8 text-right">
+						<input type="submit" class="btn btn-primary" value="Guardar">
+					</div>
+				</div>
+				<input type="hidden" name="identifier" value="{{shipping.identifier}}">
+				{% raw xsrf_form_html() %}
+			</form>
+		</div>
+	</section>
+</div>
+{% end %}

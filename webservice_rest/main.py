@@ -7,7 +7,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 import os
-import pymongo
+# import pymongo
 
 import access_token
 import product_handler
@@ -20,6 +20,11 @@ import category_handler
 import color_handler
 import customer_handler
 import contact_handler
+import tag_handler
+import city_handler
+import shipping_handler
+import webpay_handler
+import size_handler
 
 import doc_handler
 from bson.objectid import ObjectId
@@ -42,12 +47,16 @@ class Application(tornado.web.Application):
             (r"/cellar/find",           cellar_handler.CellarFindHandler),
             (r"/cellar/remove",         cellar_handler.CellarRemoveHandler),
 
-            (r"/cellar/products/list",  cellar_handler.CellarProductsListHandler),
-            (r"/cellar/products/add",   cellar_handler.CellarProductsAddHandler),
-            (r"/cellar/products/remove",cellar_handler.CellarProductsAddHandler),
-            (r"/cellar/products/kardex",cellar_handler.CellarProductsKardex),
-            (r"/cellar/exists",         cellar_handler.CellarExistsHandler),
-            (r"/cellar/products/find",  cellar_handler.CellarProductFind),
+            (r"/cellar/products/list",      cellar_handler.CellarProductsListHandler),
+            (r"/cellar/products/add",       cellar_handler.CellarProductsAddHandler),
+            (r"/cellar/products/remove",    cellar_handler.CellarProductsAddHandler),
+            (r"/cellar/products/kardex",    cellar_handler.CellarProductsKardex),
+            (r"/cellar/exists",             cellar_handler.CellarExistsHandler),
+            (r"/cellar/products/find",      cellar_handler.CellarProductFind),
+            (r"/cellar/selectforsale",      cellar_handler.SelectForSaleHandler),
+            (r"/cellar/selectreservation",  cellar_handler.SelectReservationHandler),
+            (r"/cellar/getwebcellar",       cellar_handler.GetWebCellarHandler),
+            (r"/cellar/getreservationcellar",       cellar_handler.GetReservationCellarHandler),
 
             (r"/product/add",           product_handler.AddProductHandler),
             (r"/product/edit",          product_handler.AddProductHandler),
@@ -55,6 +64,8 @@ class Application(tornado.web.Application):
             (r"/product/find",          product_handler.GetProductHandler),
             (r"/product/list",          product_handler.ListProductsHandler),
             (r"/product/search",        product_handler.SearchHandler),
+            (r"/product/for_sale",      product_handler.ForSaleHandler),
+            (r"/product/checkstock",    product_handler.CheckStockHandler),
 
             (r"/salesman/add",          seller_handler.AddSellerHandler),
             (r"/salesman/edit",         seller_handler.AddSellerHandler),
@@ -87,6 +98,8 @@ class Application(tornado.web.Application):
             (r"/order/find",            order_handler.GetOrderHandler),
             (r"/order/list",            order_handler.ListOrderHandler),
             (r"/order/changestate",     order_handler.ChangeStateHandler),
+            (r"/order/cancel",          order_handler.CancelHandler),
+            (r"/order/totalpages",      order_handler.GetTotalPagesHandler),
 
             (r"/order-detail/save",     order_detail_handler.AddOrderDetailHandler),
             (r"/order-detail/remove",   order_detail_handler.RemoveOrderDetailHandler),
@@ -110,14 +123,40 @@ class Application(tornado.web.Application):
             (r"/customer/changestate",               customer_handler.ChangeStateHandler),
             (r"/customer/remove",                    customer_handler.RemoveHandler),
             (r"/customer/initbyid",                  customer_handler.InitByIdHandler),
+            (r"/customer/gettypes",                  customer_handler.GetTypesHandler),
+            (r"/customer/gettotalpages",             customer_handler.GetTotalPagesHandler),
 
             (r"/contact/save",                 contact_handler.SaveHandler),
             (r"/contact/edit",                 contact_handler.EditHandler),
             (r"/contact/listbycustomerid",     contact_handler.ListByCustomerIdHandler),
             (r"/contact/changestate",               contact_handler.ChangeStateHandler),
             (r"/contact/remove",                    contact_handler.RemoveHandler),
-            (r"/contact/initbyid",                  contact_handler.InitByIdHandler)
-            
+            (r"/contact/initbyid",                  contact_handler.InitByIdHandler),
+            (r"/contact/gettypes",                  contact_handler.GetTypesHandler),
+
+            (r"/tag/save",                       tag_handler.SaveHandler),
+            (r"/tag/addtagproduct",              tag_handler.AddTagProductHandler),
+            (r"/tag/list",                       tag_handler.ListHandler),
+            (r"/tag/initbyid",                   tag_handler.InitByIdHandler),
+            (r"/tag/productsbytagid",            tag_handler.GetProductsByTagIdHandler),
+            (r"/tag/removeasociationbytagid",    tag_handler.RemoveTagsAsociationByTagIdHandler),
+            (r"/tag/hideshow",                   tag_handler.HideShowHandler),
+            (r"/tag/remove",                     tag_handler.RemoveHandler),
+
+            (r"/city/save",                      city_handler.SaveHandler),
+            (r"/city/list",                      city_handler.ListHandler),
+
+            (r"/shipping/save",                      shipping_handler.SaveHandler),
+            (r"/shipping/list",                      shipping_handler.ListHandler),
+            (r"/shipping/action",                    shipping_handler.ActionHandler),
+            (r"/shipping/initbyid",                  shipping_handler.InitByIdHandler),
+            (r"/shipping/remove",                    shipping_handler.RemoveHandler),
+            (r"/shipping/save_tracking",             shipping_handler.SaveTrackingHandler),
+
+            (r"/webpay/initbyorderid",               webpay_handler.InitByOrderIdHandler),
+
+            (r"/size/list",               size_handler.ListHandler),
+            (r"/size/initbyname",               size_handler.InitByNameHandler)
             ]
 
         settings = dict(
@@ -133,41 +172,41 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, **settings) 
 
-        ''' configure database '''
-        connection  = pymongo.Connection("localhost", 27017)
+        # ''' configure database '''
+        # connection  = pymongo.Connection("localhost", 27017)
 
-        if debugMode:
-            self.db = connection.dev_market_tab
-            print "database : dev_market_tab"
-        else:
-            self.db = connection.market_tab
-            print "database : market_tab"
+        # if debugMode:
+        #     self.db = connection.dev_market_tab
+        #     print "database : dev_market_tab"
+        # else:
+        #     self.db = connection.market_tab
+        #     print "database : market_tab"
 
 
-        ''' repair script for user permissions '''
-        users_list = self.db.salesman.find()
-        for user in users_list:
-            user_id = user["_id"]
+        # ''' repair script for user permissions '''
+        # users_list = self.db.salesman.find()
+        # for user in users_list:
+        #     user_id = user["_id"]
 
-            try:
-                permissions = user["permissions"]
-            except Exception, e:
-                ## adding empty permissions
+        #     try:
+        #         permissions = user["permissions"]
+        #     except Exception, e:
+        #         ## adding empty permissions
 
-                self.db.salesman.update( { "_id": ObjectId(user_id) }, { "$set": { "permissions": [] } } )
-                print "user updated"
+        #         self.db.salesman.update( { "_id": ObjectId(user_id) }, { "$set": { "permissions": [] } } )
+        #         print "user updated"
 
-                pass
+        #         pass
 
-        product_list = self.db.product.find()
-        for product in product_list:
-            product_id = product["_id"]
+        # product_list = self.db.product.find()
+        # for product in product_list:
+        #     product_id = product["_id"]
 
-            try:
-                upc = product["upc"]
-            except Exception, e:
-                self.db.product.update( { "_id": ObjectId(product_id) }, { "$set": {"upc": ""} })
-                pass
+        #     try:
+        #         upc = product["upc"]
+        #     except Exception, e:
+        #         self.db.product.update( { "_id": ObjectId(product_id) }, { "$set": {"upc": ""} })
+        #         pass
 
 def main():
     tornado.options.parse_command_line()

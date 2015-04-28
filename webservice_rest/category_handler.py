@@ -14,7 +14,7 @@ class AddCategoryHandler(BaseHandler):
 		# isntantitate category
 		category = Category()
 
-		category.identifier 	= self.TryGetParam("id", "")
+		category.id 	= self.TryGetParam("id", "")
 		category.name 			= self.TryGetParam("name", "")
 		
 		# saving current category

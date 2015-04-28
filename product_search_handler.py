@@ -11,11 +11,13 @@ from model.product import Product
 
 from basehandler import BaseHandler
 
+
 class ProductSearchHandler(BaseHandler):
-	def get(self):
-		query = self.get_argument("q", "")
 
-		product = Product()
+    @tornado.web.authenticated
+    def get(self):
+        query = self.get_argument("q", "")
 
-		self.render("product/list.html", dn="", side_menu=self.side_menu, product_list=product.Search(query))
+        product = Product()
 
+        self.render("product/list.html", dn="", side_menu=self.side_menu, product_list=product.Search(query))

@@ -1,170 +1,387 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from basemodel import BaseModel, db
-from salesmanpermission import SalesmanPermission
-from bson.objectid import ObjectId
+from basemodel import BaseModel
+import psycopg2
+import psycopg2.extras
+
+
+class UserType():
+    GESTION = 1
+    BODEGA = 6
+    ADMINISTRADOR = 2
+
+
+class Permission():
+
+    API = 1
+    NEW_PROD = 2
+    SELL = 3
+    MOD_CELLAR = 4
+    ADM_USER = 5
+    REPORT = 6
 
 
 class Salesman(BaseModel):
-	def __init__(self):
-		BaseModel.__init__(self)
-		self.collection = db.salesman
-		self._salesman_id = ''
-		self._name = ''
-		self._password = '' 
-		self._email = ''
-		self._permissions = []
+    def __init__(self):
+        BaseModel.__init__(self)
+        # self.collection = db.salesman
+        self.table = 'User'
+        self._salesman_id = ''
+        self._name = ''
+        self._password = '' 
+        self._email = ''
+        self._permissions = []
+        self._cellars = []
+        self._permissions_name = []
+        self._cellars_name = []
+        self._lastname = ""
+        self._type_id = ''
 
-	@property
-	def salesman_id(self):
-	    return self._salesman_id
-	@salesman_id.setter
-	def salesman_id(self, value):
-	    self._salesman_id = value
-	
+    @property
+    def lastname(self):
+        return self._lastname
 
-	@property
-	def name(self):
-		return self._name
-	@name.setter
-	def name(self, value):
-		self._name = value
+    @lastname.setter
+    def lastname(self, value):
+        self._lastname = value
 
-	@property
-	def password(self):
-		return self._password
-	@password.setter
-	def password(self, value):
-		self._password = value
+    @property
+    def salesman_id(self):
+        return self._salesman_id
 
-	@property
-	def email(self):
-		return self._email
-	@email.setter
-	def email(self, value):
-		self._email = value
+    @salesman_id.setter
+    def salesman_id(self, value):
+        self._salesman_id = value    
 
-	@property
-	def permissions(self):
-	    return self._permissions
-	@permissions.setter
-	def permissions(self, value):
-	    self._permissions = value
-	
+    @property
+    def name(self):
+        return self._name
 
-	def Print(self):
-		return {
-			"_id":ObjectId(self.identifier),
-			"name":self.name,
-			"email":self.email,
-			"password":self.password,
-			"permissions":self.permissions,
-			"salesman_id":self.salesman_id
-		}
+    @name.setter
+    def name(self, value):
+        self._name = value
 
-	def Remove(self):
-		try:
-			#delete = self._permissions.RemoveAllByUser()
-			#if "error" in delete:
-			#	return delete
+    @property
+    def password(self):
+        return self._password
 
-			return BaseModel.Remove(self)
-		except Exception, e:
-			return self.ShowError("error removing user")
+    @password.setter
+    def password(self, value):
+        self._password = value
 
-	def Login(self, username, password):
-		data = self.collection.find({"email":username, "password":password})
+    @property
+    def email(self):
+        return self._email
 
-		if data.count() >= 1:
-			self.InitByEmail(username) ## init user
-			return True
-		return False
+    @email.setter
+    def email(self, value):
+        self._email = value
 
-	def InitByEmail(self, email):
+    @property
+    def permissions(self):
+        return self._permissions
 
-		try:
-			data = self.collection.find({"email":email})
-			if data.count() >= 1:
-				self.name 		= data[0]["name"]
-				self.password 	= data[0]["password"]
-				self.email 		= email
-				self.identifier = str(data[0]["_id"])
-				self.permissions= data[0]["permissions"]
-				self.id         = data[0]["salesman_id"]
+    @permissions.setter
+    def permissions(self, value):
+        self._permissions = value
 
-				return self.ShowSuccessMessage("user initialized")
-			else:
-				raise
-		except Exception, e:
-			return self.ShowError("user : " + email + " not found")
+    @property
+    def user_type(self):
+        return self._user_type
 
-	def InitById(self, idd):
+    @user_type.setter
+    def user_type(self, value):
+        self._user_type = value
 
-		try:
-			data = self.collection.find({"_id":ObjectId(idd)})
-			if data.count() >= 1:
-				self.name 		= data[0]["name"]
-				self.password 	= data[0]["password"]
-				self.email 		= data[0]["email"]
-				self.identifier = str(data[0]["_id"])
-				self.permissions=  data[0]["permissions"]
-				self.id         = data[0]["salesman_id"]
+    @property
+    def permissions_name(self):
+        return self._permissions_name
 
-				return self.ShowSuccessMessage("user initialized")
-			else:
-				raise
-		except Exception, e:
-			return self.ShowError("user : " + idd + " not found")
+    @permissions_name.setter
+    def permissions_name(self, value):
+        self._permissions_name = value
 
-	def GetPermissions(self):
-		return self._permissions.FindPermissions(self.identifier)
+    @property
+    def cellars(self):
+        return self._cellars
+
+    @cellars.setter
+    def cellars(self, value):
+        self._cellars = value
+
+    @property
+    def cellars_name(self):
+        return self._cellars_name
+
+    @cellars_name.setter
+    def cellars_name(self, value):
+        self._cellars_name = value
+
+    @property
+    def type_id(self):
+        return self._type_id
+
+    @type_id.setter
+    def type_id(self, value):
+        self._type_id = value
+
+    def Print(self):
+        return {
+            "id":self.id,
+            "name":self.name,
+            "email":self.email,
+            "password":self.password,
+            "permissions":self.permissions,
+            "salesman_id":self.salesman_id,
+            "permissions_name":self.permissions_name,
+            "cellars":self.cellars,
+            "cellars_name":self.cellars_name,
+            "lastname":self.lastname
+        }
+
+    def Remove(self):
+        try:
+            return BaseModel.Remove(self)
+        except Exception, e:
+            return self.ShowError("error removing user {}".format(str(e)))
+
+    def Login(self, username, password):
+        # data = self.collection.find({"email":username, "password":password})
+
+        # if data.count() >= 1:
+        #   self.InitByEmail(username) ## init user
+        #   return True
+        # return False
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        q = '''\
+            select count(1) from "User" u 
+            inner join "User_Types" ut on ut.id = u.type_id
+            where u.email = %(email)s and %(password)s and ut.id = any(%(user_type)s)
+            limit 1'''
+        p = {
+            "email":username,
+            "password":password,
+            "user_type": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
+        }
+        try:
+            cur.execute(q,p)
+            existe = cur.fetchall()
+            if existe.rowcount > 0:
+                return True
+            else:
+                return False
+        except:
+            return False
+
+    def InitByEmail(self, email):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        q = '''\
+            select  u.*, 
+                    STRING_AGG(distinct p.name, ',') as permissions_name, 
+                    STRING_AGG(distinct c.id::text, ',') as cellars_name,
+                    ut.name as type,
+                    ut.id as type_id
+            from "User" u 
+            inner join "Permission" p on p.id = any(u.permissions) 
+            inner join "Cellar" c on c.id = any(u.cellar_permissions) 
+            inner join "User_Types" ut on ut.id = u.type_id
+            where u.email = %(email)s and ut.id = any(%(user_type)s)
+            group by u.id, ut.name, ut.id limit 1'''
+        p = {
+            "email":email,
+            "user_type": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
+        }
+        try:
+            cur.execute(q,p)
+            usuario = cur.fetchone()
+            if cur.rowcount > 0:
+                return self.ShowSuccessMessage(usuario)
+            else:
+                return self.ShowError("user : " + email + " not found")
+        except:
+            return self.ShowError("user : " + email + " not found")
+
+    def InitById(self, idd):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        q = '''\
+            select  u.*, 
+                    STRING_AGG(distinct p.name, ',') as permissions_name, 
+                    STRING_AGG(distinct c.id::text, ',') as cellars_name,
+                    ut.name as type,
+                    ut.id as type_id 
+            from "User" u 
+            inner join "Permission" p on p.id = any(u.permissions) 
+            inner join "Cellar" c on c.id = any(u.cellar_permissions) 
+            inner join "User_Types" ut on ut.id = u.type_id
+            where u.id = %(id)s and ut.id = any(%(user_type)s)
+            group by u.id, ut.name, ut.id limit 1'''
+        p = {
+            "id":idd,
+            "user_type": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
+        }
+        try:
+            cur.execute(q,p)
+            usuario = cur.fetchone()
+            return self.ShowSuccessMessage(usuario)
+        except:
+            return self.ShowError("user : " + idd + " not found")
+
+    def Save(self):
+
+        permisos = []
+
+        if self.type_id == '':
+            return self.ShowError("Debe seleccionar tipo de usuario")
+
+        if UserType.ADMINISTRADOR == int(self.type_id):
+            permisos = [
+                        Permission.ADM_USER, 
+                        Permission.API, 
+                        Permission.MOD_CELLAR, 
+                        Permission.SELL, 
+                        Permission.NEW_PROD,
+                        Permission.REPORT
+                       ]
+        elif UserType.BODEGA == int(self.type_id):
+            permisos = [
+                        Permission.MOD_CELLAR
+                       ]
+        elif UserType.GESTION == int(self.type_id):
+            permisos = [
+                        Permission.MOD_CELLAR, 
+                        Permission.SELL, 
+                        Permission.REPORT
+                       ]
+
+        usuario = []
+
+        if self.id != "":
+
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            q = '''select * from "User" where id = %(id)s limit 1'''
+            p = {
+                "id":self.id
+            }
+
+            try:
+                cur.execute(q,p)
+                usuario = cur.fetchall()
+                self.connection.commit()
+            except Exception, e:
+                return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cur.close()
+
+        if len(usuario) > 0:
+
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            q = '''update "User" set name = %(name)s,
+                                     lastname = %(lastname)s,
+                                     password = %(password)s,
+                                     email = %(email)s,
+                                     permissions = %(permissions)s,
+                                     type_id = %(type_id)s, 
+                                     cellar_permissions = %(cellar_permissions)s 
+                    where id = %(id)s'''
+            p = {
+                "name":self.name,
+                "email":self.email,
+                "permissions":permisos,
+                "password":self.password,
+                "id":self.id,
+                "type_id": self.type_id,
+                "cellar_permissions":self.cellars,
+                "lastname":self.lastname
+            }
+
+            try:
+                cur.execute(q,p)
+                self.connection.commit()
+                return self.ShowSuccessMessage(str(self.id))
+            except Exception, e:
+                return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cur.close()
+        else:
+
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            q = '''\
+                insert into "User" (name,
+                                    password,
+                                    email,
+                                    permissions,
+                                    type_id,
+                                    cellar_permissions,
+                                    lastname) 
+                values (%(name)s,
+                        %(password)s,
+                        %(email)s,
+                        %(permissions)s,
+                        %(type_id)s,
+                        %(cellar_permissions)s,
+                        %(lastname)s) 
+                returning id'''
+            p = {
+                "name":self.name,
+                "lastname":self.lastname,
+                "email":self.email,
+                "permissions":permisos,
+                "password":self.password,
+                "type_id": self.type_id,
+                "cellar_permissions":self.cellars
+            }
+
+            try:
+                cur.execute(q,p)
+                self.connection.commit()
+                self.id = cur.fetchone()["id"]
+                return self.ShowSuccessMessage(str(self.id))
+            except Exception, e:
+                return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cur.close()
 
 
-	def AssignPermission(self, permission):
-		## TODO: validate if permission exist
-		self._permissions.salesman_identifier 	= self.identifier
-		self._permissions.permission_identifier = permission
-		return self._permissions.Save()
+    def GetList(self, page, items):
 
+        page = int(page)
+        items = int(items)
+        offset = (page-1)*items
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        try:
+            q = '''\
+                select  u.*, 
+                        STRING_AGG(distinct p.name, ',') as permissions_name, 
+                        STRING_AGG(distinct c.id::text, ',') as cellars_name,
+                        ut.name as type,
+                        ut.id as type_id
+                from "User" u 
+                inner join "Permission" p on p.id = any(u.permissions) 
+                inner join "Cellar" c on c.id = any(u.cellar_permissions) 
+                inner join "User_Types" ut on ut.id = u.type_id
+                where ut.id = any(%(user_type)s)
+                group by u.id, ut.name, ut.id limit %(limit)s offset %(offset)s'''
+            p = {
+                "limit":items,
+                "offset":offset,
+                "user_type": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
+            }
+            cur.execute(q,p)
 
-	def RemovePermission(self, permission):
-		self._permissions.salesman_identifier = self.identifier
-		self._permissions.permission_identifier = permission
-		return self._permissions.RemovePermission()
-
-	def Save(self):
-		try:
-			# validate identifier
-			data = self.collection.find({"email" : self.email})
-
-			new_id = db.seq.find_and_modify(query={'seq_name':'salesman_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True)["id"]
-
-			if data.count() >= 1:
-
-				self.identifier = str(self.collection.update(
-					{"_id" : data[0]["_id"]},
-					{"$set" : {
-						"name" 		: self.name,
-						"password"  : self.password,
-						"email" 	: self.email,
-						"permissions": self.permissions
-					}}))
-
-				return self.ShowSuccessMessage(str(data[0]["_id"]))
-
-			#save the object and return the id
-			object_id = self.collection.insert(
-				{
-				"salesman_id": new_id,
-				"name" 		: self.name,
-				"password"  : self.password,
-				"email"  	: self.email,
-				"permissions": self.permissions
-				})
-
-			self.identifier = str(object_id)
-
-			return self.ShowSuccessMessage(str(object_id))
-		except Exception, e:
-			return self.ShowError("failed to save user " + self.email)
+            lista = cur.fetchall()
+            return lista
+        except Exception,e:
+            print str(e)
+            return {}

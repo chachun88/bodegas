@@ -5,14 +5,15 @@ Created on 13/12/2012
 '''
 import tornado
 
-from bson.objectid import ObjectId
-from model.basemodel import BaseModel
+from model10.basemodel import BaseModel
+
 
 class BaseHandler(tornado.web.RequestHandler):
+
     @property
     def db(self):
         return self.application.db
-    
+
     def __init__(self, application, request, **kwargs):
         tornado.web.RequestHandler.__init__(self, application, request, **kwargs)
 
@@ -21,34 +22,15 @@ class BaseHandler(tornado.web.RequestHandler):
     #           false if the token is invalid
     def ValidateToken(self):
 
-        access_token = ""
-        tokens_dict = dict()
-        c = 0
+        token = self.get_argument("token","")
+        bm = BaseModel()
+        response_obj = bm.ValidateToken(token)
 
-        # validate access token
-        try:
-            access_token = self.get_argument("token")
-            tokens_dict = self.db.access_token.find({"_id": ObjectId(access_token)})
-
-            if tokens_dict.count() > 1:
-                raise Exception("token error")
-
-            for token in tokens_dict:
-                # TODO: validate token and permissions
-                pass
-
-        except Exception, e:
-            # self.write(str(e))
-            self.write('{"error":"access token not found"}')
+        if "success" in response_obj:
+            return True
+        else:
+            # print response_obj["error"]
             return False
-
-        return True
-
-    def TryGetParam(self, arg_name, default_value):
-        try:
-            return self.get_argument(arg_name)
-        except Exception, e:
-            return default_value
 
     def RemoveItem(self, model, collection):
 
@@ -56,11 +38,11 @@ class BaseHandler(tornado.web.RequestHandler):
         if not self.ValidateToken():
             return ""
 
-        model.RemoveById(self.TryGetParam("id", ""), collection)
+        model.RemoveById(self.get_argument("id", ""), collection)
 
     def GetItem(self, model, collection):
         # validate access token
         if not self.ValidateToken():
             return ""
 
-        return model.FindById(self.TryGetParam("id", ""), collection)
+        return model.FindById(self.get_argument("id", ""), collection)

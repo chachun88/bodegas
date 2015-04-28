@@ -17,6 +17,7 @@ from model.base_model import BaseModel
 class Brand(BaseModel):
 
 	def __init__(self):
+		BaseModel.__init__(self)
 		self._identifier=""
 		self._name=""
 
@@ -38,37 +39,37 @@ class Brand(BaseModel):
 	def InitWithId(self, idd):
 		url = self.wsurl() + "/brand/find"
 
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&id=" + idd
 
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.identifier = str(data["_id"])
+		self.identifier = str(data["id"])
 		self.name = data["name"]
 
 	def InitWithName(self, name):
 		url = self.wsurl() + "/brand/find"
 
-		url += "?token=" + self.token()
+		url += "?token=" + self.token
 		url += "&name=" + name
 
 		json_string = urllib.urlopen(url).read()
 		data = json_util.loads(json_string)
 
-		self.identifier = str(data["_id"])
+		self.identifier = str(data["id"])
 		self.name = data["name"]	
 
 	def Remove(self):
 		if self.identifier!="":
 			url=self.wsurl() + "/brand/remove"
-			url+="?token=" + self.token()
+			url+="?token=" + self.token
 			url+="&id=" + self.identifier
 
 			urllib.urlopen(url)	
 
 	def Save(self):
-		url = self.wsurl()+"/brand/add?token=" + self.token()
+		url = self.wsurl()+"/brand/add?token=" + self.token
 
 		url += "&name=" + self.name		
 		url += "&id=" + self.identifier
@@ -77,7 +78,7 @@ class Brand(BaseModel):
 
 	def get_product_list(self):
 			
-		url = self.wsurl()+"/brand/list?token=" + self.token() + "&items=100"
+		url = self.wsurl()+"/brand/list?token=" + self.token + "&items=100"
 		content = urllib2.urlopen(url).read()
 
 		# parse content to array data
@@ -88,6 +89,6 @@ class Brand(BaseModel):
 		return data
 
 	def Search(self, query):
-		url = self.wsurl() + "/brand/search?token=" + self.token()
+		url = self.wsurl() + "/brand/search?token=" + self.token
 		url += "&q=" + query
 		return urllib.urlopen(url).read()

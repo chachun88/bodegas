@@ -7,13 +7,25 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from globals import token
-from globals import webservice_url
+import urllib
+
+from globals import webservice_url, appid
 
 class BaseModel(object):
 
-	def token(self):
-		return token
+    def __init__(self):
 
-	def wsurl(self):
-		return webservice_url
+        url = self.wsurl() + "/?appid={}".format(appid)
+        self._token = urllib.urlopen(url).read()
+
+    @property
+    def token(self):
+
+        if self._token == "":
+            url = self.wsurl() + "/?appid={}".format(appid)
+            self._token = urllib.urlopen(url).read()
+
+        return "{}".format(self._token)
+
+    def wsurl(self):
+        return webservice_url

@@ -3,9 +3,6 @@
 
 import os.path
 
-import pymongo
-import urllib
-
 import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
@@ -13,15 +10,14 @@ import tornado.options
 import tornado.web
 from tornado.options import define, options
 
-from basehandler import BaseHandler
-from globals import port, debugMode, carpeta_img, userMode, Menu, token, webservice_url
+from globals import port, Menu
 
 from home_handler import HomeHandler
 from home_handler import ProductRemoveHandler
 from home_handler import ProductLoadHandler, ProductOutHandler, ProductMassiveOutputHandler
 from login_handler import LoginHandler
 from login_handler import LoginPassHandler
-from product_add_handler import ProductAddHandler
+from product_add_handler import ProductAddHandler, FastEditHandler, ForSaleHandler, CheckStockHandler
 from product_add_handler import ProductEditHandler
 from product_list_handler import ProductListHandler
 from product_search_handler import ProductSearchHandler
@@ -31,7 +27,7 @@ from cellar_handler import CellarInputHandler
 from cellar_handler import CellarOutputHandler
 from cellar_handler import CellarDetailHandler, CellarComboboxHandler
 from cellar_handler import CellarEasyInputHandler
-from cellar_handler import CellarEasyOutputHandler
+from cellar_handler import CellarEasyOutputHandler, SelectForSaleHandler, SelectReservationHandler
 
 from order_handler import OrderHandler, AddOrderHandler, OrderActionsHandler
 
@@ -39,7 +35,7 @@ from cellar_add_handler import CellarAddHandler
 from cellar_remove_handler import CellarRemoveHandler
 
 from user_handler import UserHandler, UserRemoveHandler
-from user_add_handler import UserAddHandler, UserEditHandler
+from user_add_handler import UserAddHandler
 
 from report_handler import ReportHandler, ReportUploadHandler
 
@@ -49,12 +45,15 @@ from order_detail_handler import AddOrderDetailHandler, ListOrderDetailHandler
 
 from customer_handler import CustomerHandler, CustomerSaveHandler, CustomerActionsHandler, CustomerAddContactHandler, CustomerViewContactHandler, ContactActionsHandler, EditContactHandler
 
-#something
+import tag_handler
+import shipping_handler
+
+# something
 define("port", default=port, help="run on the given port", type=int)
+
 
 class Application(tornado.web.Application):
     def __init__(self):
-
 
         settings = dict(
             blog_title=u"Bodegas",
@@ -71,7 +70,7 @@ class Application(tornado.web.Application):
             (r"/auth/recover", LoginPassHandler),
 
             # products
-            #(r"/", HomeHandler),
+            # (r"/", HomeHandler),
             (r"/product", HomeHandler),
             (r"/product/out", ProductOutHandler),
             (r"/product/massiveoutput", ProductMassiveOutputHandler),
@@ -81,6 +80,9 @@ class Application(tornado.web.Application):
             (r"/product/edit", ProductEditHandler),
             (r"/product/remove", ProductRemoveHandler),
             (r"/product/search", ProductSearchHandler),
+            (r"/product/fastedit", FastEditHandler),
+            (r"/product/for_sale", ForSaleHandler),
+            (r"/product/checkstock", CheckStockHandler),
 
             # cellar
             (r"/cellar", CellarHandler),
@@ -92,13 +94,15 @@ class Application(tornado.web.Application):
             (r"/cellar/output", CellarOutputHandler),
             (r"/cellar/detail", CellarDetailHandler),
             (r"/cellar/combobox", CellarComboboxHandler),
+            (r"/cellar/selectforsale", SelectForSaleHandler),
+            (r"/cellar/selectreservation", SelectReservationHandler),
 
             # order
             (r"/order/list", OrderHandler),
             (r"/order/save", AddOrderHandler),
             (r"/orders/actions", OrderActionsHandler),
 
-            #order_detail
+            # order_detail
             (r"/order-detail/save", AddOrderDetailHandler),
             (r"/order-detail/list", ListOrderDetailHandler),
 
@@ -106,20 +110,20 @@ class Application(tornado.web.Application):
             (r"/user", UserHandler),
             (r"/user/add", UserAddHandler),
             (r"/user/remove", UserRemoveHandler),
-            (r"/user/edit", UserEditHandler),
+            (r"/user/edit", UserAddHandler),
 
-            #report
+            # report
             (r"/", ReportHandler),
             (r"/report/upload", ReportUploadHandler),
             (r"/report/download/([^/]+)", tornado.web.StaticFileHandler, {'path': 'uploads/'}),
 
-            #images
+            # images
             (r"/image/([^/]+)", ImageHandler),
             (r"/image", ImageHandler2),
             (r"/image/", ImageHandler2),
             (r"/imageremove", ImageDeleteHandler),
 
-            #customer
+            # customer
             (r"/customer", CustomerHandler),
             (r"/customer/save", CustomerSaveHandler),
             (r"/customer/actions", CustomerActionsHandler),
@@ -127,7 +131,20 @@ class Application(tornado.web.Application):
             (r"/customer/view_contact", CustomerViewContactHandler),
 
             (r"/contact/actions", ContactActionsHandler),
-            (r"/customer/edit_contact", EditContactHandler)
+            (r"/customer/edit_contact", EditContactHandler),
+
+            (r"/tag/list",              tag_handler.TagHandler),
+            (r"/tag/remove",            tag_handler.RemoveHandler),
+            (r"/tag/edit",              tag_handler.EditHandler),
+            (r"/tag/hideshow",          tag_handler.HideShowHandler),
+            (r"/tag/add",               tag_handler.AddHandler),
+
+            (r"/shipping/list",         shipping_handler.ListHandler),
+            (r"/shipping/save",         shipping_handler.SaveHandler),
+            (r"/shipping/savecity",     shipping_handler.AddCityHandler),
+            (r"/shipping/action",       shipping_handler.ActionHandler),
+            (r"/shipping/remove",       shipping_handler.RemoveHandler),
+            (r"/shipping/save_tracking",       shipping_handler.SaveTrackingCodeHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 
@@ -140,10 +157,9 @@ class Application(tornado.web.Application):
                                         ]},
                         {"class":"panel", "name":Menu.PRODUCTOS, "icon":"home", "link":"/product", 
                             "sub_menu":[
-                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_MASIVA, "link":"/product"},
-                                        {"class":"", "name":Menu.PRODUCTOS_SALIDA_MASIVA, "link":"/product/out"},
+                                        {"class":"", "name":Menu.PRODUCTOS_LISTA, "link":"/product/list"},
                                         {"class":"", "name":Menu.PRODUCTOS_CARGA, "link":"/product/add"},
-                                        {"class":"", "name":Menu.PRODUCTOS_LISTA, "link":"/product/list"}
+                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_MASIVA, "link":"/product/out"}
                                         ]},
                         {"class":"panel", "name":Menu.CLIENTES, "icon":"users", "link":"/",
                             "sub_menu":[
@@ -156,21 +172,30 @@ class Application(tornado.web.Application):
                         {"class":"panel", "name":Menu.BODEGAS, "icon":"table", "link":"/",
                             "sub_menu":[
                                         {"class":"", "name":Menu.BODEGAS_LISTAR, "link":"/cellar"},
-                                        {"class":"", "name":Menu.BODEGAS_AGREGAR, "link":"/cellar/add"}
+                                        {"class":"", "name":Menu.BODEGAS_AGREGAR, "link":"/cellar/add"},
+                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_STOCK, "link":"/product"}
+                                        ]},
+                        {"class":"panel", "name":Menu.CONFIGURACION, "icon":"cog", "link":"/",
+                            "sub_menu":[
+                                        {"class":"", "name":Menu.BODEGAS_FORSALE, "link":"/cellar/selectforsale"},
+                                        {"class":"", "name":Menu.BODEGAS_RESERVATION, "link":"/cellar/selectreservation"}
                                         ]},
                         {"class":"panel", "name":Menu.USUARIOS, "icon":"asterisk", "link":"/",
                             "sub_menu":[
                                         {"class":"", "name":Menu.USUARIOS_LISTAR, "link":"/user"},
                                         {"class":"", "name":Menu.USUARIOS_AGREGAR, "link":"/user/add"}
                                         ]},
+                        {"class":"panel", "name":Menu.TAGS, "icon":"tags", "link":"/",
+                            "sub_menu":[
+                                        {"class":"", "name":Menu.TAGS_LISTAR, "link":"/tag/list"},
+                                        {"class":"", "name":Menu.TAGS_ADD, "link":"/tag/add"}
+                                        ]},
+                        {"class":"panel", "name":Menu.SHIPPING, "icon":"plane", "link":"/",
+                            "sub_menu":[
+                                        {"class":"", "name":Menu.SHIPPING_LIST, "link":"/shipping/list"},
+                                        {"class":"", "name":Menu.SHIPPING_SAVE, "link":"/shipping/save"}
+                                        ]},
                         {"class":"panel", "name":Menu.SALIR, "icon":"sign-out", "link":"/auth/login"},]
-
-
-        ## initializing token
-        url = webservice_url + "/access_token?appid=100"
-        token = urllib.urlopen(url).read()
-        print token
-
 
 
 def main():

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from basemodel import BaseModel, db
+from basemodel import BaseModel
 
 class SalesmanPermission(BaseModel):
 	def __init__(self):
@@ -27,25 +27,46 @@ class SalesmanPermission(BaseModel):
 
 
 	def RemoveAllByUser(self):
-		try:
-			self.collection.remove({
-				"salesman_identifier":self.salesman_identifier
-				})
-			return self.ShowSuccessMessage("all permissions deleted")
-		except:
-			return self.ShowError("an error ocurred")
+		# try:
+		# 	self.collection.remove({
+		# 		"salesman_identifier":self.salesman_identifier
+		# 		})
+		# 	return self.ShowSuccessMessage("all permissions deleted")
+		# except:
+		# 	return self.ShowError("an error ocurred")
 
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		try:
+			q = '''update "User" set permissions = Array[] where id = %(id)s'''
+			p = {"id":self.salesman_identifier}
+			cur.execute(q,p)
+			self.connection.commit()
+			return self.ShowSuccessMessage("all permissions deleted")
+		except Exception,e:
+			return self.ShowError("an error ocurred, error:{}".format(str(e)))
 
 	def RemovePermission(self):
-		try:
-			self.collection.remove({
-									"salesman_identifier" : self.salesman_identifier,
-									"permission_identifier" : self.permission_identifier
-									})
+		# try:
+		# 	self.collection.remove({
+		# 							"salesman_identifier" : self.salesman_identifier,
+		# 							"permission_identifier" : self.permission_identifier
+		# 							})
 
-			return self.ShowSuccessMessage("permission deleted")
-		except:
-			return self.ShowError("permission cant be deleted")
+		# 	return self.ShowSuccessMessage("permission deleted")
+		# except:
+		# 	return self.ShowError("permission cant be deleted")
+
+		cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+		try:
+			q = '''update "User" set permissions = Array[] where id = %(id)s'''
+			p = {"id":self.salesman_identifier}
+			cur.execute(q,p)
+			self.connection.commit()
+			return self.ShowSuccessMessage("all permissions deleted")
+		except Exception,e:
+			return self.ShowError("permission cant be deleted, erro:{}".format(str(e)))
 
 	def Save(self):
 		try:

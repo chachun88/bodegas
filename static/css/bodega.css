@@ -7,7 +7,7 @@ th{
   min-height: 30px;
 }
 
-.btn-perm{
+.btn-perm,.btn-cellars{
   display:none;
 }
 
@@ -51,7 +51,7 @@ th{
 	cursor: pointer;
 }
 
-.btn-perm-bot, .btn-perm
+.btn-perm-bot, .btn-perm, .btn-cellars-bot, .btn-cellars
 {
 	cursor: pointer;
 }
@@ -80,4 +80,28 @@ th{
 
 .table-report{
 	 margin-top: 30px;
+}
+
+.table th.for_sale, .table td.for_sale{
+	line-height: 59px;
+}
+a.for_sale{
+	vertical-align: middle;
+	color: #666;
+	cursor: pointer;
+}
+i.disabled{
+	opacity: 0.3;
+}
+iframe.wysihtml5-sandbox{
+	height: 250px !important;
+}
+tr.special_row > td{
+	padding: 0 !important;
+}
+tr.special_row > td > div{
+	padding-top: 30px;
+}
+.select2-results {
+	max-height: 100px;
 }

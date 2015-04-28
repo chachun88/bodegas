@@ -16,16 +16,22 @@ class SaveHandler(BaseHandler):
 
         contact = Contact()
         contact.name = self.get_argument("name","")
-        contact.type = self.get_argument("type","")
+        contact.type_id = self.get_argument("type_id","")
         contact.telephone = self.get_argument("telephone","")
         contact.email = self.get_argument("email","")
-        contact.customer_id = self.get_argument("customer_id","")
+        contact.user_id = self.get_argument("user_id","")
         contact.address = self.get_argument("address","")
         contact.id = self.get_argument("id","")
 
-        oid = str(contact.Save())
+        contact.type = self.get_argument("type","")
+        contact.lastname = self.get_argument("lastname","")
+        contact.city = self.get_argument("city","")
+        contact.zip_code = self.get_argument("zip_code","")
+        contact.additional_info = self.get_argument("additional_info","")
+        contact.town = self.get_argument("town","")
+        contact.rut = self.get_argument("rut","")
 
-        self.write(oid)
+        self.write(json_util.dumps(contact.Save()))
 
 class EditHandler(BaseHandler):
 
@@ -36,16 +42,22 @@ class EditHandler(BaseHandler):
 
         contact = Contact()
         contact.name = self.get_argument("name","")
-        contact.type = self.get_argument("type","")
+        contact.type_id = self.get_argument("type_id","")
         contact.telephone = self.get_argument("telephone","")
         contact.email = self.get_argument("email","")
-        contact.customer_id = self.get_argument("customer_id","")
+        contact.user_id = self.get_argument("user_id","")
         contact.address = self.get_argument("address","")
         contact.id = self.get_argument("id","")
 
-        oid = str(contact.Edit())
+        contact.type = self.get_argument("type","")
+        contact.lastname = self.get_argument("lastname","")
+        contact.city = self.get_argument("city","")
+        contact.zip_code = self.get_argument("zip_code","")
+        contact.additional_info = self.get_argument("additional_info","")
+        contact.town = self.get_argument("town","")
+        contact.rut = self.get_argument("rut","")
 
-        self.write(oid)
+        self.write(json_util.dumps(contact.Edit()))
 
 class RemoveHandler(BaseHandler):
     def post(self):
@@ -54,7 +66,7 @@ class RemoveHandler(BaseHandler):
             return
 
         contact = Contact()
-        contact.Remove(self.get_argument("ids", ""))
+        self.write(json_util.dumps(contact.Remove(self.get_argument("ids", ""))))
 
 class ChangeStateHandler(BaseHandler):
 
@@ -79,14 +91,13 @@ class ListByCustomerIdHandler(BaseHandler):
         if not self.ValidateToken():
             return
 
-        customer_id = self.get_argument("customer_id","")
+        user_id = self.get_argument("user_id","")
 
-        if customer_id != "":
+        if user_id != "":
             contact = Contact()
-            str_res = json_util.dumps(contact.ListByCustomerId(customer_id))
-            self.write(str_res)
+            self.write(json_util.dumps(contact.ListByCustomerId(user_id)))
         else:
-            self.write("Debe ingresar id de cliente")
+            self.write(json_util.dumps({"error":"Debe ingresar id de cliente"}))
 
 class InitByIdHandler(BaseHandler):
 
@@ -99,3 +110,14 @@ class InitByIdHandler(BaseHandler):
         contact = Contact()
         str_res = json_util.dumps(contact.InitById(contact_id))
         self.write(str_res)
+
+class GetTypesHandler(BaseHandler):
+
+    def post(self):
+
+        if not self.ValidateToken():
+            return
+
+        contact = Contact()
+        self.write(json_util.dumps(contact.GetTypes()))
+

@@ -107,8 +107,16 @@ class Customer(BaseModel):
     def password(self, value):
         self._password = value
     
+    @property
+    def email(self):
+        return self._email
+    @email.setter
+    def email(self, value):
+        self._email = value
+    
 
     def __init__(self):
+        BaseModel.__init__(self)
         self._id = ""
         self._name = ""
         self._lastname = ""
@@ -123,13 +131,14 @@ class Customer(BaseModel):
         self._last_view = ""
         self._username = ""
         self._password = ""
+        self._email = ""
 
     def Save(self):
 
         url = self.wsurl() + "/customer/save"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "name":self.name,
         "type":self.type,
         "rut":self.rut,
@@ -143,32 +152,36 @@ class Customer(BaseModel):
         "contact":self.contact,
         "username":self.username,
         "password":self.password,
-        "id":self.id
+        "id":self.id,
+        "email":self.email
         }
 
         post_data = urllib.urlencode(data)
 
-        return urllib.urlopen(url, post_data).read()
+        response_str = urllib.urlopen(url, post_data).read()
+        response_obj = json_util.loads(response_str)
+        return response_obj
 
 
     def Remove(self, _id):
         url = self.wsurl() + "/customer/remove"
         data = {
-        "token":self.token(),
+        "token":self.token,
         "ids":_id
         }
 
         post_data = urllib.urlencode(data)
-        json_string = urllib.urlopen(url, post_data).read()
-
-        print json_string
+        
+        response_str = urllib.urlopen(url, post_data).read()
+        response_obj = json_util.loads(response_str)
+        return response_obj
 
     def InitById(self, idd):
         
         url = self.wsurl() + "/customer/initbyid"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "id":idd
         }
 
@@ -177,21 +190,33 @@ class Customer(BaseModel):
 
         json_obj =  json_util.loads(json_string)
 
-        self.id = json_obj["id"]
-        self.status = json_obj["status"]
-        self.lastname = json_obj["lastname"]
-        self.name = json_obj["name"]
-        self.rut = json_obj["rut"]
-        self.type = json_obj["type"]
-        self.bussiness = json_obj["bussiness"]
-        self.registration_date = json_obj["registration_date"]
-        self.first_view = json_obj["first_view"]
-        self.last_view = json_obj["last_view"]
-        self.approval_date = json_obj["approval_date"]
-        if "contact" in json_obj:
-            self.contact = json_obj["contact"]
-        self.username = json_obj["username"]
-        self.password = json_obj["password"]
+        if "success" in json_obj:
+
+            data = json_obj["success"]
+
+            self.id = data["id"]
+            self.status = data["status"]
+            self.lastname = data["lastname"]
+            self.name = data["name"]
+            self.rut = data["rut"]
+            self.type = data["type"]
+            self.bussiness = data["bussiness"]
+            self.registration_date = data["registration_date"]
+            self.first_view = data["first_view"]
+            self.last_view = data["last_view"]
+            self.approval_date = data["approval_date"]
+            self.email = data["email"]
+            if "contact" in data:
+                self.contact = data["contact"]
+            # self.username = data["username"]
+            self.password = data["password"]
+
+            return "ok"
+
+        else:
+
+            return json_obj["error"]
+
 
 
     def List(self, page=1, items=20):
@@ -199,7 +224,7 @@ class Customer(BaseModel):
         url = self.wsurl() + "/customer"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "page":page,
         "items":items
         }
@@ -216,12 +241,44 @@ class Customer(BaseModel):
         url = self.wsurl() + "/customer/changestate"
 
         data = {
-        "token":self.token(),
+        "token":self.token,
         "ids":ids,
         "state":state
         }
 
         post_data = urllib.urlencode(data)
-        urllib.urlopen(url, post_data).read()
+        response = json_util.loads(urllib.urlopen(url, post_data).read())
 
-        
+        print response
+
+    def GetTypes(self):
+
+        url = self.wsurl() + "/customer/gettypes"
+
+        data = {
+        "token":self.token
+        }
+
+        post_data = urllib.urlencode(data)
+
+        json_string = urllib.urlopen(url, post_data).read()
+        json_obj = json_util.loads(json_string)
+
+        return json_obj
+
+    def getTotalPages(self, page, items):
+
+        url = self.wsurl() + "/customer/gettotalpages"
+
+        data = {
+            "token" : self.token,
+            "page" : page,
+            "items" : items
+        }
+
+        post_data = urllib.urlencode(data)
+
+        json_string = urllib.urlopen(url, post_data).read()
+        json_obj = json_util.loads(json_string)
+
+        return json_obj

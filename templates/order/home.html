@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 
-{% block title %}Listado de productos {% end %}
-{% block caption %}se muestra una lista general de todos los productos{% end %}
+{% block title %}Listado de pedidos {% end %}
+{% block caption %}se muestra una lista general de todos los pedidos{% end %}
 {% block javascript %}
 <script type="text/javascript" src="/static/js/order_list.js"></script>
 {% end %}
@@ -10,14 +10,31 @@
 {% if dn == "bpf" %}
 <div class="alert alert-warning alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Problema al eliminar producto!</strong> aún quedan productos en bodega.
+	<strong><i class="fa fa-check"></i> Problema al eliminar el pedido!</strong> aún quedan pedidos.
 </div>
 {% elif dn == "bpt" %}
 <div class="alert alert-success alert-success-nohidden">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado producto.
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se ha eliminado el pedido.
 </div>
 {% end %}
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">N&uacute;meros de seguimiento</h4>
+      </div>
+      <div class="modal-body">
+        <form id="shipping-tracking" class="form-inline" action="/shipping/save_tracking" method="get"></form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick='return ValidateTracking()'>Guardar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <div class="col-md-12">
 	<section class="widget">
@@ -32,9 +49,10 @@
 							class="chzn-select select-block-level" id="default-select">
 								<option value=""></option>
 								<option value="1">Eliminar</option>
-								<option value="2">Aceptado</option>
-								<option value="3">Despachado</option>
-								<option value="4">Pendiente</option>
+								<option value="2">Confirmado</option>
+								<option value="3">Listo para despacho</option>
+								<option value="4">Despachado</option>
+								<option value="5">Cancelado</option>
 							</select>
 						</th>
 						<th>
@@ -52,14 +70,15 @@
 						<th>Cliente</th>
 						<th>Tipo</th>
 						<th>Origen</th>
-						<th>Direcci&oacute;n</th>
-						<th>Comuna</th>
-						<th>Ciudad</th>
-						<th>Pa&iacute;s</th>
-						<th>Cantidad Items</th>
-						<th>Cantidad Productos</th>
+						<!--<th>Direcci&oacute;n</th>
+						 <th>Comuna</th>
+						<th>Ciudad</th> -->
+						<!-- <th>Pa&iacute;s</th> -->
+						<th>Cantidad <br/>Items</th>
+						<th>Cantidad <br/>Productos</th>
 						<th>Total</th>
 						<th>Status</th>
+						<th>Tipo<br/>Pago</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -67,60 +86,72 @@
 					{% for p in pedidos %}
 					<tr>
 						<td>
-							<input type="checkbox" name="pedidos" class="iCheck" value="{{p['id']}}">
+							<input type="checkbox" name="pedidos" class="iCheck" value="{{p['order_id']}}" tracking-code="{{p['tracking_code']}}">
 						</td>
 						<td>
-							{{p["id"]}}
+							{{p["order_id"]}}
 						</td>
 						<td>
-							{{p["date"]}}
+							{{CustomDateFormat(p["date"])}}
 						</td>
 						<td>
 							{{p["customer"]}}
 						</td>
 						<td>
-							{{p["type"]}}
+							{{ p["tipo_cliente"] }}
 						</td>
 						<td>
 							{{p["source"]}}
 						</td>
 						<td>
-							{{p["address"]}}
-						</td>
-						<td>
-							{{p["town"]}}
-						</td>
-						<td>
-							{{p["city"]}}
-						</td>
-						<td>
-							{{p["country"]}}
-						</td>
-						<td>
 							{{p["items_quantity"]}}
 						</td>
 						<td>
-							{{p["product_quantity"]}}
+							{{p["products_quantity"]}}
 						</td>
 						<td>
-							{{p["total"]}}
+							{{money_format(p["total"])}}
 						</td>
 						<td>
-							{% if int(p["state"]) == 0 %}
-								PENDIENTE
-							{% elif int(p["state"]) == 1 %}
-								ACEPTADO
-							{% elif int(p["state"]) == 1 %}
-								DESPACHADO
+							{% if int(p["state"]) == 1 %}
+								{% if int(p["payment_type"]) == 1 %}
+									<span class="label label-warning">POR CONFIRMAR</span>
+								{% elif int(p["payment_type"]) == 2 %}
+									<span class="label label-warning">RECHAZADO</span>
+								{% end %}
+							{% elif int(p["state"]) == 2 %}
+								<span class="label label-important">CONFIRMADO</span>
+							{% elif int(p["state"]) == 3 %}
+								<span class="label label-info">LISTO PARA DESPACHO</span>
+							{% elif int(p["state"]) == 4 %}
+								<span class="label label-success">DESPACHADO</span>
+							{% else %}
+								<span class="label label-default">CANCELADO</span>
 							{% end %}
 						</td>
 						<td>
-							<button type="button" class="btn btn-primary" onclick="location.href='/order-detail/list?order_id={{p['id']}}'">Ver Detalle</button>
+							{% if int(p["payment_type"]) == 1 %}
+								TRANSFERENCIA
+							{% elif int(p["payment_type"]) == 2 %}
+								WEBPAY
+							{% end %}
+						</td>
+						<td>
+							<button type="button" class="btn btn-primary" onclick="location.href='/order-detail/list?order_id={{p['order_id']}}'">Ver Detalle</button>
 						</td>
 					</tr>
 					{% end %}
 				</tbody>
 			</table>
+			
+		</div>
+		<div class="body text-center">
+			{% if int(page) != 1 %}
+				<a href="?page={{int(page)-1}}">Anterior</a>
+			{% end %}
+			{% if int(total_pages) > int(page) %}
+				<a href="?page={{int(page)+1}}">Siguiente</a>
+			{% end %}
 		</div>
 	</section>
 </div>

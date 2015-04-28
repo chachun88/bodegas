@@ -32,15 +32,13 @@
 				<thead>
 					<tr>
 						<th></th>
-						<th>ID</th>
 						<th>estado</th>
 						<th>nombre</th>
-						<th>apellido</th>
 						<th>rut</th>
 						<th>tipo</th>
 						<th>giro</th>
 						<th>fecha registro</th>
-						<th>primera visita</th>
+						<!-- <th>primera visita</th> -->
 						<th>&Uacute;ltima visita</th>
 						<th></th>
 					</tr>
@@ -51,9 +49,7 @@
 						<td>
 							<input type="checkbox" name="clientes" class="iCheck" value="{{c['id']}}">
 						</td>
-						<td>
-							{{c["id"]}}
-						</td>
+						
 						<td>
 							{% if int(c["status"]) == 1 %}
 							PENDIENTE
@@ -65,9 +61,6 @@
 							{{c["name"]}}
 						</td>
 						<td>
-							{{c["lastname"]}}
-						</td>
-						<td>
 							{{c["rut"]}}
 						</td>
 						<td>
@@ -77,23 +70,34 @@
 							{{c["bussiness"]}}
 						</td>
 						<td>
-							{{c["registration_date"]}}
+							{{CustomDateFormat(c["registration_date"])}}
 						</td>
 						<td>
-							{{c["first_view"]}}
+							{{CustomDateFormat(c["last_view"])}}
 						</td>
 						<td>
-							{{c["last_view"]}}
-						</td>
-						<td>
-							<a class="btn btn-primary" href="/customer/add_contact?customer_id={{c['id']}}">Agregar Contacto</a>
-							<a class="btn btn-primary" href="/customer/view_contact?customer_id={{c['id']}}">Ver Contactos</a>
-							<a class="btn btn-primary" href="/customer/save?id={{c['id']}}">Editar</a>
+							<p>
+								<a class="btn btn-sm btn-success" href="/customer/view_contact?user_id={{c['id']}}">Ver Contactos</a>
+							</p>
+							<p>
+								<a class="btn btn-sm btn-info" href="/customer/add_contact?user_id={{c['id']}}">Agregar Contacto</a>
+							</p>
+							<p>
+								<a class="btn btn-sm btn-primary" href="/customer/save?id={{c['id']}}">Editar</a>
+							</p>
 						</td>
 					</tr>
 					{% end %}
 				</tbody>
 			</table>
+		</div>
+		<div class="body text-center">
+			{% if int(page) != 1 %}
+				<a href="?page={{int(page)-1}}">Anterior</a>
+			{% end %}
+			{% if int(total_pages) > int(page) %}
+				<a href="?page={{int(page)+1}}">Siguiente</a>
+			{% end %}
 		</div>
 	</section>
 </div>
