@@ -316,8 +316,6 @@ class Product(BaseModel):
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        sizes = self.size.split(',')
-
         q = '''select count(*) as cantidad from "Product" where sku = %(sku)s'''
         p = {
             "sku": self.sku
@@ -372,7 +370,6 @@ class Product(BaseModel):
                 "description": self.description,
                 "brand": self.brand,
                 "manufacturer": self.manufacturer,
-                "size": sizes,
                 "color": self.color,
                 "material": self.material,
                 "bullet_1": self.bullet_1,
@@ -418,7 +415,7 @@ class Product(BaseModel):
 
             sizes_id = []
 
-            for size in sizes:
+            for size in self.size:
 
                 if size.strip() != "":
                     _size = Size()
@@ -433,6 +430,11 @@ class Product(BaseModel):
                 ps = Product_Size()
                 ps.product_sku = self.sku
                 ps.size_id = size_id
+
+                res_remove = ps.removeNonExisting(sizes_id)
+
+                if "error" in res_remove:
+                    return self.ShowError(res_remove["error"])
 
                 res_ps = ps.save()
 
@@ -498,7 +500,6 @@ class Product(BaseModel):
                 "description": self.description,
                 "brand": self.brand,
                 "manufacturer": self.manufacturer,
-                "size": sizes,
                 "color": self.color,
                 "material": self.material,
                 "bullet_1": self.bullet_1,
@@ -536,7 +537,7 @@ class Product(BaseModel):
 
             sizes_id = []
 
-            for size in sizes:
+            for size in self.size:
 
                 if size.strip() != "":
                     _size = Size()
@@ -551,6 +552,11 @@ class Product(BaseModel):
                 ps = Product_Size()
                 ps.product_sku = self.sku
                 ps.size_id = size_id
+
+                res_remove = ps.removeNonExisting(sizes_id)
+
+                if "error" in res_remove:
+                    return self.ShowError(res_remove["error"])
 
                 res_ps = ps.save()
 
@@ -674,7 +680,7 @@ class Product(BaseModel):
 
                 sizes_id = []
 
-                for size in sizes:
+                for size in self.size:
 
                     if size.strip() != "":
                         _size = Size()
@@ -689,6 +695,10 @@ class Product(BaseModel):
                     ps = Product_Size()
                     ps.product_sku = self.sku
                     ps.size_id = size_id
+                    res_remove = ps.removeNonExisting(sizes_id)
+
+                    if "error" in res_remove:
+                        return self.ShowError(res_remove["error"])
 
                     res_ps = ps.save()
 

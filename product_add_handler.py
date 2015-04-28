@@ -187,7 +187,7 @@ class ProductAddHandler(BaseHandler):
             prod.description = self.get_argument("description", "")
             prod.brand      = self.get_argument("brand", "").encode('utf-8')
             prod.manufacturer = self.get_argument("manufacturer", "")
-            prod.size        = ",".join(self.get_arguments("size"))
+            prod.size        = self.get_arguments("size")
             prod.color      = self.get_argument("color", "")
             prod.material   = self.get_argument("material", "")
             prod.bullet_1   = self.get_argument("bullet_1", "")
@@ -212,6 +212,8 @@ class ProductAddHandler(BaseHandler):
             # print self.get_arguments("tags")
 
             res_save = prod.Save()
+
+            print res_save
 
             if "success" in res_save:
                 self.redirect("/product/list")

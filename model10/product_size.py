@@ -85,3 +85,24 @@ class Product_Size(BaseModel):
         finally:
             self.connection.close()
             cursor.close()        
+
+    def removeNonExisting(self, sizes_id):
+
+        cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''delete from "Product_Size" where product_sku = %(product_sku)s and not (size_id = ANY (%(sizes_id)s))'''
+        parameters = {
+            "product_sku" : self.product_sku,
+            "sizes_id": sizes_id
+        }
+
+        try:
+            cursor.execute(query, parameters)
+            self.connection.commit()
+
+            return self.ShowSuccessMessage("Existing remove successfully")
+        except Exception, e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cursor.close()
