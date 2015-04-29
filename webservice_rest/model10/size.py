@@ -135,7 +135,7 @@ class Size(BaseModel):
             talla = cur.fetchone()
             self.id = talla["id"]
 
-            return self.ShowSuccessMessage("Size have been successfully created")
+            return self.ShowSuccessMessage(self.name)
 
         except Exception, e:
 

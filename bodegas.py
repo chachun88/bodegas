@@ -22,7 +22,7 @@ from product_add_handler import ProductEditHandler
 from product_list_handler import ProductListHandler
 from product_search_handler import ProductSearchHandler
 
-from cellar_handler import CellarHandler
+from cellar_handler import CellarHandler, CellarEasyHandler
 from cellar_handler import CellarInputHandler
 from cellar_handler import CellarOutputHandler
 from cellar_handler import CellarDetailHandler, CellarComboboxHandler
@@ -96,6 +96,7 @@ class Application(tornado.web.Application):
             (r"/cellar/combobox", CellarComboboxHandler),
             (r"/cellar/selectforsale", SelectForSaleHandler),
             (r"/cellar/selectreservation", SelectReservationHandler),
+            (r"/cellar/easy", CellarEasyHandler),
 
             # order
             (r"/order/list", OrderHandler),
@@ -173,7 +174,8 @@ class Application(tornado.web.Application):
                             "sub_menu":[
                                         {"class":"", "name":Menu.BODEGAS_LISTAR, "link":"/cellar"},
                                         {"class":"", "name":Menu.BODEGAS_AGREGAR, "link":"/cellar/add"},
-                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_STOCK, "link":"/product"}
+                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_STOCK, "link":"/product"},
+                                        {"class":"", "name":Menu.BODEGAS_FACIL, "link": "/cellar/easy"}
                                         ]},
                         {"class":"panel", "name":Menu.CONFIGURACION, "icon":"cog", "link":"/",
                             "sub_menu":[

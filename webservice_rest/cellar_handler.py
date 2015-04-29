@@ -276,3 +276,15 @@ class GetReservationCellarHandler(BaseHandler):
 
         cellar = Cellar()
         self.write(json_util.dumps(cellar.GetReservationCellar()))
+
+
+class LastKardexHandler(BaseHandler):
+
+    def post(self):
+
+        product_sku = self.get_argument("product_sku", "")
+        cellar_identifier = self.get_argument("cellar_identifier", "")
+        size_id = self.get_argument("size_id", "")
+
+        kardex = Kardex()
+        self.write(json_util.dumps(kardex.FindKardex(product_sku, cellar_identifier, size_id)))

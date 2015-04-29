@@ -465,3 +465,122 @@ class SelectReservationHandler(BaseHandler):
             self.write(json_util.dumps(cellar.SelectReservation(cellar_id)))
         else:
             self.write(json_util.dumps({"error":"Cellar id is not valid"}))
+
+
+class CellarEasyHandler(BaseHandler):
+
+    @tornado.web.authenticated
+    def get(self):
+        cellar = Cellar()
+        res_list = cellar.List(1, 100)
+
+        cellar_list = []
+
+        if "success" in res_list:
+            cellar_list = res_list["success"]
+
+        product = Product()
+        res_lista = product.get_product_list()
+        lista = []
+
+        if "success" in res_lista:
+            lista = res_lista["success"]
+
+        size = Size()
+        res_tallas = size.list()
+        tallas = []
+
+        if "success" in res_tallas:
+            tallas = res_tallas["success"]
+
+        self.render("cellar/easy.html", 
+                    operation="Entradas ", 
+                    opp="in", 
+                    side_menu=self.side_menu, 
+                    cellar_list=res_list, 
+                    product_list=json_util.dumps(lista), 
+                    products=lista,
+                    tallas=tallas)
+
+    @tornado.web.authenticated
+    def post(self):
+
+        cellar_id = self.get_argument("cellar_id", "")
+        sku = self.get_argument("sku", "")
+        quantity = self.get_argument("quantity", "")
+        price = self.get_argument("price", "")
+        size = self.get_argument("size", "")
+        operation = self.get_argument("operation", "")
+        new_cellar = self.get_argument("new_cellar", "")
+
+        _size = Size()
+        _size.name = size
+        res_size_name = _size.initByName()
+
+        if "error" in res_size_name:
+            self.write(json_util.dumps({"state": "error", "message": res_size_name["error"]}))
+        else:
+            cellar = Cellar()
+            cellar.InitWithId(cellar_id)
+
+            product = Product()
+            product.InitWithSku(sku)
+
+            res_product_find = cellar.GetLastKardex(sku, cellar_id, _size.identifier)
+
+            units = 0
+            balance_price = 0
+
+            print res_product_find
+
+            if "success" in res_product_find:
+
+                product_find = res_product_find["success"]
+                units = product_find["balance_units"]
+                balance_price = product_find["balance_price"]
+
+            if operation == "buy":
+
+                res_add_product = cellar.AddProducts(sku, quantity, price, size, product.color, Kardex.OPERATION_BUY, self.get_user_email())
+
+                if "success" in res_add_product:
+                    self.write(json_util.dumps({"state": "ok", "message": "Stock agregado exitosamente"}))
+                else:
+                    self.write(json_util.dumps({"state": "error", "message": res_add_product["error"]}))
+            else:
+
+                if int(units) >= int(quantity): 
+
+                    if operation == "mov":
+
+                        res_remove = cellar.RemoveProducts(sku, quantity, balance_price, size, product.color, Kardex.OPERATION_MOV_OUT, self.get_user_email())
+
+                        if "success" in res_remove:
+                            cellar2 = Cellar()
+                            cellar2.InitWithId(new_cellar)
+
+                            res_add_product = cellar2.AddProducts(sku, quantity, balance_price, size, product.color, Kardex.OPERATION_MOV_IN, self.get_user_email())
+
+                            if "success" in res_add_product:
+                                self.write(json_util.dumps({"state": "ok", "message": "Stock movido exitosamente"}))
+                            else:
+                                self.write(json_util.dumps({"state": "error", "message": res_add_product["error"]}))
+                        else:
+                            self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))                        
+
+                    else:
+
+                        res_remove = cellar.RemoveProducts(sku, quantity, price, size, product.color, Kardex.OPERATION_SELL, self.get_user_email())
+
+                        if "success" in res_remove:
+                            self.write(json_util.dumps({"state": "ok", "message": "Stock sacado exitosamente"}))
+                        else:
+                            self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))
+
+                else:
+                    self.write(json_util.dumps({"state": "error", "message": "Stock insuficiente"}))
+
+
+    ## invalidate xsfr cookie for ajax use
+    def check_xsrf_cookie(self):
+        pass

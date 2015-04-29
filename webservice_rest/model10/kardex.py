@@ -179,7 +179,7 @@ class Kardex(BaseModel):
             self.user = kardex["user"]
             self.cellar_identifier = kardex["cellar_id"]
 
-            return self.ShowSuccessMessage("ok")
+            return self.ShowSuccessMessage(kardex)
 
         except Exception,e:
             return self.ShowError(str(e))

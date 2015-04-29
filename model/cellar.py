@@ -228,7 +228,26 @@ class Cellar(BaseModel):
         url = self.wsurl() + "/cellar/getreservationcellar"
 
         data = {
-        "token":self.token
+            "token":self.token
+        }
+
+        post_data = urllib.urlencode(data)
+
+        response_str = urllib.urlopen(url, post_data).read()
+
+        response_obj = json_util.loads(response_str)
+
+        return response_obj
+
+    def GetLastKardex(self, product_sku, cellar_identifier, size_id):
+
+        url = self.wsurl() + "/cellar/lastkardex"
+
+        data = {
+            "token":self.token,
+            "product_sku": product_sku,
+            "cellar_identifier": cellar_identifier,
+            "size_id": size_id
         }
 
         post_data = urllib.urlencode(data)
