@@ -8,7 +8,7 @@ from category import Category
 import psycopg2
 import psycopg2.extras
 from model10.product_size import Product_Size
-
+import math
 
 class Product(BaseModel):
 
@@ -311,7 +311,7 @@ class Product(BaseModel):
         except Exception, e:
             return self.ShowError("not found {}".format(str(e)))
 
-    def Save(self):
+    def Save(self, masive=False):
 
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
@@ -431,10 +431,11 @@ class Product(BaseModel):
                 ps.product_sku = self.sku
                 ps.size_id = size_id
 
-                res_remove = ps.removeNonExisting(sizes_id)
+                if not masive:
+                    res_remove = ps.removeNonExisting(sizes_id)
 
-                if "error" in res_remove:
-                    return self.ShowError(res_remove["error"])
+                    if "error" in res_remove:
+                        return self.ShowError(res_remove["error"])
 
                 res_ps = ps.save()
 
@@ -553,10 +554,11 @@ class Product(BaseModel):
                 ps.product_sku = self.sku
                 ps.size_id = size_id
 
-                res_remove = ps.removeNonExisting(sizes_id)
+                if not masive:
+                    res_remove = ps.removeNonExisting(sizes_id)
 
-                if "error" in res_remove:
-                    return self.ShowError(res_remove["error"])
+                    if "error" in res_remove:
+                        return self.ShowError(res_remove["error"])
 
                 res_ps = ps.save()
 
@@ -695,7 +697,9 @@ class Product(BaseModel):
                     ps = Product_Size()
                     ps.product_sku = self.sku
                     ps.size_id = size_id
-                    res_remove = ps.removeNonExisting(sizes_id)
+
+                    if not masive:
+                        res_remove = ps.removeNonExisting(sizes_id)
 
                     if "error" in res_remove:
                         return self.ShowError(res_remove["error"])
@@ -917,6 +921,29 @@ class Product(BaseModel):
         except Exception, e:
             return self.ShowError("getting list of products, {}".format(str(e)))
 
+        finally:
+            cur.close()
+            self.connection.close()
+
+    def GetListTotalPages(self, items=30):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        try:
+            q = '''select p.id from "Product" p 
+            inner join "Category" c on c.id = p.category_id 
+            inner join "Product_Size" ps on ps.product_sku = p.sku
+            inner join "Size" s on s.id = ps.size_id
+            group by p.id, c.name'''
+
+            cur.execute(q)
+            total_items = float(cur.rowcount)
+            items = float(items)
+            total_page = math.ceil(total_items/items)
+            return self.ShowSuccessMessage(total_page)
+
+        except Exception, e:
+            return self.ShowError("getting total pages of list of products, {}".format(str(e)))
         finally:
             cur.close()
             self.connection.close()

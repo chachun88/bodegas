@@ -223,8 +223,8 @@ class ProductLoadHandler(BaseHandler):
                 #     print "product name : {}".format(prod.name)
 
                 prod.size = ",".join(tallas)
-                print prod.size
-                res_save = prod.Save("one")
+                # print prod.size
+                res_save = prod.Save(True)
 
                 if debugMode:
                     if "error" in res_save:

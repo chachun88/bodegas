@@ -18,13 +18,29 @@ class ProductListHandler(BaseHandler):
     def get(self):
         self.set_active(Menu.PRODUCTOS_LISTA)  # change menu active item
 
+        page = self.get_argument("page", 1)
+        items = self.get_argument("items", 30)
+
         product = Product()
         product_list = []
 
-        res_list = product.GetList()
+        res_list = product.GetList(page, items)
 
         if "success" in res_list:
             product_list = res_list["success"]
 
-        self.render("product/list.html", dn="", side_menu=self.side_menu,
-                    product_list=product_list)
+        total_pages = 0
+
+        res_total_pages = product.GetListTotalPages(items)
+
+        if "success" in res_total_pages:
+            total_pages = res_total_pages["success"]
+
+        print total_pages
+
+        self.render("product/list.html", 
+                    dn="", 
+                    side_menu=self.side_menu,
+                    product_list=product_list,
+                    page=page,
+                    total_pages=float(total_pages))
