@@ -15,6 +15,9 @@
             <li>
                 <a href="#salida" data-toggle="tab">Salida</a>
             </li>
+            <li>
+                <a href="#movimiento" data-toggle="tab">Movimiento</a>
+            </li>
         </ul>
     </header>
     <div class="body tab-content">
@@ -150,6 +153,91 @@
                                         tabindex="-1" 
                                         id="cellar_id" 
                                         name="cellar_id">
+                                    {% for c in cellar_list %}
+                                        <option value="{{c['id']}}">{{c['name']}}</option>
+                                    {% end %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="" class="control-label"></label>
+                        <div class="controls form-group">
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div id="movimiento" class="tab-pane">
+            <form action="/cellar/easy" class="form-easy form-horizontal" method="post" >
+                <fieldset>
+                    <legend class="section">Mover a otra bodega</legend>
+                    <input type="hidden" name="operation" value="mov">
+                    <input type="hidden" id="product_list" value="{{product_list}}">
+                    <div class="control-group">
+                        <label for="" class="control-label">Sku</label>
+                        <div class="controls form-group">
+                            <div class="col-sm-8">
+                                <select data-placeholder="Producto" 
+                                        class="chzn-select select-block-level" 
+                                        tabindex="-1" 
+                                        id="sku" 
+                                        name="sku">
+                                        <option></option>
+                                    {% for p in products %}
+                                        <option value="{{p['sku']}}">{{p['sku']}}</option>
+                                    {% end %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="" class="control-label">Cantidad</label>
+                        <div class="controls form-group">
+                            <div class="col-sm-8">
+                                <input type="number" required="required" name="quantity" min="1" placeholder="cantidad de productos" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="" class="control-label">Talla</label>
+                        <div class="controls form-group">
+                            <div class="col-sm-8">
+                                <select data-placeholder="Producto" 
+                                        class="select-block-level" 
+                                        tabindex="-1" 
+                                        id="size" 
+                                        name="size">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="" class="control-label">Bodega</label>
+                        <div class="controls form-group">
+                            <div class="col-sm-8">
+                                <select data-placeholder="Producto" 
+                                        class="chzn-select select-block-level" 
+                                        tabindex="-1" 
+                                        id="cellar_id" 
+                                        name="cellar_id">
+                                    {% for c in cellar_list %}
+                                        <option value="{{c['id']}}">{{c['name']}}</option>
+                                    {% end %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="" class="control-label">Bodega destino</label>
+                        <div class="controls form-group">
+                            <div class="col-sm-8">
+                                <select data-placeholder="Producto" 
+                                        class="chzn-select select-block-level" 
+                                        tabindex="-1" 
+                                        id="new_cellar" 
+                                        name="new_cellar">
                                     {% for c in cellar_list %}
                                         <option value="{{c['id']}}">{{c['name']}}</option>
                                     {% end %}
