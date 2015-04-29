@@ -633,3 +633,25 @@ class Cellar(BaseModel):
         finally:
             self.connection.close()
             cur.close()
+
+    def FindById(self, id_list):
+
+        cur = self.connection.cursor(
+            cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''select * from "Cellar" where id = any(%(id_list)s)'''
+        parameters = {
+            "id_list": id_list
+        }
+
+        try:
+            # print cur.mogrify(query, parameters)
+            cur.execute(query, parameters)
+            self.connection.commit()
+            cellars = cur.fetchall()
+            return self.ShowSuccessMessage(cellars)
+        except Exception, e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()

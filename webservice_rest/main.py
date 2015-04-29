@@ -58,6 +58,7 @@ class Application(tornado.web.Application):
             (r"/cellar/getwebcellar",       cellar_handler.GetWebCellarHandler),
             (r"/cellar/getreservationcellar",       cellar_handler.GetReservationCellarHandler),
             (r"/cellar/lastkardex",       cellar_handler.LastKardexHandler),
+            (r"/cellar/findbyid",       cellar_handler.FindByIdHandler),
 
             (r"/product/add",           product_handler.AddProductHandler),
             (r"/product/edit",          product_handler.AddProductHandler),

@@ -472,9 +472,11 @@ class CellarEasyHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         cellar = Cellar()
-        res_list = cellar.List(1, 100)
+        res_list = cellar.FindById(self.current_user["cellar_permissions"])
 
         cellar_list = []
+
+        print res_list
 
         if "success" in res_list:
             cellar_list = res_list["success"]
@@ -497,7 +499,7 @@ class CellarEasyHandler(BaseHandler):
                     operation="Entradas ", 
                     opp="in", 
                     side_menu=self.side_menu, 
-                    cellar_list=res_list, 
+                    cellar_list=cellar_list, 
                     product_list=json_util.dumps(lista), 
                     products=lista,
                     tallas=tallas)
@@ -531,7 +533,7 @@ class CellarEasyHandler(BaseHandler):
             units = 0
             balance_price = 0
 
-            print res_product_find
+            # print res_product_find
 
             if "success" in res_product_find:
 

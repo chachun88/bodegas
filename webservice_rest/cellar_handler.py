@@ -288,3 +288,15 @@ class LastKardexHandler(BaseHandler):
 
         kardex = Kardex()
         self.write(json_util.dumps(kardex.FindKardex(product_sku, cellar_identifier, size_id)))
+
+
+class FindByIdHandler(BaseHandler):
+
+    def post(self):
+
+        id_list = [int(identifier) for identifier in self.get_argument("id_list", "").split(",")]
+
+        cellar = Cellar()
+        res_cellars = cellar.FindById(id_list)
+
+        self.write(json_util.dumps(res_cellars))

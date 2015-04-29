@@ -6,7 +6,48 @@ import urllib
 from model.base_model import BaseModel
 from bson import json_util
 
+
 class Cellar(BaseModel):
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        self._description = value
+
+    @property
+    def identifier(self):
+        return self._identifier
+
+    @identifier.setter
+    def identifier(self, value):
+        self._identifier = value
+
+    @property
+    def city(self):
+        return self._city
+
+    @city.setter
+    def city(self, value):
+        self._city = value
+
+    @property
+    def for_sale(self):
+        return self._for_sale
+
+    @for_sale.setter
+    def for_sale(self, value):
+        self._for_sale = value
 
     """ docstring for Cellar """
     def __init__(self):
@@ -111,7 +152,6 @@ class Cellar(BaseModel):
 
         return json_data
 
-
     def List(self, page, items):
         url = self.wsurl() + "/cellar/list"
         url += "?token=" + self.token
@@ -120,7 +160,7 @@ class Cellar(BaseModel):
 
         json_string = urllib.urlopen(url).read()
         return json_util.loads(json_string)
-    
+
     def AddProducts(self, product_sku, quantity, price, size, color, operation, user):
 
         url = self.wsurl() + "/cellar/products/add?token=" + self.token
@@ -178,8 +218,8 @@ class Cellar(BaseModel):
         url = self.wsurl() + "/cellar/selectforsale"
 
         data = {
-        "token":self.token,
-        "cellar_id":cellar_id
+            "token":self.token,
+            "cellar_id":cellar_id
         }
 
         post_data = urllib.urlencode(data)
@@ -195,8 +235,8 @@ class Cellar(BaseModel):
         url = self.wsurl() + "/cellar/selectreservation"
 
         data = {
-        "token":self.token,
-        "cellar_id":cellar_id
+            "token":self.token,
+            "cellar_id":cellar_id
         }
 
         post_data = urllib.urlencode(data)
@@ -212,7 +252,7 @@ class Cellar(BaseModel):
         url = self.wsurl() + "/cellar/getwebcellar"
 
         data = {
-        "token":self.token
+            "token":self.token
         }
 
         post_data = urllib.urlencode(data)
@@ -257,41 +297,20 @@ class Cellar(BaseModel):
         response_obj = json_util.loads(response_str)
 
         return response_obj
- 
-    @property
-    def name(self):
-        return self._name
-    @name.setter
-    def name(self, value):
-        self._name = value
-    
-    @property
-    def description(self):
-        return self._description
-    @description.setter
-    def description(self, value):
-        self._description = value
-    
-    @property
-    def identifier(self):
-        return self._identifier
-    @identifier.setter
-    def identifier(self, value):
-        self._identifier = value
 
-    @property
-    def city(self):
-        return self._city
-    @city.setter
-    def city(self, value):
-        self._city = value
+    def FindById(self, id_list):
 
-    @property
-    def for_sale(self):
-        return self._for_sale
-    @for_sale.setter
-    def for_sale(self, value):
-        self._for_sale = value
-    
-    
-    
+        url = self.wsurl() + "/cellar/findbyid"
+
+        data = {
+            "token": self.token,
+            "id_list": ",".join([str(identifier) for identifier in id_list])
+        }
+
+        post_data = urllib.urlencode(data)
+
+        response_str = urllib.urlopen(url, post_data).read()
+
+        response_obj = json_util.loads(response_str)
+
+        return response_obj
