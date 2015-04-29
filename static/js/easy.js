@@ -94,6 +94,31 @@ $(document).ready(function() {
         var size = $("select[name=size]", $(this)).val();
         var operation = $("input[name=operation]", $(this)).val();
 
+        if (product_sku == ''){
+            alert("Por favor seleccione un producto");
+            return false;
+        }
+
+        if (quantity == ''){
+            alert("Por favor ingrese cantidad");
+            return false;
+        }
+
+        if (price == ''){
+            alert("Por favor ingrese el precio");
+            return false;
+        }
+
+        if (size == ''){
+            alert("Por favor seleccione una talla");
+            return false;
+        }
+
+        if (cellar_id == new_cellar){
+            alert("Debe elegir una bodega distinta a la de origen");
+            return false;
+        }
+
         var post_data = {
             "cellar_id": cellar_id,
             "new_cellar": new_cellar,
@@ -122,7 +147,7 @@ $(document).ready(function() {
                     alert(response.message);
                     return false;
                 } else {
-                    alert("ok");
+                    alert(response.message);
                 }
 
             }
