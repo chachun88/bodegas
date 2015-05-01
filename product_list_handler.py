@@ -20,6 +20,7 @@ class ProductListHandler(BaseHandler):
 
         page = self.get_argument("page", 1)
         items = self.get_argument("items", 30)
+        dn = self.get_argument("dn", "")
 
         product = Product()
         product_list = []
@@ -36,10 +37,10 @@ class ProductListHandler(BaseHandler):
         if "success" in res_total_pages:
             total_pages = res_total_pages["success"]
 
-        print total_pages
+        # print total_pages
 
         self.render("product/list.html", 
-                    dn="", 
+                    dn=dn, 
                     side_menu=self.side_menu,
                     product_list=product_list,
                     page=page,

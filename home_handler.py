@@ -16,6 +16,7 @@ from basehandler import BaseHandler
 from model10.product import Product
 from model10.cellar import Cellar
 from model10.kardex import Kardex
+from model10.size import Size
 from globals import Menu, dir_products, dir_stock, debugMode
 import math
 
@@ -174,7 +175,7 @@ class ProductLoadHandler(BaseHandler):
             # self.write("{}".format(ncols))
 
             # fila
-            for i in range(3, nrows):
+            for i in range(4, nrows):
 
                 prod = Product()
                 tallas = []
@@ -185,7 +186,14 @@ class ProductLoadHandler(BaseHandler):
                     if j == 0:
                         prod.category = sheet.cell_value(i,j).encode("utf-8")
                     elif j == 1:
-                        prod.sku = sheet.cell_value(i,j).encode("utf-8")
+                        # prod.sku = sheet.cell_value(i,j).encode("utf-8")
+                        value = sheet.cell_value(i,j)
+                        try: 
+                            value = int(value)
+                        except ValueError:
+                            pass
+                        prod.sku = str(value)
+                        print prod.sku
                     elif j == 2:
                         prod.name = sheet.cell_value(i,j).encode("utf-8")
                     elif j == 3:
@@ -222,13 +230,12 @@ class ProductLoadHandler(BaseHandler):
                 # if debugMode:
                 #     print "product name : {}".format(prod.name)
 
-                prod.size = ",".join(tallas)
+                prod.size = tallas
                 # print prod.size
                 res_save = prod.Save(True)
 
                 if debugMode:
-                    if "error" in res_save:
-                        print res_save["error"]
+                    print res_save
 
         if len(warnings) > 0:
             # self.render("/product/out?dn={dn}&w={warnings}".format(dn="t2",warnings=",".join(warnings)))
@@ -275,7 +282,8 @@ class ProductRemoveHandler(BaseHandler):
             product_list = res_product_list["success"]
 
         if units > 0:
-            self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=product_list)
+            # self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=product_list)
+            self.redirect("/product/list?dn=bpf")
         else:
 
             res_remove = prod.Remove()
@@ -283,7 +291,8 @@ class ProductRemoveHandler(BaseHandler):
             if "success" in res_remove:
                 self.redirect("/product/list")
             else:
-                self.render("product/list.html", dn="bpe", side_menu=self.side_menu, product_list=product_list, message=res_remove["error"])
+                self.redirect("/product/list?dn=bpe&message={}".format(res_remove["error"]))
+                # self.render("product/list.html", dn="bpe", side_menu=self.side_menu, product_list=product_list, message=res_remove["error"])
 
 
 class ProductOutHandler(BaseHandler):
@@ -428,7 +437,12 @@ class ProductMassiveOutputHandler(BaseHandler):
                 for j in range(sheet.ncols):  
 
                     if j == 0:
-                        sku = str(sheet.cell_value(i,j))
+                        value = sheet.cell_value(i,j)
+                        try: 
+                            value = int(value)
+                        except ValueError:
+                            pass
+                        sku = str(value)
                     elif j == 1:
                         try:
                             size = str(int(sheet.cell_value(i,j)))
@@ -437,7 +451,7 @@ class ProductMassiveOutputHandler(BaseHandler):
                     elif j == 2:
                         val = sheet.cell_value(i,j)
                         if val != "":
-                            entrada = str(int(val))
+                            entrada = int(val)
                     elif j == 3:
                         val = sheet.cell_value(i,j)
                         if val != "":
@@ -445,37 +459,70 @@ class ProductMassiveOutputHandler(BaseHandler):
                     elif j == 4:
                         val = sheet.cell_value(i,j)
                         if val != "":
-                            salida = str(int(val))
+                            salida = int(val)
                     elif j == 5:
                         val = sheet.cell_value(i,j)
                         if val != "":
                             sell_price = str(int(val))
                     elif j == 6:
                         cellar_name = sheet.cell_value(i,j)
-                        res_init_name = cellar.InitWithName(cellar_name)
-                        kardex.identifier = cellar.identifier
+                        res_init_name = cellar.InitByName(cellar_name)
+                        kardex.identifier = cellar.id
 
                 if sku == '' or size == '':
                     warnings.append("sku y talla no pueden estar vacios")
                 else:
                     product = Product()
-                    res_product = product.InitWithSku(sku)
+                    res_product = product.InitBySku(sku)
 
                     if "error" in res_product:
                         warnings.append("producto con el sku {} no existe".format(sku))
                     else:
-                        if cellar.identifier != "":
+                        if cellar.id != "":
                             if entrada > 0 and price > 0:
-                                res_add = kardex.AddProducts(sku, entrada, price, size, '', 'buy', 'Sistema - carga masiva stock')
 
-                                if "error" in res_add:
-                                    warnings.append(res_add["error"].encode("utf-8"))
+                                s = Size()
+                                s.name = size
+                                res_size = s.initByName()
+
+                                if "success" in res_size:
+                                    kardex.product_sku = sku
+                                    kardex.units = entrada
+                                    kardex.price = price
+                                    kardex.size_id = s.id
+                                    kardex.color = product.color
+                                    kardex.operation_type = 'buy'
+                                    kardex.user = 'Sistema - carga masiva stock'
+                                    kardex.cellar_identifier = cellar.id
+                                    res_add = kardex.Insert()
+
+                                    if "error" in res_add:
+                                        warnings.append(res_add["error"])
+                                else:
+                                    warnings.append(res_size["error"])
 
                             if salida > 0 and sell_price > 0:
-                                res_remove = kardex.RemoveProducts(sku, salida, price, size, '', 'sell', 'Sistema - carga masiva stock')
 
-                                if "error" in res_remove:
-                                    warnings.append(res_remove['error'].encode("utf-8"))
+                                s = Size()
+                                s.name = size
+                                res_size = s.initByName()
+
+                                if "success" in res_size:
+
+                                    kardex.product_sku = sku
+                                    kardex.units = salida
+                                    kardex.price = price
+                                    kardex.size_id = s.id
+                                    kardex.color = product.color
+                                    kardex.operation_type = 'sell'
+                                    kardex.cellar_identifier = cellar.id
+                                    kardex.user = 'Sistema - carga masiva stock'
+                                    res_remove = kardex.Insert()
+
+                                    if "error" in res_remove:
+                                        warnings.append(res_remove['error'].encode("utf-8"))
+                                else:
+                                    warnings.append(res_size["error"])
                         else:
                             warnings.append('''No se reconoce nombre de la bodega, Tip: vaya a "stock/todas las bodegas",
                               y copie el nombre de la bodega a la cual desea relacionar el movimiento de stock, 

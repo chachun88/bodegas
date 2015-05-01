@@ -342,7 +342,7 @@ class User(BaseModel):
         except Exception,e:
             return self.ShowError("failed to save user {}, error:{}".format(self.email,str(e)))
 
-    def GetList(self, page, items):
+    def GetList(self, page=1, items=30):
 
         page = int(page)
         items = int(items)

@@ -25,7 +25,7 @@ class UserHandler(BaseHandler):
         dn = self.get_argument("dn", "f")  # by default f for false
         self.render("user/home.html", 
                     side_menu=self.side_menu, 
-                    user_list=usr.get_users_list(), 
+                    user_list=usr.GetList(), 
                     dn=dn, 
                     current_user_email=self.get_current_user())
 

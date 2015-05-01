@@ -17,7 +17,7 @@ var ValidateTracking = function(){
             success: function(res){
                 var html_str = JSON.stringify(res);
                 obj = $.parseJSON(html_str);
-                if (obj["state"]==0) {
+                if (res == undefined) {
                     location.reload()
                 } else {
                     alert(obj["obj"]);
@@ -53,7 +53,7 @@ $(document).ready(function(){
             if (chkArray.length > 0){
                 $('#myModal').modal('show');
             } else{
-                alert("Por favor seleccione pedidos no despachados");
+                alert("Por favor seleccione pedidos listos para ser despachados");
             }
 
         } else {
@@ -62,7 +62,7 @@ $(document).ready(function(){
                 chkArray.push($(this).val());
             });
 
-            valores_checkbox = chkArray.join(",")
+            valores_checkbox = chkArray.join(",");
 
             $.ajax({
                 url: "/orders/actions",
@@ -70,24 +70,20 @@ $(document).ready(function(){
                 type: "post",
                 dataType: 'json',
                 success: function(html) {
+
                     var html_str = JSON.stringify(html);
                     obj = $.parseJSON(html_str);
 
-                    if (obj["success"]) {
-                        location.reload();
+                    if (parseInt(action) != 5){
+                        alert(obj.error);
                     } else {
-                        if (parseInt(action) != 5){
-                            alert(obj.error);
-                        } else {
-                            var html_res = ''
 
-                            for(var i = 0; i < obj.error.length; i++){
-                                if(obj.error[i]){
-                                    html_res += 'pedido ' + obj.error[i]["identificador"] + ' : ' + obj.error[i]["error"] + '\n';
-                                }
+                        var html_res = ''
+
+                        for(var i = 0; i < obj.length; i++){
+                            if(obj[i]["error"]){
+                                html_res += 'pedido ' + obj[i]["identificador"] + ' : ' + obj[i]["error"] + '\n';
                             }
-
-                            alert(html_res);
                         }
                     }
                 }

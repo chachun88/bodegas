@@ -316,7 +316,7 @@ class Product(BaseModel):
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        q = '''select count(*) as cantidad from "Product" where sku = %(sku)s'''
+        q = '''select * from "Product" where sku = %(sku)s'''
         p = {
             "sku": self.sku
         }
@@ -325,7 +325,7 @@ class Product(BaseModel):
 
         try:
             cur.execute(q, p)
-            sku_count = cur.fetchone()["cantidad"]
+            sku_count = cur.rowcount
         except Exception, e:
             return self.ShowError("Error checking if product exists, {}".format(str(e)))
         finally:
@@ -701,8 +701,8 @@ class Product(BaseModel):
                     if not masive:
                         res_remove = ps.removeNonExisting(sizes_id)
 
-                    if "error" in res_remove:
-                        return self.ShowError(res_remove["error"])
+                        if "error" in res_remove:
+                            return self.ShowError(res_remove["error"])
 
                     res_ps = ps.save()
 
@@ -992,3 +992,23 @@ class Product(BaseModel):
         finally:
             cur.close()
             self.connection.close()
+
+    def Remove(self):
+
+        try:
+
+            if self.id != "":
+
+                cur = self.connection.cursor()
+                
+                q = '''update "Product" set deleted = 1 where id = %(id)s'''
+                p = {
+                    "id":self.id
+                }
+                cur.execute(q,p)
+                self.connection.commit()
+                return self.ShowSuccessMessage("object: {} has been deleted".format(self.id))
+            else:
+                return self.ShowError("identifier not found")   
+        except Exception, e:
+            return self.ShowError("object: not found, error:{}".format(str(e)))

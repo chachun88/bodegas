@@ -4,7 +4,9 @@
 from basemodel import BaseModel
 import psycopg2
 import psycopg2.extras
-
+from cellar import Cellar
+from order_detail import OrderDetail
+from kardex import Kardex
 
 class Order(BaseModel):
 
@@ -190,7 +192,7 @@ class Order(BaseModel):
         self._billing_id = ""
         self._shipping_id = ""
 
-    def GetList(self, page, items):
+    def List(self, page, items):
 
         page = int(page)
         items = int(items)
@@ -223,7 +225,7 @@ class Order(BaseModel):
             print str(e)
             return {}
 
-    def GetOrderById(self, _id):
+    def InitWithId(self, _id):
 
         # order = self.collection.find_one({"id":int(_id)})
 
@@ -256,6 +258,27 @@ class Order(BaseModel):
             order = cur.fetchone()
 
             if cur.rowcount > 0:
+                self.id                     = order["order_id"]
+                self.date                   = order["date"]
+                self.type                   = order["type"]
+                self.telephone              = order["telephone"]
+                self.customer               = order["customer"]
+                self.subtotal               = order["subtotal"]
+                self.shipping               = order["shipping"]
+                self.tax                    = order["tax"]
+                self.total                  = order["total"]
+                self.address                = order["address"]
+                self.town                   = order["town"]
+                self.city                   = order["city"]
+                self.source                 = order["source"]
+                self.country                = order["country"]
+                self.items_quantity         = order["items_quantity"]
+                self.product_quantity       = order["products_quantity"]
+                self.state                  = order["state"]
+                self.payment_type           = order["payment_type"]
+                self.billing_id             = order["billing_id"]
+                self.shipping_id            = order["shipping_id"]
+                self.customer_email         = order["email"]
                 return self.ShowSuccessMessage(order)
             else:
                 return self.ShowError("Pedido no encontrado")
@@ -320,59 +343,48 @@ class Order(BaseModel):
 
         return str(self.id)
 
-    def DeleteOrders(self, ids):
-        # self.collection.remove({"id":{"$in":ids}})
-        # od = OrderDetail()
-        # for i in ids:
-        #     od.Remove(i)
+    def DeleteOrder(self, identifier):
 
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        if not ids.isdigit():
-            query = '''delete from "Order_Detail" where order_id = any(%(order_id)s)'''
-        else:
+        try:
             query = '''delete from "Order_Detail" where order_id = %(order_id)s'''
-
-        parameters = {"order_id": ids}
-
-        try:
+            parameters = {"order_id": identifier}
             cur.execute(query, parameters)
-        except Exception, e:
-            self.connection.rollback()
-            return self.ShowError("Error eliminando detalles de la orden {}".format(str(e)))
 
-        if not ids.isdigit():
-            query = '''delete from "Order" where id = any(%(id)s)'''
-        else:
             query = '''delete from "Order" where id = %(id)s'''
-        parameters = {"id": ids}
-
-        try:
+            parameters = {"id": identifier}
             cur.execute(query, parameters)
+
             self.connection.commit()
             return self.ShowSuccessMessage("ordenes eliminados correctamente")
         except Exception, e:
             self.connection.rollback()
             return self.ShowError("Error eliminando la orden {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
 
-    def ChangeStateOrders(self, ids, state):
-        # print ids
-        # self.collection.update({"id":{"$in":ids}},{"$set":{"state":state}},multi=True)
+    def ChangeStateOrders(self, identifier, state):
 
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''update "Order" set state = %(state)s where id = any(%(id)s)'''
-        parameters = {"id": ids, "state": state}
+        query = '''update "Order" set state = %(state)s where id = %(id)s'''
+        parameters = {"id": identifier, "state": state}
 
         try:
+            print cur.mogrify(query, parameters)
             cur.execute(query, parameters)
             self.connection.commit()
             return self.ShowSuccessMessage("state changed")
         except Exception, e:
             self.connection.rollback()
             return self.ShowError(str(e))
+        finally:
+            cur.close()
+            self.connection.commit()
 
     def getTotalPages(self, items):
 
@@ -391,3 +403,86 @@ class Order(BaseModel):
         finally:
             self.connection.close()
             cur.close()
+
+    def cancel(self, identificador):
+
+        cellar_id = None
+        web_cellar = None
+
+        cellar = Cellar()
+        res_reservation_cellar = cellar.GetReservationCellar()
+
+        if "success" in res_reservation_cellar:
+            cellar_id = res_reservation_cellar["success"]
+        else:
+            return self.ShowError(res_reservation_cellar["error"])
+
+        if identificador == "":
+            return self.ShowError("identificador viene vacio")
+        else:
+
+            order = Order()
+            res_order = order.InitWithId(identificador)
+
+            cancelable = True
+
+            if "success" in res_order:
+
+                o = res_order["success"]
+
+                if o["state"] != Order.ESTADO_CANCELADO and o["state"] != Order.ESTADO_DESPACHADO:
+
+                    order_detail = OrderDetail()
+                    details_res = order_detail.ListByOrderId(identificador)
+
+                    if "success" in details_res:
+
+                        details = details_res["success"]
+
+                        # recorre cada producto del detalle de orden y determina si la orden es cancelable
+                        for d in details:
+
+                            k = Kardex()
+                            find_kardex = k.FindKardex(d["sku"], cellar_id, d['size_id'])
+                            units = 0
+
+                            if "success" in find_kardex:
+                                units = k.balance_units  
+
+                            if int(units) < int(d['quantity']): 
+
+                                cancelable = False
+
+                        # end for
+
+                        # si no es cancelable la orden se guarda en el array identificadores para avisar al usuario
+                        if not cancelable:
+                            identificadores.append({"identificador":identificador,"error":"no tiene stock suficiente"})
+                        else:
+
+                            cellar = Cellar()
+                            res_web_cellar = cellar.GetWebCellar()
+
+                            if "success" in res_web_cellar:
+
+                                web_cellar = res_web_cellar["success"]
+
+                            # mueve c/u de los productos desde la bodega de reserva a la bodega web
+                            kardex = Kardex()
+                            res = kardex.moveOrder(details, web_cellar, cellar_id)
+
+                            if "error" in res:
+                                identificadores.append({"identificador":identificador,"error":res["error"]})
+                    else:
+                        return self.ShowError(details_res["error"])
+                elif o["state"] == Order.ESTADO_DESPACHADO:
+                    return self.ShowError("Pedido no puede ser cancelado, ya que se encuentra despachado")
+                else:
+                    return self.ShowError("Pedido ya esta cancelado")
+            else:
+                return self.ShowError(res_order)
+
+            if len(identificadores) > 0:
+                return self.ShowError(identificadores)
+            else:
+                return self.ShowSuccessMessage("ok")

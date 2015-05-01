@@ -96,9 +96,12 @@ class OrderActionsHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
 
-        order=Order()
+        order = Order()
 
-        valores = self.get_argument("values","")
+        resultado = []
+        pedidos_erroneos = []
+
+        valores = self.get_argument("values", "").split(",")
         accion = self.get_argument("action","")
 
         if accion == "":
@@ -107,21 +110,20 @@ class OrderActionsHandler(BaseHandler):
 
         accion = int(accion)
 
-        if valores == "":
+        if len(valores) == 0:
             self.write("Debe seleccionar al menos un pedido")
             return
 
-        if accion == ACCIONES_ELIMINAR:
+        for v in valores:
 
-            response = order.Remove(valores)
+            if accion == ACCIONES_ELIMINAR:
 
-            self.write(json_util.dumps(response))
+                response = order.DeleteOrder(v)
 
-        elif accion == ACCIONES_CONFIRMAR:
+                resultado.append(response)
 
-            pedidos_erroneos = []
+            elif accion == ACCIONES_CONFIRMAR:
 
-            for v in valores.split(","):
                 _order = Order()
                 res_order = _order.InitWithId(v)
 
@@ -132,53 +134,40 @@ class OrderActionsHandler(BaseHandler):
                     else:
                         pedidos_erroneos.append(str(_order.id))
                 else:
-                    print res_order["error"]
+                    resultado.append(res_order)
 
-            if len(pedidos_erroneos) > 0:
-                self.write(json_util.dumps({"error": "Pedido/os {pedidos} no puede/en ser confirmado/os".format(pedidos=",".join(pedidos_erroneos))}))
-            else:
-                self.write(json_util.dumps({"success":"ok"}))
+            elif accion == ACCIONES_PARA_DESPACHO:
 
-        elif accion == ACCIONES_PARA_DESPACHO:
-
-            pedidos_erroneos = []
-
-            for v in valores.split(","):
                 _order = Order()
                 res_order = _order.InitWithId(v)
 
                 if "success" in res_order:
                     if _order.state == Order.ESTADO_CONFIRMADO:
-                        order.ChangeStateOrders(v ,Order.ESTADO_PARA_DESPACHO)
-                        SendConfirmedMail(_order.customer_email, _order.customer, v)
+                        res = order.ChangeStateOrders(v, Order.ESTADO_PARA_DESPACHO)
+                        resultado.append(res)
                     else:
                         pedidos_erroneos.append(str(_order.id))
                 else:
-                    print res_order["error"]
+                    resultado.append(res_order)
 
-            if len(pedidos_erroneos) > 0:
-                self.write(json_util.dumps({"error": "Pedido/os {pedidos} no puede/en ser preparado/os para ser despachado/os".format(pedidos=",".join(pedidos_erroneos))}))
-            else:
-                self.write(json_util.dumps({"success":"ok"}))
+            elif accion == ACCIONES_CANCELADO:
 
-            # response = order.ChangeStateOrders(valores,Order.ESTADO_PARA_DESPACHO)
+                # response = order.ChangeStateOrders(valores,Order.ESTADO_CANCELADO)
 
-            # self.write(json_util.dumps(response))
+                res_cancel = order.cancel(v)
 
-        elif accion == ACCIONES_CANCELADO:
+                if "success" in res_cancel:
+                    response = order.ChangeStateOrders(v, Order.ESTADO_CANCELADO)
+                    if "success" in response:
+                        self.write(json_util.dumps(response))
+                    else:
+                        resultado.append(response)
+                else:
+                    resultado.append(response)
 
-            # response = order.ChangeStateOrders(valores,Order.ESTADO_CANCELADO)
+            ''' replaced by shipping_handler.SaveTrackingCodeHandler'''
 
-            res_cancel = order.cancel(valores)
-
-            if "success" in res_cancel:
-                response = order.ChangeStateOrders(valores,Order.ESTADO_CANCELADO)
-                if "success" in response:
-                  self.write(json_util.dumps(response))
-            else:
-                self.write(json_util.dumps(res_cancel))
-
-        ''' replaced by shipping_handler.SaveTrackingCodeHandler'''
+        self.write(json_util.dumps(resultado))
 
         # elif accion == ACCIONES_DESPACHADO:
 

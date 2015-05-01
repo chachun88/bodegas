@@ -24,7 +24,7 @@ class Kardex(BaseModel):
         self._balance_units = 0
         self._balance_price = 0.0
         self._balance_total = 0.0
-        self._date = 0000000 
+        self._date = str(datetime.datetime.now().isoformat())
         self._user = ""
         self._product_id = ""
 
@@ -184,28 +184,29 @@ class Kardex(BaseModel):
         except Exception,e:
             return self.ShowError(str(e))
 
-
-    #take care of an infinite loop
+    # take care of an infinite loop
     # return last kardex in the database
     def GetPrevKardex(self):
 
-
         new_kardex = Kardex()
 
-
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         try:
             new_kardex.product_sku = self.product_sku
             new_kardex.cellar_identifier = self.cellar_identifier
 
-            cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
-            query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s order by id desc limit 1'''
+            query = '''\
+                    select * from "Kardex" 
+                    where product_sku = %(product_sku)s 
+                    and cellar_id = %(cellar_id)s 
+                    and size_id = %(size_id)s 
+                    order by id desc limit 1'''
 
             parametros = {
-            "product_sku":self.product_sku,
-            "cellar_id":self.cellar_identifier,
-            "size_id":self.size_id
+                "product_sku":self.product_sku,
+                "cellar_id":self.cellar_identifier,
+                "size_id":self.size_id
             }
             cur.execute(query,parametros)
             # print "QUERY:{}".format(cur.query)
@@ -217,7 +218,7 @@ class Kardex(BaseModel):
                 new_kardex.units = kardex["units"]
                 new_kardex.price = kardex["price"]
                 new_kardex.sell_price = kardex["sell_price"]
-                new_kardex.size_id =kardex["size_id"]
+                new_kardex.size_id = kardex["size_id"]
                 new_kardex.color = kardex["color"]
                 new_kardex.total = kardex["total"]
                 new_kardex.balance_units = kardex["balance_units"]
@@ -226,10 +227,12 @@ class Kardex(BaseModel):
                 new_kardex.date = kardex["date"]
                 new_kardex.user = kardex["user"]
                 new_kardex.cellar_identifier = kardex["cellar_id"]
+            return self.ShowSuccessMessage(new_kardex)
         except Exception, e:
             return self.ShowError("kardex not found, {}".format(str(e)))
-
-        return self.ShowSuccessMessage(new_kardex)
+        finally:
+            self.connection.commit()
+            cur.close()
 
     def Insert(self):
 
@@ -250,16 +253,16 @@ class Kardex(BaseModel):
         else:
             return self.ShowError("error al obtener kardex, {}".format(response_prevkardex["error"]))
 
-        ##parsing all to float
+        # parsing all to float
         self.price = float(self.price)
         self.total = float(self.total)
         self.balance_price = float(self.balance_price)
         self.balance_total = float(self.balance_total)
         self.units = int(self.units)
 
-        ## doing maths...
+        # doing maths...
         if self.operation_type == Kardex.OPERATION_SELL or self.operation_type == Kardex.OPERATION_MOV_OUT:
-            self.price = prev_kardex.balance_price ## calculate price
+            self.price = prev_kardex.balance_price  # calculate price
         if self.price == "0":
             self.price = prev_kardex.balance_price
 
@@ -303,8 +306,8 @@ class Kardex(BaseModel):
 
         try:
             query = '''insert into "Kardex" (balance_total,product_sku,cellar_id,operation_type,units,price,sell_price,size_id,color,total,balance_units,balance_price,date,"user") values (%(balance_total)s,%(product_sku)s,%(cellar_id)s,%(operation_type)s,%(units)s,%(price)s,%(sell_price)s,%(size_id)s,%(color)s,%(total)s,%(balance_units)s,%(balance_price)s,%(date)s,%(user)s)'''
+            print cur.mogrify(query,parametros)
             cur.execute(query,parametros)
-            # return cur.mogrify(query,parametros)
             self.connection.commit()
             return self.ShowSuccessMessage("products has been added")
         except Exception,e:

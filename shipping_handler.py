@@ -9,6 +9,11 @@ from bson import json_util
 from emails import TrackingCustomer
 from model10.customer import Customer
 from model10.order import Order
+from model10.cellar import Cellar
+from model10.order_detail import OrderDetail
+from model10.kardex import Kardex
+from model10.size import Size
+import datetime
 
 from globals import Menu, reserve_cellar_id
 
@@ -165,9 +170,96 @@ class SaveTrackingCodeHandler(BaseHandler):
 
             if "success" in res_order:
 
-                if o.state != Order.ESTADO_CANCELADO and (o.state == Order.ESTADO_PENDIENTE and o.payment_type != 2):
+                if o.state == Order.ESTADO_CANCELADO or (o.state == Order.ESTADO_PENDIENTE and o.payment_type == 2):
 
-                    res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id, reserve_cellar_id)
+                    errores.append("el pedido {} esta cancelado o rechazado".format(order_id))
+
+                else:
+
+                    c = Cellar()
+                    res_reservation = c.GetReservationCellar()
+                    if "success" in res_reservation:
+                        new_cellar_id = res_reservation["success"]
+
+                    if order_id == "":
+                        self.write(json_util.dumps({"error":"invalid order_id"}))
+                    elif tracking_code == "":
+                        self.write(json_util.dumps({"error":"invalid tracking_code"}))
+                    elif provider_id == "":
+                        self.write(json_util.dumps({"error":"invalid provider_id"}))
+                    else:
+
+                        cellar = Cellar()
+
+                        order_detail = OrderDetail()
+                        details_res = order_detail.ListByOrderId(order_id)
+
+                        if "success" in details_res:
+                            details = details_res["success"]
+
+                        for detail in details:
+
+                            sku = detail["sku"]
+                            quantity = detail["quantity"]
+                            operation = Kardex.OPERATION_SELL
+                            sell_price = detail["price"]
+                                
+                            _size = Size()
+                            _size.name = detail["size"]
+                            res_name = _size.initByName()
+
+                            if "success" in res_name:
+                                size = _size.id
+                            else:
+                                print res_name["error"]
+
+                            color = detail["color"]
+                            user = 'Sistema - Despacho'
+
+                            k = Kardex()
+                            find_kardex = k.FindKardex(sku, new_cellar_id, size)
+
+                            balance_price = 0
+                            units = 0
+
+                            if "success" in find_kardex:
+                                balance_price = k.balance_price
+                                units = k.balance_units
+
+                            if int(units) >= int(quantity): 
+
+                                kardex = Kardex()
+
+                                kardex.product_sku = sku
+                                kardex.cellar_identifier = new_cellar_id
+                                kardex.date = str(datetime.datetime.now().isoformat())
+
+                                kardex.operation_type = operation
+                                kardex.units = quantity
+                                kardex.price = balance_price
+                                kardex.size_id = size
+                                kardex.sell_price = sell_price
+
+                                kardex.color= color
+                                kardex.user = user
+
+                                response_kardex = kardex.Insert()
+
+                                if "error" in response_kardex:
+                                    self.write(json_util.dumps(response_kardex))
+                                    return
+                                        
+
+                            else:
+                                self.write(json_util.dumps({"state": 1, "obj":["Orden {}: Stock insuficiente para realizar el movimiento".format(order_id)]}))
+                                return
+
+
+                        shipping = Shipping()
+                        res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
+                        self.write(json_util.dumps(res))
+
+                    res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
 
                     if "error" in res:
                         errores.append(res["error"])
@@ -182,11 +274,7 @@ class SaveTrackingCodeHandler(BaseHandler):
 
                         if response == "ok":
                             TrackingCustomer(customer.email,customer.name,tracking_code,provider_name,order_id)
-                else:
-                    errores.append("el pedido {} esta cancelado o rechazado".format(order_id))
 
 
         if len(errores) > 0:
             self.write(json_util.dumps({"state":1,"obj":errores}))
-        else:
-            self.write(json_util.dumps({"state":0}))
