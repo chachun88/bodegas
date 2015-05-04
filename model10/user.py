@@ -281,7 +281,7 @@ class User(BaseModel):
                             Permission.REPORT
                            ]
 
-            print permisos
+            # print permisos
             if cur.rowcount > 0:
 
                 self.id = usuario['id']

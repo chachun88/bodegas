@@ -81,9 +81,9 @@ class UserAddHandler(BaseHandler):
 
         usr.type_id = self.get_argument("type_id", "")
         usr.identifier  = self.get_argument("id", "").encode("utf-8")
-        usr.cellars     = self.get_argument("cellars","").encode("utf-8")
+        usr.cellars     = self.get_arguments("cellars")
 
-        response = json_util.loads(usr.Save())
+        response = usr.Save()
 
         if "success" in response:
             self.redirect("/user/add?dn=t&warnings=")
