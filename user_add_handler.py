@@ -31,7 +31,7 @@ class UserAddHandler(BaseHandler):
 
         if user_id != "":
 
-            response = usr.InitWithId(user_id)
+            response = usr.InitById(user_id)
 
             if "success" in response:
                 dn = "t1"
@@ -62,14 +62,14 @@ class UserAddHandler(BaseHandler):
 
         if user_id != "":
 
-            response = usr.InitWithId(user_id)
+            response = usr.InitById(user_id)
 
             if "error" in response:
                 self.redirect("/user/add?dn=&warnings=" + response["error"])
 
         form_password = self.get_argument("password", "").encode("utf-8")
         usr.name  = self.get_argument("name", "").encode("utf-8")
-        usr.surname = self.get_argument("surname", "").encode("utf-8")
+        usr.lastname = self.get_argument("lastname", "").encode("utf-8")
         usr.email = self.get_argument("email", "").encode("utf-8")
 
         if usr.password != form_password:

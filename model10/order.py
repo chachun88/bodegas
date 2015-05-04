@@ -358,7 +358,7 @@ class Order(BaseModel):
             cur.execute(query, parameters)
 
             self.connection.commit()
-            return self.ShowSuccessMessage("ordenes eliminados correctamente")
+            return self.ShowSuccessMessage("orden {} eliminado correctamente".format(identifier))
         except Exception, e:
             self.connection.rollback()
             return self.ShowError("Error eliminando la orden {}".format(str(e)))
@@ -375,10 +375,10 @@ class Order(BaseModel):
         parameters = {"id": identifier, "state": state}
 
         try:
-            print cur.mogrify(query, parameters)
+            # print cur.mogrify(query, parameters)
             cur.execute(query, parameters)
             self.connection.commit()
-            return self.ShowSuccessMessage("state changed")
+            return self.ShowSuccessMessage("orden {} ha cambiado de estado exitosamente".format(identifier))
         except Exception, e:
             self.connection.rollback()
             return self.ShowError(str(e))
@@ -411,6 +411,8 @@ class Order(BaseModel):
 
         cellar = Cellar()
         res_reservation_cellar = cellar.GetReservationCellar()
+
+        errores = []
 
         if "success" in res_reservation_cellar:
             cellar_id = res_reservation_cellar["success"]
@@ -457,7 +459,7 @@ class Order(BaseModel):
 
                         # si no es cancelable la orden se guarda en el array identificadores para avisar al usuario
                         if not cancelable:
-                            identificadores.append({"identificador":identificador,"error":"no tiene stock suficiente"})
+                            errores.append("Pedido {} no es posible devolver stock a bodega".format(identificador))
                         else:
 
                             cellar = Cellar()
@@ -472,17 +474,17 @@ class Order(BaseModel):
                             res = kardex.moveOrder(details, web_cellar, cellar_id)
 
                             if "error" in res:
-                                identificadores.append({"identificador":identificador,"error":res["error"]})
+                                errores.append("error en el pedido {}, {}".format(identificador, res["error"]))
                     else:
                         return self.ShowError(details_res["error"])
                 elif o["state"] == Order.ESTADO_DESPACHADO:
-                    return self.ShowError("Pedido no puede ser cancelado, ya que se encuentra despachado")
+                    return self.ShowError("Pedido {} no puede ser cancelado, ya que se encuentra despachado".format(identificador))
                 else:
-                    return self.ShowError("Pedido ya esta cancelado")
+                    return self.ShowError("Pedido {} ya esta cancelado".format(identificador))
             else:
                 return self.ShowError(res_order)
 
-            if len(identificadores) > 0:
-                return self.ShowError(identificadores)
+            if len(errores) > 0:
+                return self.ShowError(errores)
             else:
                 return self.ShowSuccessMessage("ok")

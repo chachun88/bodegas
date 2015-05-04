@@ -404,6 +404,8 @@ class SelectForSaleHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
 
+        self.set_active(Menu.BODEGAS_FORSALE)
+
         cellar = Cellar()
         selected = cellar.GetWebCellar()
         data = Cellar().List(1, 100)
@@ -431,6 +433,8 @@ class SelectReservationHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
+
+        self.set_active(Menu.BODEGAS_RESERVATION)
 
         cellar = Cellar()
         selected = cellar.GetReservationCellar()

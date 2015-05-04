@@ -16,11 +16,24 @@ var ValidateTracking = function(){
             type: $("#shipping-tracking").attr('method'),
             success: function(res){
                 var html_str = JSON.stringify(res);
-                obj = $.parseJSON(html_str);
-                if (res == undefined) {
-                    location.reload()
+                var obj = $.parseJSON(html_str);
+                var html_res = '';
+
+                // console.log(obj);
+                
+                if(obj.length > 0){
+                    for(var i = 0; i < obj.length; i++){
+                        if("error" in obj[i]){
+                            html_res += obj[i]["error"] + '\n';
+                        }
+                    }
+                    if(html_res != ''){
+                        alert(html_res);
+                    } else {
+                        location.reload();
+                    }
                 } else {
-                    alert(obj["obj"]);
+                    location.reload();
                 }
             }
         });
@@ -74,17 +87,21 @@ $(document).ready(function(){
                     var html_str = JSON.stringify(html);
                     obj = $.parseJSON(html_str);
 
-                    if (parseInt(action) != 5){
-                        alert(obj.error);
-                    } else {
+                    var html_res = ''
 
-                        var html_res = ''
-
+                    if(obj.length > 0){
                         for(var i = 0; i < obj.length; i++){
-                            if(obj[i]["error"]){
-                                html_res += 'pedido ' + obj[i]["identificador"] + ' : ' + obj[i]["error"] + '\n';
+                            if("error" in obj[i]){
+                                html_res += obj[i]["error"] + '\n';
                             }
                         }
+                        if(html_res != ''){
+                            alert(html_res);
+                        } else {
+                            location.reload();
+                        }
+                    } else {
+                        location.reload();
                     }
                 }
             });

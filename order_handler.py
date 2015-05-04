@@ -99,7 +99,6 @@ class OrderActionsHandler(BaseHandler):
         order = Order()
 
         resultado = []
-        pedidos_erroneos = []
 
         valores = self.get_argument("values", "").split(",")
         accion = self.get_argument("action","")
@@ -132,7 +131,7 @@ class OrderActionsHandler(BaseHandler):
                         order.ChangeStateOrders(v ,Order.ESTADO_CONFIRMADO)
                         SendConfirmedMail(_order.customer_email, _order.customer, v)
                     else:
-                        pedidos_erroneos.append(str(_order.id))
+                        resultado.append({"error":"el pedido {} no puede ser confirmado".format(_order.id)})
                 else:
                     resultado.append(res_order)
 
@@ -146,7 +145,7 @@ class OrderActionsHandler(BaseHandler):
                         res = order.ChangeStateOrders(v, Order.ESTADO_PARA_DESPACHO)
                         resultado.append(res)
                     else:
-                        pedidos_erroneos.append(str(_order.id))
+                        resultado.append({"error":"el pedido {} no puede cambiar a estado listo para despacho".format(_order.id)})
                 else:
                     resultado.append(res_order)
 
@@ -154,16 +153,22 @@ class OrderActionsHandler(BaseHandler):
 
                 # response = order.ChangeStateOrders(valores,Order.ESTADO_CANCELADO)
 
-                res_cancel = order.cancel(v)
+                _order = Order()
+                res_order = _order.InitWithId(v)
 
-                if "success" in res_cancel:
-                    response = order.ChangeStateOrders(v, Order.ESTADO_CANCELADO)
-                    if "success" in response:
-                        self.write(json_util.dumps(response))
-                    else:
-                        resultado.append(response)
+                if "success" in res_order:
+
+                    if _order.state == Order.ESTADO_CONFIRMADO or _order.state == Order.ESTADO_PENDIENTE or _order.ESTADO_PARA_DESPACHO:
+
+                        res_cancel = order.cancel(v)
+
+                        if "success" in res_cancel:
+                            response = order.ChangeStateOrders(v, Order.ESTADO_CANCELADO)
+                            resultado.append(response)
+                        else:
+                            resultado.append(res_cancel)
                 else:
-                    resultado.append(response)
+                    resultado.append(res_order)
 
             ''' replaced by shipping_handler.SaveTrackingCodeHandler'''
 
