@@ -86,7 +86,11 @@
 					{% for p in pedidos %}
 					<tr>
 						<td>
-							<input type="checkbox" name="pedidos" class="iCheck" value="{{p['order_id']}}" tracking-code="{{p['tracking_code']}}">
+							{% if int(p["state"]) != 3 %}
+								<input type="checkbox" name="pedidos" class="iCheck" value="{{p['order_id']}}" tracking-code="-">
+							{% else %}
+								<input type="checkbox" name="pedidos" class="iCheck" value="{{p['order_id']}}" tracking-code="{{p['tracking_code']}}">
+							{% end %}
 						</td>
 						<td>
 							{{p["order_id"]}}
@@ -137,7 +141,7 @@
 							{% end %}
 						</td>
 						<td>
-							<button type="button" class="btn btn-primary" onclick="location.href='/order-detail/list?order_id={{p['order_id']}}'">Ver Detalle</button>
+							<a class="btn btn-primary" href="/order-detail/list?order_id={{p['order_id']}}">Ver Detalle</a>
 						</td>
 					</tr>
 					{% end %}

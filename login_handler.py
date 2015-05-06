@@ -13,7 +13,7 @@ import hashlib
 
 from lp_email_tool import lpEmailTool
 
-from model.user import User
+from model10.user import User
 
 class LoginHandler(BaseHandler):
 
@@ -30,7 +30,7 @@ class LoginHandler(BaseHandler):
 
 		## validate user and password
 		usr = User()
-		response = usr.InitWithEmail(username)
+		response = usr.InitByEmail(username)
 
 		if "error" in response:
 			self.redirect(u"/auth/login?e=" + response["error"])

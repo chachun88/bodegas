@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from model.base_model import BaseModel
+from model10.base_model import BaseModel
 from bson import json_util
 import urllib
 

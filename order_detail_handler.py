@@ -8,9 +8,9 @@ import tornado.options
 import tornado.web
 
 from basehandler import BaseHandler
-from model.order_detail import OrderDetail
-from model.order import Order
-from model.webpay import Webpay
+from model10.order_detail import OrderDetail
+from model10.order import Order
+from model10.webpay import Webpay
 
 
 class ListOrderDetailHandler(BaseHandler):

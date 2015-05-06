@@ -3,7 +3,7 @@
 
 import urllib
 
-from model.base_model import BaseModel
+from model10.base_model import BaseModel
 from bson import json_util
 from contact import Contact
 

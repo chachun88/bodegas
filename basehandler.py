@@ -6,7 +6,7 @@ Created on 13/12/2012
 import tornado.web
 from lputils import MoneyFormat
 from bson import json_util
-from model.user import User
+from model10.user import User
 import locale
 import os
 # from loadingplay.multilang.lang import lpautoSelectCurrentLang

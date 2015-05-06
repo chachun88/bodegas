@@ -21,7 +21,7 @@ class AddSellerHandler(BaseHandler):
         salesman.password   = self.get_argument("password", "")
         salesman.email      = self.get_argument("email", "")
         salesman.type_id    = self.get_argument("type_id", "")
-        salesman.cellars     = [int(i) for i in self.get_argument("cellars","").split(",")]
+        salesman.cellars     = self.get_argument("cellars","").split(",")
         salesman.lastname    = self.get_argument("lastname","")
 
         # saving current seller

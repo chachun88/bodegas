@@ -8,7 +8,7 @@ import tornado.options
 import tornado.web
 
 from basehandler import BaseHandler
-from model.user import User
+from model10.user import User
 
 from globals import Menu
 
@@ -25,7 +25,7 @@ class UserHandler(BaseHandler):
         dn = self.get_argument("dn", "f")  # by default f for false
         self.render("user/home.html", 
                     side_menu=self.side_menu, 
-                    user_list=usr.get_users_list(), 
+                    user_list=usr.GetList(), 
                     dn=dn, 
                     current_user_email=self.get_current_user())
 
@@ -35,7 +35,12 @@ class UserRemoveHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         usr = User()
-        usr.InitWithId(self.get_argument("id", ""))
-        usr.Remove()
+        usr.id = self.get_argument("id", "")
+        res = usr.Remove()
 
-        self.redirect("/user?dn=t2")
+        print res
+
+        if "success" in res:
+            self.redirect("/user?dn=t2")
+        else:
+            self.redirect("/user?dn=t4")

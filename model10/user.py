@@ -22,7 +22,7 @@ class Permission():
     REPORT = 6
 
 
-class Salesman(BaseModel):
+class User(BaseModel):
     def __init__(self):
         BaseModel.__init__(self)
         # self.collection = db.salesman
@@ -141,10 +141,25 @@ class Salesman(BaseModel):
         }
 
     def Remove(self):
-        try:
-            return BaseModel.Remove(self)
-        except Exception, e:
-            return self.ShowError("error removing user {}".format(str(e)))
+
+        if self.id != "":
+
+            cur = self.connection.cursor()
+            q = '''delete from "User" where id = %(id)s'''.format(tabla=self.table)
+            p = {
+                "id":self.id
+            }
+            try:
+                cur.execute(q,p)
+                self.connection.commit()
+                return self.ShowSuccessMessage("object: {} has been deleted".format(self.id))
+            except Exception, e:
+                return self.ShowError("object: not found, error:{}".format(str(e)))
+            finally:
+                cur.close()
+                self.connection.close()
+        else:
+            return self.ShowError("identifier not found")
 
     def Login(self, username, password):
         # data = self.collection.find({"email":username, "password":password})
@@ -183,6 +198,7 @@ class Salesman(BaseModel):
             select  u.*, 
                     STRING_AGG(distinct p.name, ',') as permissions_name, 
                     STRING_AGG(distinct c.name, ',') as cellars_name,
+                    array_agg(distinct c.id) as cellars,
                     ut.name as type,
                     ut.id as type_id
             from "User" u 
@@ -199,6 +215,18 @@ class Salesman(BaseModel):
             cur.execute(q,p)
             usuario = cur.fetchone()
             if cur.rowcount > 0:
+                self.name = usuario["name"]
+                self.lastname = usuario["lastname"]
+                self.identifier = usuario["id"]
+                self.password = usuario["password"]
+                self.permissions = usuario["permissions"]
+                self.email = usuario["email"]
+                self.identifier = usuario["id"]
+                self.cellars = usuario["cellars"]
+                self.cellars_name = usuario["cellars_name"]
+                self.permissions_name = usuario["permissions_name"]
+                self.type_id = usuario["type_id"]
+                self.type = usuario["type"]
                 return self.ShowSuccessMessage(usuario)
             else:
                 return self.ShowError("user : " + email + " not found")
@@ -214,6 +242,7 @@ class Salesman(BaseModel):
                     STRING_AGG(distinct p.name, ',') as permissions_name, 
                     STRING_AGG(distinct c.name, ',') as cellars_name,
                     ut.name as type,
+                    array_agg(distinct c.id) as cellars,
                     ut.id as type_id 
             from "User" u 
             inner join "Permission" p on p.id = any(u.permissions) 
@@ -228,11 +257,43 @@ class Salesman(BaseModel):
         try:
             cur.execute(q,p)
             usuario = cur.fetchone()
+            self.name = usuario["name"]
+            self.lastname = usuario["lastname"]
+            self.identifier = usuario["id"]
+            self.password = usuario["password"]
+            self.permissions = usuario["permissions"]
+            self.email = usuario["email"]
+            self.identifier = usuario["id"]
+            self.cellars = usuario["cellars"]
+            self.cellars_name = usuario["cellars_name"]
+            self.permissions_name = usuario["permissions_name"]
+            self.type_id = usuario["type_id"]
+            self.type = usuario["type"]
             return self.ShowSuccessMessage(usuario)
         except:
             return self.ShowError("user : " + idd + " not found")
 
     def Save(self):
+
+        items_query_anterior = 0
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        q = '''select * from "User" where email = %(email)s and type_id = any(%(type_id)s) limit 1'''
+        p = {
+            "email":self.email,
+            "type_id": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
+        }
+
+        try:
+            cur.execute(q,p)
+            usuario = cur.fetchone()
+            items_query_anterior = cur.rowcount
+        except Exception, e:
+            return self.ShowError("error finding user {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
 
         permisos = []
 
@@ -254,35 +315,18 @@ class Salesman(BaseModel):
                        ]
         elif UserType.GESTION == int(self.type_id):
             permisos = [
+                        Permission.ADM_USER, 
                         Permission.MOD_CELLAR, 
                         Permission.SELL, 
                         Permission.REPORT
                        ]
 
-        usuario = []
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        if self.id != "":
+        # print permisos
+        if items_query_anterior > 0:
 
-            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-            q = '''select * from "User" where id = %(id)s limit 1'''
-            p = {
-                "id":self.id
-            }
-
-            try:
-                cur.execute(q,p)
-                usuario = cur.fetchall()
-                self.connection.commit()
-            except Exception, e:
-                return self.ShowError(str(e))
-            finally:
-                self.connection.close()
-                cur.close()
-
-        if len(usuario) > 0:
-
-            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            self.id = usuario['id']
 
             q = '''update "User" set name = %(name)s,
                                      lastname = %(lastname)s,
@@ -299,7 +343,7 @@ class Salesman(BaseModel):
                 "password":self.password,
                 "id":self.id,
                 "type_id": self.type_id,
-                "cellar_permissions":self.cellars,
+                "cellar_permissions": [int(cellar_id) for cellar_id in self.cellars],
                 "lastname":self.lastname
             }
 
@@ -307,14 +351,12 @@ class Salesman(BaseModel):
                 cur.execute(q,p)
                 self.connection.commit()
                 return self.ShowSuccessMessage(str(self.id))
-            except Exception, e:
-                return self.ShowError(str(e))
+            except Exception,e:
+                return self.ShowError("failed to save user {}, error:{}".format(self.email,str(e)))
             finally:
-                self.connection.close()
                 cur.close()
+                self.connection.close()
         else:
-
-            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
             q = '''\
                 insert into "User" (name,
@@ -339,22 +381,23 @@ class Salesman(BaseModel):
                 "permissions":permisos,
                 "password":self.password,
                 "type_id": self.type_id,
-                "cellar_permissions":self.cellars
+                "cellar_permissions": [int(cellar_id) for cellar_id in self.cellars]
             }
 
             try:
                 cur.execute(q,p)
                 self.connection.commit()
                 self.id = cur.fetchone()["id"]
+
                 return self.ShowSuccessMessage(str(self.id))
-            except Exception, e:
-                return self.ShowError(str(e))
+
+            except Exception,e:
+                return self.ShowError("failed to save user {}, error:{}".format(self.email,str(e)))
             finally:
-                self.connection.close()
                 cur.close()
+                self.connection.close()
 
-
-    def GetList(self, page, items):
+    def GetList(self, page=1, items=30):
 
         page = int(page)
         items = int(items)

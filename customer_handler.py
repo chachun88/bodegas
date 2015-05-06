@@ -10,9 +10,9 @@ import tornado.web
 from globals import Menu
 
 from basehandler import BaseHandler
-from model.customer import Customer
-from model.contact import Contact
-from model.city import City
+from model10.customer import Customer
+from model10.contact import Contact
+from model10.city import City
 
 from datetime import datetime
 

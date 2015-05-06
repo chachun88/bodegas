@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from model10.base_model import BaseModel
 from bson import json_util
-import urllib
+from basemodel import BaseModel
+from contact import Contact
+import psycopg2
+import psycopg2.extras
 
 class Webpay(BaseModel):
 
@@ -41,14 +43,14 @@ class Webpay(BaseModel):
     @fecha_contable.setter
     def fecha_contable(self, value):
         self._fecha_contable = value
-    
+
     @property
     def fecha_transaccion(self):
         return self._fecha_transaccion
     @fecha_transaccion.setter
     def fecha_transaccion(self, value):
         self._fecha_transaccion = value
-    
+
     @property
     def hora_transaccion(self):
         return self._hora_transaccion
@@ -113,24 +115,26 @@ class Webpay(BaseModel):
         self._id_sesion = ""
         self._orden_compra = ""
         self._order_id = ""
-
+    
     def InitByOrderId(self, order_id):
 
-        url = self.wsurl() + "/webpay/initbyorderid"
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        data = {
-        "token":self.token,
+        query = '''select * from "Webpay" where "ORDER_ID" = %(order_id)s'''
+
+        parametros = {
         "order_id":order_id
         }
 
-        post_data = urllib.urlencode(data)
-
-        response_str = urllib.urlopen(url, post_data).read()
-
-        response_obj = json_util.loads(response_str)
-
-        return response_obj
-
-
-    
-    
+        try:
+            cur.execute(query,parametros)
+            if cur.rowcount > 0:
+                res = cur.fetchone()
+                return self.ShowSuccessMessage(res)
+            else:
+                return self.ShowError("not paid with webpay")
+        except Exception, e:
+            return self.ShowError("Init by order id {}".format(str(e)))
+        finally:
+            self.connection.close()
+            cur.close()

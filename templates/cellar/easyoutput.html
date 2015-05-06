@@ -11,121 +11,121 @@
     </div>
 </div>
 <div class="col-md-12">
-    <section class="widget">
-        <div class="body">
-            <a type="button" href="/cellar" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm" style="float:right; ">Volver</a>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>SKU</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Marca</th>
-                        <th>Fabricante</th>
-                        <th>Talla</th>
-                        <th>Color</th>
-                        <th>Cantidad</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in products %}
-                    <tr>
-                        <td>{{ p["sku"]}}</td>
-                        <td>{{ p["name"] }}</td>
-                        <td>{% raw p["description"] %}</td>
-                        <td>{{ p["brand"] }}</td>
-                        <td>{{ p["manufacturer"] }}</td>
-                        <td>{{ p["size"] }}</td>
-                        <td>{{ p["color"] }}</td>
-                        <td>{{ int(p["balance_units"]) }}</td>
-                        <td>
-                            <a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
-                                Sacar de este producto
-                            </a>
-                            <div class="lptooltip col-sm-2" >
-                                <div class="pointer">
-                                    <img src="/static/img/pointer.png" />
-                                </div>
-                                <form action="/cellar/easyoutput" class="form-add" >
-                                    <fieldset>
-                                        <div class="control-group">
-                                            <label for="" class="control-label">Cantidad</label>
-                                            <div class="controls form-group">
-                                                <div class="col-sm-12"><input type="number" required="required" name="quantity" min="1" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label for="" class="control-label">Precio</label>
-                                            <div class="controls form-group">
-                                                <div class="col-sm-12"><input type="number" required="required" name="price" min="0" placeholder="Precio de producto" autocomplete="off" class="form-control"></div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="color" value="{{p['color']}}">                                                                               
-                                        <div class="form-actions">
-                                            <button type="submit" class="btn btn-primary">Sacar</button>
-                                        </div>
-                                    </fieldset>
-                                    <input type="hidden" name="product_sku" value="{{ p['sku'] }}" />
-                                    <input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
-                                    <input type="hidden" name="product_name" value="{{ p["name"] }}" />
-                                    <input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
-                                    <input type="hidden" name="transaction" value="eliminado" />
-                                    <input type="hidden" name="operation" value="sell" />
-                                    <input type="hidden" name="size" value="{{p['size']}}" />
-                                </form>
-                            </div>
-                        </td>
-                        <td>
-                            <a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
-                                Mover a otra bodega
-                            </a>
-                            <div class="lptooltip col-sm-2" >
-                                <div class="pointer">
-                                    <img src="/static/img/pointer.png" />
-                                </div>
-                                <form action="/cellar/easyoutput" class="form-add" >
-                                    <fieldset>
-                                        <div class="control-group">
-                                            <label for="" class="control-label">Cantidad</label>
-                                            <div class="controls form-group">
-                                                <div class="col-sm-12"><input type="number" required="required" name="quantity" min="1" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
-                                            </div>
-                                            <input type="hidden" name="size" value="{{p['size']}}" />
-                                            <input type="hidden" name="color" value="{{p['color']}}">
-                                            <label for="" class="control-label">Bodega Destino</label>
-                                            <div class="controls form-group">
-                                                <div class="col-sm-12">
-                                                    <select name="new_cellar" class="form-control">
-                                                    {% for c in cellarList %}
-                                                       {% if reservation_cellar_id != c['id'] %}
-                                                           <option value="{{ c['id'] }}"> {{ c["name"] }}</option>
-                                                       {% end %}
-                                                       {% set cellar_name = c["name"] %}
-                                                    {% end %}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-actions">
-                                            <button type="submit" class="btn btn-primary">Mover</button>
-                                        </div>
-                                    </fieldset>
-                                    <input type="hidden" name="balance_price" value="{{ p["balance_price"] }}" />
-                                    <input type="hidden" name="product_sku" value="{{ p['sku'] }}" />
-                                    <input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
-                                    <input type="hidden" name="product_name" value="{{ p["name"] }}" />
-                                    <input type="hidden" name="cellar_name" value="{{ cellar_name }}" />
-                                    <input type="hidden" name="transaction" value="movido" />
-                                    <input type="hidden" name="operation" value="mov" />
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    {% end %}
-                </tbody>
-            </table>
-        </div>
-    </section>
+	<section class="widget">
+		<div class="body">
+			<a type="button" href="/cellar" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm" style="float:right; ">Volver</a>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>SKU</th>
+						<th>Nombre</th>
+						<th>Descripción</th>
+						<th>Marca</th>
+						<th>Fabricante</th>
+						<th>Talla</th>
+						<th>Color</th>
+						<th>Cantidad</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for p in products %}
+					<tr>
+						<td>{{ p["sku"]}}</td>
+						<td>{{ p["name"] }}</td>
+						<td>{% raw p["description"] %}</td>
+						<td>{{ p["brand"] }}</td>
+						<td>{{ p["manufacturer"] }}</td>
+						<td>{{ p["size"] }}</td>
+						<td>{{ p["color"] }}</td>
+						<td>{{ int(p["balance_units"]) }}</td>
+						<td>
+							<a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+								Sacar de este producto
+							</a>
+							<div class="lptooltip col-sm-2" >
+								<div class="pointer">
+									<img src="/static/img/pointer.png" />
+								</div>
+								<form action="/cellar/easyoutput" class="form-add" >
+									<fieldset>
+										<div class="control-group">
+											<label for="" class="control-label">Cantidad</label>
+											<div class="controls form-group">
+												<div class="col-sm-12"><input type="number" required="required" name="quantity" min="1" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
+											</div>
+										</div>
+										<div class="control-group">
+											<label for="" class="control-label">Precio</label>
+											<div class="controls form-group">
+												<div class="col-sm-12"><input type="number" required="required" name="price" min="0" placeholder="Precio de producto" autocomplete="off" class="form-control"></div>
+											</div>
+										</div>
+										<input type="hidden" name="color" value="{{p['color']}}">																				
+										<div class="form-actions">
+											<button type="submit" class="btn btn-primary">Sacar</button>
+										</div>
+									</fieldset>
+									<input type="hidden" name="product_sku" value="{{ p['sku'] }}" />
+									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
+									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
+									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
+									<input type="hidden" name="transaction" value="eliminado" />
+									<input type="hidden" name="operation" value="sell" />
+									<input type="hidden" name="size" value="{{p['size']}}" />
+								</form>
+							</div>
+						</td>
+						<td>
+							<a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+								Mover a otra bodega
+							</a>
+							<div class="lptooltip col-sm-2" >
+								<div class="pointer">
+									<img src="/static/img/pointer.png" />
+								</div>
+								<form action="/cellar/easyoutput" class="form-add" >
+									<fieldset>
+										<div class="control-group">
+											<label for="" class="control-label">Cantidad</label>
+											<div class="controls form-group">
+												<div class="col-sm-12"><input type="number" required="required" name="quantity" min="1" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
+											</div>
+											<input type="hidden" name="size" value="{{p['size']}}" />
+											<input type="hidden" name="color" value="{{p['color']}}">
+											<label for="" class="control-label">Bodega Destino</label>
+											<div class="controls form-group">
+												<div class="col-sm-12">
+													<select name="new_cellar" class="form-control">
+													{% for c in cellarList %}
+														{% if reservation_cellar_id != c['id'] %}
+														<option value="{{ c['id'] }}"> {{ c["name"] }}</option>
+														{{ cellar_name=c["name"] }}
+														{% end %}
+													{% end %}
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="form-actions">
+											<button type="submit" class="btn btn-primary">Mover</button>
+										</div>
+									</fieldset>
+									<input type="hidden" name="balance_price" value="{{ p["balance_price"] }}" />
+									<input type="hidden" name="product_sku" value="{{ p['sku'] }}" />
+									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
+									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
+									<input type="hidden" name="cellar_name" value="{{ cellar_name }}" />
+									<input type="hidden" name="transaction" value="movido" />
+									<input type="hidden" name="operation" value="mov" />
+								</form>
+							</div>
+						</td>
+					</tr>
+					{% end %}
+				</tbody>
+			</table>
+		</div>
+	</section>
 </div>
 {% end %}

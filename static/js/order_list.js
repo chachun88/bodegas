@@ -16,11 +16,24 @@ var ValidateTracking = function(){
             type: $("#shipping-tracking").attr('method'),
             success: function(res){
                 var html_str = JSON.stringify(res);
-                obj = $.parseJSON(html_str);
-                if (obj["state"]==0) {
-                    location.reload()
+                var obj = $.parseJSON(html_str);
+                var html_res = '';
+
+                // console.log(obj);
+                
+                if(obj.length > 0){
+                    for(var i = 0; i < obj.length; i++){
+                        if("error" in obj[i]){
+                            html_res += obj[i]["error"] + '\n';
+                        }
+                    }
+                    if(html_res != ''){
+                        alert(html_res);
+                    } else {
+                        location.reload();
+                    }
                 } else {
-                    alert(obj["obj"]);
+                    location.reload();
                 }
             }
         });
@@ -53,7 +66,7 @@ $(document).ready(function(){
             if (chkArray.length > 0){
                 $('#myModal').modal('show');
             } else{
-                alert("Por favor seleccione pedidos no despachados");
+                alert("Por favor seleccione pedidos listos para ser despachados");
             }
 
         } else {
@@ -62,7 +75,7 @@ $(document).ready(function(){
                 chkArray.push($(this).val());
             });
 
-            valores_checkbox = chkArray.join(",")
+            valores_checkbox = chkArray.join(",");
 
             $.ajax({
                 url: "/orders/actions",
@@ -70,25 +83,25 @@ $(document).ready(function(){
                 type: "post",
                 dataType: 'json',
                 success: function(html) {
+
                     var html_str = JSON.stringify(html);
                     obj = $.parseJSON(html_str);
 
-                    if (obj["success"]) {
-                        location.reload();
-                    } else {
-                        if (parseInt(action) != 5){
-                            alert(obj.error);
-                        } else {
-                            var html_res = ''
+                    var html_res = ''
 
-                            for(var i = 0; i < obj.error.length; i++){
-                                if(obj.error[i]){
-                                    html_res += 'pedido ' + obj.error[i]["identificador"] + ' : ' + obj.error[i]["error"] + '\n';
-                                }
+                    if(obj.length > 0){
+                        for(var i = 0; i < obj.length; i++){
+                            if("error" in obj[i]){
+                                html_res += obj[i]["error"] + '\n';
                             }
-
-                            alert(html_res);
                         }
+                        if(html_res != ''){
+                            alert(html_res);
+                        } else {
+                            location.reload();
+                        }
+                    } else {
+                        location.reload();
                     }
                 }
             });

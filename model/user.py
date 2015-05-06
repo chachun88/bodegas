@@ -12,7 +12,7 @@ import urllib2
 # from basehandler import BaseHandler
 from bson import json_util
 
-from model.base_model import BaseModel
+from model10.base_model import BaseModel
 
 # TOKEN=5334d6c29ec9a710f56d9ab5
 
@@ -29,7 +29,6 @@ class User(BaseModel):
         self._identifier = ""
         self._salesman_id = ""
         self._cellars = []
-        self._cellars_name = []
 
 
     ####################
@@ -226,7 +225,11 @@ class User(BaseModel):
         url += "&password=" + self.password
         url += "&email=" + self.email
         url += "&type_id={}".format(self.type_id)
-        url += "&cellars={}".format(self.cellars)
+
+        if type(self.cellars) == list:
+            url += "&cellars=" + urllib.quote( ",".join(self.cellars).encode("utf8") )
+        else:
+            url += "&cellars=" + urllib.quote( self.cellars.encode("utf8") )
         url += "&id=" + self.identifier
 
         # url = urllib.urlencode(url)
