@@ -1012,3 +1012,26 @@ class Product(BaseModel):
                 return self.ShowError("identifier not found")   
         except Exception, e:
             return self.ShowError("object: not found, error:{}".format(str(e)))
+
+    def GetSizes(self):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''\
+                select s.id, s.name from "Size" s
+                inner join (select distinct on(product_sku, size_id) product_sku, size_id from "Kardex") k on k.size_id = s.id
+                where k.product_sku = %(product_sku)s'''
+        parameters = {
+            "product_sku": self.sku
+        }
+
+        try:
+            cur.execute(query, parameters)
+            sizes = cur.fetchall()
+            self.connection.commit()
+            return self.ShowSuccessMessage(sizes)
+        except Exception, e:
+            return self.ShowError("Get sizes by product sku, {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.commit()

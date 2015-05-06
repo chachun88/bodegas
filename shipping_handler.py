@@ -46,20 +46,22 @@ class SaveHandler(BaseHandler):
         city = City()
         cities = city.List()
 
-        identifier = int(self.get_argument("identifier",0))
+        identifier = self.get_argument("identifier","")
         dn = self.get_argument("dn","")
         mensaje = self.get_argument("mensaje","")
 
         shipping = Shipping()
 
-        if identifier != 0:
-            
+        if identifier != "":
+
             shipping.identifier = identifier
             res = shipping.InitById()
 
+            print res
+
             if "error" in res:
+                print res
                 self.write(res["error"])
-                return
 
         if "success" in cities:
             self.render("shipping/add.html",cities=cities["success"],shipping=shipping,dn=dn,mensaje=mensaje)
@@ -70,19 +72,19 @@ class SaveHandler(BaseHandler):
     def post(self):
 
         shipping = Shipping()
-        shipping.identifier = int(self.get_argument("identifier",0))
+        shipping.identifier = self.get_argument("identifier","")
         shipping.from_city_id = self.get_argument("from_city_id",0)
         shipping.to_city_id = self.get_argument("to_city_id",0)
         shipping.correos_price = self.get_argument("correos_price",0)
         shipping.chilexpress_price = self.get_argument("chilexpress_price",0)
         shipping.price = self.get_argument("price",0)
-        shipping.edited = self.get_argument("edited",0)
+        shipping.edited = bool(self.get_argument("edited", False))
         shipping.charge_type = self.get_argument("charge_type",1)
         
         guardado = shipping.Save()
         
         if "success" in guardado:
-            if shipping.identifier == 0:
+            if shipping.identifier == "":
                 self.redirect("/shipping/list")
             else:
                 self.redirect("/shipping/save?identifier={id}".format(id=shipping.identifier))

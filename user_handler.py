@@ -35,7 +35,12 @@ class UserRemoveHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         usr = User()
-        usr.InitWithId(self.get_argument("id", ""))
-        usr.Remove()
+        usr.id = self.get_argument("id", "")
+        res = usr.Remove()
 
-        self.redirect("/user?dn=t2")
+        print res
+
+        if "success" in res:
+            self.redirect("/user?dn=t2")
+        else:
+            self.redirect("/user?dn=t4")

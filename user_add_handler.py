@@ -86,6 +86,9 @@ class UserAddHandler(BaseHandler):
         response = usr.Save()
 
         if "success" in response:
-            self.redirect("/user/add?dn=t&warnings=")
+            if user_id == "":
+                self.redirect("/user/add?dn=t&warnings=")
+            else:
+                self.redirect("/user")
         else:
             self.redirect("/user/add?dn=warnings=" + response["error"])

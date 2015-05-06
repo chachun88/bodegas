@@ -13,7 +13,7 @@ class Shipping(BaseModel):
         self._identifier = 0
         self._to_city_id = 0
         self._from_city_id = 0
-        self._edited = 0
+        self._edited = False
         self._price = 0
         self._correos_price = 0
         self._chilexpress_price = 0
@@ -93,7 +93,7 @@ class Shipping(BaseModel):
 
     def Save(self):
 
-        if self.identifier != 0:
+        if self.identifier != "":
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             query = '''update "Shipping" set from_city_id = %(from_city_id)s, to_city_id = %(to_city_id)s, correos_price = %(correos_price)s, chilexpress_price = %(chilexpress_price)s, price = %(price)s, edited = %(edited)s, charge_type = %(charge_type)s where id = %(id)s'''
@@ -204,21 +204,29 @@ class Shipping(BaseModel):
 
     def InitById(self):
 
-        if self.identifier == 0:
+        if self.identifier == "":
 
-            return self.ShowError("Debe especificador un identificador válido")
+            return self.ShowError("Debe especificar un identificador válido")
 
         else:
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             query = '''select * from "Shipping" where id = %(id)s'''
             parameters = {
-            "id":self.identifier
+                "id":self.identifier
             }
 
             try:
                 cur.execute(query,parameters)
                 shipping = cur.fetchone()
+                self.identifier = shipping["id"]
+                self.from_city_id = shipping["from_city_id"]
+                self.to_city_id = shipping["to_city_id"]
+                self.edited = shipping["edited"]
+                self.correos_price = shipping["correos_price"]
+                self.chilexpress_price = shipping["chilexpress_price"]
+                self.price = shipping["price"]
+                self.charge_type = shipping["charge_type"]
                 return self.ShowSuccessMessage(shipping)
             except Exception,e:
                 return self.ShowError(str(e))

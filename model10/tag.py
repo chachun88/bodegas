@@ -4,25 +4,24 @@
 from basemodel import BaseModel
 import psycopg2
 import psycopg2.extras
-from bson import json_util
+
 
 class Tag(BaseModel):
 
     @property
     def name(self):
         return self._name
+
     @name.setter
     def name(self, value):
         self._name = value
-    
 
     def __init__(self):
         BaseModel.__init__(self)
         self.table = "Tag"
+        self._name = ''
 
-    def Save(self):
-
-        
+    def Save(self):        
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -30,7 +29,7 @@ class Tag(BaseModel):
 
         query = '''select id from "Tag" where name = %(name)s'''
         parameters = {
-        "name":self.name
+            "name":self.name
         }
 
         try:
@@ -50,7 +49,7 @@ class Tag(BaseModel):
 
             query = '''insert into "Tag" (name) values (%(name)s) returning id'''
             parameters = {
-            "name":self.name
+                "name":self.name
             }
 
             try:
@@ -71,8 +70,8 @@ class Tag(BaseModel):
 
             query = '''update "Tag" set name = %(name)s where id = %(id)s returning id'''
             parameters = {
-            "name":self.name,
-            "id":self.id
+                "name":self.name,
+                "id":self.id
             }
 
             try:
@@ -93,7 +92,7 @@ class Tag(BaseModel):
 
         query = '''select * from "Tag" where id = any(%(ids)s)'''
         parameters = {
-        "ids":ids
+            "ids":ids
         }
 
         try:
@@ -112,7 +111,7 @@ class Tag(BaseModel):
 
         query = '''select * from "Tag" t left join "Tag_Product" tp on tp.tag_id = t.id where tp.product_id = %(id)s'''
         parameters = {
-        "id":_id
+            "id":_id
         }
 
         try:
@@ -131,8 +130,8 @@ class Tag(BaseModel):
 
         query = '''insert into "Tag_Product" (tag_id,product_id) values (%(tag_id)s,%(product_id)s) returning id'''
         parameters = {
-        "tag_id":tag_id,
-        "product_id":product_id
+            "tag_id":tag_id,
+            "product_id":product_id
         }
 
         try:
@@ -174,8 +173,8 @@ class Tag(BaseModel):
 
         query = '''select * from "Tag" limit %(limit)s offset %(offset)s'''
         parameters = {
-        "limit":limit,
-        "offset":offset
+            "limit":limit,
+            "offset":offset
         }
 
         try:
@@ -214,6 +213,8 @@ class Tag(BaseModel):
             try:
                 cur.execute(query,parameters)
                 tag = cur.fetchone()
+                self.name = tag["name"]
+                self.id = tag["id"]
                 return self.ShowSuccessMessage(tag)
             except Exception,e:
                 return self.ShowError("Error al inicializar tag por id, {}".format(str(e)))
@@ -229,7 +230,7 @@ class Tag(BaseModel):
 
         query = '''select product_id from "Tag" t inner join "Tag_Product" tp on tp.tag_id = t.id where tp.tag_id = %(id)s'''
         parameters = {
-        "id":_id
+            "id":_id
         }
 
         lista_product_id = []
@@ -254,8 +255,8 @@ class Tag(BaseModel):
 
         query = '''update "Tag" set visible = %(visible)s where id = %(id)s'''
         parameters = {
-        "visible":visible,
-        "id":tag_id
+            "visible":visible,
+            "id":tag_id
         }
 
         try:
@@ -265,4 +266,24 @@ class Tag(BaseModel):
         except Exception,e:
             return self.ShowError(str(e))
 
-    
+    def Remove(self, identifier):
+
+        res = self.RemoveTagsAsociationByTagId(identifier)
+
+        if "success" in res:
+
+            cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            query = '''delete from "Tag" where id = %(id)s'''
+            parameters = {
+                "id": identifier
+            }
+
+            try:
+                cur.execute(query,parameters)
+                self.connection.commit()
+                return self.ShowSuccessMessage(identifier)
+            except Exception,e:
+                return self.ShowError(str(e))
+
+        return res

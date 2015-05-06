@@ -141,10 +141,25 @@ class User(BaseModel):
         }
 
     def Remove(self):
-        try:
-            return BaseModel.Remove(self)
-        except Exception, e:
-            return self.ShowError("error removing user {}".format(str(e)))
+
+        if self.id != "":
+
+            cur = self.connection.cursor()
+            q = '''delete from "User" where id = %(id)s'''.format(tabla=self.table)
+            p = {
+                "id":self.id
+            }
+            try:
+                cur.execute(q,p)
+                self.connection.commit()
+                return self.ShowSuccessMessage("object: {} has been deleted".format(self.id))
+            except Exception, e:
+                return self.ShowError("object: not found, error:{}".format(str(e)))
+            finally:
+                cur.close()
+                self.connection.close()
+        else:
+            return self.ShowError("identifier not found")
 
     def Login(self, username, password):
         # data = self.collection.find({"email":username, "password":password})
@@ -183,6 +198,7 @@ class User(BaseModel):
             select  u.*, 
                     STRING_AGG(distinct p.name, ',') as permissions_name, 
                     STRING_AGG(distinct c.name, ',') as cellars_name,
+                    array_agg(distinct c.id) as cellars,
                     ut.name as type,
                     ut.id as type_id
             from "User" u 
@@ -199,6 +215,18 @@ class User(BaseModel):
             cur.execute(q,p)
             usuario = cur.fetchone()
             if cur.rowcount > 0:
+                self.name = usuario["name"]
+                self.lastname = usuario["lastname"]
+                self.identifier = usuario["id"]
+                self.password = usuario["password"]
+                self.permissions = usuario["permissions"]
+                self.email = usuario["email"]
+                self.identifier = usuario["id"]
+                self.cellars = usuario["cellars"]
+                self.cellars_name = usuario["cellars_name"]
+                self.permissions_name = usuario["permissions_name"]
+                self.type_id = usuario["type_id"]
+                self.type = usuario["type"]
                 return self.ShowSuccessMessage(usuario)
             else:
                 return self.ShowError("user : " + email + " not found")
@@ -214,6 +242,7 @@ class User(BaseModel):
                     STRING_AGG(distinct p.name, ',') as permissions_name, 
                     STRING_AGG(distinct c.name, ',') as cellars_name,
                     ut.name as type,
+                    array_agg(distinct c.id) as cellars,
                     ut.id as type_id 
             from "User" u 
             inner join "Permission" p on p.id = any(u.permissions) 
@@ -228,119 +257,145 @@ class User(BaseModel):
         try:
             cur.execute(q,p)
             usuario = cur.fetchone()
+            self.name = usuario["name"]
+            self.lastname = usuario["lastname"]
+            self.identifier = usuario["id"]
+            self.password = usuario["password"]
+            self.permissions = usuario["permissions"]
+            self.email = usuario["email"]
+            self.identifier = usuario["id"]
+            self.cellars = usuario["cellars"]
+            self.cellars_name = usuario["cellars_name"]
+            self.permissions_name = usuario["permissions_name"]
+            self.type_id = usuario["type_id"]
+            self.type = usuario["type"]
             return self.ShowSuccessMessage(usuario)
         except:
             return self.ShowError("user : " + idd + " not found")
 
     def Save(self):
 
+        items_query_anterior = 0
+
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        q = '''select id from "Cellar" where name = any(%(cellars)s)'''
+        q = '''select * from "User" where email = %(email)s and type_id = any(%(type_id)s) limit 1'''
         p = {
-            "cellars":self.cellars
+            "email":self.email,
+            "type_id": [UserType.ADMINISTRADOR, UserType.GESTION, UserType.BODEGA]
         }
-        cur.execute(q,p)
-        bodegas = []
 
-        for i in cur.fetchall():
-            bodegas.append(i["id"])
-
-        q = '''select * from "User" where email = %(email)s limit 1'''
-        p = {
-            "email":self.email
-        }
-        cur.execute(q,p)
-        usuario = cur.fetchone()
+        try:
+            cur.execute(q,p)
+            usuario = cur.fetchone()
+            items_query_anterior = cur.rowcount
+        except Exception, e:
+            return self.ShowError("error finding user {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
 
         permisos = []
 
-        try:
+        if self.type_id == '':
+            return self.ShowError("Debe seleccionar tipo de usuario")
 
-            if self.type_id == '':
-                return self.ShowError("Debe seleccionar tipo de usuario")
+        if UserType.ADMINISTRADOR == int(self.type_id):
+            permisos = [
+                        Permission.ADM_USER, 
+                        Permission.API, 
+                        Permission.MOD_CELLAR, 
+                        Permission.SELL, 
+                        Permission.NEW_PROD,
+                        Permission.REPORT
+                       ]
+        elif UserType.BODEGA == int(self.type_id):
+            permisos = [
+                        Permission.MOD_CELLAR
+                       ]
+        elif UserType.GESTION == int(self.type_id):
+            permisos = [
+                        Permission.ADM_USER, 
+                        Permission.MOD_CELLAR, 
+                        Permission.SELL, 
+                        Permission.REPORT
+                       ]
 
-            if UserType.ADMINISTRADOR == int(self.type_id):
-                permisos = [
-                            Permission.ADM_USER, 
-                            Permission.API, 
-                            Permission.MOD_CELLAR, 
-                            Permission.SELL, 
-                            Permission.NEW_PROD,
-                            Permission.REPORT
-                           ]
-            elif UserType.BODEGA == int(self.type_id):
-                permisos = [
-                            Permission.MOD_CELLAR
-                           ]
-            elif UserType.GESTION == int(self.type_id):
-                permisos = [
-                            Permission.ADM_USER, 
-                            Permission.MOD_CELLAR, 
-                            Permission.SELL, 
-                            Permission.REPORT
-                           ]
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-            # print permisos
-            if cur.rowcount > 0:
+        # print permisos
+        if items_query_anterior > 0:
 
-                self.id = usuario['id']
+            self.id = usuario['id']
 
-                q = '''update "User" set name = %(name)s,
-                                         lastname = %(lastname)s,
-                                         password = %(password)s,
-                                         email = %(email)s,
-                                         permissions = %(permissions)s,
-                                         type_id = %(type_id)s, 
-                                         cellar_permissions = %(cellar_permissions)s 
-                        where id = %(id)s'''
-                p = {
-                    "name":self.name,
-                    "email":self.email,
-                    "permissions":permisos,
-                    "password":self.password,
-                    "id":self.id,
-                    "type_id": self.type_id,
-                    "cellar_permissions":bodegas,
-                    "lastname":self.lastname
-                }
+            q = '''update "User" set name = %(name)s,
+                                     lastname = %(lastname)s,
+                                     password = %(password)s,
+                                     email = %(email)s,
+                                     permissions = %(permissions)s,
+                                     type_id = %(type_id)s, 
+                                     cellar_permissions = %(cellar_permissions)s 
+                    where id = %(id)s'''
+            p = {
+                "name":self.name,
+                "email":self.email,
+                "permissions":permisos,
+                "password":self.password,
+                "id":self.id,
+                "type_id": self.type_id,
+                "cellar_permissions": [int(cellar_id) for cellar_id in self.cellars],
+                "lastname":self.lastname
+            }
+
+            try:
                 cur.execute(q,p)
                 self.connection.commit()
                 return self.ShowSuccessMessage(str(self.id))
-            else:
+            except Exception,e:
+                return self.ShowError("failed to save user {}, error:{}".format(self.email,str(e)))
+            finally:
+                cur.close()
+                self.connection.close()
+        else:
 
-                q = '''\
-                    insert into "User" (name,
-                                        password,
-                                        email,
-                                        permissions,
-                                        type_id,
-                                        cellar_permissions,
-                                        lastname) 
-                    values (%(name)s,
-                            %(password)s,
-                            %(email)s,
-                            %(permissions)s,
-                            %(type_id)s,
-                            %(cellar_permissions)s,
-                            %(lastname)s) 
-                    returning id'''
-                p = {
-                    "name":self.name,
-                    "lastname":self.lastname,
-                    "email":self.email,
-                    "permissions":permisos,
-                    "password":self.password,
-                    "type_id": self.type_id,
-                    "cellar_permissions":bodegas
-                }
+            q = '''\
+                insert into "User" (name,
+                                    password,
+                                    email,
+                                    permissions,
+                                    type_id,
+                                    cellar_permissions,
+                                    lastname) 
+                values (%(name)s,
+                        %(password)s,
+                        %(email)s,
+                        %(permissions)s,
+                        %(type_id)s,
+                        %(cellar_permissions)s,
+                        %(lastname)s) 
+                returning id'''
+            p = {
+                "name":self.name,
+                "lastname":self.lastname,
+                "email":self.email,
+                "permissions":permisos,
+                "password":self.password,
+                "type_id": self.type_id,
+                "cellar_permissions": [int(cellar_id) for cellar_id in self.cellars]
+            }
+
+            try:
                 cur.execute(q,p)
                 self.connection.commit()
                 self.id = cur.fetchone()["id"]
 
                 return self.ShowSuccessMessage(str(self.id))
-        except Exception,e:
-            return self.ShowError("failed to save user {}, error:{}".format(self.email,str(e)))
+
+            except Exception,e:
+                return self.ShowError("failed to save user {}, error:{}".format(self.email,str(e)))
+            finally:
+                cur.close()
+                self.connection.close()
 
     def GetList(self, page=1, items=30):
 

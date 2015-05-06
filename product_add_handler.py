@@ -280,8 +280,9 @@ class ProductEditHandler(BaseHandler):
         res_tags = tag.List(1,100000)
 
         sizes = []
-        size = Size()
-        res_sizes = size.list()
+        res_sizes = prod.GetSizes()
+
+        print res_sizes
 
         if "success" in res_sizes:
             sizes = res_sizes["success"]
@@ -309,6 +310,8 @@ class FastEditHandler(BaseHandler):
         res = prod.InitById(self.get_argument("id", ""))
 
         if "success" in res:
+
+            # print prod.size_id
 
             prod.name = self.get_argument("name", "")
             prod.description = self.get_argument("description", "")

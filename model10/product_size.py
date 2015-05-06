@@ -88,9 +88,11 @@ class Product_Size(BaseModel):
 
     def removeNonExisting(self, sizes_id):
 
+        kardex_count = 0
+
         cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''delete from "Product_Size" where product_sku = %(product_sku)s and not (size_id = ANY (%(sizes_id)s))'''
+        query = '''select id from "Kardex" where product_sku = %(product_sku)s and not (size_id = ANY (%(sizes_id)s))'''
         parameters = {
             "product_sku" : self.product_sku,
             "sizes_id": sizes_id
@@ -98,11 +100,32 @@ class Product_Size(BaseModel):
 
         try:
             cursor.execute(query, parameters)
+            kardex_count = cursor.rowcount
             self.connection.commit()
-
-            return self.ShowSuccessMessage("Existing remove successfully")
         except Exception, e:
             return self.ShowError(str(e))
         finally:
             self.connection.close()
             cursor.close()
+
+        if kardex_count == 0:
+
+            cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+            query = '''delete from "Product_Size" where product_sku = %(product_sku)s and not (size_id = ANY (%(sizes_id)s))'''
+            parameters = {
+                "product_sku" : self.product_sku,
+                "sizes_id": sizes_id
+            }
+
+            try:
+                cursor.execute(query, parameters)
+                self.connection.commit()
+                return self.ShowSuccessMessage("Existing remove successfully")
+            except Exception, e:
+                return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cursor.close()
+        else:
+            return self.ShowSuccessMessage("skip")
