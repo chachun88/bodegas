@@ -10,43 +10,43 @@ import tornado.options
 import tornado.web
 from tornado.options import define, options
 
-from globals import port, Menu
+from src.globals import port, Menu
 
-from home_handler import HomeHandler
-from home_handler import ProductRemoveHandler
-from home_handler import ProductLoadHandler, ProductOutHandler, ProductMassiveOutputHandler
-from login_handler import LoginHandler
-from login_handler import LoginPassHandler
-from product_add_handler import ProductAddHandler, FastEditHandler, ForSaleHandler, CheckStockHandler
-from product_add_handler import ProductEditHandler
-from product_list_handler import ProductListHandler
-from product_search_handler import ProductSearchHandler
+from src.handler.home_handler import HomeHandler
+from src.handler.home_handler import ProductRemoveHandler
+from src.handler.home_handler import ProductLoadHandler, ProductOutHandler, ProductMassiveOutputHandler
+from src.handler.login_handler import LoginHandler
+from src.handler.login_handler import LoginPassHandler
+from src.handler.product_add_handler import ProductAddHandler, FastEditHandler, ForSaleHandler, CheckStockHandler
+from src.handler.product_add_handler import ProductEditHandler
+from src.handler.product_list_handler import ProductListHandler
+from src.handler.product_search_handler import ProductSearchHandler
 
-from cellar_handler import CellarHandler, CellarEasyHandler
-from cellar_handler import CellarInputHandler
-from cellar_handler import CellarOutputHandler
-from cellar_handler import CellarDetailHandler, CellarComboboxHandler
-from cellar_handler import CellarEasyInputHandler
-from cellar_handler import CellarEasyOutputHandler, SelectForSaleHandler, SelectReservationHandler
+from src.handler.cellar_handler import CellarHandler, CellarEasyHandler
+from src.handler.cellar_handler import CellarInputHandler
+from src.handler.cellar_handler import CellarOutputHandler
+from src.handler.cellar_handler import CellarDetailHandler, CellarComboboxHandler
+from src.handler.cellar_handler import CellarEasyInputHandler
+from src.handler.cellar_handler import CellarEasyOutputHandler, SelectForSaleHandler, SelectReservationHandler
 
-from order_handler import OrderHandler, AddOrderHandler, OrderActionsHandler
+from src.handler.order_handler import OrderHandler, AddOrderHandler, OrderActionsHandler
 
-from cellar_add_handler import CellarAddHandler
-from cellar_remove_handler import CellarRemoveHandler
+from src.handler.cellar_add_handler import CellarAddHandler
+from src.handler.cellar_remove_handler import CellarRemoveHandler
 
-from user_handler import UserHandler, UserRemoveHandler
-from user_add_handler import UserAddHandler
+from src.handler.user_handler import UserHandler, UserRemoveHandler
+from src.handler.user_add_handler import UserAddHandler
 
-from report_handler import ReportHandler, ReportUploadHandler
+from src.handler.report_handler import ReportHandler, ReportUploadHandler
 
-from image_handler import ImageHandler, ImageHandler2, ImageDeleteHandler
+from src.handler.image_handler import ImageHandler, ImageHandler2, ImageDeleteHandler
 
-from order_detail_handler import AddOrderDetailHandler, ListOrderDetailHandler
+from src.handler.order_detail_handler import AddOrderDetailHandler, ListOrderDetailHandler
 
-from customer_handler import CustomerHandler, CustomerSaveHandler, CustomerActionsHandler, CustomerAddContactHandler, CustomerViewContactHandler, ContactActionsHandler, EditContactHandler
+from src.handler.customer_handler import CustomerHandler, CustomerSaveHandler, CustomerActionsHandler, CustomerAddContactHandler, CustomerViewContactHandler, ContactActionsHandler, EditContactHandler
 
-import tag_handler
-import shipping_handler
+from src.handler.tag_handler import *
+from src.handler.shipping_handler import *
 
 # something
 define("port", default=port, help="run on the given port", type=int)
@@ -134,18 +134,18 @@ class Application(tornado.web.Application):
             (r"/contact/actions", ContactActionsHandler),
             (r"/customer/edit_contact", EditContactHandler),
 
-            (r"/tag/list",              tag_handler.TagHandler),
-            (r"/tag/remove",            tag_handler.RemoveHandler),
-            (r"/tag/edit",              tag_handler.EditHandler),
-            (r"/tag/hideshow",          tag_handler.HideShowHandler),
-            (r"/tag/add",               tag_handler.AddHandler),
+            (r"/tag/list",              TagHandler),
+            (r"/tag/remove",            RemoveHandler),
+            (r"/tag/edit",              EditHandler),
+            (r"/tag/hideshow",          HideShowHandler),
+            (r"/tag/add",               AddHandler),
 
-            (r"/shipping/list",         shipping_handler.ListHandler),
-            (r"/shipping/save",         shipping_handler.SaveHandler),
-            (r"/shipping/savecity",     shipping_handler.AddCityHandler),
-            (r"/shipping/action",       shipping_handler.ActionHandler),
-            (r"/shipping/remove",       shipping_handler.RemoveHandler),
-            (r"/shipping/save_tracking",       shipping_handler.SaveTrackingCodeHandler)
+            (r"/shipping/list",         ListHandler),
+            (r"/shipping/save",         SaveHandler),
+            (r"/shipping/savecity",     AddCityHandler),
+            (r"/shipping/action",       ActionHandler),
+            (r"/shipping/remove",       RemoveHandler),
+            (r"/shipping/save_tracking",       SaveTrackingCodeHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 
