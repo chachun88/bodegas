@@ -17,10 +17,13 @@ from ..model10.kardex import Kardex
 
 from bson import json_util
 
+
 class CellarHandler(BaseHandler):
+
     @tornado.web.authenticated
     def get(self):
-        self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
+
+        self.set_active(Menu.BODEGAS_LISTAR)  # change menu active item
 
         data = Cellar().List(1, 100)
 

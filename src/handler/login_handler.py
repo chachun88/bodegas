@@ -50,10 +50,14 @@ class LoginHandler(BaseHandler):
 
 		if auth:
 			self.set_secure_cookie("user_bodega",json_util.dumps(response["success"]))
-			self.redirect(self.get_argument("next", u"/"))
+			self.redirect(self.get_argument("next", u"/"), status=200)
 		else:
 			error_msg = tornado.escape.url_escape("t")
-			self.redirect(u"/auth/login?e=" + error_msg)
+			self.redirect(u"/auth/login?e=" + error_msg, status=500)
+
+
+	def check_xsrf_cookie(self):
+		pass
 
 class LoginPassHandler(BaseHandler):
 

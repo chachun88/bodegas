@@ -7,11 +7,16 @@ import math
 from bson import json_util
 from bson.objectid import ObjectId
 
+from tornado.options import options
+
 
 class BaseModel(object):
     def __init__(self):
 
-        self._connection = psycopg2.connect("host='localhost' dbname='giani' user='yichun' password='chachun88'")
+        self._connection = psycopg2.connect("host='{host}' dbname='{dbname}' user='{user}' password='{password}'".format(host=options["db_host"],
+                                                                                                                    dbname=options["db_name"], 
+                                                                                                                    user=options["db_user"], 
+                                                                                                                    password=options["db_password"]))
         self._table = ""
         self._id = ""
 
@@ -34,15 +39,18 @@ class BaseModel(object):
     @property
     def connection(self):
         if self._connection.closed != 0:
-            self._connection = psycopg2.connect("host='localhost' dbname='giani' user='yichun' password='chachun88'")
+            self._connection = psycopg2.connect("host='{host}' dbname='{dbname}' user='{user}' password='{password}'".format(host=options["db_host"],
+                                                                                                                    dbname=options["db_name"], 
+                                                                                                                    user=options["db_user"], 
+                                                                                                                    password=options["db_password"]))
 
         return self._connection
 
     def Save(self):
-        return ShowError("must be overriden by user")
+        return self.ShowError("must be overriden by user")
 
     def InitById(self, idd):
-        return ShowError("must be overriden by user")
+        return self.ShowError("must be overriden by user")
 
     def GetList(self, page, items):
 

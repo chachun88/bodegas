@@ -43,14 +43,15 @@ class Kardex(BaseModel):
     @property
     def product_id(self):
         return self._product_id
+
     @product_id.setter
     def product_id(self, value):
-        self._product_id = value
-        
+        self._product_id = value        
 
     @property
     def product_sku(self):
         return self._product_sku
+
     @product_sku.setter
     def product_sku(self, value):
         self._product_sku = value
@@ -58,6 +59,7 @@ class Kardex(BaseModel):
     @property
     def cellar_identifier(self):
         return self._cellar_identifier
+
     @cellar_identifier.setter
     def cellar_identifier(self, value):
         self._cellar_identifier = value
@@ -65,6 +67,7 @@ class Kardex(BaseModel):
     @property
     def operation_type(self):
         return self._operation_type
+
     @operation_type.setter
     def operation_type(self, value):
         self._operation_type = value
@@ -72,6 +75,7 @@ class Kardex(BaseModel):
     @property
     def units(self):
         return self._units
+
     @units.setter
     def units(self, value):
         self._units = value
@@ -79,6 +83,7 @@ class Kardex(BaseModel):
     @property
     def price(self):
         return self._price
+
     @price.setter
     def price(self, value):
         self._price = value
@@ -86,21 +91,23 @@ class Kardex(BaseModel):
     @property
     def sell_price(self):
         return self._sell_price
+
     @sell_price.setter
     def sell_price(self, value):
-        self._sell_price = value
-        
+        self._sell_price = value        
 
     @property
     def size_id(self):
         return self._size_id
+
     @size_id.setter
     def size_id(self, value):
         self._size_id = value
-    
+
     @property
     def color(self):
         return self._color
+
     @color.setter
     def color(self, value):
         self._color = value
@@ -108,6 +115,7 @@ class Kardex(BaseModel):
     @property
     def total(self):
         return self._total
+
     @total.setter
     def total(self, value):
         self._total = value
@@ -115,6 +123,7 @@ class Kardex(BaseModel):
     @property
     def balance_units(self):
         return self._balance_units
+
     @balance_units.setter
     def balance_units(self, value):
         self._balance_units = value
@@ -122,6 +131,7 @@ class Kardex(BaseModel):
     @property
     def balance_price(self):
         return self._balance_price
+
     @balance_price.setter
     def balance_price(self, value):
         self._balance_price = value
@@ -129,6 +139,7 @@ class Kardex(BaseModel):
     @property
     def balance_total(self):
         return self._balance_total
+
     @balance_total.setter
     def balance_total(self, value):
         self._balance_total = value
@@ -136,6 +147,7 @@ class Kardex(BaseModel):
     @property
     def date(self):
         return self._date
+
     @date.setter
     def date(self, value):
         self._date = value
@@ -145,18 +157,17 @@ class Kardex(BaseModel):
 
     def InitById(self, idd):
         return ''
-        
-    def FindKardex(self, product_sku, cellar_identifier, size_id):
 
+    def FindKardex(self, product_sku, cellar_identifier, size_id):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s order by date desc limit 1'''
 
         parametros = {
-        "product_sku":product_sku,
-        "cellar_id":cellar_identifier,
-        "size_id":size_id
+            "product_sku":product_sku,
+            "cellar_id":cellar_identifier,
+            "size_id":size_id
         }
 
         try:
@@ -169,7 +180,7 @@ class Kardex(BaseModel):
             self.units = kardex["units"]
             self.price = kardex["price"]
             self.sell_price = kardex["sell_price"]
-            self.size_id =kardex["size_id"]
+            self.size_id = kardex["size_id"]
             self.color = kardex["color"]
             self.total = kardex["total"]
             self.balance_units = kardex["balance_units"]
@@ -306,7 +317,7 @@ class Kardex(BaseModel):
 
         try:
             query = '''insert into "Kardex" (balance_total,product_sku,cellar_id,operation_type,units,price,sell_price,size_id,color,total,balance_units,balance_price,date,"user") values (%(balance_total)s,%(product_sku)s,%(cellar_id)s,%(operation_type)s,%(units)s,%(price)s,%(sell_price)s,%(size_id)s,%(color)s,%(total)s,%(balance_units)s,%(balance_price)s,%(date)s,%(user)s)'''
-            print cur.mogrify(query,parametros)
+            # print cur.mogrify(query,parametros)
             cur.execute(query,parametros)
             self.connection.commit()
             return self.ShowSuccessMessage("products has been added")
