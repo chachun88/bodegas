@@ -18,7 +18,6 @@ from basehandler import BaseHandler
 from ..globals import *
 from ..model10.product import Product
 from ..model10.category import Category
-from ..model10.brand import Brand
 from ..model10.tag import Tag
 from ..model10.kardex import Kardex
 from ..model10.size import Size

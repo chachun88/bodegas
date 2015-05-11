@@ -25,7 +25,7 @@ import tornado.ioloop
 import tornado.web 
 import unittest
 from tornado.options import define, options
-import mock
+# import mock
 from bodegas import Application
 
 define("protocol", default="https", help="run on the given port", type=str)
