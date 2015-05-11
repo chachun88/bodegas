@@ -18,8 +18,6 @@ import datetime
 
 import re
 
-from salesman import Salesman
-
 
 class Cellar(BaseModel):
 

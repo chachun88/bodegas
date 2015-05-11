@@ -9,3 +9,12 @@ $ sudo pip install xlrd
 *******************************************************
 
 al configurar en una maquina definitiva, se debe aumentar el timeout para que funcione la carga masiva con excel
+
+
+```sh
+watchmedo shell-command \
+    --patterns="*.py" \
+    --command='clear && python -m test' \
+    --recursive \
+    /Users/ricardo/git_loadingplay/bodegas.git/
+´´´
