@@ -45,6 +45,8 @@ class CellarHandler(BaseHandler):
         elif debugMode:
             print res_web_cellar["error"]
 
+        print self.current_user
+
         self.render("cellar/home.html",side_menu=self.side_menu, data=data, dn=self.get_argument("dn", ""), web_cellar_id=web_cellar_id,
             reservation_cellar_id=reservation_cellar_id)
 

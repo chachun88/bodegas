@@ -55,7 +55,7 @@ class TestTornadoWeb(unittest.TestCase):
         #         (r'/', MainHandler), 
         #         ])
         self.http_server = tornado.httpserver.HTTPServer(Application()) 
-        self.http_server.listen(options.port) 
+        self.http_server.listen(9008) 
 
     def tearDown(self):
         self.http_server.stop()
@@ -79,7 +79,7 @@ class TestTornadoWeb(unittest.TestCase):
 
         http_client = tornado.httpclient.AsyncHTTPClient()
         http_client.fetch(
-            "http://localhost:9007/cellar", 
+            "http://localhost:9008/cellar", 
             self.handle_request)
         tornado.ioloop.IOLoop.instance().start()
 

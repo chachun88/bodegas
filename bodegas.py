@@ -11,6 +11,7 @@ import tornado.web
 from tornado.options import define, options
 
 from src.globals import port, Menu
+from lp.globals import *
 
 from src.handler.home_handler import HomeHandler
 from src.handler.home_handler import ProductRemoveHandler
@@ -48,8 +49,15 @@ from src.handler.customer_handler import CustomerHandler, CustomerSaveHandler, C
 from src.handler.tag_handler import *
 from src.handler.shipping_handler import *
 
+from config import *
+
 # something
-define("port", default=port, help="run on the given port", type=int)
+define("port", default=PORT, help="run on the given port", type=int)
+
+# define("db_name", default=DB_NAME, help="", type=str)
+# define("db_user", default=DB_USER, help="", type=str)
+# define("db_host", default=DB_HOST, help="", type=str)
+# define("db_password", default=DB_PASSWORD, help="", type=str)
 
 
 class Application(tornado.web.Application):
@@ -60,7 +68,7 @@ class Application(tornado.web.Application):
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             xsrf_cookies=True,
-            cookie_secret="12oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o",
+            cookie_secret="12oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1ol",
             login_url="/auth/login",
             debug=True,
         )

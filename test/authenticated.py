@@ -14,9 +14,9 @@ def authenticated(method):
     """
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        objeto = {"cellar_permissions": [1,2,3,4,5,6]}
-        # self.current_user(objeto)
-        self.set_secure_cookie("user_bodega", json_util.dumps(objeto))
+        # objeto = {"cellar_permissions": [1,2,3,4,5,6]}
+        # # self.current_user(objeto)
+        # self.set_secure_cookie("user_bodega", json_util.dumps(objeto))
         return method(self, *args, **kwargs)
     return wrapper
 
