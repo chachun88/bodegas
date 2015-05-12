@@ -9,5 +9,5 @@ sl.password = ONTEST_PASSWORD
 sl.script_file = "dbscripts/schema.sql"
 
 
-sl.delete_old()
+# sl.delete_old()
 sl.execute()
