@@ -66,8 +66,8 @@ class TestTornadoWeb(unittest.TestCase):
     def testHelloWorldHandler(self): 
 
         http_client = tornado.httpclient.AsyncHTTPClient() 
-        http_client.fetch('http://localhost:9008/auth/login', self.handle_request, method="POST", body="user=yi.neko@gmail.com&password=chachun88") 
-        print self.response
+        http_client.fetch('http://localhost:9007/cellar', self.handle_request) 
+        
         tornado.ioloop.IOLoop.instance().start() 
         self.failIf(self.response.error) 
         self.assertEqual(self.response.code, 200)
