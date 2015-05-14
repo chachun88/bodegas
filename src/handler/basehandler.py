@@ -57,7 +57,13 @@ class BaseHandler(tornado.web.RequestHandler):
 
     ''' @return current user email '''
     def get_current_user(self):
-        user_json = self.get_secure_cookie("user_bodega")        
+        user_json = self.get_secure_cookie("user_bodega")   
+        if options["enviroment"] == Enviroment.ONTEST:
+            user_json = '''\
+                        {"status": 2, "bussiness": "", "name": "Yi Chun", "permissions_name": "modificar bodegas", "type_id": 6, "deleted": 0, "lastname": "Lin", "registration_date": {
+                        "$date": 1423067587141}, "approval_date": null, "email": "yichun212@gmail.com", "cellars_name": "Bodega Central,Bodega de prueba,bodega reserva", 
+                        "cellar_permissions": [13, 12, 5], "last_view": {"$date": 1423067587141}, "first_view": {"$date": 1423067587141}, "password": "698d51a19d8a121ce581499d7b701668", "id": 733, 
+                        "rut": "", "permissions": [4]}'''     
         if user_json: 
             return tornado.escape.json_decode(user_json)
         else:
@@ -111,9 +117,6 @@ class BaseHandler(tornado.web.RequestHandler):
         kwargs["side_menu"] = self.side_menu
         kwargs["CustomDateFormat"] = self.CustomDateFormat
         kwargs["money_format"] = self.money_format
-
-        if options["enviroment"] == Enviroment.ONTEST:
-            kwargs["current_user"] = { "cellar_permissions" : [1,2,3], "permissions" : [1,2,3] }
 
         # overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)

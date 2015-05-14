@@ -279,6 +279,7 @@ class Order(BaseModel):
                 self.billing_id             = order["billing_id"]
                 self.shipping_id            = order["shipping_id"]
                 self.customer_email         = order["email"]
+                self.voucher                = order["voucher"]
                 return self.ShowSuccessMessage(order)
             else:
                 return self.ShowError("Pedido no encontrado")

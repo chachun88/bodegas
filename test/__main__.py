@@ -6,7 +6,6 @@ from config import *
 from tornado.options import define
 from lp.globals import Enviroment
 
-
 define("protocol", default="https", help="run on the given port", type=str)
 
 define("enviroment", default=Enviroment.ONTEST, type=str)

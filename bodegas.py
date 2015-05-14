@@ -36,12 +36,13 @@ from config import *
 # something
 define("port", default=PORT, help="run on the given port", type=int)
 
+if "enviroment" not in options:
 
-# define("enviroment", default=enviroment, type=str)
-# define("db_name", default=DB_NAME, help="", type=str)
-# define("db_user", default=DB_USER, help="", type=str)
-# define("db_host", default=DB_HOST, help="", type=str)
-# define("db_password", default=DB_PASSWORD, help="", type=str)
+    define("enviroment", default=enviroment, type=str)
+    define("db_name", default=DB_NAME, help="", type=str)
+    define("db_user", default=DB_USER, help="", type=str)
+    define("db_host", default=DB_HOST, help="", type=str)
+    define("db_password", default=DB_PASSWORD, help="", type=str)
 
 
 class Application(tornado.web.Application):

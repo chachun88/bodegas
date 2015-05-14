@@ -5,7 +5,6 @@ import os.path
 import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
-from tornado.options import options
 import tornado.web
 
 import xlrd  # lib excel
@@ -18,8 +17,6 @@ from ..model10.cellar import Cellar
 from ..model10.kardex import Kardex
 from ..model10.size import Size
 from ..globals import Menu, dir_products, dir_stock, debugMode
-import math
-from lp.globals import enviroment, Enviroment
 
 
 def cast(t):
