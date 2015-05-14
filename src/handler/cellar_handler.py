@@ -45,7 +45,7 @@ class CellarHandler(BaseHandler):
         elif debugMode:
             print res_web_cellar["error"]
 
-        print self.current_user
+        # print self.current_user
 
         self.render(
             "cellar/home.html",
