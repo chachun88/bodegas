@@ -152,12 +152,6 @@ class Kardex(BaseModel):
     def date(self, value):
         self._date = value
 
-    def Save(self):
-        return ''
-
-    def InitById(self, idd):
-        return ''
-
     def FindKardex(self, product_sku, cellar_identifier, size_id):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -247,6 +241,9 @@ class Kardex(BaseModel):
 
     def Insert(self):
 
+        if int(self.units) == 0:
+            return self.ShowError("Debe ingresar cantidad de productos")
+
         response_prevkardex = self.GetPrevKardex()
 
         product_size = Product_Size()
@@ -274,13 +271,14 @@ class Kardex(BaseModel):
         # doing maths...
         if self.operation_type == Kardex.OPERATION_SELL or self.operation_type == Kardex.OPERATION_MOV_OUT:
             self.price = prev_kardex.balance_price  # calculate price
-        if self.price == "0":
+
+        if self.price == 0.0:
             self.price = prev_kardex.balance_price
 
         self.total = self.units * self.price
 
         if self.operation_type == Kardex.OPERATION_BUY or self.operation_type == Kardex.OPERATION_MOV_IN:
-            self.sell_price = "0"
+            self.sell_price = 0
             self.balance_units = prev_kardex.balance_units + self.units
             self.balance_total = prev_kardex.balance_total + self.total
         else:
@@ -339,7 +337,6 @@ class Kardex(BaseModel):
             kardex.units = d['quantity']
             kardex.price = d['price']
             kardex.size_id = d['size_id']
-
             kardex.color= d["color"]
             kardex.user = "Sistema"
 
@@ -354,7 +351,6 @@ class Kardex(BaseModel):
 
                 if "error" in res_kardex_2:
                     errors.append(res_kardex_2["error"])
-                    
             else:
                 errors.append(res_kardex["error"])
 
@@ -365,7 +361,7 @@ class Kardex(BaseModel):
         else:
             return self.ShowSuccessMessage("ok")
 
-    ## only for debugging.
+    # only for debugging.
     def Debug(self, product_sku, cellar_identifier, size_id):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -373,9 +369,9 @@ class Kardex(BaseModel):
         query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s order by id desc limit 1'''
 
         parameters = {
-        "product_sku":product_sku,
-        "cellar_id":cellar_identifier,
-        "size_id":size_id
+            "product_sku":product_sku,
+            "cellar_id":cellar_identifier,
+            "size_id":size_id
         }
 
         # data = self.collection.find({
@@ -413,7 +409,6 @@ class Kardex(BaseModel):
         @return json si es exitoso retorna json con sucess de lo contrario retorna error
         """
 
-
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         query = '''select coalesce(sum(balance_units),0) as total from 
@@ -424,8 +419,8 @@ class Kardex(BaseModel):
                 as kardex'''
 
         parametros = {
-        "product_sku":product_sku,
-        "size_id":size_id
+            "product_sku":product_sku,
+            "size_id":size_id
         }
 
         try:
@@ -455,4 +450,3 @@ class Kardex(BaseModel):
 
         except Exception,e:
             return self.ShowError("getting stock by product sku, {}".format(str(e)))
-

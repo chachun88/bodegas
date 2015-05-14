@@ -47,7 +47,12 @@ class CellarHandler(BaseHandler):
 
         print self.current_user
 
-        self.render("cellar/home.html",side_menu=self.side_menu, data=data, dn=self.get_argument("dn", ""), web_cellar_id=web_cellar_id,
+        self.render(
+            "cellar/home.html",
+            side_menu=self.side_menu, 
+            data=data, 
+            dn=self.get_argument("dn", ""), 
+            web_cellar_id=web_cellar_id,
             reservation_cellar_id=reservation_cellar_id)
 
 
@@ -473,8 +478,6 @@ class CellarEasyHandler(BaseHandler):
 
         cellar_list = []
 
-        print res_list
-
         if "success" in res_list:
             cellar_list = res_list["success"]
 
@@ -507,7 +510,7 @@ class CellarEasyHandler(BaseHandler):
         cellar_id = self.get_argument("cellar_id", "")
         sku = self.get_argument("sku", "")
         quantity = self.get_argument("quantity", "")
-        price = self.get_argument("price", "")
+        price = self.get_argument("price", 0)
         size = self.get_argument("size", "")
         operation = self.get_argument("operation", "")
         new_cellar = self.get_argument("new_cellar", "")
@@ -523,59 +526,46 @@ class CellarEasyHandler(BaseHandler):
             cellar.InitById(cellar_id)
 
             product = Product()
-            product.InitBySku(sku)
+            init_sku = product.InitBySku(sku)
 
-            kardex = Kardex()
-            res_product_find = kardex.FindKardex(sku, cellar_id, _size.id)
+            if "success" in init_sku:
 
-            units = 0
-            balance_price = 0
+                kardex = Kardex()
+                res_product_find = kardex.FindKardex(sku, cellar_id, _size.id)
 
-            # print res_product_find
+                units = 0
+                balance_price = 0
 
-            if "success" in res_product_find:
+                # print res_product_find
 
-                product_find = res_product_find["success"]
-                units = product_find["balance_units"]
-                balance_price = product_find["balance_price"]
+                if "success" in res_product_find:
 
-            if operation == "buy":
+                    product_find = res_product_find["success"]
+                    units = product_find["balance_units"]
+                    balance_price = product_find["balance_price"]
 
-                kardex.product_sku = sku
-                kardex.units = quantity
-                kardex.price = price
-                kardex.size_id = _size.id
-                kardex.color = product.color
-                kardex.operation_type = Kardex.OPERATION_BUY
-                kardex.user = self.get_user_email()
-                kardex.cellar_identifier = cellar_id
+                if operation == "buy":
 
-                res_add_product = kardex.Insert()
+                    kardex.product_sku = sku
+                    kardex.units = quantity
+                    kardex.price = price
+                    kardex.size_id = _size.id
+                    kardex.color = product.color
+                    kardex.operation_type = Kardex.OPERATION_BUY
+                    kardex.user = self.get_user_email()
+                    kardex.cellar_identifier = cellar_id
 
-                if "success" in res_add_product:
-                    self.write(json_util.dumps({"state": "ok", "message": "Stock agregado exitosamente"}))
+                    res_add_product = kardex.Insert()
+
+                    if "success" in res_add_product:
+                        self.write(json_util.dumps({"state": "ok", "message": "Stock agregado exitosamente"}))
+                    else:
+                        self.write(json_util.dumps({"state": "error", "message": res_add_product["error"]}))
                 else:
-                    self.write(json_util.dumps({"state": "error", "message": res_add_product["error"]}))
-            else:
 
-                if int(units) >= int(quantity): 
+                    if int(units) >= int(quantity): 
 
-                    if operation == "mov":
-
-                        kardex = Kardex()
-
-                        kardex.product_sku = sku
-                        kardex.units = quantity
-                        kardex.price = balance_price
-                        kardex.size_id = _size.id
-                        kardex.color = product.color
-                        kardex.operation_type = Kardex.OPERATION_MOV_OUT
-                        kardex.user = self.get_user_email()
-                        kardex.cellar_identifier = cellar_id
-
-                        res_remove = kardex.Insert()
-
-                        if "success" in res_remove:
+                        if operation == "mov":
 
                             kardex = Kardex()
 
@@ -584,38 +574,55 @@ class CellarEasyHandler(BaseHandler):
                             kardex.price = balance_price
                             kardex.size_id = _size.id
                             kardex.color = product.color
-                            kardex.operation_type = Kardex.OPERATION_MOV_IN
+                            kardex.operation_type = Kardex.OPERATION_MOV_OUT
                             kardex.user = self.get_user_email()
-                            kardex.cellar_identifier = new_cellar
+                            kardex.cellar_identifier = cellar_id
 
-                            res_add_product = kardex.Insert()
+                            res_remove = kardex.Insert()
 
-                            if "success" in res_add_product:
-                                self.write(json_util.dumps({"state": "ok", "message": "Stock movido exitosamente"}))
+                            if "success" in res_remove:
+
+                                kardex = Kardex()
+
+                                kardex.product_sku = sku
+                                kardex.units = quantity
+                                kardex.price = balance_price
+                                kardex.size_id = _size.id
+                                kardex.color = product.color
+                                kardex.operation_type = Kardex.OPERATION_MOV_IN
+                                kardex.user = self.get_user_email()
+                                kardex.cellar_identifier = new_cellar
+
+                                res_add_product = kardex.Insert()
+
+                                if "success" in res_add_product:
+                                    self.write(json_util.dumps({"state": "ok", "message": "Stock movido exitosamente"}))
+                                else:
+                                    self.write(json_util.dumps({"state": "error", "message": res_add_product["error"]}))
                             else:
-                                self.write(json_util.dumps({"state": "error", "message": res_add_product["error"]}))
+                                self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))                        
+
                         else:
-                            self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))                        
+
+                            kardex.product_sku = sku
+                            kardex.units = quantity
+                            kardex.sell_price = price
+                            kardex.size_id = _size.id
+                            kardex.color = product.color
+                            kardex.operation_type = Kardex.OPERATION_SELL
+                            kardex.user = self.get_user_email()
+
+                            res_remove = kardex.Insert()
+
+                            if "success" in res_remove:
+                                self.write(json_util.dumps({"state": "ok", "message": "Stock sacado exitosamente"}))
+                            else:
+                                self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))
 
                     else:
-
-                        kardex.product_sku = sku
-                        kardex.units = quantity
-                        kardex.sell_price = price
-                        kardex.size_id = _size.id
-                        kardex.color = product.color
-                        kardex.operation_type = Kardex.OPERATION_SELL
-                        kardex.user = self.get_user_email()
-
-                        res_remove = kardex.Insert()
-
-                        if "success" in res_remove:
-                            self.write(json_util.dumps({"state": "ok", "message": "Stock sacado exitosamente"}))
-                        else:
-                            self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))
-
-                else:
-                    self.write(json_util.dumps({"state": "error", "message": "Stock insuficiente"}))
+                        self.write(json_util.dumps({"state": "error", "message": "Stock insuficiente"}))
+            else:
+                self.write(json_util.dumps({"state": "error", "message": init_sku["error"]}))
 
 
     ## invalidate xsfr cookie for ajax use

@@ -131,7 +131,7 @@ class Size(BaseModel):
         try:
             cur.execute(query,parametros)
             self.connection.commit()
-                
+
             talla = cur.fetchone()
             self.id = talla["id"]
 

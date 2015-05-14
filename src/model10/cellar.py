@@ -23,10 +23,10 @@ class Cellar(BaseModel):
 
     def __init__(self):
         BaseModel.__init__(self)
-        self._name = ''
-        self._description = ''
+        self.name = ''
+        self.description = ''
         self.table = 'Cellar'
-        self._city = 0
+        self.city = 0
 
     @property
     def name(self):
@@ -345,20 +345,27 @@ class Cellar(BaseModel):
         parametros = {
             "id": idd
         }
-        cur.execute(query, parametros)
-        cellar = cur.fetchone()
 
-        if cur.rowcount > 0:
-            self.id = cellar['id']
-            self.name = cellar['name']
-            self.description = cellar['description']
-            self.city = cellar["city_id"]
-            self.for_sale = cellar["for_sale"]
-            return self.ShowSuccessMessage("cellar initialized")
+        try:
+            cur.execute(query, parametros)
+            cellar = cur.fetchone()
 
-        else:
+            if cur.rowcount > 0:
+                self.id = cellar['id']
+                self.name = cellar['name']
+                self.description = cellar['description']
+                self.city = cellar["city_id"]
+                self.for_sale = cellar["for_sale"]
+                return self.ShowSuccessMessage("cellar initialized")
 
-            return self.ShowError("item not found")
+            else:
+
+                return self.ShowError("item not found")
+        except Exception, e:
+            return self.ShowError("cellar not found, {}".format(str(e)))
+        finally:
+            self.connection.close()
+            cur.close()
 
     def ListProducts(self, page=1, items=30):
 

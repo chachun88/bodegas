@@ -5,7 +5,7 @@ import os.path
 import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
-import tornado.options
+from tornado.options import options
 import tornado.web
 
 import xlrd  # lib excel
@@ -19,6 +19,7 @@ from ..model10.kardex import Kardex
 from ..model10.size import Size
 from ..globals import Menu, dir_products, dir_stock, debugMode
 import math
+from lp.globals import enviroment, Enviroment
 
 
 def cast(t):
@@ -41,7 +42,7 @@ fn = ''
 fnout = ''
 
 
-class HomeHandler(BaseHandler):
+class StockExcelHandler(BaseHandler):
 
     @tornado.web.authenticated
     @tornado.web.asynchronous
@@ -148,7 +149,7 @@ class HomeHandler(BaseHandler):
             self.render("product/home.html", args)
 
 
-class ProductLoadHandler(BaseHandler):
+class MassiveProductsHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
@@ -298,7 +299,7 @@ class ProductRemoveHandler(BaseHandler):
                 # self.render("product/list.html", dn="bpe", side_menu=self.side_menu, product_list=product_list, message=res_remove["error"])
 
 
-class ProductOutHandler(BaseHandler):
+class ProductsExcelHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
@@ -401,7 +402,7 @@ class ProductOutHandler(BaseHandler):
             self.render("product/out.html", args)
 
 
-class ProductMassiveOutputHandler(BaseHandler):
+class MassiveStockHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
@@ -479,6 +480,7 @@ class ProductMassiveOutputHandler(BaseHandler):
 
                     if "error" in res_product:
                         warnings.append("producto con el sku {} no existe".format(sku))
+                        # print res_product
                     else:
                         if cellar.id != "":
                             if entrada > 0 and price > 0:

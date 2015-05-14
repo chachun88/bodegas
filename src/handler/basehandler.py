@@ -9,6 +9,8 @@ from bson import json_util
 from ..model10.user import User
 import locale
 import os
+from lp.globals import enviroment, Enviroment
+from tornado.options import options
 # from loadingplay.multilang.lang import lpautoSelectCurrentLang
 
 
@@ -46,6 +48,9 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def __init__(self, application, request, **kwargs):
         tornado.web.RequestHandler.__init__(self, application, request, **kwargs)
+
+        if options["enviroment"] == Enviroment.ONTEST:
+            self.current_user = { "cellar_permissions" : [1,2,3], "permissions" : [1,2,3] }
 
         # detecto el lenguage del navegador del usuario
         # lpautoSelectCurrentLang(self)
@@ -106,6 +111,9 @@ class BaseHandler(tornado.web.RequestHandler):
         kwargs["side_menu"] = self.side_menu
         kwargs["CustomDateFormat"] = self.CustomDateFormat
         kwargs["money_format"] = self.money_format
+
+        if options["enviroment"] == Enviroment.ONTEST:
+            kwargs["current_user"] = { "cellar_permissions" : [1,2,3], "permissions" : [1,2,3] }
 
         # overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)

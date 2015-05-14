@@ -18,3 +18,10 @@ watchmedo shell-command \
     --recursive \
     /Users/ricardo/git_loadingplay/bodegas.git/
 ´´´
+
+
+## coverage
+
+```sh
+coverage erase & coverage run -m test & coverage html -d coverage_html -i
+```

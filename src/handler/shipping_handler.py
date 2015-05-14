@@ -161,6 +161,8 @@ class SaveTrackingCodeHandler(BaseHandler):
 
         arr_order_id = self.get_arguments("order_id")
 
+        # print arr_order_id
+
         for x in range(0, len(arr_order_id)):
 
             order_id = arr_order_id[x]

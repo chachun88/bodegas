@@ -737,7 +737,11 @@ class Product(BaseModel):
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        q = '''select string_agg(s.name,',') as size, array_agg(s.id) as size_id, p.*, c.name as category from "Product" p 
+        q = '''select string_agg(s.name,',') as size, 
+                array_agg(s.id) as size_id, 
+                p.*, 
+                c.name as category
+                from "Product" p 
                 inner join "Category" c on c.id = p.category_id 
                 inner join "Product_Size" ps on ps.product_sku = p.sku
                 inner join "Size" s on s.id = ps.size_id
@@ -751,6 +755,8 @@ class Product(BaseModel):
 
             cur.execute(q, p)
             producto = cur.fetchone()
+
+            producto["tags"] = []
 
             self.identifier = producto["id"]
             self.category = producto["category"]
@@ -782,8 +788,6 @@ class Product(BaseModel):
             self.promotion_price = producto["promotion_price"]
             self.bulk_price = producto["bulk_price"]
 
-            producto["tags"] = []
-
             tag = Tag()
             response = tag.GetTagsByProductId(producto["id"])
 
@@ -797,7 +801,7 @@ class Product(BaseModel):
             else:
                 return self.ShowError("product with sku {} not found".format(sku))
         except Exception, e:
-            return self.ShowError("product cannot be initialized by sku, {}".format(str(e)))
+            return self.ShowError("product cannot be initialized by sku {}, {}".format(sku, str(e)))
         finally:
             cur.close()
             self.connection.close()

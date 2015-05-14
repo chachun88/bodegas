@@ -10,42 +10,24 @@ import tornado.options
 import tornado.web
 from tornado.options import define, options
 
-from src.globals import port, Menu
+from src.globals import Menu
 from lp.globals import *
 
-from src.handler.home_handler import HomeHandler
-from src.handler.home_handler import ProductRemoveHandler
-from src.handler.home_handler import ProductLoadHandler, ProductOutHandler, ProductMassiveOutputHandler
-from src.handler.login_handler import LoginHandler
-from src.handler.login_handler import LoginPassHandler
-from src.handler.product_add_handler import ProductAddHandler, FastEditHandler, ForSaleHandler, CheckStockHandler
-from src.handler.product_add_handler import ProductEditHandler
-from src.handler.product_list_handler import ProductListHandler
-from src.handler.product_search_handler import ProductSearchHandler
-
-from src.handler.cellar_handler import CellarHandler, CellarEasyHandler
-from src.handler.cellar_handler import CellarInputHandler
-from src.handler.cellar_handler import CellarOutputHandler
-from src.handler.cellar_handler import CellarDetailHandler, CellarComboboxHandler
-from src.handler.cellar_handler import CellarEasyInputHandler
-from src.handler.cellar_handler import CellarEasyOutputHandler, SelectForSaleHandler, SelectReservationHandler
-
-from src.handler.order_handler import OrderHandler, AddOrderHandler, OrderActionsHandler
-
-from src.handler.cellar_add_handler import CellarAddHandler
-from src.handler.cellar_remove_handler import CellarRemoveHandler
-
-from src.handler.user_handler import UserHandler, UserRemoveHandler
-from src.handler.user_add_handler import UserAddHandler
-
-from src.handler.report_handler import ReportHandler, ReportUploadHandler
-
-from src.handler.image_handler import ImageHandler, ImageHandler2, ImageDeleteHandler
-
-from src.handler.order_detail_handler import AddOrderDetailHandler, ListOrderDetailHandler
-
-from src.handler.customer_handler import CustomerHandler, CustomerSaveHandler, CustomerActionsHandler, CustomerAddContactHandler, CustomerViewContactHandler, ContactActionsHandler, EditContactHandler
-
+from src.handler.home_handler import *
+from src.handler.login_handler import *
+from src.handler.product_add_handler import *
+from src.handler.product_list_handler import *
+from src.handler.product_search_handler import *
+from src.handler.cellar_handler import *
+from src.handler.order_handler import *
+from src.handler.cellar_add_handler import *
+from src.handler.cellar_remove_handler import *
+from src.handler.user_handler import *
+from src.handler.user_add_handler import *
+from src.handler.report_handler import *
+from src.handler.image_handler import *
+from src.handler.order_detail_handler import *
+from src.handler.customer_handler import *
 from src.handler.tag_handler import *
 from src.handler.shipping_handler import *
 
@@ -54,6 +36,8 @@ from config import *
 # something
 define("port", default=PORT, help="run on the given port", type=int)
 
+
+# define("enviroment", default=enviroment, type=str)
 # define("db_name", default=DB_NAME, help="", type=str)
 # define("db_user", default=DB_USER, help="", type=str)
 # define("db_host", default=DB_HOST, help="", type=str)
@@ -67,7 +51,7 @@ class Application(tornado.web.Application):
             blog_title=u"Bodegas",
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
-            xsrf_cookies=True,
+            xsrf_cookies=False,
             cookie_secret="12oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1ol",
             login_url="/auth/login",
             debug=True,
@@ -79,10 +63,10 @@ class Application(tornado.web.Application):
 
             # products
             # (r"/", HomeHandler),
-            (r"/product", HomeHandler),
-            (r"/product/out", ProductOutHandler),
-            (r"/product/massiveoutput", ProductMassiveOutputHandler),
-            (r"/product/load", ProductLoadHandler),
+            (r"/product", StockExcelHandler),
+            (r"/product/out", ProductsExcelHandler),
+            (r"/product/massiveoutput", MassiveStockHandler),
+            (r"/product/load", MassiveProductsHandler),
             (r"/product/add", ProductAddHandler),
             (r"/product/list", ProductListHandler),
             (r"/product/edit", ProductEditHandler),
