@@ -9,7 +9,7 @@ LOCAL_HOST="localhost"
 LOCAL_PASSWORD="chachun88"
 
 
-ONDEV_DB_NAME="test_giani"
+ONDEV_DB_NAME="giani"
 ONDEV_USER="yichun"
 ONDEV_HOST="localhost"
 ONDEV_PASSWORD="chachun88"
@@ -21,7 +21,7 @@ ONTEST_HOST="localhost"
 ONTEST_PASSWORD="chachun88"
 
 
-PRODUCTION_DB_NAME="test_giani"
+PRODUCTION_DB_NAME="giani"
 PRODUCTION_USER="yichun"
 PRODUCTION_HOST="localhost"
 PRODUCTION_PASSWORD="chachun88"
