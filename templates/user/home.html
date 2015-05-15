@@ -1,8 +1,6 @@
 {% extends "../base.html" %}
-
 {% block title %}Lista de usuarios {% end %}
 {% block caption %}muestra la lista de vendedores{% end %}
-
 {% block body %}
 {% if dn == "t" %}
 <div class="alert alert-success">
@@ -52,26 +50,28 @@
 				</thead>
 				<tbody>
 					{% for u in user_list %}
-					<tr>
-						<td>{{ u["name"] }}</td>
-						<td>{{ u["email"] }}</td>
-						<td>{{ u["permissions_name"] }}</td>
-						<td>{{ u['type'] }}</td>
-						<td>
-						{% if int(5) in current_user["permissions"] %}
-							<a class="btn btn-sm btn-success" href="/user/edit?id={{ u['id'] }}">
-								Editar
-							</a>
-							<br/>
-							<br/>
-							<a class="btn btn-sm btn-danger" href="/user/remove?id={{ u['id'] }}" onclick="return confirm('¿Está seguro que desea eliminar al usuario?');">
-								Eliminar
-							</a>
-						{% end %}
-					</tbody>
-				</table>
-			</div>
-		</section>
-	</div>
-	{% end %}
+						<tr>
+							<td>{{ u["name"] }}</td>
+							<td>{{ u["email"] }}</td>
+							<td>{{ u["permissions_name"] }}</td>
+							<td>{{ u['type'] }}</td>
+							<td>
+								{% if int(5) in current_user["permissions"] %}
+									<a class="btn btn-sm btn-success" href="/user/edit?id={{ u['id'] }}">
+										Editar
+									</a>
+									<br/>
+									<br/>
+									<a class="btn btn-sm btn-danger" href="/user/remove?id={{ u['id'] }}" onclick="return confirm('¿Está seguro que desea eliminar al usuario?');">
+										Eliminar
+									</a>
+								{% end %}
+							</td>
+						</tr>
+					{% end %}
+				</tbody>
+			</table>
+		</div>
+	</section>
+</div>
 {% end %}
