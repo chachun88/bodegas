@@ -38,6 +38,8 @@ define("port", default=PORT, help="run on the given port", type=int)
 
 if "enviroment" not in options:
 
+    print enviroment
+
     define("enviroment", default=enviroment, type=str)
     define("db_name", default=DB_NAME, help="", type=str)
     define("db_user", default=DB_USER, help="", type=str)

@@ -25,28 +25,6 @@ from ..model10.size import Size
 
 class ProductAddHandler(BaseHandler):
 
-    @tornado.web.authenticated
-    def get(self):
-
-        self.set_active(Menu.PRODUCTOS_CARGA)  # change menu active item
-
-        tags = []
-        tag = Tag()
-        res_tags = tag.List(1,100000)
-
-        sizes = []
-        size = Size()
-        res_sizes = size.list()
-
-        if "success" in res_sizes:
-            sizes = res_sizes["success"]
-
-        if "success" in res_tags:
-            tags = res_tags["success"]
-
-        prod = Product()
-        self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="add", tags=tags, sizes=sizes)
-
     def saveImage( self, imagedata, sku, image_number ):
 
         final_name = "{}_{}.png".format( image_number, sku )
@@ -92,6 +70,28 @@ class ProductAddHandler(BaseHandler):
                 self.write("directorio de imagen acaba de ser")
         else:
             self.write( "imagen no existe " )
+
+    @tornado.web.authenticated
+    def get(self):
+
+        self.set_active(Menu.PRODUCTOS_CARGA)  # change menu active item
+
+        tags = []
+        tag = Tag()
+        res_tags = tag.List(1,100000)
+
+        sizes = []
+        size = Size()
+        res_sizes = size.list()
+
+        if "success" in res_sizes:
+            sizes = res_sizes["success"]
+
+        if "success" in res_tags:
+            tags = res_tags["success"]
+
+        prod = Product()
+        self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="add", tags=tags, sizes=sizes)
 
     @tornado.web.authenticated
     def post(self):
