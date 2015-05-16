@@ -67,7 +67,7 @@
 										</div>
 									</fieldset>
 									<input type="hidden" name="product_sku" value="{{ p['sku'] }}" />
-									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
+									<input type="hidden" name="cellar_id" value="{{ cellar.id }}" />
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
 									<input type="hidden" name="transaction" value="eliminado" />
@@ -113,7 +113,7 @@
 									</fieldset>
 									<input type="hidden" name="balance_price" value="{{ p["balance_price"] }}" />
 									<input type="hidden" name="product_sku" value="{{ p['sku'] }}" />
-									<input type="hidden" name="cellar_id" value="{{ cellar.identifier }}" />
+									<input type="hidden" name="cellar_id" value="{{ cellar.id }}" />
 									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
 									<input type="hidden" name="cellar_name" value="{{ cellar_name }}" />
 									<input type="hidden" name="transaction" value="movido" />

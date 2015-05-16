@@ -98,7 +98,7 @@ class EditHandler(BaseHandler):
 
                 if "success" in res:
                     product = Product()
-                    res_lista = product.GetList()
+                    res_lista = product.GetList(0,0)
                     # print res_lista
 
                     if "success" in res_lista:
@@ -125,7 +125,7 @@ class AddHandler(BaseHandler):
 
         tag = Tag()
         product = Product()
-        lista = product.GetList()["success"]
+        lista = product.GetList(0,0)["success"]
         asociados = []
         self.render("tag/save.html", tag=tag, mode="add", product_list=lista, dn="", asociados=asociados)
 
