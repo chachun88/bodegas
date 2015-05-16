@@ -485,7 +485,7 @@ class CellarEasyHandler(BaseHandler):
             cellar_list = res_list["success"]
 
         product = Product()
-        res_lista = product.GetList()
+        res_lista = product.GetList(0,0)
         lista = []
 
         if "success" in res_lista:
