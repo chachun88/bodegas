@@ -136,44 +136,81 @@ class CellarEasyInputHandler(BaseHandler):
         if "success" in res_tallas:
             tallas = res_tallas["success"]
 
+        products = []
+
+        res_cellar_products = cellar.ListProducts()
+
+        if "success" in res_cellar_products:
+            products = res_cellar_products['success']
+
         self.render("cellar/easyinput.html", 
                     operation="Entradas ", 
                     opp="in", 
                     side_menu=self.side_menu, 
                     cellar=cellar, 
-                    products=cellar.ListProducts(), 
+                    products=products, 
                     product_list=lista, 
                     tallas=tallas)
     
     @tornado.web.authenticated
     def post(self):
+
         cellar_id = self.get_argument("cellar_id", "")
-        product_sku = self.get_argument("product_sku", "")
+        sku = self.get_argument("product_sku", "")
         quantity = self.get_argument("quantity", "")
-        price = self.get_argument("price", "")
+        price = self.get_argument("price", 0)
         size = self.get_argument("size", "")
-        operation = "buy"
+        operation = self.get_argument("operation", "buy")
+        new_cellar = self.get_argument("new_cellar", "")
 
+        _size = Size()
+        _size.name = size
+        res_size_name = _size.initByName()
 
-        cellar = Cellar()
-        cellar.InitById(cellar_id)
-
-        product = Product()
-        product.InitBySku(product_sku)
-
-        product.size=size
-        product.description = product.description
-        product.color = product.color
-        product.tags = ",".join(str(t) for t in product.tags)
-        product.Save()
-
-        res_add_product = cellar.AddProducts(product_sku, quantity, price, size, product.color.encode("utf-8"), operation, self.get_user_email() )
-
-        if "success" in res_add_product:
-            self.write("ok")
-        else:
-            print res_add_product["error"]
+        if "error" in res_size_name:
             self.write("no")
+        else:
+            cellar = Cellar()
+            cellar.InitById(cellar_id)
+
+            product = Product()
+            init_sku = product.InitBySku(sku)
+
+            if "success" in init_sku:
+
+                kardex = Kardex()
+                res_product_find = kardex.FindKardex(sku, cellar_id, _size.id)
+
+                units = 0
+                balance_price = 0
+
+                # print res_product_find
+
+                if "success" in res_product_find:
+
+                    product_find = res_product_find["success"]
+                    units = product_find["balance_units"]
+                    balance_price = product_find["balance_price"]
+
+                if operation == "buy":
+
+                    kardex.product_sku = sku
+                    kardex.units = quantity
+                    kardex.price = price
+                    kardex.size_id = _size.id
+                    kardex.color = product.color
+                    kardex.operation_type = Kardex.OPERATION_BUY
+                    kardex.user = self.get_user_email()
+                    kardex.cellar_identifier = cellar_id
+
+                    res_add_product = kardex.Insert()
+
+                    if "success" in res_add_product:
+                        self.write("ok")
+                    else:
+                        self.write("no")
+            else:
+                self.write("no")
 
     ## invalidate xsfr cookie for ajax use
     def check_xsrf_cookie(self):
@@ -208,92 +245,120 @@ class CellarEasyOutputHandler(BaseHandler):
         if "success" in res_reservation:
             reservation_cellar_id = res_reservation["success"]
 
+        products = []
+
+        res_cellar_products = cellar.ListProducts()
+
+        if "success" in res_cellar_products:
+            products = res_cellar_products['success']
+
         self.render("cellar/easyoutput.html", 
             cellar=cellar, 
-            products=cellar.ListProducts(), 
+            products=products, 
             cellarList=data,
             tallas=tallas,
             reservation_cellar_id=reservation_cellar_id)
 
     @tornado.web.authenticated
     def post(self):
+
         cellar_id = self.get_argument("cellar_id", "")
         sku = self.get_argument("product_sku", "")
         quantity = self.get_argument("quantity", "")
-        price = self.get_argument("price", "")
-        balance_price = self.get_argument("balance_price", "")
-        new_cellar = self.get_argument("new_cellar", "")
+        price = self.get_argument("price", 0)
         size = self.get_argument("size", "")
-        color = self.get_argument("color", "").encode("utf-8")
-        operation = self.get_argument("operation", "")
+        operation = self.get_argument("operation", "sell")
+        new_cellar = self.get_argument("new_cellar", "")
 
         _size = Size()
         _size.name = size
         res_size_name = _size.initByName()
 
         if "error" in res_size_name:
-            print res_size_name["error"]
             self.write("no")
-
-        cellar = Cellar()
-        cellar.InitById(cellar_id)
-
-        product = Product()
-        product.InitBySku(sku)
-
-        res_product_find = cellar.ProductKardex(sku, cellar_id, _size.identifier)
-
-        buy = 0
-        sell = 0
-
-        if "success" in res_product_find:
-
-            product_find = res_product_find["success"]
-
-            for p in product_find:
-                if p["operation_type"] == Kardex.OPERATION_BUY or p["operation_type"] == Kardex.OPERATION_MOV_IN:
-                    buy += p["total"] 
-
-                if p["operation_type"] == Kardex.OPERATION_SELL or p["operation_type"] == Kardex.OPERATION_MOV_OUT:
-                    sell += p["total"]
-
-        units = buy - sell      
-
-        if int(units) >= int(quantity): 
-
-            if operation == "mov":
-
-                res_remove = cellar.RemoveProducts(sku, quantity, price, size, color, Kardex.OPERATION_MOV_OUT, self.get_user_email())
-
-                if "success" in res_remove:
-                    self.write("ok")
-                else:
-                    self.write(res_remove["error"])
-
-                cellar2 = Cellar()
-                cellar2.InitById(new_cellar)
-
-                res_add_product = cellar2.AddProducts(sku, quantity, balance_price, size, color, Kardex.OPERATION_MOV_IN, self.get_user_email())
-
-                if "success" in res_add_product:
-                    self.write("ok")
-                    redirect = "bpt"
-                else:
-                    self.write(res_add_product["error"])
-                    redirect = "bpf"
-
-            else:
-
-                res_remove = cellar.RemoveProducts(sku, quantity, price, size, color, Kardex.OPERATION_SELL, self.get_user_email())
-
-                if "success" in res_remove:
-                    self.write("ok")
-                else:
-                    self.write(res_remove["error"])
-
         else:
-            self.write("stock insuficiente")
-            redirect = "bpf"
+            cellar = Cellar()
+            cellar.InitById(cellar_id)
+
+            product = Product()
+            init_sku = product.InitBySku(sku)
+
+            if "success" in init_sku:
+
+                kardex = Kardex()
+                res_product_find = kardex.FindKardex(sku, cellar_id, _size.id)
+
+                units = 0
+                balance_price = 0
+
+                # print res_product_find
+
+                if "success" in res_product_find:
+
+                    product_find = res_product_find["success"]
+                    units = product_find["balance_units"]
+                    balance_price = product_find["balance_price"]
+
+                if int(units) >= int(quantity): 
+
+                    if operation == "mov":
+
+                        kardex = Kardex()
+
+                        kardex.product_sku = sku
+                        kardex.units = quantity
+                        kardex.price = balance_price
+                        kardex.size_id = _size.id
+                        kardex.color = product.color
+                        kardex.operation_type = Kardex.OPERATION_MOV_OUT
+                        kardex.user = self.get_user_email()
+                        kardex.cellar_identifier = cellar_id
+
+                        res_remove = kardex.Insert()
+
+                        if "success" in res_remove:
+
+                            kardex = Kardex()
+
+                            kardex.product_sku = sku
+                            kardex.units = quantity
+                            kardex.price = balance_price
+                            kardex.size_id = _size.id
+                            kardex.color = product.color
+                            kardex.operation_type = Kardex.OPERATION_MOV_IN
+                            kardex.user = self.get_user_email()
+                            kardex.cellar_identifier = new_cellar
+
+                            res_add_product = kardex.Insert()
+
+                            if "success" in res_add_product:
+                                self.write("ok")
+                            else:
+                                self.write("no")
+                        else:
+                            self.write("no")                        
+
+                    else:
+
+                        kardex.product_sku = sku
+                        kardex.units = quantity
+                        kardex.sell_price = price
+                        kardex.size_id = _size.id
+                        kardex.color = product.color
+                        kardex.operation_type = Kardex.OPERATION_SELL
+                        kardex.user = self.get_user_email()
+
+                        res_remove = kardex.Insert()
+
+                        if "success" in res_remove:
+                            self.write("ok")
+                        else:
+                            self.write("no")
+
+                else:
+                    self.write("no")
+            else:
+                self.write("no")
 
 
     ## invalidate xsfr cookie for ajax use
@@ -485,7 +550,7 @@ class CellarEasyHandler(BaseHandler):
             cellar_list = res_list["success"]
 
         product = Product()
-        res_lista = product.GetList()
+        res_lista = product.GetList(0,0)
         lista = []
 
         if "success" in res_lista:

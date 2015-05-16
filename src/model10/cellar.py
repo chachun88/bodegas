@@ -391,10 +391,10 @@ class Cellar(BaseModel):
 
                 prod_print = response_obj["success"]
 
-                response_obj = kardex.FindKardex(
+                kardex_find = kardex.FindKardex(
                     p["product_sku"], self.id, p["size_id"])
 
-                if "success" in response_obj:
+                if "success" in kardex_find:
 
                     size = Size()
                     size.id = kardex.size_id

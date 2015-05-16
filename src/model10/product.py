@@ -952,6 +952,8 @@ class Product(BaseModel):
 
     def GetList(self, page = 1, items = 30):
 
+
+
         page = int(page)
         items = int(items)
         offset = (page - 1) * items
@@ -959,19 +961,31 @@ class Product(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         try:
-            q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
-            inner join "Category" c on c.id = p.category_id 
-            inner join "Product_Size" ps on ps.product_sku = p.sku
-            inner join "Size" s on s.id = ps.size_id
-            where p.deleted = %(deleted)s
-            group by p.id, c.name 
-            order by p.name asc
-            limit %(items)s offset %(offset)s'''
-            p = {
-                "items": items,
-                "offset": offset,
-                "deleted": False
-            }
+            if page == 0 and items == 0:
+                q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
+                inner join "Category" c on c.id = p.category_id 
+                inner join "Product_Size" ps on ps.product_sku = p.sku
+                inner join "Size" s on s.id = ps.size_id
+                where p.deleted = %(deleted)s
+                group by p.id, c.name 
+                order by p.name asc'''
+                p = {
+                    "deleted": False
+                }
+            else:
+                q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
+                inner join "Category" c on c.id = p.category_id 
+                inner join "Product_Size" ps on ps.product_sku = p.sku
+                inner join "Size" s on s.id = ps.size_id
+                where p.deleted = %(deleted)s
+                group by p.id, c.name 
+                order by p.name asc
+                limit %(items)s offset %(offset)s'''
+                p = {
+                    "items": items,
+                    "offset": offset,
+                    "deleted": False
+                }
             cur.execute(q, p)
             lista = cur.fetchall()
             return self.ShowSuccessMessage(lista)
