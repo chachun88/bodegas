@@ -50,7 +50,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
     </tr>
     </tbody></table>""".format( order_id=order_id,
                                 name=contact.name,
-                                address=contact.address.encode("utf-8"),
+                                address=contact,
                                 town=contact.town.encode("utf-8"),
                                 city=contact.city,
                                 telephone=contact.telephone,
