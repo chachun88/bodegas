@@ -167,6 +167,8 @@ class OrderActionsHandler(BaseHandler):
                             resultado.append(response)
                         else:
                             resultado.append(res_cancel)
+                    else:
+                      resultado.append({"error":"el pedido {} no puede ser cancelado".format(_order.id)})
                 else:
                     resultado.append(res_order)
 
