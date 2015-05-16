@@ -141,16 +141,6 @@ class Customer(BaseModel):
     
     def InitById(self, _id):
 
-        # customer = self.collection.find_one({"id":int(_id)})
-
-        # if customer:
-
-        #     return customer
-
-        # else:
-
-        #     return {}
-
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         query = '''select u.*,ut.name as type from "User" u left join "User_Types" ut on ut.id = u.type_id where u.id = %(id)s limit 1'''
@@ -161,8 +151,25 @@ class Customer(BaseModel):
 
         try:
             cur.execute(query,parametros)
-            customer = cur.fetchone()
-            return self.ShowSuccessMessage(customer)
+            if cur.rowcount > 0:
+                customer = cur.fetchone()
+                self.id = customer["id"]
+                self.name = customer["name"]
+                self.lastname = customer["lastname"]
+                self.type = customer["type"]
+                self.rut = customer["rut"]
+                self.bussiness = customer["bussiness"]
+                self.approval_date = customer["approval_date"]
+                self.registration_date = customer["registration_date"]
+                self.status = customer["status"]
+                self.first_view = customer["first_view"]
+                self.last_view = customer["last_view"]
+                self.username = customer["name"]
+                self.password = customer["password"]
+                self.email = customer["email"]
+                return self.ShowSuccessMessage(self)
+            else:
+                return self.ShowError("customer not found")
         except Exception,e:
             return self.ShowError(str(e))
 

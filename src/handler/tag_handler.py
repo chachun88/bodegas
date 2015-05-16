@@ -34,7 +34,7 @@ class TagHandler(BaseHandler):
         else:
             self.render("tag/list.html",dn="error",mensaje=res["error"])
 
-class RemoveHandler(BaseHandler):
+class RemoveTagHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):

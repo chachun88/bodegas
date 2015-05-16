@@ -15,7 +15,7 @@ from lp.globals import *
 
 from src.handler.home_handler import *
 from src.handler.login_handler import *
-from src.handler.product_add_handler import *
+from src.handler.product_handler import *
 from src.handler.product_list_handler import *
 from src.handler.product_search_handler import *
 from src.handler.cellar_handler import *
@@ -130,7 +130,7 @@ class Application(tornado.web.Application):
             (r"/customer/edit_contact", EditContactHandler),
 
             (r"/tag/list",              TagHandler),
-            (r"/tag/remove",            RemoveHandler),
+            (r"/tag/remove",            RemoveTagHandler),
             (r"/tag/edit",              EditHandler),
             (r"/tag/hideshow",          HideShowHandler),
             (r"/tag/add",               AddHandler),

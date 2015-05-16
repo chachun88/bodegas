@@ -185,7 +185,16 @@ class MassiveProductsHandler(BaseHandler):
                 for j in range(ncols):
 
                     if j == 0:
-                        prod.category = sheet.cell_value(i,j).encode("utf-8")
+                        value = sheet.cell_value(i,j)
+
+                        if isinstance(value, unicode):
+                            value = value.encode("utf-8")
+                        elif value.is_integer():
+                            value = str(int(value))
+                        else:
+                            value = str(value)
+
+                        prod.category = value
                     elif j == 1:
                         # prod.sku = sheet.cell_value(i,j).encode("utf-8")
                         value = sheet.cell_value(i,j)
@@ -194,17 +203,42 @@ class MassiveProductsHandler(BaseHandler):
                         except ValueError:
                             pass
                         prod.sku = str(value)
-                        print prod.sku
+
                     elif j == 2:
-                        prod.name = sheet.cell_value(i,j).encode("utf-8")
+                        value = sheet.cell_value(i,j)
+
+                        if isinstance(value, unicode):
+                            value = value.encode("utf-8")
+                        elif value.is_integer():
+                            value = str(int(value))
+                        else:
+                            value = str(value)
+
+                        prod.name = value
                     elif j == 3:
-                        prod.description = sheet.cell_value(i,j)
+
+                        value = sheet.cell_value(i,j)
+
+                        if isinstance(value, unicode):
+                            value = value.encode("utf-8")
+                        elif value.is_integer():
+                            value = str(int(value))
+                        else:
+                            value = str(value)
+
+                        prod.description = value
                     elif j == 4:                                        
                         prod.color = sheet.cell_value(i,j)
-                    elif j == 5:                                        
-                        prod.price = int(sheet.cell_value(i,j))
+                    elif j == 5: 
+                        try:                                       
+                            prod.price = int(sheet.cell_value(i,j))
+                        except Exception, e:
+                            warnings.append("Error formato de precio")
                     elif j == 6:
-                        prod.sell_price = int(sheet.cell_value(i,j))
+                        try:                                       
+                            prod.sell_price = int(sheet.cell_value(i,j))
+                        except Exception, e:
+                            warnings.append("Error formato de precio")
                     elif j == 7:
 
                         bulk_price = sheet.cell_value(i,j)
@@ -216,13 +250,53 @@ class MassiveProductsHandler(BaseHandler):
                                 warnings.append(str(e))
 
                     elif j == 8:
-                        prod.manufacturer = sheet.cell_value(i,j).encode("utf-8")
+
+                        value = sheet.cell_value(i,j)
+
+                        if isinstance(value, unicode):
+                            value = value.encode("utf-8")
+                        elif value.is_integer():
+                            value = str(int(value))
+                        else:
+                            value = str(value)
+
+                        prod.manufacturer = value
                     elif j == 9:
-                        prod.brand = sheet.cell_value(i,j).encode("utf-8")
+
+                        value = sheet.cell_value(i,j)
+
+                        if isinstance(value, unicode):
+                            value = value.encode("utf-8")
+                        elif value.is_integer():
+                            value = str(int(value))
+                        else:
+                            value = str(value)
+
+                        prod.brand = value
                     elif j == 10:
-                        prod.delivery = sheet.cell_value(i,j).encode("utf-8")
+
+                        value = sheet.cell_value(i,j)
+
+                        if isinstance(value, unicode):
+                            value = value.encode("utf-8")
+                        elif value.is_integer():
+                            value = str(int(value))
+                        else:
+                            value = str(value)
+
+                        prod.delivery = value
                     elif j == 11:
-                        prod.which_size = sheet.cell_value(i,j).encode("utf-8")
+
+                        value = sheet.cell_value(i,j)
+
+                        if isinstance(value, unicode):
+                            value = value.encode("utf-8")
+                        elif value.is_integer():
+                            value = str(int(value))
+                        else:
+                            value = str(value)
+
+                        prod.which_size = value
                     elif j > 11 and j < ncols:
                         valor = sheet.cell_value(i,j)
                         if valor != "":
@@ -254,46 +328,6 @@ class MassiveProductsHandler(BaseHandler):
                 "filename" : ""
             }
             self.redirect("/product/out?" + urllib.urlencode(args))
-
-
-class ProductRemoveHandler(BaseHandler):
-
-    @tornado.web.authenticated
-    def get(self):
-
-        prod = Product()
-        prod.InitById(self.get_argument("id", ""))
-
-        cellar_id = "remove"
-        size = "remove"
-
-        cellar = Cellar()       
-        product_find = cellar.FindProductKardex(prod.sku, cellar_id, size)
-
-        units = 0
-
-        if "success" in product_find:
-            units = product_find["success"]
-
-        product_list = []
-
-        res_product_list = prod.GetList()
-
-        if "success" in res_product_list:
-            product_list = res_product_list["success"]
-
-        if units > 0:
-            # self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=product_list)
-            self.redirect("/product/list?dn=bpf")
-        else:
-
-            res_remove = prod.Remove()
-
-            if "success" in res_remove:
-                self.redirect("/product/list")
-            else:
-                self.redirect("/product/list?dn=bpe&message={}".format(res_remove["error"]))
-                # self.render("product/list.html", dn="bpe", side_menu=self.side_menu, product_list=product_list, message=res_remove["error"])
 
 
 class ProductsExcelHandler(BaseHandler):

@@ -109,7 +109,7 @@ class Menu:
 
     TAGS = "Tags"
     TAGS_LISTAR = "Lista de Tags"
-    TAGS_ADD = "Agregar tag"
+    TAGS_ADD = "Agregar Tag"
 
     SHIPPING = "Despacho"
     SHIPPING_LIST = "Lista de precios"

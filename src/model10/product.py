@@ -20,7 +20,7 @@ class Product(BaseModel):
         self._brand = ''  # marca de producto
         self._manufacturer = ''  # proveedor
         self._size = []  # tallas
-        self._color = []  # color
+        self._color = ''  # color
         self._material = ''  # material
         self._bullet_1 = ''  # viñeta 1
         self._bullet_2 = ''  # viñeta 2
@@ -316,9 +316,10 @@ class Product(BaseModel):
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        q = '''select * from "Product" where sku = %(sku)s'''
+        q = '''select * from "Product" where sku = %(sku)s and deleted = %(deleted)s'''
         p = {
-            "sku": self.sku
+            "sku": self.sku,
+            "deleted": False
         }
 
         sku_count = 0
@@ -356,7 +357,7 @@ class Product(BaseModel):
             ,which_size = %(which_size)s
             ,promotion_price = %(promotion_price)s
             ,bulk_price = %(bulk_price)s
-            ,delivery = %(delivery)s where sku = %(sku)s returning id'''
+            ,delivery = %(delivery)s where sku = %(sku)s and deleted = %(deleted)s returning id'''
 
             category = Category()
             category.name = self.category
@@ -389,7 +390,8 @@ class Product(BaseModel):
                 "upc": self.upc,
                 "sku": self.sku,
                 "sell_price": self.sell_price,
-                "bulk_price" : self.bulk_price
+                "bulk_price" : self.bulk_price,
+                "deleted": False
             }
 
             cur = self.connection.cursor(
@@ -487,7 +489,7 @@ class Product(BaseModel):
             , which_size = %(which_size)s
             , promotion_price = %(promotion_price)s
             , bulk_price = %(bulk_price)s
-            , delivery = %(delivery)s where id = %(id)s'''
+            , delivery = %(delivery)s where id = %(id)s and deleted = %(deleted)s'''
 
             category = Category()
             category.name = self.category
@@ -521,7 +523,8 @@ class Product(BaseModel):
                 "delivery": self.delivery,
                 "which_size": self.which_size,
                 "promotion_price": self.promotion_price,
-                "bulk_price" : self.bulk_price
+                "bulk_price" : self.bulk_price,
+                "deleted": False
             }
 
             # print "existe id:{}".format(cur.mogrify(q,p))
@@ -616,7 +619,8 @@ class Product(BaseModel):
                                         color,
                                         sell_price,
                                         promotion_price,
-                                        bulk_price)
+                                        bulk_price,
+                                        deleted)
             values (%(delivery)s,
                     %(which_size)s,
                     %(name)s,
@@ -640,7 +644,8 @@ class Product(BaseModel):
                     %(color)s,
                     %(sell_price)s,
                     %(promotion_price)s,
-                    %(bulk_price)s) returning id'''
+                    %(bulk_price)s,
+                    %(deleted)s) returning id'''
 
             p = {
                 "name": self.name,
@@ -666,7 +671,8 @@ class Product(BaseModel):
                 "delivery": self.delivery,
                 "which_size": self.which_size,
                 "promotion_price": self.promotion_price,
-                "bulk_price" : self.bulk_price
+                "bulk_price" : self.bulk_price,
+                "deleted": False
             }
 
             # print cur.mogrify(q.strip(),p)
@@ -745,9 +751,10 @@ class Product(BaseModel):
                 inner join "Category" c on c.id = p.category_id 
                 inner join "Product_Size" ps on ps.product_sku = p.sku
                 inner join "Size" s on s.id = ps.size_id
-                where p.sku = %(sku)s group by p.id, c.name limit 1'''
+                where p.sku = %(sku)s and deleted = %(deleted)s group by p.id, c.name limit 1'''
         p = {
-            "sku": sku
+            "sku": sku,
+            "deleted": False
         }
         try:
 
@@ -766,7 +773,7 @@ class Product(BaseModel):
             self.description = producto["description"]
             self.brand = producto["brand"]
             self.manufacturer = producto["manufacturer"]
-            self.size = producto["size"]
+            self.size = producto["size"].split(",")
             self.color = producto["color"]
             self.material = producto["material"]
             self.bullet_1 = producto["bullet_1"]
@@ -815,9 +822,10 @@ class Product(BaseModel):
                 inner join "Category" c on c.id = p.category_id 
                 inner join "Product_Size" ps on ps.product_sku = p.sku
                 inner join "Size" s on s.id = ps.size_id
-                where p.id = %(id)s group by p.id, c.name limit 1'''
+                where p.id = %(id)s and deleted = %(deleted)s group by p.id, c.name limit 1'''
         p = {
-            "id": identifier
+            "id": identifier,
+            "deleted": False
         }
         try:
             cur.execute(q, p)
@@ -841,7 +849,7 @@ class Product(BaseModel):
                 self.description = producto["description"]
                 self.brand = producto["brand"]
                 self.manufacturer = producto["manufacturer"]
-                self.size = producto["size"]
+                self.size = producto["size"].split(",")
                 self.color = producto["color"]
                 self.material = producto["material"]
                 self.bullet_1 = producto["bullet_1"]
@@ -878,9 +886,10 @@ class Product(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        q = '''select * from "Product" where name = %(name)s limit 1'''
+        q = '''select * from "Product" where name = %(name)s and deleted = %(deleted)s limit 1'''
         p = {
-            "name": name
+            "name": name,
+            "deleted": False
         }
         try:
             cur.execute(q, p)
@@ -909,13 +918,24 @@ class Product(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        q = '''select p.*,c.name as category from "Product" p 
-        left join "Category" c on c.id = p.category_id 
-        where lower(p.name) like %(name)s limit 5'''
+        # q = '''select p.*,c.name as category from "Product" p 
+        # left join "Category" c on c.id = p.category_id 
+        # where lower(p.name) like %(name)s and deleted = %(deleted)s limit 5'''
+
+        q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
+            inner join "Category" c on c.id = p.category_id 
+            inner join "Product_Size" ps on ps.product_sku = p.sku
+            inner join "Size" s on s.id = ps.size_id
+            where p.deleted = %(deleted)s
+            and lower(p.name) like %(name)s
+            group by p.id, c.name 
+            order by p.sku asc'''
+
         p = {
-            "name": "%{}%".format(query.lower())
+            "name": "%{}%".format(query.lower()),
+            "deleted": False
         }
-        print cur.mogrify(q, p)
+
         try:
             cur.execute(q, p)
             products = cur.fetchall()
@@ -943,10 +963,14 @@ class Product(BaseModel):
             inner join "Category" c on c.id = p.category_id 
             inner join "Product_Size" ps on ps.product_sku = p.sku
             inner join "Size" s on s.id = ps.size_id
-            group by p.id, c.name limit %(items)s offset %(offset)s'''
+            where p.deleted = %(deleted)s
+            group by p.id, c.name 
+            order by p.name asc
+            limit %(items)s offset %(offset)s'''
             p = {
                 "items": items,
-                "offset": offset
+                "offset": offset,
+                "deleted": False
             }
             cur.execute(q, p)
             lista = cur.fetchall()
@@ -968,9 +992,14 @@ class Product(BaseModel):
             inner join "Category" c on c.id = p.category_id 
             inner join "Product_Size" ps on ps.product_sku = p.sku
             inner join "Size" s on s.id = ps.size_id
+            where p.deleted = %(deleted)s
             group by p.id, c.name'''
 
-            cur.execute(q)
+            p = {
+                "deleted": False
+            }
+
+            cur.execute(q, p)
             total_items = float(cur.rowcount)
             items = float(items)
             total_page = math.ceil(total_items/items)
@@ -985,9 +1014,10 @@ class Product(BaseModel):
     def ForSale(self, product_id):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        q = '''select for_sale from "Product" where id = %(id)s'''
+        q = '''select for_sale from "Product" where id = %(id)s and deleted = %(deleted)s'''
         p = {
-            "id": product_id
+            "id": product_id,
+            "deleted": False
         }
 
         for_sale = 0
@@ -1002,18 +1032,20 @@ class Product(BaseModel):
             self.connection.close()
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        q = '''update "Product" set for_sale = %(for_sale)s where id = %(id)s'''
+        q = '''update "Product" set for_sale = %(for_sale)s where id = %(id)s and deleted = %(deleted)s'''
 
         if for_sale == 0:
             p = {
                 "id": product_id,
-                "for_sale": 1
+                "for_sale": 1,
+                "deleted": False
             }
             for_sale = 1
         else:
             p = {
                 "id": product_id,
-                "for_sale": 0
+                "for_sale": 0,
+                "deleted": False
             }
             for_sale = 0
 
@@ -1035,9 +1067,10 @@ class Product(BaseModel):
 
                 cur = self.connection.cursor()
                 
-                q = '''update "Product" set deleted = 1 where id = %(id)s'''
+                q = '''update "Product" set deleted = %(deleted)s where id = %(id)s'''
                 p = {
-                    "id":self.id
+                    "id":self.id,
+                    "deleted": True
                 }
                 cur.execute(q,p)
                 self.connection.commit()
@@ -1053,10 +1086,12 @@ class Product(BaseModel):
 
         query = '''\
                 select s.id, s.name from "Size" s
-                inner join (select distinct on(product_sku, size_id) product_sku, size_id from "Kardex") k on k.size_id = s.id
-                where k.product_sku = %(product_sku)s'''
+                inner join "Product_Size" ps on ps.size_id = s.id
+                inner join "Product" p on p.sku = ps.product_sku
+                where ps.product_sku = %(product_sku)s and p.deleted = %(deleted)s'''
         parameters = {
-            "product_sku": self.sku
+            "product_sku": self.sku,
+            "deleted": False
         }
 
         try:

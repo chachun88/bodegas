@@ -2,11 +2,7 @@
 
 {% block title %}Listado de productos {% end %}
 {% block caption %}
-	{% if int(2) in current_user["permissions"] %}
-		se muestra una lista general de todos los productos
-	{% else %}
-		secci&oacute;n no autorizada
-	{% end %}
+	se muestra una lista general de todos los productos
 {% end %}
 
 {% block body %}
@@ -184,6 +180,14 @@
 					{% if int(total_pages) > int(page) %}
 						<a href="?page={{int(page)+1}}">Siguiente</a>
 					{% end %}
+				</div>
+			</section>
+		</div>
+	{% else %}
+		<div class="col-md-12">
+			<section class="widget">
+				<div class="body">
+					<div class="alert alert-danger">Secci&oacute;n No Autorizada</div>
 				</div>
 			</section>
 		</div>

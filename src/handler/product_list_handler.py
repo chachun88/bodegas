@@ -21,6 +21,7 @@ class ProductListHandler(BaseHandler):
         page = self.get_argument("page", 1)
         items = self.get_argument("items", 30)
         dn = self.get_argument("dn", "")
+        message = self.get_argument("message", "")
 
         product = Product()
         product_list = []
@@ -44,4 +45,5 @@ class ProductListHandler(BaseHandler):
                     side_menu=self.side_menu,
                     product_list=product_list,
                     page=page,
+                    message = message,
                     total_pages=float(total_pages))

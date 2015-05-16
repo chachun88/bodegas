@@ -135,36 +135,38 @@
 							<div class="control-group">
 								<label class="control-label" for="prefix">Tags</label>
 								<div class="controls form-group">
-									<select data-placeholder="Tags Asociados"
-		                                class="chzn-select select-block-level" tabindex="-1"
-		                                multiple="multiple"
-		                                name="tags" 
-		                                id="multiple">
-		                                {% for p in tags %}
-		                                    {% if p['id'] in product.tags %}
-		                                        <option value="{{p['id']}}" selected="selected">{{p['name']}}</option>
-		                                    {% else %}
-		                                        <option value="{{p['id']}}">{{p['name']}}</option>
-		                                    {% end %}
-		                                {% end %}
-		                            </select>
-
+									<div class="col-sm-8">
+										<select data-placeholder="Tags Asociados"
+			                                class="chzn-select select-block-level" tabindex="-1"
+			                                multiple="multiple"
+			                                name="tags" 
+			                                id="multiple">
+			                                {% for p in tags %}
+			                                    {% if p['id'] in product.tags %}
+			                                        <option value="{{p['id']}}" selected="selected">{{p['name']}}</option>
+			                                    {% else %}
+			                                        <option value="{{p['id']}}">{{p['name']}}</option>
+			                                    {% end %}
+			                                {% end %}
+			                            </select>
+			                        </div>
 								</div>
 							</div>
 							{% else %}
 							<div class="control-group">
 								<label class="control-label" for="prefix">Tags</label>
 								<div class="controls form-group">
-									<select data-placeholder="Tags Asociados"
-		                                class="chzn-select select-block-level" tabindex="-1"
-		                                multiple="multiple"
-		                                name="tags" 
-		                                id="multiple">
-		                                {% for p in tags %}
-		                                    <option value="{{p['id']}}">{{p['name']}}</option>
-		                                {% end %}
-		                            </select>
-
+									<div class="col-sm-8">
+										<select data-placeholder="Tags Asociados"
+			                                class="chzn-select select-block-level" tabindex="-1"
+			                                multiple="multiple"
+			                                name="tags" 
+			                                id="multiple">
+			                                {% for p in tags %}
+			                                    <option value="{{p['id']}}">{{p['name']}}</option>
+			                                {% end %}
+			                            </select>
+			                        </div>
 								</div>
 							</div>
 							{% end %}

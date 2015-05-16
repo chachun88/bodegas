@@ -3,7 +3,7 @@ TESTING_PORT = 9008
 PRODUCTION_PORT = 9007
 
 
-LOCAL_DB_NAME="test_giani"
+LOCAL_DB_NAME="giani"
 LOCAL_USER="yichun"
 LOCAL_HOST="localhost"
 LOCAL_PASSWORD="chachun88"

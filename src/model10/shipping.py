@@ -82,7 +82,20 @@ class Shipping(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         try:
-            cur.execute('''select s.id,c.name as origen, c2.name as destino, s.correos_price, s.chilexpress_price, s.price, s.edited, s.charge_type from "Shipping" s left join "City" c on c.id = s.from_city_id left join "City" c2 on c2.id = s.to_city_id''')
+            query = '''\
+                    select s.id,
+                        c.name as origen, 
+                        c2.name as destino, 
+                        s.correos_price, 
+                        s.chilexpress_price, 
+                        s.price, 
+                        s.edited, 
+                        s.charge_type 
+                    from "Shipping" s 
+                    left join "City" c on c.id = s.from_city_id 
+                    left join "City" c2 on c2.id = s.to_city_id
+                    order by origen asc, destino asc'''
+            cur.execute(query)
             lista = cur.fetchall()
             return self.ShowSuccessMessage(lista)
         except Exception,e:
@@ -281,3 +294,6 @@ class Shipping(BaseModel):
                 return self.ShowSuccessMessage(user_id)
             except Exception, e:
                 return self.ShowError("saving tracking code {}".format(str(e)))
+            finally:
+                cur.close()
+                self.connection.close()

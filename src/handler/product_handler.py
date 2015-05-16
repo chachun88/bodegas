@@ -21,6 +21,7 @@ from ..model10.category import Category
 from ..model10.tag import Tag
 from ..model10.kardex import Kardex
 from ..model10.size import Size
+from ..model10.cellar import Cellar
 
 
 class ProductAddHandler(BaseHandler):
@@ -158,16 +159,7 @@ class ProductAddHandler(BaseHandler):
             category.InitWithName(self.get_argument("category", ""))
         except:     
             category.name = self.get_argument("category", "")
-            category.Save()
-
-        # if the brand does not exist is created
-        brand = Brand()   
-
-        try:
-            brand.InitWithName(self.get_argument("brand", ""))
-        except:     
-            brand.name = self.get_argument("brand", "")
-            brand.Save()    
+            category.Save()  
 
         prod = Product()
 
@@ -281,8 +273,6 @@ class ProductEditHandler(BaseHandler):
         sizes = []
         res_sizes = prod.GetSizes()
 
-        print res_sizes
-
         if "success" in res_sizes:
             sizes = res_sizes["success"]
         elif debugMode:
@@ -309,8 +299,6 @@ class FastEditHandler(BaseHandler):
         res = prod.InitById(self.get_argument("id", ""))
 
         if "success" in res:
-
-            # print prod.size_id
 
             prod.name = self.get_argument("name", "")
             prod.description = self.get_argument("description", "")
@@ -384,3 +372,43 @@ class CheckStockHandler(BaseHandler):
 
         else:
             self.write(json_util.dumps(self.showError("product_sku esta vacio")))
+
+
+class ProductRemoveHandler(BaseHandler):
+
+    @tornado.web.authenticated
+    def get(self):
+
+        prod = Product()
+        prod.InitById(self.get_argument("id", ""))
+
+        cellar_id = "remove"
+        size = "remove"
+
+        cellar = Cellar()       
+        product_find = cellar.FindProductKardex(prod.sku, cellar_id, size)
+
+        units = 0
+
+        if "success" in product_find:
+            units = product_find["success"]
+
+        product_list = []
+
+        res_product_list = prod.GetList()
+
+        if "success" in res_product_list:
+            product_list = res_product_list["success"]
+
+        if units > 0:
+            # self.render("product/list.html", dn="bpf", side_menu=self.side_menu, product_list=product_list)
+            self.redirect("/product/list?dn=bpf")
+        else:
+
+            res_remove = prod.Remove()
+
+            if "success" in res_remove:
+                self.redirect("/product/list")
+            else:
+                self.redirect("/product/list?dn=bpe&message={}".format(res_remove["error"]))
+                # self.render("product/list.html", dn="bpe", side_menu=self.side_menu, product_list=product_list, message=res_remove["error"])

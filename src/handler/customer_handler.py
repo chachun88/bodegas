@@ -280,21 +280,22 @@ class EditContactHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
+
+        contact = {}
+        cities = {}
+        types = {}
+
         contact_id = self.get_argument("id","")
+
         contact = Contact()
-        contact.InitById(contact_id)
+        res_contact = contact.InitById(contact_id)
+        response = contact.GetTypes()
 
         city = City()
         res_city = city.List()
 
-        cities = {}
-
         if "success" in res_city:
             cities = res_city["success"]
-
-        types = {}
-
-        response = contact.GetTypes()
 
         if "success" in response:
             types = response["success"]

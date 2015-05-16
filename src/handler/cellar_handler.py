@@ -473,6 +473,9 @@ class CellarEasyHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
+
+        self.set_active(Menu.BODEGAS_FACIL)
+
         cellar = Cellar()
         res_list = cellar.FindById(self.current_user["cellar_permissions"])
 

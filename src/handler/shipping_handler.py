@@ -304,8 +304,9 @@ class SaveTrackingCodeHandler(BaseHandler):
 
                                 customer = Customer()
                                 response = customer.InitById(res["success"])
+                                print response
 
-                                if response == "ok":
+                                if "success" in response:
                                     TrackingCustomer(customer.email,customer.name,tracking_code,provider_name,order_id)
                         else:
                             resultado.append({"error": "el pedido {} no puede ser despachado, stock es insuficiente".format(order_id)})

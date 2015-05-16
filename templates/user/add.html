@@ -8,11 +8,7 @@
 {% end %}
 {% end %}
 {% block caption %}
-    {% if int(5) in current_user["permissions"] %}
-        un usuario
-    {% else %}
-        sección no autorizada
-    {% end %}
+    un usuario
 {% end %}
 
 {% block body %}
@@ -113,7 +109,8 @@
 {% else %}
 <div class="col-md-12">
     <section class="widget">
-        <div style="float:right;">
+        <div class="body">
+            <div class="alert alert-danger">Secci&oacute;n No Autorizada</div>
         </div>
     </section>
 </div>

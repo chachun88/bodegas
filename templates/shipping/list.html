@@ -9,28 +9,24 @@
 	<section class="widget">
 		<div class="body">
 			<form action="/shipping/action" method="post">
-				<table class="table table-condensed">
-					<tr>
-						<th colspan="5">Acciones</th>
-						<th></th>
-					</tr>
-					<tr>
-						<th colspan="5">
-							<select class="form-control" name="action">
-								<option value="">Seleccione una acci&oacute;n</option>
-								<option value="chilexpress_price">Aplicar Chilexpress</option>
-								<option value="correos_price">Aplicar Correos de Chile</option>
-								<option value="correos_edited">Aplicar Correos Excepto Editados</option>
-								<option value="chilexpress_edited">Aplicar Chilexpress Excepto Editados</option>
-							</select>
-						</th>
-						<th>
-							<input type="submit" class="btn btn-primary" value="Aplicar">
-						</th>
-					</tr>
-				</table>
-				{% raw xsrf_form_html() %}
+				<fieldset>
+					<div class="col-md-6">
+						<select class="form-control" name="action">
+							<option value="">Seleccione una acci&oacute;n</option>
+							<option value="chilexpress_price">Aplicar Chilexpress</option>
+							<option value="correos_price">Aplicar Correos de Chile</option>
+							<option value="correos_edited">Aplicar Correos Excepto Editados</option>
+							<option value="chilexpress_edited">Aplicar Chilexpress Excepto Editados</option>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<button type="submit" class="btn btn-primary">Aplicar</button>
+					</div>
+					{% raw xsrf_form_html() %}
+				</fieldset>
 			</form>
+		</div>
+		<div class="body">
 			<table class="table table-striped table-images">
 				<thead>
 					<tr>

@@ -552,7 +552,7 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
     message = sendgrid.Mail()
     message.set_from("{nombre} <{mail}>".format(nombre="Giani Da Firenze", mail=email_giani))
     message.add_to(email)
-    message.set_subject("Giani Da Firenze - El Pedido Nro {order_id} Ha Sido Enviado".format(order_id=order_id))
+    message.set_subject("Giani Da Firenze - El pedido Nº {order_id} ha sido enviado".format(order_id=order_id))
     message.set_html(html)
 
     status, msg = sg.send(message)

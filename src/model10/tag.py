@@ -162,7 +162,7 @@ class Tag(BaseModel):
         finally:
             cur.close()
             self.connection.close()
-        
+
     def List(self,page=1,items=20):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -171,7 +171,7 @@ class Tag(BaseModel):
         page = int(page)
         offset = (page-1) * limit
 
-        query = '''select * from "Tag" limit %(limit)s offset %(offset)s'''
+        query = '''select * from "Tag" order by visible desc, name asc limit %(limit)s offset %(offset)s'''
         parameters = {
             "limit":limit,
             "offset":offset
@@ -265,6 +265,9 @@ class Tag(BaseModel):
             return self.ShowSuccessMessage(tag_id)
         except Exception,e:
             return self.ShowError(str(e))
+        finally:
+            cur.close()
+            self.connection.close()
 
     def Remove(self, identifier):
 
@@ -285,5 +288,8 @@ class Tag(BaseModel):
                 return self.ShowSuccessMessage(identifier)
             except Exception,e:
                 return self.ShowError(str(e))
+            finally:
+                self.connection.close()
+                cur.close()
 
         return res

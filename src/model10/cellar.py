@@ -79,7 +79,7 @@ class Cellar(BaseModel):
 
         for k in kardex:
 
-            query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s order by id desc limit 1'''
+            query = '''select * from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s order by date desc, id desc limit 1'''
 
             parametros = {
                 "product_sku": k["product_sku"],
@@ -252,7 +252,7 @@ class Cellar(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select * from "Cellar" limit %(items)s offset %(offset)s'''
+        query = '''select * from "Cellar" order by name limit %(items)s offset %(offset)s'''
         parametros = {
             "items": items,
             "offset": offset
