@@ -93,7 +93,7 @@ class CustomerSaveHandler(BaseHandler):
             if response == "ok":
                 self.render("customer/save.html",dn="",mode="edit", customer=customer,types=types)
             else:
-                self.write(response)
+                self.write(response["error"])
 
     @tornado.web.authenticated
     def post(self):
