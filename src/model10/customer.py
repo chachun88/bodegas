@@ -224,7 +224,7 @@ class Customer(BaseModel):
                 returning id'''
 
         try:
-            return self.ShowError(cur.mogrify(query, customer))
+            # return self.ShowError(cur.mogrify(query, customer))
             cur.execute(query,customer)
             self.connection.commit()
             customer_id = cur.fetchone()[0]
