@@ -214,7 +214,7 @@ class Customer(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         query = '''insert into "User" (name,lastname,type_id,rut,bussiness,approval_date,registration_date,status,first_view,last_view,password, email)
-        values (%(name)s,%(lastname)s,%(type)s,%(rut)s,%(bussiness)s,%(approval_date)s,now(),%(status)s,now(),now(),%(password)s,%(email)s)
+        values (%(name)s,%(lastname)s,%(type)s,%(rut)s,%(bussiness)s,%(approval_date)s,current_date,%(status)s,current_date,current_date,%(password)s,%(email)s)
          returning id'''
 
         try:
