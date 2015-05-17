@@ -213,7 +213,7 @@ class Customer(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''insert into "User" (name,lastname,type,rut,bussiness,approval_date,registration_date,status,first_view,last_view,username,password, email)
+        query = '''insert into "User" (name,lastname,type_id,rut,bussiness,approval_date,registration_date,status,first_view,last_view,username,password, email)
         values (%(name)s,%(lastname)s,%(type)s,%(rut)s,%(bussiness)s,%(approval_date)s,%(registration_date)s,%(status)s,%(first_view)s,%(last_view)s,%(username)s,%(password)s,%(email)s)
          returning id'''
 
