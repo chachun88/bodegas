@@ -138,7 +138,7 @@ class Customer(BaseModel):
         self._username = ""
         self._password = ""
         self._email = ""
-    
+
     def InitById(self, _id):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -146,32 +146,38 @@ class Customer(BaseModel):
         query = '''select u.*,ut.name as type from "User" u left join "User_Types" ut on ut.id = u.type_id where u.id = %(id)s limit 1'''
 
         parametros = {
-        "id":_id
+            "id":_id
         }
 
         try:
             cur.execute(query,parametros)
             if cur.rowcount > 0:
                 customer = cur.fetchone()
-                self.id = customer["id"]
-                self.name = customer["name"]
-                self.lastname = customer["lastname"]
-                self.type = customer["type"]
-                self.rut = customer["rut"]
-                self.bussiness = customer["bussiness"]
-                self.approval_date = customer["approval_date"]
-                self.registration_date = customer["registration_date"]
-                self.status = customer["status"]
-                self.first_view = customer["first_view"]
-                self.last_view = customer["last_view"]
-                self.username = customer["name"]
-                self.password = customer["password"]
-                self.email = customer["email"]
-                return self.ShowSuccessMessage(self)
+                try:
+                    self.id = customer["id"]
+                    self.name = customer["name"]
+                    self.lastname = customer["lastname"]
+                    self.type = customer["type"]
+                    self.rut = customer["rut"]
+                    self.bussiness = customer["bussiness"]
+                    self.approval_date = customer["approval_date"]
+                    self.registration_date = customer["registration_date"]
+                    self.status = customer["status"]
+                    self.first_view = customer["first_view"]
+                    self.last_view = customer["last_view"]
+                    self.username = customer["name"]
+                    self.password = customer["password"]
+                    self.email = customer["email"]
+                    return self.ShowSuccessMessage(self)
+                except Exception, e:
+                    return self.ShowError(str(e))
             else:
                 return self.ShowError("customer not found")
         except Exception,e:
             return self.ShowError(str(e))
+        finally:
+            cur.close()
+            self.connection.close()
 
     def Save(self):
 
