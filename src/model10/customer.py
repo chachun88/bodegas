@@ -181,43 +181,50 @@ class Customer(BaseModel):
 
     def Save(self):
 
-        # new_id = db.seq.find_and_modify(query={'seq_name':'customer_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
-
-        # print self.contact
-
         customer = {
-        "name": self.name,
-        "lastname": self.lastname,
-        "type": self.type,
-        "rut": self.rut,
-        "bussiness": self.bussiness,
-        "approval_date": self.approval_date,
-        "registration_date": self.registration_date,
-        "status": self.status,
-        "first_view": self.first_view,
-        "last_view": self.last_view,
-        "username": self.username,
-        "password": self.password,
-        "email": self.email
+            "name": self.name,
+            "lastname": self.lastname,
+            "type": self.type,
+            "rut": self.rut,
+            "bussiness": self.bussiness,
+            "approval_date": None,
+            "status": self.status,
+            "username": self.username,
+            "password": self.password,
+            "email": self.email
         }
-
-        # try:
-
-        #     self.collection.insert(customer)
-
-        #     return str(new_id)
-
-        # except Exception, e:
-
-        #     return str(e)
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''insert into "User" (name,lastname,type_id,rut,bussiness,approval_date,registration_date,status,first_view,last_view,password, email)
-        values (%(name)s,%(lastname)s,%(type)s,%(rut)s,%(bussiness)s,%(approval_date)s,current_date(),%(status)s,current_date(),current_date(),%(password)s,%(email)s)
-         returning id'''
+        query = '''\
+                insert into "User" (name,
+                                    lastname,
+                                    type_id,
+                                    rut,
+                                    bussiness,
+                                    approval_date,
+                                    registration_date,
+                                    status,
+                                    first_view,
+                                    last_view,
+                                    password,
+                                    email)
+                values (%(name)s,
+                        %(lastname)s,
+                        %(type)s,
+                        %(rut)s,
+                        %(bussiness)s,
+                        %(approval_date)s,
+                        current_date(),
+                        %(status)s,
+                        current_date(),
+                        current_date(),
+                        %(password)s,
+                        %(email)s)
+                returning id'''
 
         try:
+            return self.ShowError(cur.mogrify(query, customer))
             cur.execute(query,customer)
             self.connection.commit()
             customer_id = cur.fetchone()[0]
