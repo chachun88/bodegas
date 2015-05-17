@@ -215,10 +215,10 @@ class Customer(BaseModel):
                         %(rut)s,
                         %(bussiness)s,
                         %(approval_date)s,
-                        current_date(),
+                        localtimestamp,
                         %(status)s,
-                        current_date(),
-                        current_date(),
+                        localtimestamp,
+                        localtimestamp,
                         %(password)s,
                         %(email)s)
                 returning id'''
