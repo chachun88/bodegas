@@ -467,8 +467,9 @@ class Order(BaseModel):
                             res_web_cellar = cellar.GetWebCellar()
 
                             if "success" in res_web_cellar:
-
                                 web_cellar = res_web_cellar["success"]
+                            else:
+                                errores.append("bodega web no encontrado")
 
                             # mueve c/u de los productos desde la bodega de reserva a la bodega web
                             kardex = Kardex()

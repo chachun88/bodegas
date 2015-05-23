@@ -138,7 +138,7 @@ class Customer(BaseModel):
         self._username = ""
         self._password = ""
         self._email = ""
-    
+
     def InitById(self, _id):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -146,72 +146,85 @@ class Customer(BaseModel):
         query = '''select u.*,ut.name as type from "User" u left join "User_Types" ut on ut.id = u.type_id where u.id = %(id)s limit 1'''
 
         parametros = {
-        "id":_id
+            "id":_id
         }
 
         try:
             cur.execute(query,parametros)
             if cur.rowcount > 0:
                 customer = cur.fetchone()
-                self.id = customer["id"]
-                self.name = customer["name"]
-                self.lastname = customer["lastname"]
-                self.type = customer["type"]
-                self.rut = customer["rut"]
-                self.bussiness = customer["bussiness"]
-                self.approval_date = customer["approval_date"]
-                self.registration_date = customer["registration_date"]
-                self.status = customer["status"]
-                self.first_view = customer["first_view"]
-                self.last_view = customer["last_view"]
-                self.username = customer["name"]
-                self.password = customer["password"]
-                self.email = customer["email"]
-                return self.ShowSuccessMessage(self)
+                try:
+                    self.id = customer["id"]
+                    self.name = customer["name"]
+                    self.lastname = customer["lastname"]
+                    self.type = customer["type"]
+                    self.rut = customer["rut"]
+                    self.bussiness = customer["bussiness"]
+                    self.approval_date = customer["approval_date"]
+                    self.registration_date = customer["registration_date"]
+                    self.status = customer["status"]
+                    self.first_view = customer["first_view"]
+                    self.last_view = customer["last_view"]
+                    self.username = customer["name"]
+                    self.password = customer["password"]
+                    self.email = customer["email"]
+                    return self.ShowSuccessMessage(self)
+                except Exception, e:
+                    return self.ShowError(str(e))
             else:
                 return self.ShowError("customer not found")
         except Exception,e:
             return self.ShowError(str(e))
+        finally:
+            cur.close()
+            self.connection.close()
 
     def Save(self):
 
-        # new_id = db.seq.find_and_modify(query={'seq_name':'customer_seq'},update={'$inc': {'id': 1}},fields={'id': 1, '_id': 0},new=True,upsert=True)["id"]
-
-        # print self.contact
-
         customer = {
-        "name": self.name,
-        "lastname": self.lastname,
-        "type": self.type,
-        "rut": self.rut,
-        "bussiness": self.bussiness,
-        "approval_date": self.approval_date,
-        "registration_date": self.registration_date,
-        "status": self.status,
-        "first_view": self.first_view,
-        "last_view": self.last_view,
-        "username": self.username,
-        "password": self.password,
-        "email": self.email
+            "name": self.name,
+            "lastname": self.lastname,
+            "type": self.type,
+            "rut": self.rut,
+            "bussiness": self.bussiness,
+            "approval_date": None,
+            "status": self.status,
+            "username": self.username,
+            "password": self.password,
+            "email": self.email
         }
-
-        # try:
-
-        #     self.collection.insert(customer)
-
-        #     return str(new_id)
-
-        # except Exception, e:
-
-        #     return str(e)
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''insert into "User" (name,lastname,type,rut,bussiness,approval_date,registration_date,status,first_view,last_view,username,password, email)
-        values (%(name)s,%(lastname)s,%(type)s,%(rut)s,%(bussiness)s,%(approval_date)s,%(registration_date)s,%(status)s,%(first_view)s,%(last_view)s,%(username)s,%(password)s,%(email)s)
-         returning id'''
+        query = '''\
+                insert into "User" (name,
+                                    lastname,
+                                    type_id,
+                                    rut,
+                                    bussiness,
+                                    approval_date,
+                                    registration_date,
+                                    status,
+                                    first_view,
+                                    last_view,
+                                    password,
+                                    email)
+                values (%(name)s,
+                        %(lastname)s,
+                        %(type)s,
+                        %(rut)s,
+                        %(bussiness)s,
+                        %(approval_date)s,
+                        localtimestamp,
+                        %(status)s,
+                        localtimestamp,
+                        localtimestamp,
+                        %(password)s,
+                        %(email)s)
+                returning id'''
 
         try:
+            # return self.ShowError(cur.mogrify(query, customer))
             cur.execute(query,customer)
             self.connection.commit()
             customer_id = cur.fetchone()[0]

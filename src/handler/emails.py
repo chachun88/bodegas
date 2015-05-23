@@ -50,8 +50,8 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
     </tr>
     </tbody></table>""".format( order_id=order_id,
                                 name=contact.name,
-                                address=contact.address.encode("utf-8"),
-                                town=contact.town.encode("utf-8"),
+                                address=contact,
+                                town=contact.town,
                                 city=contact.city,
                                 telephone=contact.telephone,
                                 email=contact.email.encode("utf-8"))
@@ -86,8 +86,8 @@ def TrackingCustomer(email,name,tracking_code,provider_name,order_id):
     </tr>
     </tbody></table>""".format( order_id=order_id,
                                 name=contact.name.encode("utf-8"),
-                                address=contact.address.encode("utf-8"),
-                                town=contact.town.encode("utf-8"),
+                                address=contact.address,
+                                town=contact.town,
                                 city=contact.city,
                                 telephone=contact.telephone,
                                 email=contact.email.encode("utf-8"))

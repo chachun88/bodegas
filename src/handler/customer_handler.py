@@ -90,10 +90,10 @@ class CustomerSaveHandler(BaseHandler):
             self.render("customer/save.html",dn="",mode="add", customer=customer,types=types)
         else:
             response = customer.InitById(user_id)
-            if response == "ok":
+            if "success" in response:
                 self.render("customer/save.html",dn="",mode="edit", customer=customer,types=types)
             else:
-                self.write(response)
+                self.write(response["error"])
 
     @tornado.web.authenticated
     def post(self):
