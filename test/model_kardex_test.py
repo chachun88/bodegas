@@ -21,8 +21,8 @@ class ModelKardexTest(unittest.TestCase):
     def tearDown(self):
         BaseModel.execute_query( '''TRUNCATE "Kardex" CASCADE;''' )
 
-    def test_add(self):
 
+    def productAdd(self):
         city = City()
         city.name = "Santiago"
         city.Save()
@@ -101,6 +101,12 @@ class ModelKardexTest(unittest.TestCase):
         product.bulk_price = 0
 
         product.Save()
+
+        return product, cellar
+
+    def test_add(self):
+
+        product, cellar = self.productAdd()
 
         self.kardex.product_sku = 'GDF-OI14-Queltehue-C19'
         self.kardex.units = 3
@@ -117,85 +123,7 @@ class ModelKardexTest(unittest.TestCase):
         )   
 
     def test_remove(self):
-
-        city = City()
-        city.name = "Santiago"
-        city.Save()
-
-        cellar = Cellar()
-        cellar.city = city.id
-        cellar.name = 'Bodega Central'
-        res = cellar.Save()
-
-        tags = []
-
-        tag = Tag()
-        tag.name = 'botin'
-        res = tag.Save()
-
-        if "success" in res:
-            tags.append(res["success"])
-
-        tag.name = 'queltehue'
-        res = tag.Save()
-
-        if "success" in res:
-            tags.append(res["success"])
-
-        size = Size()
-        size.name = '35'
-        res = size.insert()
-
-        size_id = []
-
-        if "success" in res:
-            size_id.append(size.id)
-
-        size = Size()
-        size.name = '36'
-        res = size.insert()
-
-        if "success" in res:
-            size_id.append(size.id)
-
-        size = Size()
-        size.name = '37'
-        res = size.insert()
-
-        if "success" in res:
-            size_id.append(size.id)
-
-        product = Product()
-
-        product.name = 'Queltehue 19'
-        product.sku = 'GDF-OI14-Queltehue-C19'
-        product.descripction = 'descripcion'
-        product.brand = 'Giani Da Firenze'
-        product.manufacturer = 'Calzur'
-        product.size = ['35', '36', '37']
-        product.color = 'café moro'
-        product.bullet_1 = ''
-        product.bullet_2 = ''
-        product.bullet_3 = ''
-        product.currency = 'CLP'
-        product.image = ''
-        product.image_2 = ''
-        product.image_3 = ''
-        product.image_4 = ''
-        product.image_5 = ''
-        product.image_6 = ''
-        product.category = ''
-        product.upc = ''
-        product.price = 33558
-        product.sell_price = 0
-        product.delivery = 'delivery'
-        product.which_size = 'qureywe'
-        product.tags = ','.join([str(identificador) for identificador in tags])
-        product.promotion_price = 0
-        product.size_id = size_id
-        product.bulk_price = 0
-
-        product.Save()
+        product, cellar = self.productAdd()
 
         self.kardex.product_sku = 'GDF-OI14-Queltehue-C19'
         self.kardex.units = 3
@@ -222,88 +150,7 @@ class ModelKardexTest(unittest.TestCase):
 
     def test_mov(self):
 
-        city = City()
-        city.name = "Santiago"
-        city.Save()
-
-        cellar = Cellar()
-        cellar.city = city.id
-        cellar.name = 'Bodega Central'
-        res = cellar.Save()
-
-        new_cellar = Cellar()
-        new_cellar.city = city.id
-        new_cellar.name = 'Bodega Reserva'
-        res = new_cellar.Save()
-
-        tags = []
-
-        tag = Tag()
-        tag.name = 'botin'
-        res = tag.Save()
-
-        if "success" in res:
-            tags.append(res["success"])
-
-        tag.name = 'queltehue'
-        res = tag.Save()
-
-        if "success" in res:
-            tags.append(res["success"])
-
-        size = Size()
-        size.name = '35'
-        res = size.insert()
-
-        size_id = []
-
-        if "success" in res:
-            size_id.append(size.id)
-
-        size = Size()
-        size.name = '36'
-        res = size.insert()
-
-        if "success" in res:
-            size_id.append(size.id)
-
-        size = Size()
-        size.name = '37'
-        res = size.insert()
-
-        if "success" in res:
-            size_id.append(size.id)
-
-        product = Product()
-        product.name = 'Queltehue 19'
-        product.sku = 'GDF-OI14-Queltehue-C19'
-        product.descripction = 'descripcion'
-        product.brand = 'Giani Da Firenze'
-        product.manufacturer = 'Calzur'
-        product.size = ['35', '36', '37']
-        product.color = 'café moro'
-        product.bullet_1 = ''
-        product.bullet_2 = ''
-        product.bullet_3 = ''
-        product.currency = 'CLP'
-        product.image = ''
-        product.image_2 = ''
-        product.image_3 = ''
-        product.image_4 = ''
-        product.image_5 = ''
-        product.image_6 = ''
-        product.category = ''
-        product.upc = ''
-        product.price = 33558
-        product.sell_price = 0
-        product.delivery = 'delivery'
-        product.which_size = 'qureywe'
-        product.tags = ','.join([str(identificador) for identificador in tags])
-        product.promotion_price = 0
-        product.size_id = size_id
-        product.bulk_price = 0
-
-        product.Save()
+        product, cellar = self.productAdd()
 
         self.kardex.product_sku = 'GDF-OI14-Queltehue-C19'
         self.kardex.units = 3
