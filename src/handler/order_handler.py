@@ -28,13 +28,14 @@ ACCIONES_CANCELADO = 5
 
 
 class OrderHandler(BaseHandler):
+
     @tornado.web.authenticated
     def get(self):
 
         self.set_active(Menu.PEDIDOS_LISTA)
 
-        page = self.get_argument("page",1) 
-        items = self.get_argument("items",20)
+        page = self.get_argument("page", 1)
+        items = self.get_argument("items", 20)
 
         total_pages = 1
 
@@ -45,11 +46,11 @@ class OrderHandler(BaseHandler):
         if "success" in res_total_pages:
             total_pages = res_total_pages["success"]
 
-        self.render("order/home.html", 
-                    side_menu=self.side_menu, 
-                    pedidos=pedidos, 
-                    dn=self.get_argument("dn", ""), 
-                    page=page, 
+        self.render("order/home.html",
+                    side_menu=self.side_menu,
+                    pedidos=pedidos,
+                    dn=self.get_argument("dn", ""),
+                    page=page,
                     total_pages=total_pages)
 
 
@@ -59,7 +60,7 @@ class AddOrderHandler(BaseHandler):
     def get(self):
 
         order = Order()
-        self.render("order/save.html",dn="",mode="add", order=order)
+        self.render("order/save.html", dn="", mode="add", order=order)
 
     @tornado.web.authenticated
     def post(self):
@@ -67,23 +68,23 @@ class AddOrderHandler(BaseHandler):
         # instantiate order
         order = Order()
 
-        order.id                = self.get_argument("id", "")
-        order.date              = datetime.now()
-        order.salesman          = self.get_argument("salesman", "")
-        order.customer          = self.get_argument("customer", "")
-        order.subtotal          = self.get_argument("subtotal", "")
-        order.discount          = self.get_argument("discount", "")
-        order.tax               = self.get_argument("tax", "")
-        order.total             = self.get_argument("total", "")
-        order.address           = self.get_argument("address", "")
-        order.town              = self.get_argument("town", "")
-        order.city              = self.get_argument("city", "")
-        order.country           = self.get_argument("country","")
-        order.type              = self.get_argument("type","")
-        order.source            = self.get_argument("source","")
-        order.items_quantity    = self.get_argument("items_quantity","")
-        order.product_quantity  = self.get_argument("product_quantity","")
-        order.state             = self.get_argument("state","")
+        order.id = self.get_argument("id", "")
+        order.date = datetime.now()
+        order.salesman = self.get_argument("salesman", "")
+        order.customer = self.get_argument("customer", "")
+        order.subtotal = self.get_argument("subtotal", "")
+        order.discount = self.get_argument("discount", "")
+        order.tax = self.get_argument("tax", "")
+        order.total = self.get_argument("total", "")
+        order.address = self.get_argument("address", "")
+        order.town = self.get_argument("town", "")
+        order.city = self.get_argument("city", "")
+        order.country = self.get_argument("country", "")
+        order.type = self.get_argument("type", "")
+        order.source = self.get_argument("source", "")
+        order.items_quantity = self.get_argument("items_quantity", "")
+        order.product_quantity = self.get_argument("product_quantity", "")
+        order.state = self.get_argument("state", "")
 
         # saving the current order
         oid = order.Save()
@@ -101,11 +102,11 @@ class OrderActionsHandler(BaseHandler):
         resultado = []
 
         valores = self.get_argument("values", "").split(",")
-        accion = self.get_argument("action","")
+        accion = self.get_argument("action", "")
 
         if accion == "":
             self.write("Debe seleccionar una acción")
-            return 
+            return
 
         accion = int(accion)
 
@@ -128,10 +129,12 @@ class OrderActionsHandler(BaseHandler):
 
                 if "success" in res_order:
                     if _order.state == Order.ESTADO_PENDIENTE and _order.payment_type == 1:
-                        order.ChangeStateOrders(v ,Order.ESTADO_CONFIRMADO)
-                        SendConfirmedMail(_order.customer_email, _order.customer, v)
+                        order.ChangeStateOrders(v, Order.ESTADO_CONFIRMADO)
+                        SendConfirmedMail(
+                            _order.customer_email, _order.customer, v)
                     else:
-                        resultado.append({"error":"el pedido {} no puede ser confirmado".format(_order.id)})
+                        resultado.append(
+                            {"error": "el pedido {} no puede ser confirmado".format(_order.id)})
                 else:
                     resultado.append(res_order)
 
@@ -142,10 +145,12 @@ class OrderActionsHandler(BaseHandler):
 
                 if "success" in res_order:
                     if _order.state == Order.ESTADO_CONFIRMADO:
-                        res = order.ChangeStateOrders(v, Order.ESTADO_PARA_DESPACHO)
+                        res = order.ChangeStateOrders(
+                            v, Order.ESTADO_PARA_DESPACHO)
                         resultado.append(res)
                     else:
-                        resultado.append({"error":"el pedido {} no puede cambiar a estado listo para despacho".format(_order.id)})
+                        resultado.append(
+                            {"error": "el pedido {} no puede cambiar a estado listo para despacho".format(_order.id)})
                 else:
                     resultado.append(res_order)
 
@@ -163,12 +168,14 @@ class OrderActionsHandler(BaseHandler):
                         res_cancel = order.cancel(v)
 
                         if "success" in res_cancel:
-                            response = order.ChangeStateOrders(v, Order.ESTADO_CANCELADO)
+                            response = order.ChangeStateOrders(
+                                v, Order.ESTADO_CANCELADO)
                             resultado.append(response)
                         else:
                             resultado.append(res_cancel)
                     else:
-                      resultado.append({"error":"el pedido {} no puede ser cancelado".format(_order.id)})
+                        resultado.append(
+                            {"error": "el pedido {} no puede ser cancelado".format(_order.id)})
                 else:
                     resultado.append(res_order)
 
@@ -212,7 +219,6 @@ class OrderActionsHandler(BaseHandler):
         #             if response == "ok":
         #                 TrackingCustomer(customer.email,customer.name,tracking_code,provider_name,order_id)
 
-
         #     if len(errores) > 0:
         #         self.write(json_util.dumps({"state":1,"obj":errores}))
         #     else:
@@ -222,7 +228,59 @@ class OrderActionsHandler(BaseHandler):
         pass
 
 
-def SendConfirmedMail(email,name,id_orden):
+class OrderAjaxListHandler(BaseHandler):
+
+    def get(self):
+        start = int(self.get_argument("start", 0))
+        items = self.get_argument("items", 20)
+
+        columns = [
+            ""
+            "order_id",
+            "o.date",
+            "customer",
+            "tipo_cliente",
+            "source",
+            "items_quantity",
+            "products_quantity",
+            "total",
+            "o.state",
+            "payment_type"
+        ]
+
+        column = int(self.get_argument("order[0][column]")) - 1
+        direction = self.get_argument("order[0][dir]")
+
+        page = int(start / items) + 1
+
+        total_items = 0
+
+        # print columns[column]
+
+        order = Order()
+        pedidos = order.List(page, items, columns[column], direction)
+        res_total_items = order.getTotalItems()
+
+        if "success" in res_total_items:
+            total_items = res_total_items["success"]
+
+        result = {
+            "recordsTotal": total_items,
+            "recordsFiltered": total_items,
+            "data": pedidos
+        }
+
+        self.write(json_util.dumps(result))
+
+        # self.render("order/home.html",
+        #             side_menu=self.side_menu,
+        #             pedidos=pedidos,
+        #             dn=self.get_argument("dn", ""),
+        #             page=page,
+        #             total_pages=total_pages)
+
+
+def SendConfirmedMail(email, name, id_orden):
 
     html = """\
     <html xmlns=""><head>
@@ -604,9 +662,11 @@ def SendConfirmedMail(email,name,id_orden):
 
     sg = sendgrid.SendGridClient(usuario_sendgrid, pass_sendgrid)
     message = sendgrid.Mail()
-    message.set_from("{nombre} <{mail}>".format(nombre="Giani Da Firenze",mail=email_giani))
+    message.set_from(
+        "{nombre} <{mail}>".format(nombre="Giani Da Firenze", mail=email_giani))
     message.add_to(email)
-    message.set_subject("Giani Da Firenze - El pago de la orden Nº {} ha sido confirmado".format(id_orden))
+    message.set_subject(
+        "Giani Da Firenze - El pago de la orden Nº {} ha sido confirmado".format(id_orden))
     message.set_html(html)
     status, msg = sg.send(message)
 

@@ -44,6 +44,93 @@ var ValidateTracking = function(){
 }
 
 $(document).ready(function(){
+
+    $('#pedidos').DataTable({
+        "serverSide": true,
+        "ajax": {
+            url: "/order/list_ajax",
+            data: function ( d ) {
+                //d.start = d.start
+            }
+        },
+        "lengthChange": false,
+        "pageLength": 20,
+        "columnDefs": [
+            {   "targets": 0,
+                "data": null, 
+                "orderable": false,
+                render: function ( data, type, row ) {
+                    if ( row.state != 3 ) {
+                        return '<input type="checkbox" name="pedidos" class="iCheck" value="' + row.order_id + '" tracking-code="-">';
+                    } else {
+                        console.log('<input type="checkbox" name="pedidos" class="iCheck" value="' + row.order_id + '" tracking-code="' + row.tracking_code + '">');
+                        return '<input type="checkbox" name="pedidos" class="iCheck" value="' + row.order_id + '" tracking-code="' + row.tracking_code + '">'
+                    }
+                    return data;
+                }
+            },
+            { "targets": 1,"data": "order_id", "orderable": true },
+            { "targets": 2,"data": "date", "orderable": true },
+            { "targets": 3,"data": "customer", "orderable": true },
+            { 
+                "targets": 4,
+                "data": "tipo_cliente",
+                "orderable": true
+            },
+            { "targets": 5,"data": "source", "orderable": true },
+            { "targets": 6,"data": "items_quantity", "orderable": true },
+            { "targets": 7,"data": "products_quantity", "orderable": true },
+            { "targets": 8,"data": "total", "orderable": true },
+            { 
+                "targets": 9,
+                "data": "state",
+                "orderable": true,
+                "render": function(data, type, row) {
+                    if (row.state == 1) {
+                        if (row.payment_type == 1) {
+                            return '<span class="label label-warning">POR CONFIRMAR</span>';
+                        } else {
+                            return '<span class="label label-warning">RECHAZADO</span>';
+                        }
+                    } else if (row.state == 2) {
+                        return '<span class="label label-important">CONFIRMADO</span>';
+                    } else if (row.state == 3) {
+                        return '<span class="label label-info">LISTO PARA DESPACHO</span>';
+                    } else if (row.state == 4) {
+                        return '<span class="label label-success">DESPACHADO</span>';
+                    } else if (row.state == 5) {
+                        return '<span class="label label-default">CANCELADO</span>';
+                    }
+
+                }
+            },
+            { 
+                "targets": 10,
+                "data": "payment_type",
+                "orderable": true,
+                "render" : function(data, type, row)
+                {
+                    if(row.payment_type == 1){
+                        return 'TRANSFERENCIA';
+                    } else {
+                        return 'WEBPAY'
+                    }
+                } 
+            },
+            { 
+                "targets": 11,
+                "data": null, 
+                "orderable": false,
+                render: function ( data, type, row ) {
+                    if ( type === 'display' ) {
+                        return '<a class="btn btn-primary btn-sm" href="/order-detail/list?order_id=' + row.order_id + '">Ver Detalle</a>';
+                    }
+                    return data;
+                }
+            }
+        ]
+    });
+
     $("#aplicar").click(function(){
 
         var action = $("#default-select").val();
@@ -57,7 +144,7 @@ $(document).ready(function(){
 
             $(".iCheck:checked").each(function() {
                 var tracking_code = $(this).attr("tracking-code");
-                if(tracking_code=='None')
+                if(tracking_code=='null')
                     chkArray.push($(this).val());
             });
 

@@ -97,6 +97,7 @@ class Application(tornado.web.Application):
             (r"/order/list", OrderHandler),
             (r"/order/save", AddOrderHandler),
             (r"/orders/actions", OrderActionsHandler),
+            (r"/order/list_ajax", OrderAjaxListHandler),
 
             # order_detail
             (r"/order-detail/save", AddOrderDetailHandler),

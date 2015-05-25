@@ -192,14 +192,25 @@ class Order(BaseModel):
         self._billing_id = ""
         self._shipping_id = ""
 
-    def List(self, page, items):
+    def List(self, page, items, column="o.id", dir='desc'):
 
         page = int(page)
         items = int(items)
         offset = (page - 1) * items
-        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
         try:
-            query = '''select o.*,
+            query = '''
+                    select o.id,
+                    to_char(o.date, 'DD/MM/YY HH12:MI') as date,
+                    o.state,
+                    o.source,
+                    o.items_quantity,
+                    o.products_quantity,
+                    o.total,
+                    o.payment_type,
+                    o.tracking_code,
                     coalesce(c.name, '') || ' ' || coalesce(c.lastname, '') as customer,
                     c.*,
                     ut.name as tipo_cliente,
@@ -210,14 +221,15 @@ class Order(BaseModel):
                     inner join "Contact" c on c.id = o.billing_id 
                     inner join "City" ct on ct.id = c.city_id 
                     inner join "User_Types" ut on ut.id = u.type_id
-                    order by o.id desc 
+                    order by {column} {dir} 
                     limit %(items)s 
-                    offset %(offset)s'''
+                    offset %(offset)s'''.format(column=column,dir=dir)
 
             parametros = {
                 "items": items,
                 "offset": offset
             }
+            # print cur.mogrify(query, parametros)
             cur.execute(query, parametros)
             lista = cur.fetchall()
             return lista
@@ -399,6 +411,30 @@ class Order(BaseModel):
             cur.execute(query, parameters)
             pages = cur.fetchone()["pages"]
             return self.ShowSuccessMessage(pages)
+        except Exception, e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
+
+    def getTotalItems(self):
+
+        cur = self.connection.cursor(
+            cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''
+                select count(*) as items
+                from "Order" o 
+                inner join "User" u on u.id = o.user_id 
+                inner join "Contact" c on c.id = o.billing_id 
+                inner join "City" ct on ct.id = c.city_id 
+                inner join "User_Types" ut on ut.id = u.type_id
+                '''
+
+        try:
+            cur.execute(query)
+            items = cur.fetchone()["items"]
+            return self.ShowSuccessMessage(items)
         except Exception, e:
             return self.ShowError(str(e))
         finally:
