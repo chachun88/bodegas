@@ -2,10 +2,10 @@
 <html>
 	<head>
 		<title>{% block title %}{% end %}</title>
-		<link href="/static/css/application.min.css" rel="stylesheet">
+		<link href="/{{nocache_static}}/css/application.min.css" rel="stylesheet">
         {% block css %}{% end %}
-		<link href="/static/css/bodega.css" rel="stylesheet">
-		<link href="/static/css/lp.autocomplete.css" rel="stylesheet">
+		<link href="/{{nocache_static}}/css/bodega.css" rel="stylesheet">
+		<link href="/{{nocache_static}}/css/lp.autocomplete.css" rel="stylesheet">
 
 		<link rel="shortcut icon" href="img/favicon.png">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,76 +14,76 @@
 		<meta charset="utf-8">
 
 		<!-- jquery and friends -->
-		<script src="/static/lib/jquery/jquery-2.0.3.min.js"></script>
+		<script src="/{{nocache_static}}/lib/jquery/jquery-2.0.3.min.js"></script>
 
 		<!-- jquery plugins -->
-		<script src="/static/lib/icheck.js/jquery.icheck.js"></script>
-		<script src="/static/lib/sparkline/jquery.sparkline.js"></script>
-		<script src="/static/lib/jquery-ui-1.10.3.custom.js"></script>
-		<script src="/static/lib/jquery.slimscroll.js"></script>
+		<script src="/{{nocache_static}}/lib/icheck.js/jquery.icheck.js"></script>
+		<script src="/{{nocache_static}}/lib/sparkline/jquery.sparkline.js"></script>
+		<script src="/{{nocache_static}}/lib/jquery-ui-1.10.3.custom.js"></script>
+		<script src="/{{nocache_static}}/lib/jquery.slimscroll.js"></script>
 
-		<script src="/static/lib/jquery-maskedinput/jquery.maskedinput.js"></script>
-		<script src="/static/lib/parsley/parsley.js"> </script>
-		<script src="/static/lib/select2.js"></script>
-		<script src="/static/lib/jquery.autogrow-textarea.js"></script>
+		<script src="/{{nocache_static}}/lib/jquery-maskedinput/jquery.maskedinput.js"></script>
+		<script src="/{{nocache_static}}/lib/parsley/parsley.js"> </script>
+		<script src="/{{nocache_static}}/lib/select2.js"></script>
+		<script src="/{{nocache_static}}/lib/jquery.autogrow-textarea.js"></script>
 
 
 		<!-- d3, nvd3-->
-		<script src="/static/lib/nvd3/lib/d3.v2.js"></script>
-		<script src="/static/lib/nvd3/nv.d3.custom.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/lib/d3.v2.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/nv.d3.custom.js"></script>
 
 		<!-- nvd3 models -->
-		<script src="/static/lib/nvd3/src/models/scatter.js"></script>
-		<script src="/static/lib/nvd3/src/models/axis.js"></script>
-		<script src="/static/lib/nvd3/src/models/legend.js"></script>
-		<script src="/static/lib/nvd3/src/models/multiBar.js"></script>
-		<script src="/static/lib/nvd3/src/models/multiBarChart.js"></script>
-		<script src="/static/lib/nvd3/src/models/line.js"></script>
-		<script src="/static/lib/nvd3/src/models/lineChart.js"></script>
-		<script src="/static/lib/nvd3/stream_layers.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/src/models/scatter.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/src/models/axis.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/src/models/legend.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/src/models/multiBar.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/src/models/multiBarChart.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/src/models/line.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/src/models/lineChart.js"></script>
+		<script src="/{{nocache_static}}/lib/nvd3/stream_layers.js"></script>
 
 		<!--backbone and friends -->
-		<script src="/static/lib/backbone/underscore-min.js"></script>
-		<script src="/static/lib/backbone/backbone-min.js"></script>
-		<script src="/static/lib/backbone/backbone.localStorage-min.js"></script>
+		<script src="/{{nocache_static}}/lib/backbone/underscore-min.js"></script>
+		<script src="/{{nocache_static}}/lib/backbone/backbone-min.js"></script>
+		<script src="/{{nocache_static}}/lib/backbone/backbone.localStorage-min.js"></script>
 
 		<!-- bootstrap default plugins -->
-		<script src="/static/lib/bootstrap/transition.js"></script>
-		<script src="/static/lib/bootstrap/collapse.js"></script>
-		<script src="/static/lib/bootstrap/alert.js"></script>
-		<script src="/static/lib/bootstrap/tooltip.js"></script>
-		<script src="/static/lib/bootstrap/popover.js"></script>
-		<script src="/static/lib/bootstrap/button.js"></script>
-		<script src="/static/lib/bootstrap/tab.js"> </script>
-		<script src="/static/lib/bootstrap/dropdown.js"></script>
-		<script src="/static/lib/bootstrap/modal.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap/transition.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap/collapse.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap/alert.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap/tooltip.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap/popover.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap/button.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap/tab.js"> </script>
+		<script src="/{{nocache_static}}/lib/bootstrap/dropdown.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap/modal.js"></script>
 
-		<script src="/static/lib/bootstrap-select/bootstrap-select.js"></script>
-		<script src="/static/lib/bootstrap-switch.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap-select/bootstrap-select.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap-switch.js"></script>
 
-		<script src="/static/lib/bootstrap-datepicker.js"></script>
-		<script src="/static/lib/bootstrap-select/bootstrap-select.js"></script>
-		<script src="/static/lib/wysihtml5/wysihtml5-0.3.0_rc2.js"></script>
-		<script src="/static/lib/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
-		<script src="/static/lib/bootstrap-switch.js"></script>
-		<script src="/static/lib/bootstrap-colorpicker.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap-datepicker.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap-select/bootstrap-select.js"></script>
+		<script src="/{{nocache_static}}/lib/wysihtml5/wysihtml5-0.3.0_rc2.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap-switch.js"></script>
+		<script src="/{{nocache_static}}/lib/bootstrap-colorpicker.js"></script>
 
 
 		<!-- basic application js-->
-		<script src="/static/js/app.js"></script>
-		<script src="/static/js/settings.js"></script>
-		<script src="/static/js/lp-checkbox.js"></script>
+		<script src="/{{nocache_static}}/js/app.js"></script>
+		<script src="/{{nocache_static}}/js/settings.js"></script>
+		<script src="/{{nocache_static}}/js/lp-checkbox.js"></script>
 
-		<script type="text/javascript" src="/static/js/lp.autocomplete.js"></script>
-		<script type="text/javascript" src="/static/js/bodegas.js"></script>
+		<script type="text/javascript" src="/{{nocache_static}}/js/lp.autocomplete.js"></script>
+		<script type="text/javascript" src="/{{nocache_static}}/js/bodegas.js"></script>
 
 		<!-- page specific -->
-		<script type="text/javascript" src="/static/js/forms-elemets.js"></script>
+		<script type="text/javascript" src="/{{nocache_static}}/js/forms-elemets.js"></script>
 
 		{% block javascript %}{% end %}
 
-		<!-- <script src="/static/js/index.js"></script> -->
-		<!-- <script src="/static/js/chat.js"></script> -->
+		<!-- <script src="/{{nocache_static}}/js/index.js"></script> -->
+		<!-- <script src="/{{nocache_static}}/js/chat.js"></script> -->
 	</head>
 	<body class="background-dark" >
 		<div class="logo">
@@ -122,7 +122,7 @@
 						<li class="hidden-xs"><a href="/auth/login"><i class="fa fa-sign-out"></i></a></li>
 					</ul>
 					<form action="/product/search" id="search-form" class="navbar-form pull-right" role="search">
-						<input type="search" name="q" class="search-query" placeholder="búsqueda de productos">
+						<input type="text" name="q" class="search-query" placeholder="búsqueda de productos">
 						<input type="submit" class="btn btn-sm btn-primary" value="Buscar">
 					</form>
 				</div>

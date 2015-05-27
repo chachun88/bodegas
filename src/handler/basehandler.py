@@ -103,6 +103,11 @@ class BaseHandler(tornado.web.RequestHandler):
             locale.setlocale( locale.LC_NUMERIC, 'Spanish_Spain.1252' )
         return "${}".format(locale.format('%d', value, True))
 
+    def nocache_static( self ):
+       if not "nocache_static" in tornado.options.options:
+           return "static"
+       return tornado.options.options["nocache_static"]
+
     def render(self, template_name ,**kwargs):
 
         # loading current_user
@@ -117,6 +122,7 @@ class BaseHandler(tornado.web.RequestHandler):
         kwargs["side_menu"] = self.side_menu
         kwargs["CustomDateFormat"] = self.CustomDateFormat
         kwargs["money_format"] = self.money_format
+        kwargs["nocache_static"] = self.nocache_static()
 
         # overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)

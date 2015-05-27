@@ -363,6 +363,8 @@
  		});
  	});
 
+    /*$("table#productos").DataTable();*/
+
 });
 
 

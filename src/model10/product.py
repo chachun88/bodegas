@@ -950,7 +950,7 @@ class Product(BaseModel):
             cur.close()
             self.connection.close()
 
-    def GetList(self, page = 1, items = 30):
+    def GetList(self, page = 1, items = 30, query = "", column = "p.name", direction = "asc"):
 
 
 
@@ -968,7 +968,7 @@ class Product(BaseModel):
                 inner join "Size" s on s.id = ps.size_id
                 where p.deleted = %(deleted)s
                 group by p.id, c.name 
-                order by p.name asc'''
+                order by {column} {direction}'''.format(column=column, direction=direction)
                 p = {
                     "deleted": False
                 }
@@ -979,8 +979,8 @@ class Product(BaseModel):
                 inner join "Size" s on s.id = ps.size_id
                 where p.deleted = %(deleted)s
                 group by p.id, c.name 
-                order by p.name asc
-                limit %(items)s offset %(offset)s'''
+                order by {column} {direction}
+                limit %(items)s offset %(offset)s'''.format(column=column, direction=direction)
                 p = {
                     "items": items,
                     "offset": offset,

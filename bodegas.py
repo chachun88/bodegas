@@ -35,6 +35,7 @@ from config import *
 
 # something
 define("port", default=PORT, help="run on the given port", type=int)
+define("nocache_static", default="static_v27", help="", type=str)
 
 if "enviroment" not in options:
 
@@ -48,6 +49,7 @@ if "enviroment" not in options:
 
 
 class Application(tornado.web.Application):
+
     def __init__(self):
 
         settings = dict(
@@ -61,6 +63,9 @@ class Application(tornado.web.Application):
         )
 
         handlers = [
+            (r'/{}/(.*)'.format(tornado.options.options["nocache_static"]),
+             tornado.web.StaticFileHandler,
+             {'path': os.path.join(os.path.dirname(__file__), "static")}),
             (r"/auth/login", LoginHandler),
             (r"/auth/recover", LoginPassHandler),
 
@@ -112,7 +117,8 @@ class Application(tornado.web.Application):
             # report
             (r"/", ReportHandler),
             (r"/report/upload", ReportUploadHandler),
-            (r"/report/download/([^/]+)", tornado.web.StaticFileHandler, {'path': 'uploads/'}),
+            (r"/report/download/([^/]+)",
+             tornado.web.StaticFileHandler, {'path': 'uploads/'}),
 
             # images
             (r"/image/([^/]+)", ImageHandler),
@@ -149,52 +155,70 @@ class Application(tornado.web.Application):
         # Have one global connection to the blog DB across all handlers
 
         self.side_menu = [
-                        {"class":"panel", "name":Menu.INFORMES, "icon":"bar-chart-o", "link":"/",
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.INFORMES_POR_BODEGA, "link":"/"}
-                                        ]},
-                        {"class":"panel", "name":Menu.PRODUCTOS, "icon":"home", "link":"/product", 
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.PRODUCTOS_LISTA, "link":"/product/list"},
-                                        {"class":"", "name":Menu.PRODUCTOS_CARGA, "link":"/product/add"},
-                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_MASIVA, "link":"/product/out"}
-                                        ]},
-                        {"class":"panel", "name":Menu.CLIENTES, "icon":"users", "link":"/",
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.CLIENTES_LISTAR, "link":"/customer"}
-                                        ]},
-                        {"class":"panel", "name":Menu.PEDIDOS, "icon":"truck", "link":"/order", 
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.PEDIDOS_LISTA, "link":"/order/list"}
-                                        ]},
-                        {"class":"panel", "name":Menu.BODEGAS, "icon":"table", "link":"/",
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.BODEGAS_LISTAR, "link":"/cellar"},
-                                        {"class":"", "name":Menu.BODEGAS_AGREGAR, "link":"/cellar/add"},
-                                        {"class":"", "name":Menu.PRODUCTOS_CARGA_STOCK, "link":"/product"},
-                                        {"class":"", "name":Menu.BODEGAS_FACIL, "link": "/cellar/easy"}
-                                        ]},
-                        {"class":"panel", "name":Menu.CONFIGURACION, "icon":"cog", "link":"/",
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.BODEGAS_FORSALE, "link":"/cellar/selectforsale"},
-                                        {"class":"", "name":Menu.BODEGAS_RESERVATION, "link":"/cellar/selectreservation"}
-                                        ]},
-                        {"class":"panel", "name":Menu.USUARIOS, "icon":"asterisk", "link":"/",
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.USUARIOS_LISTAR, "link":"/user"},
-                                        {"class":"", "name":Menu.USUARIOS_AGREGAR, "link":"/user/add"}
-                                        ]},
-                        {"class":"panel", "name":Menu.TAGS, "icon":"tags", "link":"/",
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.TAGS_LISTAR, "link":"/tag/list"},
-                                        {"class":"", "name":Menu.TAGS_ADD, "link":"/tag/add"}
-                                        ]},
-                        {"class":"panel", "name":Menu.SHIPPING, "icon":"plane", "link":"/",
-                            "sub_menu":[
-                                        {"class":"", "name":Menu.SHIPPING_LIST, "link":"/shipping/list"},
-                                        {"class":"", "name":Menu.SHIPPING_SAVE, "link":"/shipping/save"}
-                                        ]},
-                        {"class":"panel", "name":Menu.SALIR, "icon":"sign-out", "link":"/auth/login"},]
+            {"class": "panel", "name": Menu.INFORMES, "icon": "bar-chart-o", "link": "/",
+             "sub_menu": [
+                 {"class": "",
+                  "name": Menu.INFORMES_POR_BODEGA, "link": "/"}
+             ]},
+            {"class": "panel", "name": Menu.PRODUCTOS, "icon": "home", "link": "/product",
+             "sub_menu": [
+                 {"class": "", "name": Menu.PRODUCTOS_LISTA,
+                  "link": "/product/list"},
+                 {"class": "", "name": Menu.PRODUCTOS_CARGA,
+                  "link": "/product/add"},
+                 {"class": "", "name": Menu.PRODUCTOS_CARGA_MASIVA,
+                  "link": "/product/out"}
+             ]},
+            {"class": "panel", "name": Menu.CLIENTES, "icon": "users", "link": "/",
+             "sub_menu": [
+                 {"class": "", "name": Menu.CLIENTES_LISTAR,
+                  "link": "/customer"}
+             ]},
+            {"class": "panel", "name": Menu.PEDIDOS, "icon": "truck", "link": "/order",
+             "sub_menu": [
+                 {"class": "", "name": Menu.PEDIDOS_LISTA,
+                  "link": "/order/list"}
+             ]},
+            {"class": "panel", "name": Menu.BODEGAS, "icon": "table", "link": "/",
+             "sub_menu": [
+                 {"class": "", "name": Menu.BODEGAS_LISTAR,
+                  "link": "/cellar"},
+                 {"class": "", "name": Menu.BODEGAS_AGREGAR,
+                  "link": "/cellar/add"},
+                 {"class": "", "name": Menu.PRODUCTOS_CARGA_STOCK,
+                  "link": "/product"},
+                 {"class": "", "name": Menu.BODEGAS_FACIL,
+                  "link": "/cellar/easy"}
+             ]},
+            {"class": "panel", "name": Menu.CONFIGURACION, "icon": "cog", "link": "/",
+             "sub_menu": [
+                 {"class": "", "name": Menu.BODEGAS_FORSALE,
+                  "link": "/cellar/selectforsale"},
+                 {"class": "", "name": Menu.BODEGAS_RESERVATION,
+                  "link": "/cellar/selectreservation"}
+             ]},
+            {"class": "panel", "name": Menu.USUARIOS, "icon": "asterisk", "link": "/",
+             "sub_menu": [
+                 {"class": "", "name": Menu.USUARIOS_LISTAR,
+                  "link": "/user"},
+                 {"class": "", "name": Menu.USUARIOS_AGREGAR,
+                  "link": "/user/add"}
+             ]},
+            {"class": "panel", "name": Menu.TAGS, "icon": "tags", "link": "/",
+             "sub_menu": [
+                 {"class": "", "name": Menu.TAGS_LISTAR,
+                  "link": "/tag/list"},
+                 {"class": "", "name": Menu.TAGS_ADD,
+                  "link": "/tag/add"}
+             ]},
+            {"class": "panel", "name": Menu.SHIPPING, "icon": "plane", "link": "/",
+             "sub_menu": [
+                 {"class": "", "name": Menu.SHIPPING_LIST,
+                  "link": "/shipping/list"},
+                 {"class": "", "name": Menu.SHIPPING_SAVE,
+                  "link": "/shipping/save"}
+             ]},
+            {"class": "panel", "name": Menu.SALIR, "icon": "sign-out", "link": "/auth/login"}, ]
 
 
 def main():
