@@ -265,7 +265,6 @@ class OrderAjaxListHandler(BaseHandler):
             "customer",
             "tipo_cliente",
             "source",
-            "items_quantity",
             "total",
             "o.state",
             "payment_type"

@@ -112,9 +112,9 @@ $(document).ready(function(){
                 "orderable": true
             },
             { "targets": 5,"data": "source", "orderable": true },
-            { "targets": 6,"data": "items_quantity", "orderable": true },
+            //{ "targets": 6,"data": "items_quantity", "orderable": true },
             { 
-                "targets": 7,
+                "targets": 6,
                 "data": "total", 
                 "orderable": true,
                 render: function(data, type, row){
@@ -122,7 +122,7 @@ $(document).ready(function(){
                 } 
             },
             { 
-                "targets": 8,
+                "targets": 7,
                 "data": "state",
                 "orderable": true,
                 render: function(data, type, row) {
@@ -145,7 +145,7 @@ $(document).ready(function(){
                 }
             },
             { 
-                "targets": 9,
+                "targets": 8,
                 "data": "payment_type",
                 "orderable": true,
                 "render" : function(data, type, row)
@@ -158,12 +158,12 @@ $(document).ready(function(){
                 } 
             },
             {
-                "targets": 10,
+                "targets": 9,
                 "data": "trx_id",
                 "orderable": false
             },
             { 
-                "targets": 11,
+                "targets": 10,
                 "data": null, 
                 "orderable": false,
                 render: function ( data, type, row ) {
