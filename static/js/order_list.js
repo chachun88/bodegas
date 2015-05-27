@@ -43,10 +43,12 @@ var ValidateTracking = function(){
     }
 }
 
+
 $(document).ready(function(){
 
     $('#pedidos').DataTable({
         "serverSide": true,
+        "processing": true,
         "ajax": {
             url: "/order/list_ajax",
             data: function ( d ) {
@@ -55,6 +57,38 @@ $(document).ready(function(){
         },
         "lengthChange": false,
         "pageLength": 20,
+        "dom": 'T<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "../static/swf/copy_csv_xls_pdf.swf",
+            "aButtons": [
+                {
+                    "sExtends": "copy",
+                    "sButtonText": "Copiar",
+                    fnComplete: function(nButton, oConfig, flash, text) {
+                        var lines = text.split('\n').length;
+                        if (oConfig.bHeader) lines--;
+                        if (this.s.dt.nTFoot !== null && oConfig.bFooter) lines--;
+                        var plural = (lines==1) ? "" : "s";
+                        this.fnInfo( '<h6>Tabla copiada</h6>'+
+                            '<p>'+lines+' fila'+plural+' copiada' + plural +' al portapapeles.</p>',
+                            1500
+                        );
+                    }
+                },
+                "xls",
+                {
+                    "sExtends": "pdf",
+                    "sButtonText": "PDF"
+                },
+                {
+                    "sExtends": "print",
+                    "sButtonText": "Imprimir",
+                    fnClick: function() {
+                        window.print();
+                    }
+                }
+            ]
+        },
         "columnDefs": [
             {   "targets": 0,
                 "data": null, 
@@ -79,13 +113,19 @@ $(document).ready(function(){
             },
             { "targets": 5,"data": "source", "orderable": true },
             { "targets": 6,"data": "items_quantity", "orderable": true },
-            { "targets": 7,"data": "products_quantity", "orderable": true },
-            { "targets": 8,"data": "total", "orderable": true },
             { 
-                "targets": 9,
+                "targets": 7,
+                "data": "total", 
+                "orderable": true,
+                render: function(data, type, row){
+                    return row.total.formatMoney(0);
+                } 
+            },
+            { 
+                "targets": 8,
                 "data": "state",
                 "orderable": true,
-                "render": function(data, type, row) {
+                render: function(data, type, row) {
                     if (row.state == 1) {
                         if (row.payment_type == 1) {
                             return '<span class="label label-warning">POR CONFIRMAR</span>';
@@ -105,7 +145,7 @@ $(document).ready(function(){
                 }
             },
             { 
-                "targets": 10,
+                "targets": 9,
                 "data": "payment_type",
                 "orderable": true,
                 "render" : function(data, type, row)
@@ -116,6 +156,11 @@ $(document).ready(function(){
                         return 'WEBPAY'
                     }
                 } 
+            },
+            {
+                "targets": 10,
+                "data": "trx_id",
+                "orderable": false
             },
             { 
                 "targets": 11,
@@ -128,7 +173,30 @@ $(document).ready(function(){
                     return data;
                 }
             }
-        ]
+        ],
+        "language":{
+            "zeroRecords": "No hay resultados para esta busqueda",
+            "search": "Busqueda:",
+            "paginate": {
+                "first":      "Primera",
+                "last":       "Ultima",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "info":           "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+            "infoEmpty":      "Mostrando 0 a 0 de 0 entradas",
+            "processing":     "Cargando..."
+        }
+    });
+
+    $('span.state-filter').click(function(){
+        var valor = $(this).html();
+        if(valor=='TODOS'){
+            $('input[type=search]').val('');
+        } else {
+            $('input[type=search]').val(valor);
+        }
+        $('input[type=search]').trigger('keyup');
     });
 
     $("#aplicar").click(function(){

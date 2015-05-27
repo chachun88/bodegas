@@ -266,27 +266,43 @@ class Customer(BaseModel):
         except Exception,e:
             return self.ShowError(str(e))
 
-    def List(self, current_page=1, items_per_page=20):
+    def List(self, current_page=1, items_per_page=20, query="", column="u.registration_date", dir='desc'):
 
         skip = int(items_per_page) * ( int(current_page) - 1 )
-
-        #lista = self.collection.find().skip(skip).limit(int(items_per_page))
 
         lista = {}
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        try:
-            query = '''select u.*,ut.name as type from "User" u 
-            inner join "User_Types" ut on ut.id = u.type_id where (u.type_id = 4 or u.type_id = 3) 
-            and u.email <> '' 
-            and u.deleted = 0 
-            order by u.registration_date desc
-            limit %(limit)s offset %(offset)s'''
-            parametros = {
+        query = '''\
+                select u.id,
+                        u.name,
+                        nullif(u.rut,'') as rut,
+                        ut.name as type,
+                        nullif(u.bussiness,'') as bussiness,
+                        to_char(u.registration_date, 'DD/MM/YY HH12:MI') as registration_date,
+                        to_char(u.last_view, 'DD/MM/YY HH12:MI') as last_view,
+                        CASE WHEN u.status=1 THEN 'PENDIENTE'
+                            WHEN u.status=2 THEN 'ACEPTADO'
+                        END as status
+                from "User" u 
+                inner join "User_Types" ut on ut.id = u.type_id 
+                where (u.type_id = 4 or u.type_id = 3) 
+                    and u.email <> '' 
+                    and u.deleted = 0 
+                    {query}
+                order by {column} {dir} 
+                nulls last
+                limit %(limit)s 
+                offset %(offset)s'''.format(query=query,column=column,dir=dir)
+
+        parametros = {
             "limit":items_per_page,
             "offset":skip
-            }
+        }
+
+        print cur.mogrify(query, parametros)
+        try:
             cur.execute(query,parametros)
             lista = cur.fetchall()
 
@@ -321,6 +337,29 @@ class Customer(BaseModel):
 
             return self.ShowError(str(e))
 
+    def getTotalItems(self, query=""):
+
+        cur = self.connection.cursor(
+            cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''
+                select count(*) as items
+                from "User" u 
+                inner join "User_Types" ut on ut.id = u.type_id 
+                where (u.type_id = 4 or u.type_id = 3) 
+                    and u.email <> '' 
+                    and u.deleted = 0 
+                    {query}'''.format(query=query)
+
+        try:
+            cur.execute(query)
+            items = cur.fetchone()["items"]
+            return self.ShowSuccessMessage(items)
+        except Exception, e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
 
     def ChangeState(self,ids,state):
         

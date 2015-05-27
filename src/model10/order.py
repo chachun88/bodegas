@@ -192,7 +192,7 @@ class Order(BaseModel):
         self._billing_id = ""
         self._shipping_id = ""
 
-    def List(self, page, items, column="o.id", dir='desc'):
+    def List(self, page, items, query="", column="o.id", dir='desc'):
 
         page = int(page)
         items = int(items)
@@ -200,41 +200,47 @@ class Order(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        try:
-            query = '''
-                    select o.id,
-                    to_char(o.date, 'DD/MM/YY HH12:MI') as date,
-                    o.state,
-                    o.source,
-                    o.items_quantity,
-                    o.products_quantity,
-                    o.total,
-                    o.payment_type,
-                    o.tracking_code,
-                    coalesce(c.name, '') || ' ' || coalesce(c.lastname, '') as customer,
-                    c.*,
-                    ut.name as tipo_cliente,
-                    o.id as order_id,
-                    ct.name as city 
-                    from "Order" o 
-                    inner join "User" u on u.id = o.user_id 
-                    inner join "Contact" c on c.id = o.billing_id 
-                    inner join "City" ct on ct.id = c.city_id 
-                    inner join "User_Types" ut on ut.id = u.type_id
-                    order by {column} {dir} 
-                    limit %(items)s 
-                    offset %(offset)s'''.format(column=column,dir=dir)
+        query = '''
+                select o.id,
+                to_char(o.date, 'DD/MM/YY HH12:MI') as date,
+                o.state,
+                o.source,
+                o.items_quantity,
+                o.products_quantity,
+                o.total,
+                o.payment_type,
+                o.tracking_code,
+                coalesce(c.name, '') || ' ' || coalesce(c.lastname, '') as customer,
+                c.*,
+                ut.name as tipo_cliente,
+                o.id as order_id,
+                ct.name as city,
+                coalesce(w."TBK_ID_TRANSACCION"::text, '') as trx_id
+                from "Order" o 
+                inner join "User" u on u.id = o.user_id 
+                inner join "Contact" c on c.id = o.billing_id 
+                inner join "City" ct on ct.id = c.city_id 
+                inner join "User_Types" ut on ut.id = u.type_id
+                left join "Webpay" w on w."ORDER_ID" = o.id
+                {query}
+                order by {column} {dir} 
+                NULLS last
+                limit %(items)s 
+                offset %(offset)s'''.format(query=query,column=column,dir=dir)
 
-            parametros = {
-                "items": items,
-                "offset": offset
-            }
-            # print cur.mogrify(query, parametros)
+        parametros = {
+            "items": items,
+            "offset": offset
+        }
+
+        print cur.mogrify(query, parametros)
+
+        try:
             cur.execute(query, parametros)
             lista = cur.fetchall()
             return lista
         except Exception, e:
-            print str(e)
+            print "select {}".format(str(e))
             return {}
 
     def InitWithId(self, _id):
@@ -417,7 +423,7 @@ class Order(BaseModel):
             self.connection.close()
             cur.close()
 
-    def getTotalItems(self):
+    def getTotalItems(self, query=""):
 
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
@@ -429,7 +435,7 @@ class Order(BaseModel):
                 inner join "Contact" c on c.id = o.billing_id 
                 inner join "City" ct on ct.id = c.city_id 
                 inner join "User_Types" ut on ut.id = u.type_id
-                '''
+                {query}'''.format(query=query)
 
         try:
             cur.execute(query)

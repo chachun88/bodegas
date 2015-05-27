@@ -126,6 +126,7 @@ class Application(tornado.web.Application):
             (r"/customer/actions", CustomerActionsHandler),
             (r"/customer/add_contact", CustomerAddContactHandler),
             (r"/customer/view_contact", CustomerViewContactHandler),
+            (r"/customer/list_ajax", CustomerAjaxListHandler),
 
             (r"/contact/actions", ContactActionsHandler),
             (r"/customer/edit_contact", EditContactHandler),

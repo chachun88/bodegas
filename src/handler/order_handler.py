@@ -233,6 +233,30 @@ class OrderAjaxListHandler(BaseHandler):
     def get(self):
         start = int(self.get_argument("start", 0))
         items = self.get_argument("items", 20)
+        term = self.get_argument("search[value]","")
+        query = ""
+
+        if term != "":
+            if term.lower() == 'confirmado':
+                query = '''where o.state = 2'''
+            elif term.lower() == 'rechazado':
+                query = '''where o.state = 1 and o.payment_type = 2'''
+            elif term.lower() == 'por confirmar':
+                query = '''where o.state = 1 and o.payment_type = 1'''
+            elif term.lower() == 'listo para despacho':
+                query = '''where o.state = 3'''
+            elif term.lower() == 'despachado':
+                query = '''where o.state = 4'''
+            elif term.lower() == 'cancelado':
+                query = '''where o.state = 5'''
+            elif term.lower() == 'mayorista' or term.lower() == 'cliente mayorista':
+                query = '''where ut.id = 4'''
+            elif term.lower() == 'transferencia':
+                query = '''where o.payment_type = 1'''
+            elif term.lower() == 'webpay':
+                query = '''where o.payment_type = 2'''
+            else:
+                query = """where unaccent(lower(coalesce(c.name, '') || ' ' || coalesce(c.lastname, ''))) like '%%{term}%%'""".format(term=term)
 
         columns = [
             ""
@@ -242,24 +266,26 @@ class OrderAjaxListHandler(BaseHandler):
             "tipo_cliente",
             "source",
             "items_quantity",
-            "products_quantity",
             "total",
             "o.state",
             "payment_type"
         ]
 
-        column = int(self.get_argument("order[0][column]")) - 1
+        column = int(self.get_argument("order[0][column]"))
         direction = self.get_argument("order[0][dir]")
 
         page = int(start / items) + 1
 
         total_items = 0
 
-        # print columns[column]
+        if column > 0:
+            column -= 1
+        else:
+            direction = 'desc'
 
         order = Order()
-        pedidos = order.List(page, items, columns[column], direction)
-        res_total_items = order.getTotalItems()
+        pedidos = order.List(page, items, query, columns[column], direction)
+        res_total_items = order.getTotalItems(query)
 
         if "success" in res_total_items:
             total_items = res_total_items["success"]

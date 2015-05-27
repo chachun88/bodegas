@@ -108,3 +108,6 @@ tr.special_row > td > div{
 .no-sort::after { display: none!important; }
 
 .no-sort { pointer-events: none!important; cursor: default!important; }
+span.state-filter {cursor: pointer;}
+th.state-filter {vertical-align: middle !important;}
+.dataTables_processing { padding: 14px 0 34px 0; }

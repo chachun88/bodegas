@@ -104,9 +104,6 @@ class CustomerSaveHandler(BaseHandler):
         customer.id = self.get_argument("id","")
         customer.name = self.get_argument("name","").encode("utf-8")
         customer.type = self.get_argument("type", "")
-
-        
-
         customer.rut = self.get_argument("rut", "")
         customer.lastname = self.get_argument("lastname","").encode("utf-8")
         customer.bussiness = self.get_argument("bussiness","").encode("utf-8")
@@ -330,4 +327,63 @@ class EditContactHandler(BaseHandler):
             self.redirect("/customer/view_contact?user_id={}".format(contact.user_id))
         else:
             self.write(response["error"])
-            
+
+
+class CustomerAjaxListHandler(BaseHandler):
+
+    def get(self):
+        start = int(self.get_argument("start", 0))
+        items = self.get_argument("items", 20)
+        term = self.get_argument("search[value]","")
+        query = ""
+
+        if term != "":
+            if term.lower() == 'empresa':
+                query = '''and ut.id = 4'''
+            elif term.lower() == 'persona':
+                query = '''and (ut.id = 3 or ut.id = 5)'''
+            elif term.lower() == 'aceptado':
+                query = '''and u.status = 2'''
+            elif term.lower() == 'pendiente':
+                query = '''and u.status = 1'''
+            else:
+                query = """and (unaccent(lower(coalesce(u.name, ''))) like '%%{term}%%' or rut like '%%{term}%%')""".format(term=term)
+
+        columns = [
+            ""
+            "status",
+            "name",
+            "rut",
+            "type",
+            "bussiness",
+            "u.registration_date",
+            "u.last_view"
+        ]
+
+        column = int(self.get_argument("order[0][column]"))
+        direction = self.get_argument("order[0][dir]")
+
+        page = int(start / items) + 1
+
+        total_items = 0
+
+        if column != 0:
+            column -= 1
+        else:
+            column = 6
+            direction = 'desc'
+
+        customer = Customer()
+        clientes = customer.List(page, items, query, columns[column], direction)
+        res_total_items = customer.getTotalItems(query)
+
+        if "success" in res_total_items:
+            total_items = res_total_items["success"]
+
+        result = {
+            "recordsTotal": total_items,
+            "recordsFiltered": total_items,
+            "data": clientes
+        }
+
+        self.write(json_util.dumps(result))
