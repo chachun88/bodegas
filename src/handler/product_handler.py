@@ -307,8 +307,8 @@ class FastEditHandler(BaseHandler):
             prod.sell_price     = self.get_argument("sell_price", "")
             prod.category = self.get_argument("category","")
             prod.sku = prod.sku
-            prod.manufacturer = self.get_argument("manufacturer","")
-            prod.brand = self.get_argument("brand","")
+            # prod.manufacturer = self.get_argument("manufacturer","")
+            # prod.brand = self.get_argument("brand","")
             prod.delivery = self.get_argument("delivery","")
             prod.which_size = self.get_argument("which_size","")
             prod.for_sale = self.get_argument("for_sale",0)

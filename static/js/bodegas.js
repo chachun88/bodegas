@@ -367,36 +367,6 @@
 
 });
 
-
-var FastEdit = function(form_id,sku){
-	var data = $(form_id).serialize();
-	var url = $(form_id).attr("action");
-	var method = $(form_id).attr("method");
-	
-	$.ajax({
-		url:url,
-		data:data,
-		type:method,
-		success: function(obj){
-
-			console.log(obj);
-
-			if(obj.success){
-				$(".name-"+sku).html($(form_id+" input[name='name']").val());
-				$(".sell_price-"+sku).html($(form_id+" input[name='sell_price']").val());
-				$(".sku-"+sku).html($(form_id+" input[name='sku']").val());
-				$(".brand-"+sku).html($(form_id+" input[name='brand']").val());
-				$(".manufacturer-"+sku).html($(form_id+" input[name='manufacturer']").val());
-				$(".sell_price-"+sku).html($(form_id+" input[name='sell_price']").val());
-				$(".color-"+sku).html($(form_id+" input[name='color']").val());
-				$('#'+sku).slideToggle();
-			} else {
-				alert(obj.error);
-			}
-		}
-	});
-}
-
 var for_sale = function(product_id){
 	$.ajax({
 		url: "/product/for_sale",

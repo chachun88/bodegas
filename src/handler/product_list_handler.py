@@ -10,6 +10,7 @@ import tornado.web
 from basehandler import BaseHandler
 from ..globals import Menu
 from ..model10.product import Product
+from bson import json_util
 
 
 class ProductListHandler(BaseHandler):
@@ -46,4 +47,55 @@ class ProductListHandler(BaseHandler):
                     product_list=product_list,
                     page=page,
                     message = message,
-                    total_pages=float(total_pages))
+                    total_pages=float(total_pages),
+                    dumps=json_util.dumps)
+
+    @tornado.web.authenticated
+    def post(self):
+        start = int(self.get_argument("start", 0))
+        items = self.get_argument("items", 20)
+        term = self.get_argument("search[value]","")
+        query = ""
+
+        if term != "":
+            query = """where unaccent(lower(coalesce(p.name, ''))) like '%%(term)s%' or unaccent(lower(coalesce(p.name, ''))) like '%%(term)s%'"""
+
+        columns = [
+            ""
+            "order_id",
+            "o.date",
+            "customer",
+            "tipo_cliente",
+            "source",
+            "items_quantity",
+            "total",
+            "o.state",
+            "payment_type"
+        ]
+
+        column = int(self.get_argument("order[0][column]"))
+        direction = self.get_argument("order[0][dir]")
+
+        page = int(start / items) + 1
+
+        total_items = 0
+
+        if column > 0:
+            column -= 1
+        else:
+            direction = 'desc'
+
+        order = Order()
+        pedidos = order.List(page, items, query, columns[column], direction, term)
+        res_total_items = order.getTotalItems(query, term)
+
+        if "success" in res_total_items:
+            total_items = res_total_items["success"]
+
+        result = {
+            "recordsTotal": total_items,
+            "recordsFiltered": total_items,
+            "data": pedidos
+        }
+
+        self.write(json_util.dumps(result))
