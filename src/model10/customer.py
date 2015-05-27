@@ -302,7 +302,7 @@ class Customer(BaseModel):
             "term": term
         }
 
-        print cur.mogrify(query, parametros)
+        # print cur.mogrify(query, parametros)
         try:
             cur.execute(query,parametros)
             lista = cur.fetchall()
