@@ -58,19 +58,21 @@ class ProductListHandler(BaseHandler):
         query = ""
 
         if term != "":
-            query = """where unaccent(lower(coalesce(p.name, ''))) like '%%(term)s%' or unaccent(lower(coalesce(p.name, ''))) like '%%(term)s%'"""
+            query = """\
+                    and (unaccent(lower(coalesce(p.name, ''))) like %(term)s 
+                    or unaccent(lower(coalesce(p.sku, ''))) like %(term)s)"""
 
         columns = [
-            ""
-            "order_id",
-            "o.date",
-            "customer",
-            "tipo_cliente",
-            "source",
-            "items_quantity",
-            "total",
-            "o.state",
-            "payment_type"
+            "p.for_sale",
+            "p.image",
+            "p.sku",
+            "p.name",
+            "p.size",
+            "p.color",
+            "p.price",
+            "p.sell_price",
+            "p.promotion_price",
+            "p.bulk_price"
         ]
 
         column = int(self.get_argument("order[0][column]"))
@@ -80,22 +82,26 @@ class ProductListHandler(BaseHandler):
 
         total_items = 0
 
-        if column > 0:
-            column -= 1
-        else:
+        if column == 0:
             direction = 'desc'
 
-        order = Order()
-        pedidos = order.List(page, items, query, columns[column], direction, term)
-        res_total_items = order.getTotalItems(query, term)
+        product = Product()
+        pedidos = product.GetList(page, items, query, columns[column], direction, "%{}%".format(term))
+        res_total_items = product.getTotalItems(query, "%{}%".format(term))
 
         if "success" in res_total_items:
             total_items = res_total_items["success"]
 
-        result = {
-            "recordsTotal": total_items,
-            "recordsFiltered": total_items,
-            "data": pedidos
-        }
-
+        if "success" in pedidos:
+            result = {
+                "recordsTotal": total_items,
+                "recordsFiltered": total_items,
+                "data": pedidos["success"]
+            }
+        else:
+            result = {
+                "recordsTotal": 0,
+                "recordsFiltered": 0,
+                "data": {}
+            }
         self.write(json_util.dumps(result))

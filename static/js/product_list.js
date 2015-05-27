@@ -107,7 +107,7 @@ $(document).ready(function(){
         "serverSide": true,
         "processing": true,
         "ajax": {
-            url: "/customer/list_ajax",
+            url: "/product/list",
             type: "post",
             data: function ( d ) {
                 //d.start = d.start
@@ -167,11 +167,12 @@ $(document).ready(function(){
                     return '<img src="/image/' + row.imaege + '?mw=60" width="60">'
                 }
             },
-            { "targets": 2,"data": "name", "orderable": true },
-            { "targets": 3,"data": "size", "orderable": false },
-            { "targets": 4,"data": "color", "orderable": true },
+            { "targets": 2,"data": "sku", "orderable": true },
+            { "targets": 3,"data": "name", "orderable": true },
+            { "targets": 4,"data": "size", "orderable": false },
+            { "targets": 5,"data": "color", "orderable": true },
             { 
-                "targets": 5,
+                "targets": 6,
                 "data": "price",
                 "orderable": true,
                 render: function(data, type, row){
@@ -179,7 +180,7 @@ $(document).ready(function(){
                 }
             },
             { 
-                "targets": 6,
+                "targets": 7,
                 "data": "sell_price", 
                 "orderable": true,
                 render: function(data, type, row){
@@ -187,7 +188,7 @@ $(document).ready(function(){
                 }
             },
             { 
-                "targets": 7,
+                "targets": 8,
                 "data": "promotion_price", 
                 "orderable": true,
                 render: function(data, type, row){
@@ -195,7 +196,7 @@ $(document).ready(function(){
                 }
             },
             { 
-                "targets": 8,
+                "targets": 9,
                 "data": "bulk_price", 
                 "orderable": true,
                 render: function(data, type, row){
@@ -203,9 +204,21 @@ $(document).ready(function(){
                 }
             },
             { 
-                "targets": 9,
+                "targets": 10,
                 "data": null, 
-                "orderable": false 
+                "orderable": false,
+                render: function(data, type, row){
+                    var botones = '<a class="btn btn-sm btn-primary" href="/product/edit?id=' + row.id + '">Editar</a>'+
+                                '<br/>' +
+                                '<a class="btn btn-sm btn-danger" href="/product/remove?id='+ row.id +
+                                '" onclick="return confirm("¿Está seguro que desea eliminar el producto?");">'+
+                                'Eliminar' +
+                                '</a>' +
+                                '<br/>' +
+                                "<input type='hidden' id='" + row.sku + "' value='" + JSON.stringify(row) + "'>" +
+                                "<a class=\"btn btn-warning btn-sm\" onclick=\"formFastEdit('" + row.sku + "')\">Edici&oacute;n R&aacute;pida</a>"
+                    return botones;
+                }
             }
         ],
         "language":{

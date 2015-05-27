@@ -950,7 +950,7 @@ class Product(BaseModel):
             cur.close()
             self.connection.close()
 
-    def GetList(self, page = 1, items = 30, query = "", column = "p.name", direction = "asc"):
+    def GetList(self, page = 1, items = 30, query = "", column = "p.name", direction = "asc", term=''):
 
 
 
@@ -962,30 +962,45 @@ class Product(BaseModel):
 
         try:
             if page == 0 and items == 0:
-                q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
+                q = '''\
+                select string_agg(s.name,',') as size, 
+                p.*, 
+                c.name as category from "Product" p 
                 inner join "Category" c on c.id = p.category_id 
                 inner join "Product_Size" ps on ps.product_sku = p.sku
                 inner join "Size" s on s.id = ps.size_id
                 where p.deleted = %(deleted)s
+                {query}
                 group by p.id, c.name 
-                order by {column} {direction}'''.format(column=column, direction=direction)
+                order by {column} {direction}'''.format(column=column, 
+                                                        direction=direction, 
+                                                        query=query)
                 p = {
-                    "deleted": False
+                    "deleted": False,
+                    "term": term
                 }
             else:
-                q = '''select string_agg(s.name,',') as size, p.*, c.name as category from "Product" p 
+                q = '''\
+                select string_agg(s.name,',') as size, 
+                p.*, 
+                c.name as category from "Product" p 
                 inner join "Category" c on c.id = p.category_id 
                 inner join "Product_Size" ps on ps.product_sku = p.sku
                 inner join "Size" s on s.id = ps.size_id
                 where p.deleted = %(deleted)s
+                {query}
                 group by p.id, c.name 
                 order by {column} {direction}
-                limit %(items)s offset %(offset)s'''.format(column=column, direction=direction)
+                limit %(items)s offset %(offset)s'''.format(column=column, 
+                                                            direction=direction, 
+                                                            query=query)
                 p = {
                     "items": items,
                     "offset": offset,
-                    "deleted": False
+                    "deleted": False,
+                    "term": term
                 }
+            print cur.mogrify(q, p)
             cur.execute(q, p)
             lista = cur.fetchall()
             return self.ShowSuccessMessage(lista)
@@ -1024,6 +1039,34 @@ class Product(BaseModel):
         finally:
             cur.close()
             self.connection.close()
+
+    def getTotalItems(self, query='', term=''):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        q = '''\
+            select count(1) as items from "Product" p 
+            inner join "Category" c on c.id = p.category_id 
+            inner join "Product_Size" ps on ps.product_sku = p.sku
+            inner join "Size" s on s.id = ps.size_id
+            where p.deleted = %(deleted)s
+            {query}
+            group by p.id, c.name'''.format(query=query)
+
+        p = {
+            "deleted": False,
+            "term": term
+        }
+
+        try:
+            cur.execute(q, p)
+            items = len(cur.fetchall())
+            return self.ShowSuccessMessage(items)
+        except Exception, e:
+            return self.ShowError(str(e))
+        finally:
+            self.connection.close()
+            cur.close()
 
     def ForSale(self, product_id):
 
