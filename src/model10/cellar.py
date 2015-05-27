@@ -532,7 +532,7 @@ class Cellar(BaseModel):
                 "size_id": size_id
             }
 
-            print cur.mogrify(query, parametros)
+            # print cur.mogrify(query, parametros)
 
             try:
                 cur.execute(query, parametros)

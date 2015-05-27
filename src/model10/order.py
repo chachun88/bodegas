@@ -234,8 +234,6 @@ class Order(BaseModel):
             "term": term
         }
 
-        # print query
-
         try:
             cur.execute(query, parametros)
             lista = cur.fetchall()

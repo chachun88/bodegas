@@ -8,5 +8,5 @@ sl.password = "12345"
 sl.script_file = "schema.sql"
 
 
-sl.delete_old()
+sl.delete_old(database="postgres")
 sl.execute()
