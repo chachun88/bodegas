@@ -192,7 +192,7 @@ class Order(BaseModel):
         self._billing_id = ""
         self._shipping_id = ""
 
-    def List(self, page, items, query="", column="o.id", dir='desc'):
+    def List(self, page, items, query="", column="o.id", dir='desc', term=""):
 
         page = int(page)
         items = int(items)
@@ -230,10 +230,11 @@ class Order(BaseModel):
 
         parametros = {
             "items": items,
-            "offset": offset
+            "offset": offset,
+            "term": term
         }
 
-        # print cur.mogrify(query, parametros)
+        # print query
 
         try:
             cur.execute(query, parametros)
@@ -423,7 +424,7 @@ class Order(BaseModel):
             self.connection.close()
             cur.close()
 
-    def getTotalItems(self, query=""):
+    def getTotalItems(self, query="", term=""):
 
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
@@ -437,8 +438,12 @@ class Order(BaseModel):
                 inner join "User_Types" ut on ut.id = u.type_id
                 {query}'''.format(query=query)
 
+        parameters = {
+            "term": term
+        }
+
         try:
-            cur.execute(query)
+            cur.execute(query, parameters)
             items = cur.fetchone()["items"]
             return self.ShowSuccessMessage(items)
         except Exception, e:

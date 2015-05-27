@@ -266,7 +266,7 @@ class Customer(BaseModel):
         except Exception,e:
             return self.ShowError(str(e))
 
-    def List(self, current_page=1, items_per_page=20, query="", column="u.registration_date", dir='desc'):
+    def List(self, current_page=1, items_per_page=20, query="", column="u.registration_date", dir='desc', term=''):
 
         skip = int(items_per_page) * ( int(current_page) - 1 )
 
@@ -298,7 +298,8 @@ class Customer(BaseModel):
 
         parametros = {
             "limit":items_per_page,
-            "offset":skip
+            "offset":skip,
+            "term": term
         }
 
         # print cur.mogrify(query, parametros)
@@ -337,7 +338,7 @@ class Customer(BaseModel):
 
             return self.ShowError(str(e))
 
-    def getTotalItems(self, query=""):
+    def getTotalItems(self, query="", term=''):
 
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
@@ -350,9 +351,12 @@ class Customer(BaseModel):
                     and u.email <> '' 
                     and u.deleted = 0 
                     {query}'''.format(query=query)
+        parameters = {
+            "term": term
+        }
 
         try:
-            cur.execute(query)
+            cur.execute(query, parameters)
             items = cur.fetchone()["items"]
             return self.ShowSuccessMessage(items)
         except Exception, e:

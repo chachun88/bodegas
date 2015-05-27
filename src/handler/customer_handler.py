@@ -347,7 +347,7 @@ class CustomerAjaxListHandler(BaseHandler):
             elif term.lower() == 'pendiente':
                 query = '''and u.status = 1'''
             else:
-                query = """and (unaccent(lower(coalesce(u.name, ''))) like '%%{term}%%' or rut like '%%{term}%%')""".format(term=term)
+                query = """and (unaccent(lower(coalesce(u.name, ''))) like '%%(term)s%' or rut like '%%(term)s%')"""
 
         columns = [
             ""
@@ -374,8 +374,8 @@ class CustomerAjaxListHandler(BaseHandler):
             direction = 'desc'
 
         customer = Customer()
-        clientes = customer.List(page, items, query, columns[column], direction)
-        res_total_items = customer.getTotalItems(query)
+        clientes = customer.List(page, items, query, columns[column], direction, term)
+        res_total_items = customer.getTotalItems(query, term)
 
         if "success" in res_total_items:
             total_items = res_total_items["success"]
