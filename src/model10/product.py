@@ -1000,7 +1000,7 @@ class Product(BaseModel):
                     "deleted": False,
                     "term": term
                 }
-            print cur.mogrify(q, p)
+            # print cur.mogrify(q, p)
             cur.execute(q, p)
             lista = cur.fetchall()
             return self.ShowSuccessMessage(lista)
