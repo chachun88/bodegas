@@ -76,13 +76,8 @@ var FastEdit = function(form_id){
         type:method,
         success: function(obj){
             if(obj.success){
-                $(".name-"+sku).html($(form_id+" input[name='name']").val());
-                $(".sell_price-"+sku).html(parseInt($(form_id+" input[name='sell_price']").val()).formatMoney(0));
-                $(".sku-"+sku).html($(form_id+" input[name='sku']").val());
-                $(".promotion_price-"+sku).html(parseInt($(form_id+" input[name='promotion_price']").val()).formatMoney(0));
-                $(".bulk_price-"+sku).html(parseInt($(form_id+" input[name='bulk_price']").val()).formatMoney(0));
-                $(".price-"+sku).html(parseInt($(form_id+" input[name='price']").val()).formatMoney(0));
-                $(".color-"+sku).html($(form_id+" input[name='color']").val());
+                /*var search = $("input[type=search]").val();*/
+                $("input[type=search]").trigger("keyup");
                 $('#myModal').modal('hide');
             } else {
                 alert(obj.error);
@@ -103,7 +98,7 @@ $(document).ready(function(){
         "locale": "es"
     });
 
-    $('#productos').DataTable({
+    var products_table = $('#productos').DataTable({
         "serverSide": true,
         "processing": true,
         "ajax": {
@@ -234,5 +229,9 @@ $(document).ready(function(){
             "infoEmpty":      "Mostrando 0 a 0 de 0 entradas",
             "processing":     "Cargando..."
         }
+    });
+
+    $('input[type=search]').on( 'keyup', function () {
+        products_table.search( this.value ).draw();
     });
 });
