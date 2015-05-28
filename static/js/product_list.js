@@ -77,7 +77,7 @@ var FastEdit = function(form_id){
         success: function(obj){
             if(obj.success){
                 /*var search = $("input[type=search]").val();*/
-                $("input[type=search]").trigger("keyup");
+                $('input#hidden_search').trigger("keyup");
                 $('#myModal').modal('hide');
             } else {
                 alert(obj.error);
@@ -233,6 +233,9 @@ $(document).ready(function(){
     });
 
     $('input[type=search]').on( 'keyup', function () {
+        $('input#hidden_search').val( this.value );
+    });
+    $('input#hidden_search').on( 'keyup', function () {
         products_table.search( this.value ).draw();
     });
 });
