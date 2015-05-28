@@ -82,8 +82,8 @@ class ProductListHandler(BaseHandler):
 
         total_items = 0
 
-        if column == 0:
-            direction = 'desc'
+        # if column == 0:
+        #     direction = 'desc'
 
         product = Product()
         pedidos = product.GetList(page, items, query, columns[column], direction, "%{}%".format(term))

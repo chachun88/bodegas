@@ -99,6 +99,7 @@ $(document).ready(function(){
     });
 
     var products_table = $('#productos').DataTable({
+        "order": [[ 3, "asc" ]],
         "serverSide": true,
         "processing": true,
         "ajax": {
