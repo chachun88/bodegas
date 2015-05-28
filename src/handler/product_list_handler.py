@@ -99,6 +99,7 @@ class ProductListHandler(BaseHandler):
                 "data": pedidos["success"]
             }
         else:
+            print pedidos
             result = {
                 "recordsTotal": 0,
                 "recordsFiltered": 0,
