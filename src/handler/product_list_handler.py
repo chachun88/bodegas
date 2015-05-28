@@ -59,8 +59,8 @@ class ProductListHandler(BaseHandler):
 
         if term != "":
             query = """\
-                    and (unaccent(lower(coalesce(p.name::text, ''))) like %(term)s 
-                    or unaccent(lower(coalesce(p.sku::text, ''))) like %(term)s)"""
+                    and (unaccent(lower(coalesce(p.name, ''))) like %(term)s 
+                    or unaccent(lower(coalesce(p.sku, ''))) like %(term)s)"""
 
         columns = [
             "p.for_sale",
@@ -99,7 +99,6 @@ class ProductListHandler(BaseHandler):
                 "data": pedidos["success"]
             }
         else:
-            print pedidos
             result = {
                 "recordsTotal": 0,
                 "recordsFiltered": 0,
