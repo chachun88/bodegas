@@ -133,13 +133,13 @@ $(document).ready(function(){
                             return '<span class="label label-danger">RECHAZADO</span>';
                         }
                     } else if (row.state == 2) {
-                        return '<span class="label label-important">CONFIRMADO</span>';
+                        return '<span class="label label-success">CONFIRMADO</span>';
                     } else if (row.state == 3) {
                         return '<span class="label label-info">LISTO PARA DESPACHO</span>';
                     } else if (row.state == 4) {
-                        return '<span class="label label-success">DESPACHADO</span>';
+                        return '<span class="label label-primary">DESPACHADO</span>';
                     } else if (row.state == 5) {
-                        return '<span class="label label-default">CANCELADO</span>';
+                        return '<span class="label label-danger">CANCELADO</span>';
                     }
 
                 }
