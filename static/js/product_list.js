@@ -160,7 +160,7 @@ $(document).ready(function(){
                 "data": "image", 
                 "orderable": false,
                 render: function(data, type, row){
-                    return '<img src="/image/' + row.image + '?mw=60" width="60">'
+                    return '<img src=\"/image/' + row.image + '?mw=60\" width=\"60\">';
                 }
             },
             { "targets": 2,"data": "sku", "orderable": true },

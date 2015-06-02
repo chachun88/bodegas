@@ -98,7 +98,7 @@ $(document).ready(function(){
                         return '<input type="checkbox" name="pedidos" class="iCheck" value="' + row.order_id + '" tracking-code="-">';
                     } else {
                         console.log('<input type="checkbox" name="pedidos" class="iCheck" value="' + row.order_id + '" tracking-code="' + row.tracking_code + '">');
-                        return '<input type="checkbox" name="pedidos" class="iCheck" value="' + row.order_id + '" tracking-code="' + row.tracking_code + '">'
+                        return '<input type=\"checkbox\" name=\"pedidos\" class=\"iCheck\" value=\"' + row.order_id + '" tracking-code="' + row.tracking_code + '">';
                     }
                     return data;
                 }
