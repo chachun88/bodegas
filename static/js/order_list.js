@@ -153,7 +153,7 @@ $(document).ready(function(){
                     if(row.payment_type == 1){
                         return 'TRANSFERENCIA';
                     } else {
-                        return 'WEBPAY'
+                        return 'WEBPAY';
                     }
                 } 
             },
@@ -242,7 +242,7 @@ $(document).ready(function(){
                     var html_str = JSON.stringify(html);
                     obj = $.parseJSON(html_str);
 
-                    var html_res = ''
+                    var html_res = '';
 
                     if(obj.length > 0){
                         for(var i = 0; i < obj.length; i++){
@@ -250,7 +250,7 @@ $(document).ready(function(){
                                 html_res += obj[i]["error"] + '\n';
                             }
                         }
-                        if(html_res != ''){
+                        if(html_res !== ''){
                             alert(html_res);
                         } else {
                             location.reload();
