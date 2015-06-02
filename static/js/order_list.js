@@ -130,7 +130,7 @@ $(document).ready(function(){
                         if (row.payment_type == 1) {
                             return '<span class="label label-warning">POR CONFIRMAR</span>';
                         } else {
-                            return '<span class="label label-warning">RECHAZADO</span>';
+                            return '<span class="label label-danger">RECHAZADO</span>';
                         }
                     } else if (row.state == 2) {
                         return '<span class="label label-important">CONFIRMADO</span>';
