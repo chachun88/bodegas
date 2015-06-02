@@ -149,9 +149,16 @@ $(document).ready(function(){
                 "orderable": true,
                 render: function ( data, type, row ) {
                     if(row.for_sale == 1){
-                        return '<i class="fa fa-eye" id="' + row.id + '"></i>';
+                        return '<a class=\"for_sale\" onclick=\"for_sale(\'' +
+                               row.id + 
+                               '\')"><i class="fa fa-eye" id="' +
+                               row.id +
+                               '"></i></a>';
                     } else {
-                        return '<i class="fa fa-eye disabled" id="' + row.id + '"></i>';
+                        return '<a class=\"for_sale\" onclick=\"for_sale(\'' +
+                               row.id + 
+                               '\')"><i class="fa fa-eye disabled" id="' +
+                               row.id + '"></i></a>';
                     }
                 }
             },
