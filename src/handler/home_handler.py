@@ -289,12 +289,14 @@ class MassiveProductsHandler(BaseHandler):
 
                         value = sheet.cell_value(i,j)
 
-                        if isinstance(value, unicode):
-                            value = value.encode("utf-8")
-                        elif value.is_integer():
-                            value = str(int(value))
-                        else:
-                            value = str(value)
+                        if value != "":
+
+                            if isinstance(value, unicode):
+                                value = value.encode("utf-8")
+                            elif value.is_integer():
+                                value = str(int(value))
+                            else:
+                                value = str(value)
 
                         prod.which_size = value
                     elif j > 11 and j < ncols:
@@ -559,9 +561,11 @@ class MassiveStockHandler(BaseHandler):
                                 else:
                                     warnings.append(res_size["error"])
                         else:
-                            warnings.append('''No se reconoce la bodega '{}', Tip: vaya a "stock/todas las bodegas",
+                            warning_message = '''No se reconoce la bodega '{}', Tip: vaya a "stock/todas las bodegas",
                               y copie el nombre de la bodega a la cual desea relacionar el movimiento de stock, 
-                              luego peguelo en la planilla excel, asi no correra riesgos de error de tipeo'''.format(cellar_name))
+                              luego peguelo en la planilla excel, asi no correra riesgos de error de tipeo'''.format(cellar_name)
+                            if warning_message not in warnings:
+                                warnings.append(warning_message)
 
             if len(warnings) > 0:
 
