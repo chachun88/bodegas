@@ -187,12 +187,13 @@ class MassiveProductsHandler(BaseHandler):
                     if j == 0:
                         value = sheet.cell_value(i,j)
 
-                        if isinstance(value, unicode):
-                            value = value.encode("utf-8")
-                        elif value.is_integer():
-                            value = str(int(value))
-                        else:
-                            value = str(value)
+                        if value != "":
+                            if isinstance(value, unicode):
+                                value = value.encode("utf-8")
+                            elif value.is_integer():
+                                value = str(int(value))
+                            else:
+                                value = str(value)
 
                         prod.category = value
                     elif j == 1:
@@ -207,24 +208,27 @@ class MassiveProductsHandler(BaseHandler):
                     elif j == 2:
                         value = sheet.cell_value(i,j)
 
-                        if isinstance(value, unicode):
-                            value = value.encode("utf-8")
-                        elif value.is_integer():
-                            value = str(int(value))
-                        else:
-                            value = str(value)
+                        if value != "":
+                            if isinstance(value, unicode):
+                                value = value.encode("utf-8")
+                            elif value.is_integer():
+                                value = str(int(value))
+                            else:
+                                value = str(value)
 
                         prod.name = value
                     elif j == 3:
 
                         value = sheet.cell_value(i,j)
 
-                        if isinstance(value, unicode):
-                            value = value.encode("utf-8")
-                        elif value.is_integer():
-                            value = str(int(value))
-                        else:
-                            value = str(value)
+                        if value != "":
+
+                            if isinstance(value, unicode):
+                                value = value.encode("utf-8")
+                            elif value.is_integer():
+                                value = str(int(value))
+                            else:
+                                value = str(value)
 
                         prod.description = value
                     elif j == 4:                                        
@@ -253,36 +257,42 @@ class MassiveProductsHandler(BaseHandler):
 
                         value = sheet.cell_value(i,j)
 
-                        if isinstance(value, unicode):
-                            value = value.encode("utf-8")
-                        elif value.is_integer():
-                            value = str(int(value))
-                        else:
-                            value = str(value)
+                        if value != "":
+
+                            if isinstance(value, unicode):
+                                value = value.encode("utf-8")
+                            elif value.is_integer():
+                                value = str(int(value))
+                            else:
+                                value = str(value)
 
                         prod.manufacturer = value
                     elif j == 9:
 
                         value = sheet.cell_value(i,j)
 
-                        if isinstance(value, unicode):
-                            value = value.encode("utf-8")
-                        elif value.is_integer():
-                            value = str(int(value))
-                        else:
-                            value = str(value)
+                        if value != "":
+
+                            if isinstance(value, unicode):
+                                value = value.encode("utf-8")
+                            elif value.is_integer():
+                                value = str(int(value))
+                            else:
+                                value = str(value)
 
                         prod.brand = value
                     elif j == 10:
 
                         value = sheet.cell_value(i,j)
 
-                        if isinstance(value, unicode):
-                            value = value.encode("utf-8")
-                        elif value.is_integer():
-                            value = str(int(value))
-                        else:
-                            value = str(value)
+                        if value != "":
+
+                            if isinstance(value, unicode):
+                                value = value.encode("utf-8")
+                            elif value.is_integer():
+                                value = str(int(value))
+                            else:
+                                value = str(value)
 
                         prod.delivery = value
                     elif j == 11:
