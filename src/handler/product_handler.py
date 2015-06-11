@@ -197,7 +197,10 @@ class ProductAddHandler(BaseHandler):
             prod.which_size = self.get_argument("which_size","").encode('utf-8')
             prod.tags       = ",".join([t.encode("utf-8") for t in self.get_arguments("tags")])
             prod.for_sale   = self.get_argument("for_sale",0)
-            prod.promotion_price = self.get_argument("promotion_price", 0)
+
+            promotion_price = self.get_argument("promotion_price", 0)
+            if promotion_price != "":
+                prod.promotion_price = promotion_price
             prod.bulk_price = self.get_argument("bulk_price", 0)
 
             # print self.get_arguments("tags")
@@ -238,7 +241,9 @@ class ProductAddHandler(BaseHandler):
             prod.delivery   = self.get_argument("delivery","").encode("utf-8")
             prod.which_size = self.get_argument("which_size","").encode("utf-8")
             prod.for_sale   = self.get_argument("for_sale",0)
-            prod.promotion_price = self.get_argument("promotion_price", 0)
+            promotion_price = self.get_argument("promotion_price", 0)
+            if promotion_price != "":
+                prod.promotion_price = promotion_price
             prod.bulk_price = self.get_argument("bulk_price", 0)
 
             # size_arr = self.get_argument("size", "").split(",")
