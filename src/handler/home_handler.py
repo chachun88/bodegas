@@ -224,7 +224,15 @@ class MassiveProductsHandler(BaseHandler):
                         if value != "":
 
                             if isinstance(value, unicode):
-                                value = value.encode("utf-8")
+                                value = value.encode("utf-8").strip()
+                                lines = value.split("\n")
+                                html = "<ul>"
+
+                                for l in lines:
+                                    html += "<li>{line}</li>".format(line=l)
+
+                                html += "</ul>"
+                                value = html
                             elif value.is_integer():
                                 value = str(int(value))
                             else:
@@ -255,18 +263,14 @@ class MassiveProductsHandler(BaseHandler):
 
                     elif j == 8:
 
-                        value = sheet.cell_value(i,j)
+                        promotion_price = sheet.cell_value(i,j)
 
-                        if value != "":
+                        if promotion_price != "":
+                            try:
+                                prod.promotion_price = int(promotion_price)
+                            except Exception, e:
+                                warnings.append(str(e))
 
-                            if isinstance(value, unicode):
-                                value = value.encode("utf-8")
-                            elif value.is_integer():
-                                value = str(int(value))
-                            else:
-                                value = str(value)
-
-                        prod.manufacturer = value
                     elif j == 9:
 
                         value = sheet.cell_value(i,j)
@@ -280,7 +284,7 @@ class MassiveProductsHandler(BaseHandler):
                             else:
                                 value = str(value)
 
-                        prod.brand = value
+                        prod.manufacturer = value
                     elif j == 10:
 
                         value = sheet.cell_value(i,j)
@@ -294,7 +298,7 @@ class MassiveProductsHandler(BaseHandler):
                             else:
                                 value = str(value)
 
-                        prod.delivery = value
+                        prod.brand = value
                     elif j == 11:
 
                         value = sheet.cell_value(i,j)
@@ -308,8 +312,23 @@ class MassiveProductsHandler(BaseHandler):
                             else:
                                 value = str(value)
 
+                        prod.delivery = value
+
+                    elif j == 12:
+
+                        value = sheet.cell_value(i,j)
+
+                        if value != "":
+
+                            if isinstance(value, unicode):
+                                value = value.encode("utf-8")
+                            elif value.is_integer():
+                                value = str(int(value))
+                            else:
+                                value = str(value)
+
                         prod.which_size = value
-                    elif j > 11 and j < ncols:
+                    elif j > 12 and j < ncols:
                         valor = sheet.cell_value(i,j)
                         if valor != "":
                             tallas.append(cast(valor))
