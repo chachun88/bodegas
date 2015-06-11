@@ -146,11 +146,11 @@ class ProductAddHandler(BaseHandler):
         if ( "image-2" in self.request.files ):
             img3 = self.saveImage( self.request.files['image-2'][0], self.get_argument("sku", ""), 2 )
         if ( "image-3" in self.request.files ):
-            img3 = self.saveImage( self.request.files['image-3'][0], self.get_argument("sku", ""), 3 )
+            img4 = self.saveImage( self.request.files['image-3'][0], self.get_argument("sku", ""), 3 )
         if ( "image-4" in self.request.files ):
-            img3 = self.saveImage( self.request.files['image-4'][0], self.get_argument("sku", ""), 4 )
+            img5 = self.saveImage( self.request.files['image-4'][0], self.get_argument("sku", ""), 4 )
         if ( "image-5" in self.request.files ):
-            img3 = self.saveImage( self.request.files['image-5'][0], self.get_argument("sku", ""), 5 )
+            img6 = self.saveImage( self.request.files['image-5'][0], self.get_argument("sku", ""), 5 )
 
         # if the category does not exist is created
         category = Category()
