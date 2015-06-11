@@ -189,7 +189,7 @@ class MassiveProductsHandler(BaseHandler):
 
                         if value != "":
                             if isinstance(value, unicode):
-                                value = value.encode("utf-8")
+                                value = value.encode("utf-8").strip()
                             elif value.is_integer():
                                 value = str(int(value))
                             else:
