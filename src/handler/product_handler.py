@@ -316,7 +316,9 @@ class FastEditHandler(BaseHandler):
             # prod.brand = self.get_argument("brand","")
             # prod.which_size = self.get_argument("which_size","")
             # prod.for_sale = self.get_argument("for_sale",0)
-            prod.promotion_price = self.get_argument("promotion_price",0)
+            promotion_price = self.get_argument("promotion_price", 0)
+            if promotion_price != "":
+                prod.promotion_price = promotion_price
             prod.bulk_price = self.get_argument("bulk_price", 0)
 
             prod.tags = ','.join(str(v) for v in prod.tags)
