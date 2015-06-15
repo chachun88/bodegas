@@ -33,7 +33,8 @@ def getIamgeBuffer(handler, image_name):
             buff = f.read()
             f.close()
 
-            #print "retorna original"
+            # print "retorna original"
+            # print buff
 
             return buff
         except Exception, e:
@@ -90,7 +91,7 @@ def getIamgeBuffer(handler, image_name):
     # convert pil image to bytes buffer
     buf= StringIO.StringIO()
     im.save(buf, format= 'PNG')
-    jpeg= buf.getvalue()
+    jpeg = buf.getvalue()
 
     #print "retorna default"
 
@@ -111,8 +112,6 @@ class ImageHandler(BaseHandler):
 
         self.finish()
 
-
-
 class ImageHandler2(BaseHandler):
 
     def get(self):
@@ -122,7 +121,6 @@ class ImageHandler2(BaseHandler):
 
         self.write(getIamgeBuffer(self, DEFAULT_IMAGE))
         self.finish()
-        
 
 class ImageDeleteHandler(BaseHandler):
 
@@ -133,7 +131,7 @@ class ImageDeleteHandler(BaseHandler):
         tipo = self.get_argument("type","")
         identificador = self.get_argument("id","")
 
-        print "files"
+        # print "files"
         if image_name != "":
             os.chdir( dir_img )
 
@@ -152,7 +150,6 @@ class ImageDeleteHandler(BaseHandler):
                     timeline.RemoveImage(identificador, image_name)
                 except Exception,e:
                     print str( e )
-
 
             self.write("imagen eliminada")
         else:

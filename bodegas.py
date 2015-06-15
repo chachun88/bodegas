@@ -36,6 +36,7 @@ from config import *
 # something
 define("port", default=PORT, help="run on the given port", type=int)
 define("nocache_static", default="static_v27", help="", type=str)
+define("upload", default="upload", help="", type=str)
 
 if "enviroment" not in options:
 
@@ -66,6 +67,9 @@ class Application(tornado.web.Application):
             (r'/{}/(.*)'.format(tornado.options.options["nocache_static"]),
              tornado.web.StaticFileHandler,
              {'path': os.path.join(os.path.dirname(__file__), "static")}),
+            (r'/uploads/images/(.*)',
+             tornado.web.StaticFileHandler,
+             {'path': os.path.join(os.path.dirname(__file__), "uploads/images")}),
             (r"/auth/login", LoginHandler),
             (r"/auth/recover", LoginPassHandler),
 

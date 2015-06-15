@@ -53,7 +53,11 @@
 							{% if order.voucher != '' %}
 							<tr>
 								<td colspan="6">
-									<img src="/image/{{order.voucher}}?mw=400">
+									{% if order.voucher.split(".")[-1] == 'pdf' %}
+										<iframe width="100%" frameborder="0" height="500" src="/uploads/images/{{order.voucher}}?mw=-1">
+									{% else %}
+										<iframe width="100%" frameborder="0" height="500" src="/image/{{order.voucher}}?mw=400">
+									{% end %}
 								</td>
 							</tr>
 							{% end %}
