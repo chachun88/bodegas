@@ -49,6 +49,7 @@ class LoginHandler(BaseHandler):
 			auth = True
 		else:
 			self.write("usr.email {} usr.password {}".format(usr.email, usr.password))
+			self.write("username {} password {}".format(username, password))
 
 		# if auth:
 		# 	self.set_secure_cookie("user_bodega",json_util.dumps(response["success"]))
