@@ -45,18 +45,15 @@ class LoginHandler(BaseHandler):
 
 		password = m.hexdigest()
 		
-		if username == usr.email and password == usr.password:
+		if username.encode("utf-8") == usr.email and password.encode("utf-8") == usr.password:
 			auth = True
-		else:
-			self.write("usr.email {} usr.password {}".format(usr.email, usr.password))
-			self.write("username {} password {}".format(username, password))
 
-		# if auth:
-		# 	self.set_secure_cookie("user_bodega",json_util.dumps(response["success"]))
-		# 	self.redirect(self.get_argument("next", u"/"))
-		# else:
-		# 	error_msg = tornado.escape.url_escape("t")
-		# 	self.redirect(u"/auth/login?e=" + error_msg)
+		if auth:
+			self.set_secure_cookie("user_bodega",json_util.dumps(response["success"]))
+			self.redirect(self.get_argument("next", u"/"))
+		else:
+			error_msg = tornado.escape.url_escape("t")
+			self.redirect(u"/auth/login?e=" + error_msg)
 
 
 	def check_xsrf_cookie(self):
