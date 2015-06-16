@@ -168,7 +168,7 @@ $(document).ready(function(){
                 "orderable": false,
                 render: function ( data, type, row ) {
                     if ( type === 'display' ) {
-                        return '<a class="btn btn-primary btn-sm" href="/order-detail/list?order_id=' + row.order_id + '">Ver Detalle</a>';
+                        return '<a class="btn btn-primary btn-sm detail-button" href="/order-detail/list?order_id=' + row.order_id + '">Ver Detalle</a>';
                     }
                     return data;
                 }
@@ -347,8 +347,14 @@ $(document).ready(function(){
       }
     });*/
 
-    $('#myModal').on('shown.bs.modal', function() {
+    $('#myModal, #iframe_detalle').on('shown.bs.modal', function() {
         //addUser();
+    });
+
+    $(document).on('click', "a.detail-button", function(e){
+        e.preventDefault();
+        $("#iframe_detalle iframe").attr('src', $(this).attr('href'));
+        $("#iframe_detalle").modal('show');
     });
 
     //$('#myModal').modal('show');

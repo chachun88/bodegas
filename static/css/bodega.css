@@ -117,3 +117,14 @@ tr.special_row > td > div{
 span.state-filter {cursor: pointer;}
 th.state-filter {vertical-align: middle !important;}
 .dataTables_processing { padding: 14px 0 34px 0; }
+#iframe_detalle .modal-dialog{
+	height: 90%;
+	width: 90%;
+}
+#iframe_detalle .modal-content{
+	width: 100%;
+	height: 100%;
+}
+section#detalle_pedido th, section#detalle_pedido td{
+	font-size: 13px;
+}

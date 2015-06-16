@@ -35,7 +35,7 @@ from config import *
 
 # something
 define("port", default=PORT, help="run on the given port", type=int)
-define("nocache_static", default="static_v27", help="", type=str)
+define("nocache_static", default="static_v28", help="", type=str)
 define("upload", default="upload", help="", type=str)
 
 if "enviroment" not in options:
