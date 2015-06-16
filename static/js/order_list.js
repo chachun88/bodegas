@@ -24,7 +24,7 @@ var ValidateTracking = function(){
                 if(obj.length > 0){
                     for(var i = 0; i < obj.length; i++){
                         if("error" in obj[i]){
-                            html_res += obj[i]["error"] + '\n';
+                            html_res += obj[i].error + '\n';
                         }
                     }
                     if(html_res != ''){

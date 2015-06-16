@@ -688,7 +688,7 @@ def SendConfirmedMail(email, name, id_orden):
     sg = sendgrid.SendGridClient(usuario_sendgrid, pass_sendgrid)
     message = sendgrid.Mail()
     message.set_from(
-        "{nombre} <{mail}>".format(nombre="Giani Da Firenze", mail=email_giani))
+        "{nombre} <{mail}>".format(nombre="Giani Da Firenze", mail=from_giani))
     message.add_to(email)
     message.set_subject(
         "Giani Da Firenze - El pago de la orden Nº {} ha sido confirmado".format(id_orden))
