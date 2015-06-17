@@ -1,16 +1,6 @@
 {% extends "../base.html" %}
-{% block javascript %}
-<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.min.css" media="screen" />
-
-<script type="text/javascript" src="/{{nocache_static}}/js/jquery-ui.min.js" charset="UTF-8"></script>
-<script type="text/javascript" src="/{{nocache_static}}/js/plupload.full.min.js" charset="UTF-8"></script>
-<script type="text/javascript" src="/{{nocache_static}}/js/jquery.ui.plupload.min.js" charset="UTF-8"></script>
-<script type="text/javascript" src="/{{nocache_static}}/js/plupload.es.js" charset="UTF-8"></script>
-<link type="text/css" rel="stylesheet" href="/{{nocache_static}}/css/jquery.ui.plupload.css" media="screen" />
 
 
-<script type="text/javascript" src="/{{nocache_static}}/js/add_product.js"></script>
-{% end %}
 {% block title %}
 	{% if tit == "edit" %}
 		Editar Producto 
@@ -203,45 +193,43 @@
 								<label class="control-label" for="prefix">Imagen</label>
 								<div class="controls form-group">
 									<div class="col-sm-8">
-										<div id="uploader">
-											<p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
-										</div>
-										<input type="file" name="image" multiple />
 										<ul class="image-list">
 											<li>
-												<button type="button" index="0" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img src="/image/{{product.image}}?mw=60" />
+												<button type="button" image-name="{{ product.image }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+												<img  src="/image/{{ product.image }}?mw=60"  />
+												<input type="file" name="image" class="image-item-fille" />
 											</li>
 											<li>
-												<button type="button" index="1" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img src="/image/{{product.image_2}}?mw=60" />
+												<button type="button" image-name="{{ product.image_2 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+												<img  src="/image/{{ product.image_2 }}?mw=60" />
+												<input type="file" name="image-1" class="image-item-fille" />
 											</li>
 											<li>
-												<button type="button" index="2" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img src="/image/{{product.image_3}}?mw=60" />
+												<button type="button" image-name="{{ product.image_3 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+												<img  src="/image/{{ product.image_3 }}?mw=60" />
+												<input type="file" name="image-2" class="image-item-fille" />
 											</li>
 											<li>
-												<button type="button" index="3" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img src="/image/{{product.image_4}}?mw=60" />
+												<button type="button" image-name="{{ product.image_4 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+												<img  src="/image/{{ product.image_4 }}?mw=60" />
+												<input type="file" name="image-3" class="image-item-fille" />
 											</li>
 											<li>
-												<button type="button" index="4" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img src="/image/{{product.image_5}}?mw=60" />
+												<button type="button" image-name="{{ product.image_5 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+												<img  src="/image/{{ product.image_5 }}?mw=60" />
+												<input type="file" name="image-4" class="image-item-fille" />
 											</li>
 											<li>
-												<button type="button" index="5" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img src="/image/{{product.image_6}}?mw=60" />
+												<button type="button" image-name="{{ product.image_6 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
+												<img  src="/image/{{ product.image_6 }}?mw=60" />
+												<input type="file" name="image-5" class="image-item-fille" />
 											</li>
 										</ul>
 									</div>
 								</div>
 							</div>
-							<script type="template" class="template-image">
-								<li>
-									<button type="button" index=";;index;;" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-									<img src=";;src;;" />
-								</li>
-							</script>
+
+
 							<!--
 							<div class="control-group">
 								<label class="control-label" for="prefix">Color</label>
@@ -307,5 +295,64 @@
 				</div>
 			</section>
 		</div>
+
+		<script type="text/javascript">
+
+			$(document).ready(function()
+				{
+
+					$('#wysihtml5-textarea').wysihtml5({
+						"font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
+						"emphasis": true, //Italics, bold, etc. Default true
+						"lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+						"html": false, //Button which allows you to edit the generated HTML. Default false
+						"link": false, //Button to insert a link. Default true
+						"image": false, //Button to insert an image. Default true,
+						"color": false, //Button to change color of font  
+						"locale": "es"
+					});
+
+					// load image from client
+					$(".image-item-fille").on("change", function(ev)
+					{
+						var f = ev.target.files[0];
+						var fr = new FileReader();
+						var img = $( "img", $(this).parent());
+
+						fr.onload = function(ev2)
+						{
+							console.dir(ev2);
+							img.attr("src", ev2.target.result);
+
+						};
+
+						fr.readAsDataURL(f);
+					});
+
+					// click input from image
+					$(".image-list img").click(function()
+					{
+						$("input", $(this).parent()).click();
+					});
+
+					// remove an image
+					$(".close-image-list").click(function()
+					{
+						var image_name = $(this).attr("image-name");
+						var element = $(this);
+						var img_display = $("img", element.parent());
+						var file = $("input", element.parent());
+
+						$.get("/imageremove?image_name=" + image_name)
+						.done(function(data)
+							{
+								img_display.attr("src", "/image/default_image.png?mw=60");
+								file.val("");
+							});
+					});
+
+
+				});
+		</script>
 	{% end %}
 {% end %}
