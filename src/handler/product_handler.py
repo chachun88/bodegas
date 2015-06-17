@@ -97,21 +97,60 @@ class ProductAddHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
 
-        image_filename = []
-
-        if "image" in self.request.files:
-            cont = 0
-            for archivo in self.request.files["image"]:
-                filename = self.saveImage( archivo, self.get_argument("sku", ""), cont )
-                image_filename.append(filename)
-                cont += 1
-
         try:  # Windows needs stdio set for binary mode.
             import msvcrt
             msvcrt.setmode(0, os.O_BINARY)  # stdin  = 0
             msvcrt.setmode(1, os.O_BINARY)  # stdout = 1
         except ImportError:
             pass
+
+        ''' 
+        fn =""    
+        try:   
+            form = cgi.FieldStorage()
+
+            # A nested FieldStorage instance holds the file
+            fileitem = self.request.files['image'][0]
+
+            for i in self.request.files:
+                self.write("llega : {} <br>".format( self.request.files[i][0]["filename"] ))
+
+            # strip leading path from file name to avoid directory traversal attacks
+            fn = fileitem['filename']
+        except:
+            pass
+
+        return
+        '''
+
+        '''
+        if fn != "":
+            #print fn 
+            open('uploads/images/' + self.get_argument("sku", "")+'.png', 'wb').write(fileitem["body"])
+            image_name=self.get_argument("sku", "")+'.png'
+        else:
+            image_name=''
+        '''
+
+        img1 = "{}_{}.png".format( 0, self.get_argument("sku", "").encode('utf-8') )
+        img2 = "{}_{}.png".format( 1, self.get_argument("sku", "").encode('utf-8') )
+        img3 = "{}_{}.png".format( 2, self.get_argument("sku", "").encode('utf-8') )
+        img4 = "{}_{}.png".format( 3, self.get_argument("sku", "").encode('utf-8') )
+        img5 = "{}_{}.png".format( 4, self.get_argument("sku", "").encode('utf-8') )
+        img6 = "{}_{}.png".format( 5, self.get_argument("sku", "").encode('utf-8') )
+
+        if ( "image" in self.request.files ):
+            img1 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
+        if ( "image-1" in self.request.files ):
+            img2 = self.saveImage( self.request.files['image-1'][0], self.get_argument("sku", ""), 1 )
+        if ( "image-2" in self.request.files ):
+            img3 = self.saveImage( self.request.files['image-2'][0], self.get_argument("sku", ""), 2 )
+        if ( "image-3" in self.request.files ):
+            img4 = self.saveImage( self.request.files['image-3'][0], self.get_argument("sku", ""), 3 )
+        if ( "image-4" in self.request.files ):
+            img5 = self.saveImage( self.request.files['image-4'][0], self.get_argument("sku", ""), 4 )
+        if ( "image-5" in self.request.files ):
+            img6 = self.saveImage( self.request.files['image-5'][0], self.get_argument("sku", ""), 5 )
 
         # if the category does not exist is created
         category = Category()
@@ -147,6 +186,12 @@ class ProductAddHandler(BaseHandler):
             prod.bullet_3   = self.get_argument("bullet_3", "")
             prod.currency   = self.get_argument("currency", "")
             prod.price      = self.get_argument("price", "")
+            prod.image      = img1
+            prod.image_2    = img2
+            prod.image_3    = img3
+            prod.image_4    = img4
+            prod.image_5    = img5
+            prod.image_6    = img6
             prod.sell_price = self.get_argument("sell_price",0)
             prod.delivery   = self.get_argument("delivery","").encode('utf-8')
             prod.which_size = self.get_argument("which_size","").encode('utf-8')
@@ -157,19 +202,6 @@ class ProductAddHandler(BaseHandler):
             if promotion_price != "":
                 prod.promotion_price = promotion_price
             prod.bulk_price = self.get_argument("bulk_price", 0)
-
-            if int(0) in image_filename:
-                prod.image      = image_filename[0]
-            if int(1) in image_filename:
-                prod.image_2    = image_filename[1]
-            if int(2) in image_filename:
-                prod.image_3    = image_filename[2]
-            if int(3) in image_filename:
-                prod.image_4    = image_filename[3]
-            if int(4) in image_filename:
-                prod.image_5    = image_filename[4]
-            if int(5) in image_filename:
-                prod.image_6    = image_filename[5]
 
             # print self.get_arguments("tags")
 
@@ -199,6 +231,12 @@ class ProductAddHandler(BaseHandler):
             prod.bullet_3   = self.get_argument("bullet_3", "").encode("utf-8")
             prod.currency   = self.get_argument("currency", "").encode("utf-8")
             prod.price      = self.get_argument("price", "").encode("utf-8")
+            prod.image      = img1.encode("utf-8")
+            prod.image_2    = img2.encode("utf-8")
+            prod.image_3    = img3.encode("utf-8")
+            prod.image_4    = img4.encode("utf-8")
+            prod.image_5    = img5.encode("utf-8")
+            prod.image_6    = img6.encode("utf-8")
             prod.sell_price = self.get_argument("sell_price",0).encode("utf-8")
             prod.delivery   = self.get_argument("delivery","").encode("utf-8")
             prod.which_size = self.get_argument("which_size","").encode("utf-8")
@@ -213,19 +251,6 @@ class ProductAddHandler(BaseHandler):
 
             prod.size        = self.get_arguments("size")
             prod.tags       = ",".join([t.encode("utf-8") for t in self.get_arguments("tags","")])
-
-            if int(0) in image_filename:
-                prod.image      = image_filename[0]
-            if int(1) in image_filename:
-                prod.image_2    = image_filename[1]
-            if int(2) in image_filename:
-                prod.image_3    = image_filename[2]
-            if int(3) in image_filename:
-                prod.image_4    = image_filename[3]
-            if int(4) in image_filename:
-                prod.image_5    = image_filename[4]
-            if int(5) in image_filename:
-                prod.image_6    = image_filename[5]
 
             respose = prod.Save("one")
 
