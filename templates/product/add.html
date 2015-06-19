@@ -1,5 +1,8 @@
 {% extends "../base.html" %}
 
+{% block javascript %}
+<script src="/{{nocache_static}}/js/multiple_upload.js"></script>
+{% end %}
 
 {% block title %}
 	{% if tit == "edit" %}
@@ -19,7 +22,8 @@
 	{% else %}
 		sección no autorizada
 	{% end %}
-{% end %}			
+{% end %}
+
 {% block body %}
 	{% if int(2) in current_user["permissions"] %}
 		{% if dn == "bpf" %}
@@ -193,37 +197,44 @@
 								<label class="control-label" for="prefix">Imagen</label>
 								<div class="controls form-group">
 									<div class="col-sm-8">
+										<input type="file" name="image" multiple />
+										<script type="template" class="template-image" >
+										    <li>
+												<img src=";;src;;"  />
+										    </li>
+										</script>
 										<ul class="image-list">
-											<li>
-												<button type="button" image-name="{{ product.image }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img  src="/image/{{ product.image }}?mw=60"  />
-												<input type="file" name="image" class="image-item-fille" />
-											</li>
-											<li>
-												<button type="button" image-name="{{ product.image_2 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img  src="/image/{{ product.image_2 }}?mw=60" />
-												<input type="file" name="image-1" class="image-item-fille" />
-											</li>
-											<li>
-												<button type="button" image-name="{{ product.image_3 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img  src="/image/{{ product.image_3 }}?mw=60" />
-												<input type="file" name="image-2" class="image-item-fille" />
-											</li>
-											<li>
-												<button type="button" image-name="{{ product.image_4 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img  src="/image/{{ product.image_4 }}?mw=60" />
-												<input type="file" name="image-3" class="image-item-fille" />
-											</li>
-											<li>
-												<button type="button" image-name="{{ product.image_5 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img  src="/image/{{ product.image_5 }}?mw=60" />
-												<input type="file" name="image-4" class="image-item-fille" />
-											</li>
-											<li>
-												<button type="button" image-name="{{ product.image_6 }}" class="close close-image-list" data-dismiss="image-item" aria-hidden="true">×</button>
-												<img  src="/image/{{ product.image_6 }}?mw=60" />
-												<input type="file" name="image-5" class="image-item-fille" />
-											</li>
+											
+											{% if product.image != '' %}
+												<li>
+													<img src="/image/{{ product.image }}?mw=60"  />
+												</li>
+											{% end %}
+											{% if product.image_2 != '' %}
+												<li>
+													<img src="/image/{{ product.image_2 }}?mw=60" />
+												</li>
+											{% end %}
+											{% if product.image_3 != '' %}
+												<li>
+													<img src="/image/{{ product.image_3 }}?mw=60" />
+												</li>
+											{% end %}
+											{% if product.image_4 != '' %}
+												<li>
+													<img src="/image/{{ product.image_4 }}?mw=60" />
+												</li>
+											{% end %}
+											{% if product.image_5 != '' %}
+												<li>
+													<img src="/image/{{ product.image_5 }}?mw=60" />
+												</li>
+											{% end %}
+											{% if product.image_6 != '' %}
+												<li>
+													<img src="/image/{{ product.image_6 }}?mw=60" />
+												</li>
+											{% end %}
 										</ul>
 									</div>
 								</div>

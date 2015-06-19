@@ -132,32 +132,26 @@ class ProductAddHandler(BaseHandler):
             image_name=''
         '''
 
-        img1 = "{}_{}.png".format( 0, self.get_argument("sku", "").encode('utf-8') )
-        img2 = "{}_{}.png".format( 1, self.get_argument("sku", "").encode('utf-8') )
-        img3 = "{}_{}.png".format( 2, self.get_argument("sku", "").encode('utf-8') )
-        img4 = "{}_{}.png".format( 3, self.get_argument("sku", "").encode('utf-8') )
-        img5 = "{}_{}.png".format( 4, self.get_argument("sku", "").encode('utf-8') )
-        img6 = "{}_{}.png".format( 5, self.get_argument("sku", "").encode('utf-8') )
+        filelist = self.request.files
+        product_sku = self.get_argument("sku", "")
+        photolist = ['','','','','','']
 
-        if ( "image" in self.request.files ):
-            img1 = self.saveImage( self.request.files['image'][0], self.get_argument("sku", ""), 0 )
-        if ( "image-1" in self.request.files ):
-            img2 = self.saveImage( self.request.files['image-1'][0], self.get_argument("sku", ""), 1 )
-        if ( "image-2" in self.request.files ):
-            img3 = self.saveImage( self.request.files['image-2'][0], self.get_argument("sku", ""), 2 )
-        if ( "image-3" in self.request.files ):
-            img4 = self.saveImage( self.request.files['image-3'][0], self.get_argument("sku", ""), 3 )
-        if ( "image-4" in self.request.files ):
-            img5 = self.saveImage( self.request.files['image-4'][0], self.get_argument("sku", ""), 4 )
-        if ( "image-5" in self.request.files ):
-            img6 = self.saveImage( self.request.files['image-5'][0], self.get_argument("sku", ""), 5 )
+        for x in range(6):
+            photolist[x] = "{}_{}.png".format(x, product_sku.encode('utf-8'))
+
+        if "image" in filelist:
+            index = 0
+            for _file in filelist["image"]:
+                filename = self.saveImage( _file, product_sku, index )
+                photolist[index] = filename
+                index += 1
 
         # if the category does not exist is created
         category = Category()
 
         try:
             category.InitWithName(self.get_argument("category", ""))
-        except:     
+        except:
             category.name = self.get_argument("category", "")
             category.Save()  
 
@@ -186,12 +180,12 @@ class ProductAddHandler(BaseHandler):
             prod.bullet_3   = self.get_argument("bullet_3", "")
             prod.currency   = self.get_argument("currency", "")
             prod.price      = self.get_argument("price", "")
-            prod.image      = img1
-            prod.image_2    = img2
-            prod.image_3    = img3
-            prod.image_4    = img4
-            prod.image_5    = img5
-            prod.image_6    = img6
+            prod.image      = photolist[0]
+            prod.image_2    = photolist[1]
+            prod.image_3    = photolist[2]
+            prod.image_4    = photolist[3]
+            prod.image_5    = photolist[4]
+            prod.image_6    = photolist[5]
             prod.sell_price = self.get_argument("sell_price",0)
             prod.delivery   = self.get_argument("delivery","").encode('utf-8')
             prod.which_size = self.get_argument("which_size","").encode('utf-8')
@@ -231,12 +225,12 @@ class ProductAddHandler(BaseHandler):
             prod.bullet_3   = self.get_argument("bullet_3", "").encode("utf-8")
             prod.currency   = self.get_argument("currency", "").encode("utf-8")
             prod.price      = self.get_argument("price", "").encode("utf-8")
-            prod.image      = img1.encode("utf-8")
-            prod.image_2    = img2.encode("utf-8")
-            prod.image_3    = img3.encode("utf-8")
-            prod.image_4    = img4.encode("utf-8")
-            prod.image_5    = img5.encode("utf-8")
-            prod.image_6    = img6.encode("utf-8")
+            prod.image      = photolist[0].encode("utf-8")
+            prod.image_2    = photolist[1].encode("utf-8")
+            prod.image_3    = photolist[2].encode("utf-8")
+            prod.image_4    = photolist[3].encode("utf-8")
+            prod.image_5    = photolist[4].encode("utf-8")
+            prod.image_6    = photolist[5].encode("utf-8")
             prod.sell_price = self.get_argument("sell_price",0).encode("utf-8")
             prod.delivery   = self.get_argument("delivery","").encode("utf-8")
             prod.which_size = self.get_argument("which_size","").encode("utf-8")
