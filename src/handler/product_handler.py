@@ -136,8 +136,8 @@ class ProductAddHandler(BaseHandler):
         product_sku = self.get_argument("sku", "")
         photolist = ['','','','','','']
 
-        for x in range(6):
-            photolist[x] = "{}_{}.png".format(x, product_sku.encode('utf-8'))
+        # for x in range(6):
+        #     photolist[x] = "{}_{}.png".format(x, product_sku.encode('utf-8'))
 
         if "image" in filelist:
             index = 0

@@ -33,23 +33,22 @@ ImagesPreviewView.prototype.initEvents = function() {
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
                     size_sum += file.size;
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        // console.log(e.target.result);
-                        self.controller.AddFile(e.target.result);
-                    };
-                    reader.readAsDataURL(file);
                 }
 
-                console.log(size_sum);
+                // console.log(size_sum);
 
                 if(size_sum/1024/1024>4){
                     alert("El peso total de los archivos no debe superar 4MB");
                     $(this).val('');
+                } else {
+
+                    self.loadImages( files, function()
+                    {
+                        console.log("llega");
+                        self.controller.ClearFileList();
+                    } );
                 }
             }
-
-            self.controller.ClearFileList();
         });
 
     $(document).on("click", ".remove", function() {
@@ -58,7 +57,36 @@ ImagesPreviewView.prototype.initEvents = function() {
     });
 };
 
+
+ImagesPreviewView.prototype.loadImages = function(image_list, images_loaded) 
+{
+    var self = this;
+    var counter = 0;
+    var length = image_list.length;
+    images_loaded = images_loaded === undefined ? function(){} : images_loaded;
+
+    for (var i = 0; i < image_list.length; i++) 
+    {
+        var _file = image_list[i];
+        var reader = new FileReader();
+        reader.onload = function(e) 
+        {
+            // console.log(e.target.result);
+            self.controller.AddFile(e.target.result);
+            counter += 1;
+
+            if (counter == length)
+            {
+                images_loaded();
+            }
+        }
+
+        reader.readAsDataURL(_file);
+    }
+};
+
 ImagesPreviewView.prototype.render = function() {
+    // console.log("render");
     var images = this.controller.getImages();
     $(this.image_list_class).html("");
     for (i = 0; i < images.length; i++) {

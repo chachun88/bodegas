@@ -1,5 +1,5 @@
 th{
-	text-transform: capitalize;
+    text-transform: capitalize;
 }
 #perm.form-control{
   overflow:visible; 
@@ -13,88 +13,92 @@ th{
 
 .lptooltip
 {
-	position: absolute;
-	border: rgba(51,51,51,0.4) solid 1px;
-	background: rgba(51,51,51,0.8);
-	display: none;
-	padding: 10px;
-	margin-left: -8px;
-	margin-top: 9px;
+    position: absolute;
+    border: rgba(51,51,51,0.4) solid 1px;
+    background: rgba(51,51,51,0.8);
+    display: none;
+    padding: 10px;
+    margin-left: -8px;
+    margin-top: 9px;
 }
 
 .alert-success
 {
-	display: none;
-	z-index: 100;
+    display: none;
+    z-index: 100;
 }
 
 .alert-success-nohidden
 {
-	display: block;
-	z-index: 100;
+    display: block;
+    z-index: 100;
 }
 
 .pointer
 {
-	width: 15px;
-	margin-left: auto;
-	margin-right: auto;
-	position: absolute;
-	top: -17px;
-	left: 73px;
+    width: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    top: -17px;
+    left: 73px;
 }
 
 .pointer img
 {
-	height: 10px;
-	opacity: 0.4;
-	cursor: pointer;
+    height: 10px;
+    opacity: 0.4;
+    cursor: pointer;
 }
 
 .btn-perm-bot, .btn-perm, .btn-cellars-bot, .btn-cellars
 {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .image-list li
 {
-	display: block;
-	float: left;
+    display: inline-block;
+    margin: 3%;
+    text-align: left;
+    width: 25%;
 }
 
 .image-list img
 {
-	max-width: 60px;
-	max-height: 60px;
+    border: 1px solid black;
+    max-height: 100%;
+    max-width: 100%;
+    padding: 5px;
 }
 
 .image-list input
 {
-	display: none;
+    display: none;
 }
 
 .close-image-list
 {
-	margin-left: -20px;
+    margin-left: -20px;
 }
 
 .table-report{
-	 margin-top: 30px;
+     margin-top: 30px;
 }
 
 .table th.for_sale, .table td.for_sale{
-	line-height: 59px;
+    line-height: 59px;
 }
 a.for_sale{
-	vertical-align: middle;
-	color: #666;
-	cursor: pointer;
+    vertical-align: middle;
+    color: #666;
+    cursor: pointer;
 }
 i.disabled{
-	opacity: 0.3;
+    opacity: 0.3;
 }
 /*iframe.wysihtml5-sandbox{
-	max-height: 200px !important;
+    max-height: 200px !important;
 }*/
 #wysihtml5-textarea{
     height: 300px;
@@ -103,13 +107,13 @@ i.disabled{
     height: 100px !important;
 }
 tr.special_row > td{
-	padding: 0 !important;
+    padding: 0 !important;
 }
 tr.special_row > td > div{
-	padding-top: 30px;
+    padding-top: 30px;
 }
 .select2-results {
-	max-height: 100px;
+    max-height: 100px;
 }
 .no-sort::after { display: none!important; }
 
@@ -118,13 +122,13 @@ span.state-filter {cursor: pointer;}
 th.state-filter {vertical-align: middle !important;}
 .dataTables_processing { padding: 14px 0 34px 0; }
 #iframe_detalle .modal-dialog{
-	height: 90%;
-	width: 90%;
+    height: 90%;
+    width: 90%;
 }
 #iframe_detalle .modal-content{
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 }
 section#detalle_pedido th, section#detalle_pedido td{
-	font-size: 13px;
+    font-size: 13px;
 }

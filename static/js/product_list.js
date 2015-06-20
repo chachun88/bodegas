@@ -165,7 +165,7 @@ $(document).ready(function(){
                 "data": "image", 
                 "orderable": false,
                 render: function(data, type, row){
-                    console.log(row.image);
+                    // console.log(row.image);
                     return '<img src=\"/image/' + row.image + '?mw=60\" width=\"60\">';
                 }
             },
