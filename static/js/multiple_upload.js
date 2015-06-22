@@ -25,14 +25,21 @@ ImagesPreviewView.prototype.initEvents = function() {
             if(files.length>6){
                 alert("No puede subir mas de 6 fotos");
                 $(this).val('');
-                
+                $(image_list_class).html('');
             } else {
 
                 size_sum = 0;
+                var extension_ok = true;
+                var extensions = ['png','jpeg','jpg'];
 
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
                     size_sum += file.size;
+
+                    if(extensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1){
+                        // console.log("·");
+                        extension_ok = false;
+                    }
                 }
 
                 // console.log(size_sum);
@@ -40,13 +47,19 @@ ImagesPreviewView.prototype.initEvents = function() {
                 if(size_sum/1024/1024>4){
                     alert("El peso total de los archivos no debe superar 4MB");
                     $(this).val('');
+                    $(image_list_class).html('');
                 } else {
-
-                    self.loadImages( files, function()
-                    {
-                        console.log("llega");
-                        self.controller.ClearFileList();
-                    } );
+                    if(!extension_ok){
+                        alert("Los formatos permitidos son png, jpeg, jpg");
+                        $(this).val('');
+                        $(image_list_class).html('');
+                    } else {
+                        self.loadImages( files, function()
+                        {
+                            // console.log("llega");
+                            self.controller.ClearFileList();
+                        } );
+                    }
                 }
             }
         });
@@ -79,7 +92,7 @@ ImagesPreviewView.prototype.loadImages = function(image_list, images_loaded)
             {
                 images_loaded();
             }
-        }
+        };
 
         reader.readAsDataURL(_file);
     }

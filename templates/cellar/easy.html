@@ -8,20 +8,14 @@
 <div class="col-md-6">
 <section class="widget widget-tabs">
     <header>
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a href="#entrada" data-toggle="tab">Entrada</a>
-            </li>
-            <li>
-                <a href="#salida" data-toggle="tab">Salida</a>
-            </li>
-            <li>
-                <a href="#movimiento" data-toggle="tab">Movimiento</a>
-            </li>
-        </ul>
+        <p>
+            <a href="#entrada" class="btn a_tab btn-default">Entrada</a>
+            <a href="#salida" class="btn a_tab btn-default">Salida</a>
+            <a href="#movimiento" class="btn a_tab btn-default">Movimiento</a>
+        </p>
     </header>
-    <div class="body tab-content">
-        <div id="entrada" class="tab-pane active clearfix">
+    <div class="body">
+        <div id="entrada" class="div_tab clearfix">
             <form action="/cellar/easy" class="form-easy form-horizontal" method="post">
                 <fieldset>
                     <legend class="section">Ingreso de stock</legend>
@@ -92,7 +86,7 @@
                 </fieldset>
             </form>
         </div>
-        <div id="salida" class="tab-pane">
+        <div id="salida" class="div_tab hidden">
             <form action="/cellar/easy" class="form-easy form-horizontal" method="post" >
                 <fieldset>
                     <legend class="section">Salida de stock</legend>
@@ -169,7 +163,7 @@
                 </fieldset>
             </form>
         </div>
-        <div id="movimiento" class="tab-pane">
+        <div id="movimiento" class="div_tab hidden">
             <form action="/cellar/easy" class="form-easy form-horizontal" method="post" >
                 <fieldset>
                     <legend class="section">Mover a otra bodega</legend>

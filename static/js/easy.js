@@ -155,4 +155,9 @@ $(document).ready(function() {
 
         return false;
     });
+
+    $("a.a_tab").click(function(){
+        var identifier = $(this).attr("href");
+        $(identifier).removeClass("hidden").siblings().addClass("hidden");
+    });
 });
