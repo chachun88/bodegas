@@ -156,8 +156,10 @@ $(document).ready(function() {
         return false;
     });
 
-    $("a.a_tab").click(function(){
+    $("a.a_tab").click(function(event){
+        event.preventDefault();
         var identifier = $(this).attr("href");
+        $(this).removeClass("btn-default").addClass('btn-info').siblings().removeClass('btn-info').addClass('btn-default');
         $(identifier).removeClass("hidden").siblings().addClass("hidden");
     });
 });

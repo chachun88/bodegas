@@ -141,7 +141,7 @@ class OrderDetail(BaseModel):
             order_detail = cur.fetchall()
             return self.ShowSuccessMessage(order_detail)
         except Exception, e:
-            return self.ShowError("Error getting list, {}".format(str(e)))
+            return self.ShowError("No es posible obtener el detalle del pedido, {}".format(str(e)))
 
     def GetDetail(self, _id):
 

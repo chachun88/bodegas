@@ -97,7 +97,7 @@ $(document).ready(function(){
                     if ( row.state != 3 ) {
                         return '<input type="checkbox" name="pedidos" class="iCheck" value="' + row.order_id + '" tracking-code="-">';
                     } else {
-                        console.log('<input type="checkbox" name="pedidos" class="iCheck" value="' + row.order_id + '" tracking-code="' + row.tracking_code + '">');
+                        // console.log('<input type="checkbox" name="pedidos" class="iCheck" value="' + row.order_id + '" tracking-code="' + row.tracking_code + '">');
                         return '<input type=\"checkbox\" name=\"pedidos\" class=\"iCheck\" value=\"' + row.order_id + '" tracking-code="' + row.tracking_code + '">';
                     }
                     return data;

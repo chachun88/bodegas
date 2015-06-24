@@ -615,7 +615,9 @@ class Cellar(BaseModel):
             cellar = cur.fetchone()["id"]
             return self.ShowSuccessMessage(cellar)
         except Exception, e:
-            return self.ShowError(str(e))
+            return self.ShowError("No es posible obtener \
+                                  id de la bodega de reserva, {}"
+                                  .format(str(e)))
         finally:
             self.connection.close()
             cur.close()

@@ -34,6 +34,7 @@ ws_port = 0
 reserve_cellar_id = 12
 from_giani = 'contacto@gianidafirenze.cl'
 email_giani = ["contacto@gianidafirenze.cl", "julian@loadingplay.com"]
+email_local = 'yichun212@gmail.com'
 
 dir_products = 'uploads/salidas_masivas/'
 dir_stock = 'uploads/entradas_masivas/'
