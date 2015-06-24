@@ -47,17 +47,6 @@
 									<td>{{order.town}}</td>
 									<td>{{order.city}}</td>
 								</tr>
-								{% if order.voucher != '' %}
-								<tr>
-									<td colspan="6">
-										{% if order.voucher.split(".")[-1] == 'pdf' %}
-											<iframe width="100%" frameborder="0" height="500" src="/uploads/images/{{order.voucher}}?mw=-1">
-										{% else %}
-											<iframe width="100%" frameborder="0" height="500" src="/image/{{order.voucher}}?mw=400">
-										{% end %}
-									</td>
-								</tr>
-								{% end %}
 							</tbody>
 						</table>
 					</div>
@@ -114,6 +103,17 @@
 						</table>
 					</div>
 				</div>
+				{% if order.voucher != '' %}
+				<div class="row">
+					<div class="col-md-10">
+						{% if order.voucher.split(".")[-1] == 'pdf' %}
+							<iframe width="100%" frameborder="0" height="500" src="/uploads/images/{{order.voucher}}?mw=-1">
+						{% else %}
+							<iframe width="100%" frameborder="0" height="500" src="/image/{{order.voucher}}?mw=400">
+						{% end %}
+					</div>
+				</div>
+				{% end %}
 				{% if int(order.payment_type) == 2 and int(order.state) != 1 %}
 				<div class="row">
 					<div class="col-md-1"></div>

@@ -14,10 +14,8 @@ from ..model10.order_detail import OrderDetail
 from ..model10.kardex import Kardex
 from ..model10.size import Size
 import datetime
-from lp.globals import enviroment, Enviroment
-from tornado.options import options
 
-from ..globals import Menu, reserve_cellar_id, email_local
+from ..globals import Menu, reserve_cellar_id
 
 class AddCityHandler(BaseHandler):
 
@@ -188,16 +186,8 @@ class SaveTrackingCodeHandler(BaseHandler):
                     res_reservation = c.GetReservationCellar()
                     if "success" in res_reservation:
                         new_cellar_id = res_reservation["success"]
-                    else:
-                        resultado.append({"error":res_reservation['error']})
 
-                    if order_id == "":
-                        resultado.append({"error":"empty order id"})
-                    elif tracking_code == "":
-                        resultado.append({"error":"empty tracking_code"})
-                    elif provider_id == "":
-                        resultado.append({"error":"empty provider_id"})
-                    else:
+                    if not self.validateEmpty([order_id, tracking_code, provider_id]):
 
                         order_detail = OrderDetail()
                         details_res = order_detail.ListByOrderId(order_id)
@@ -205,124 +195,136 @@ class SaveTrackingCodeHandler(BaseHandler):
                         if "success" in details_res:
                             details = details_res["success"]
                         else:
-                            resultado.append({"error":details_res['error']})
+                            resultado.append(details_res)
                             break
 
-                        cancelable = True
+                        if self.cancelable(details):
 
-                        for detail in details:
+                            shipping = Shipping()
+                            res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
 
-                            sku = detail["sku"]
-                            quantity = detail["quantity"]
-                            operation = Kardex.OPERATION_SELL
-                            sell_price = detail["price"]
-
-                            _size = Size()
-                            _size.name = detail["size"]
-                            res_name = _size.initByName()
-
-                            if "success" in res_name:
-                                size = _size.id
-                                color = detail["color"]
-                                user = 'Sistema - Despacho'
-
-                                k = Kardex()
-                                find_kardex = k.FindKardex(sku, new_cellar_id, size)
-
-                                balance_price = 0
-                                units = 0
-
-                                if "success" in find_kardex:
-                                    balance_price = k.balance_price
-                                    units = k.balance_units
-
-                                if int(units) < int(quantity):
-                                    resultado.append({
-                                        "error": 'Pedido {}, sku {}, \
-                                        talla {} no tiene stock suficiente'
-                                        .format(order_id, sku, detail['size'])
-                                        })
-                                    cancelable = False
-                                    break 
-                            else:
-                                cancelable = False
-                                resultado.append({"error": res_name['error']})
+                            if "error" in res:
+                                resultado.append(res)
                                 break
+                            else:
+                                if int(provider_id) == 1:
+                                    provider_name = "Chilexpress"
+                                elif int(provider_id) == 2:
+                                    provider_name = "Correos de Chile"
 
-                        if cancelable:
+                                customer = Customer()
+                                response = customer.InitById(res["success"])
+                                print response
 
-                            for detail in details:
-
-                                sku = detail["sku"]
-                                quantity = detail["quantity"]
-                                operation = Kardex.OPERATION_SELL
-                                sell_price = detail["price"]
-
-                                _size = Size()
-                                _size.name = detail["size"]
-                                res_name = _size.initByName()
-
-                                if "success" in res_name:
-                                    size = _size.id
-
-                                color = detail["color"]
-                                user = 'Sistema - Despacho'
-
-                                k = Kardex()
-                                find_kardex = k.FindKardex(sku, new_cellar_id, size)
-
-                                balance_price = 0
-                                units = 0
-
-                                if "success" in find_kardex:
-                                    balance_price = k.balance_price
-                                    units = k.balance_units
-
-                                    if int(units) >= int(quantity):
-
-                                        kardex = Kardex()
-                                        kardex.product_sku = sku
-                                        kardex.cellar_identifier = new_cellar_id
-                                        kardex.date = str(datetime.datetime.now().isoformat())
-                                        kardex.operation_type = operation
-                                        kardex.units = quantity
-                                        kardex.price = balance_price
-                                        kardex.size_id = size
-                                        kardex.sell_price = sell_price
-                                        kardex.color = color
-                                        kardex.user = user
-
-                                        response_kardex = kardex.Insert()
-
-                                        if "error" in response_kardex:
-                                            resultado.append(response_kardex)
-                                            break
-                                        else:
-                                            shipping = Shipping()
-                                            res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
-
-                                            if "error" in res:
-                                                resultado.append(res)
-                                                break
-                                            else:
-                                                if int(provider_id) == 1:
-                                                    provider_name = "Chilexpress"
-                                                elif int(provider_id) == 2:
-                                                    provider_name = "Correos de Chile"
-
-                                                customer = Customer()
-                                                response = customer.InitById(res["success"])
-                                                # print response
-
-                                                if "success" in response:
-                                                    if options["enviroment"] == Enviroment.LOCAL:
-                                                        TrackingCustomer(email_local,customer.name,tracking_code,provider_name,order_id)
-                                                    else:
-                                                        TrackingCustomer(customer.email,customer.name,tracking_code,provider_name,order_id)
-                        # else:
-                        #     resultado.append({"error": "el pedido {} no puede ser despachado, stock es insuficiente".format(order_id)})
-
+                                if "success" in response:
+                                    TrackingCustomer(customer.email,customer.name,tracking_code,provider_name,order_id)
+                        else:
+                            resultado.append({"error": "el pedido {} no puede ser despachado, stock es insuficiente".format(order_id)})
+                    else:
+                        resultado.append({"error":"faltan datos para despachar el pedido {}".format(order_id)})
             else:
                 resultado.append(res_order)
 
         self.write(json_util.dumps(resultado))
+
+    def validateEmpty(self, params = []):
+
+        empty = False
+
+        for param in params:
+            if param == '':
+                empty = True
+
+        return empty
+
+    def cancelable(self, details):
+
+        cancelable = True
+
+        for detail in details:
+
+            sku = detail["sku"]
+            quantity = detail["quantity"]
+            operation = Kardex.OPERATION_SELL
+            sell_price = detail["price"]
+
+            _size = Size()
+            _size.name = detail["size"]
+            res_name = _size.initByName()
+
+            if "success" in res_name:
+                size = _size.id
+                color = detail["color"]
+                user = 'Sistema - Despacho'
+
+                k = Kardex()
+                find_kardex = k.FindKardex(sku, new_cellar_id, size)
+
+                balance_price = 0
+                units = 0
+
+                if "success" in find_kardex:
+                    balance_price = k.balance_price
+                    units = k.balance_units
+
+                    if int(units) < int(quantity):
+                        cancelable = False
+                        break
+                else:
+                    cancelable = False
+                    break
+            else:
+                cancelable = False
+                break
+        # end for
+
+        return cancelable
+
+    def cancel(self, details):
+
+        for detail in details:
+
+            sku = detail["sku"]
+            quantity = detail["quantity"]
+            operation = Kardex.OPERATION_SELL
+            sell_price = detail["price"]
+
+            _size = Size()
+            _size.name = detail["size"]
+            res_name = _size.initByName()
+
+            if "success" in res_name:
+                size = _size.id
+
+            color = detail["color"]
+            user = 'Sistema - Despacho'
+
+            k = Kardex()
+            find_kardex = k.FindKardex(sku, new_cellar_id, size)
+
+            balance_price = 0
+            units = 0
+
+            if "success" in find_kardex:
+                balance_price = k.balance_price
+                units = k.balance_units
+
+            if int(units) >= int(quantity):
+
+                kardex = Kardex()
+                kardex.product_sku = sku
+                kardex.cellar_identifier = new_cellar_id
+                kardex.date = str(datetime.datetime.now().isoformat())
+                kardex.operation_type = operation
+                kardex.units = quantity
+                kardex.price = balance_price
+                kardex.size_id = size
+                kardex.sell_price = sell_price
+                kardex.color = color
+                kardex.user = user
+
+                response_kardex = kardex.Insert()
+
+                if "error" in response_kardex:
+                    resultado.append(response_kardex)
+                    break
