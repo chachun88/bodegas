@@ -14,6 +14,14 @@ define("db_user", default=LOCAL_USER, help="", type=str)
 define("db_host", default=LOCAL_HOST, help="", type=str)
 define("db_password", default=LOCAL_PASSWORD, help="", type=str)
 
+
+query = '''delete from "City" where id not in (select city_id from "Contact")'''
+
+try:
+    from_city_id = BaseModel.execute_query_real(query)
+except Exception, e:
+    print str(e)
+
 query = '''select id from "City" where lower(name) = %(name)s'''
 parameters = {
     "name": 'santiago'
