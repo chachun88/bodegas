@@ -65,9 +65,13 @@ for i in range(1, nrows):
                 shipping.price = precio
                 shipping.edited = False
                 shipping.charge_type = 1
-                response = shipping.Save()
 
-                # print response
+                response = shipping.exists(from_city_id, city.id)
 
-                if "error" in response:
+                if "success" in response:
+                    if not response['success']:
+                        response = shipping.Save()
+                        if 'error' in response:
+                            print response['error']
+                else:
                     print response['error']

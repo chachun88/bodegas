@@ -298,3 +298,29 @@ class Shipping(BaseModel):
             finally:
                 cur.close()
                 self.connection.close()
+
+    def exists(self, from_city_id, to_city_id):
+
+        if from_city_id == None:
+            return self.ShowError("origen no puede estar vacio")
+        elif to_city_id == None:
+            return self.ShowError("destino no puede estar vacio")
+        else:
+            query = '''\
+                    select id from "Shipping" 
+                    where from_city_id = %(from_city_id)s 
+                    and to_city_id = %(to_city_id)s'''
+            parameters = {
+                "from_city_id": from_city_id,
+                "to_city_id": to_city_id
+            }
+            cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            try:
+                cursor.execute(query, parameters)
+                if cursor.rowcount > 0:
+                    return self.ShowSuccessMessage(True)
+                else:
+                    return self.ShowSuccessMessage(False)
+            except Exception, e:
+                return self.ShowError("error al buscar precio de despacho, {}".format(
+                    str(e)))
