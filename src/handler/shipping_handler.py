@@ -295,36 +295,38 @@ class SaveTrackingCodeHandler(BaseHandler):
 
             if "success" in res_name:
                 size = _size.id
+                color = detail["color"]
+                user = 'Sistema - Despacho'
 
-            color = detail["color"]
-            user = 'Sistema - Despacho'
+                k = Kardex()
+                find_kardex = k.FindKardex(sku, new_cellar_id, size)
 
-            k = Kardex()
-            find_kardex = k.FindKardex(sku, new_cellar_id, size)
+                balance_price = 0
+                units = 0
 
-            balance_price = 0
-            units = 0
+                if "success" in find_kardex:
+                    balance_price = k.balance_price
+                    units = k.balance_units
 
-            if "success" in find_kardex:
-                balance_price = k.balance_price
-                units = k.balance_units
+                    if int(units) >= int(quantity):
 
-            if int(units) >= int(quantity):
+                        kardex = Kardex()
+                        kardex.product_sku = sku
+                        kardex.cellar_identifier = new_cellar_id
+                        kardex.date = str(datetime.datetime.now().isoformat())
+                        kardex.operation_type = operation
+                        kardex.units = quantity
+                        kardex.price = balance_price
+                        kardex.size_id = size
+                        kardex.sell_price = sell_price
+                        kardex.color = color
+                        kardex.user = user
 
-                kardex = Kardex()
-                kardex.product_sku = sku
-                kardex.cellar_identifier = new_cellar_id
-                kardex.date = str(datetime.datetime.now().isoformat())
-                kardex.operation_type = operation
-                kardex.units = quantity
-                kardex.price = balance_price
-                kardex.size_id = size
-                kardex.sell_price = sell_price
-                kardex.color = color
-                kardex.user = user
+                        response_kardex = kardex.Insert()
 
-                response_kardex = kardex.Insert()
-
-                if "error" in response_kardex:
-                    resultado.append(response_kardex)
+                        if "error" in response_kardex:
+                            break
+                else:
                     break
+            else:
+                break
