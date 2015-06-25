@@ -122,9 +122,10 @@ class Shipping(BaseModel):
             }
 
             try:
+                # print cur.mogrify(query, parameters)
                 cur.execute(query,parameters)
                 self.connection.commit()
-                return self.ShowSuccessMessage(self.id)
+                return self.ShowSuccessMessage(self.identifier)
             except Exception,e:
                 return self.ShowError(str(e))
             finally:
@@ -147,9 +148,9 @@ class Shipping(BaseModel):
 
             try:
                 cur.execute(query,parameters)
-                self.id = cur.fetchone()["id"]
+                self.identifier = cur.fetchone()["id"]
                 self.connection.commit()
-                return self.ShowSuccessMessage(self.id)
+                return self.ShowSuccessMessage(self.identifier)
             except Exception,e:
                 return self.ShowError(str(e))
             finally:
