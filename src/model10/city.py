@@ -45,7 +45,7 @@ class City(BaseModel):
 			cur.execute(query,parameters)
 			if cur.rowcount > 0:
 				self.id = cur.fetchone()["id"]
-				return self.ShowError("Ciudad ya existe en la lista")
+				# return self.ShowSuccessMessage(self.id)
 		except Exception,e:
 			return self.ShowError(str(e))
 		finally:
