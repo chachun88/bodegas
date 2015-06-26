@@ -10,7 +10,7 @@ class Shipping(BaseModel):
     def __init__(self):
         BaseModel.__init__(self)
         self.table = 'Shipping'
-        self._identifier = 0
+        self._identifier = ''
         self._to_city_id = 0
         self._from_city_id = 0
         self._edited = False
@@ -106,6 +106,8 @@ class Shipping(BaseModel):
 
     def Save(self):
 
+        print self.identifier
+
         if self.identifier != "":
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -133,6 +135,8 @@ class Shipping(BaseModel):
                 cur.close()
 
         else:
+
+            print "insert"
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             query = '''insert into "Shipping" (from_city_id,to_city_id,correos_price,chilexpress_price,price,edited,charge_type) values (%(from_city_id)s,%(to_city_id)s,%(correos_price)s,%(chilexpress_price)s,%(price)s,%(edited)s,%(charge_type)s) returning id'''
