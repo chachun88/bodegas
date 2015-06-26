@@ -7,6 +7,7 @@ from ..model10.city import City
 from ..model10.shipping import Shipping
 from bson import json_util
 from emails import TrackingCustomer
+import sendgrid
 from ..model10.customer import Customer
 from ..model10.order import Order
 from ..model10.cellar import Cellar
@@ -14,8 +15,9 @@ from ..model10.order_detail import OrderDetail
 from ..model10.kardex import Kardex
 from ..model10.size import Size
 import datetime
+from lp.globals import enviroment, Enviroment
 
-from ..globals import Menu, reserve_cellar_id
+from ..globals import *
 
 class AddCityHandler(BaseHandler):
 
@@ -200,6 +202,8 @@ class SaveTrackingCodeHandler(BaseHandler):
 
                         if self.cancelable(details):
 
+                            self.cancel(details)
+
                             shipping = Shipping()
                             res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
 
@@ -280,6 +284,25 @@ class SaveTrackingCodeHandler(BaseHandler):
 
         return cancelable
 
+    def sendError(self, subject,  msg):
+        try:
+            if enviroment != Enviroment.LOCAL and enviroment != Enviroment.ONTEST:
+                sg = sendgrid.SendGridClient(usuario_sendgrid, pass_sendgrid)
+                message = sendgrid.Mail()
+                message.set_from(
+                    "Bodega Giani <contacto@loadingplay.com>")
+                message.add_to(["ricardo@loadingplay.com", "yi@loadingplay.com"])
+
+                message.set_subject(subject)
+
+                message.set_html(msg)
+                status, msg = sg.send(message)
+            else:
+                print msg
+        except Exception, ex:
+            print str(ex)
+            pass
+
     def cancel(self, details):
 
         for detail in details:
@@ -325,8 +348,14 @@ class SaveTrackingCodeHandler(BaseHandler):
                         response_kardex = kardex.Insert()
 
                         if "error" in response_kardex:
-                            break
+                            self.sendError("Error marcar despacho, pedido {}"
+                                           .format(detail['order_id']), 
+                                           response_kardex['error'])
                 else:
-                    break
+                    self.sendError("Error al obtener kardex en despacho, pedido {}"
+                                           .format(detail['order_id']), 
+                                           response_kardex['error'])
             else:
-                break
+                self.sendError("Error despacho, no encontro talla, pedido {}"
+                                           .format(detail['order_id']), 
+                                           response_kardex['error'])
