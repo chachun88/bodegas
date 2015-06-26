@@ -85,7 +85,7 @@ ImagesPreviewView.prototype.loadImages = function(image_list, images_loaded)
         reader.onload = function(e) 
         {
             // console.log(e.target.result);
-            self.controller.AddFile(e.target.result);
+            self.controller.AddFile(e.target.result, _file['name']);
             counter += 1;
 
             if (counter == length)
@@ -105,15 +105,16 @@ ImagesPreviewView.prototype.render = function() {
     for (i = 0; i < images.length; i++) {
         var img = images[i];
         var template = $(".template-image").html()
-            .replace(";;src;;", img)
-            .replace(";;index;;", i);
+            .replace(";;src;;", img.img)
+            .replace(";;index;;", i)
+            .replace(";;image_name;;", img.name);
 
         $(this.image_list_class).append(template);
     }
 };
 
-ImagesPreviewController.prototype.AddFile = function(img) {
-    this.model.push(img);
+ImagesPreviewController.prototype.AddFile = function(img, name) {
+    this.model.push({"name":name, "img": img});
     this.view.render();
 };
 

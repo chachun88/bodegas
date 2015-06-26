@@ -131,20 +131,26 @@ class ProductAddHandler(BaseHandler):
         else:
             image_name=''
         '''
-
+        image_order = self.get_argument("image_order", "").encode("utf-8").split(",")
         filelist = self.request.files
         product_sku = self.get_argument("sku", "")
         photolist = ['','','','','','']
 
-        # for x in range(6):
-        #     photolist[x] = "{}_{}.png".format(x, product_sku.encode('utf-8'))
+        new_list = ['','','','','','']
 
-        if "image" in filelist:
-            index = 0
-            for _file in filelist["image"]:
-                filename = self.saveImage( _file, product_sku, index )
-                photolist[index] = filename
-                index += 1
+        for x in range(6):
+            photolist[x] = "{}_{}.png".format(x, product_sku.encode('utf-8'))
+
+        index = 0
+        for order in image_order:
+            if "image" in filelist:
+                filename = self.saveImage( filelist["image"][int(order)], product_sku, index )
+                new_list[index] = filename
+            else:
+                new_list[index] = photolist[int(order)]
+            index += 1
+
+        print new_list
 
         # if the category does not exist is created
         category = Category()
@@ -180,12 +186,12 @@ class ProductAddHandler(BaseHandler):
             prod.bullet_3   = self.get_argument("bullet_3", "")
             prod.currency   = self.get_argument("currency", "")
             prod.price      = self.get_argument("price", "")
-            prod.image      = photolist[0]
-            prod.image_2    = photolist[1]
-            prod.image_3    = photolist[2]
-            prod.image_4    = photolist[3]
-            prod.image_5    = photolist[4]
-            prod.image_6    = photolist[5]
+            prod.image      = new_list[0]
+            prod.image_2    = new_list[1]
+            prod.image_3    = new_list[2]
+            prod.image_4    = new_list[3]
+            prod.image_5    = new_list[4]
+            prod.image_6    = new_list[5]
             prod.sell_price = self.get_argument("sell_price",0)
             prod.delivery   = self.get_argument("delivery","").encode('utf-8')
             prod.which_size = self.get_argument("which_size","").encode('utf-8')
@@ -225,12 +231,12 @@ class ProductAddHandler(BaseHandler):
             prod.bullet_3   = self.get_argument("bullet_3", "").encode("utf-8")
             prod.currency   = self.get_argument("currency", "").encode("utf-8")
             prod.price      = self.get_argument("price", "").encode("utf-8")
-            prod.image      = photolist[0].encode("utf-8")
-            prod.image_2    = photolist[1].encode("utf-8")
-            prod.image_3    = photolist[2].encode("utf-8")
-            prod.image_4    = photolist[3].encode("utf-8")
-            prod.image_5    = photolist[4].encode("utf-8")
-            prod.image_6    = photolist[5].encode("utf-8")
+            prod.image      = new_list[0].encode("utf-8")
+            prod.image_2    = new_list[1].encode("utf-8")
+            prod.image_3    = new_list[2].encode("utf-8")
+            prod.image_4    = new_list[3].encode("utf-8")
+            prod.image_5    = new_list[4].encode("utf-8")
+            prod.image_6    = new_list[5].encode("utf-8")
             prod.sell_price = self.get_argument("sell_price",0).encode("utf-8")
             prod.delivery   = self.get_argument("delivery","").encode("utf-8")
             prod.which_size = self.get_argument("which_size","").encode("utf-8")
