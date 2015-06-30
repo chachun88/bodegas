@@ -187,6 +187,8 @@ class SaveTrackingCodeHandler(BaseHandler):
 
                 else:
 
+                    new_cellar_id = reserve_cellar_id
+
                     c = Cellar()
                     res_reservation = c.GetReservationCellar()
                     if "success" in res_reservation:
@@ -203,9 +205,11 @@ class SaveTrackingCodeHandler(BaseHandler):
                             resultado.append(details_res)
                             break
 
-                        if self.cancelable(details):
+                        list_sku = self.cancelable(details, new_cellar_id)
 
-                            self.cancel(details)
+                        if len(list_sku) == 0:
+
+                            self.cancel(details, new_cellar_id)
 
                             shipping = Shipping()
                             res = shipping.SaveTrackingCode(order_id,tracking_code,provider_id)
@@ -226,7 +230,9 @@ class SaveTrackingCodeHandler(BaseHandler):
                                 if "success" in response:
                                     TrackingCustomer(customer.email,customer.name,tracking_code,provider_name,order_id)
                         else:
-                            resultado.append({"error": "el pedido {} no puede ser despachado, stock es insuficiente".format(order_id)})
+                            resultado.append({"error": "el pedido {} no puede ser despachado, \
+                                             por favor revise stock de los sgte productos {}"
+                                             .format(order_id, ",".join(list_sku))})
                     else:
                         resultado.append({"error":"faltan datos para despachar el pedido {}".format(order_id)})
             else:
@@ -244,7 +250,9 @@ class SaveTrackingCodeHandler(BaseHandler):
 
         return empty
 
-    def cancelable(self, details):
+    def cancelable(self, details, new_cellar_id):
+
+        sku_list = []
 
         cancelable = True
 
@@ -270,16 +278,19 @@ class SaveTrackingCodeHandler(BaseHandler):
 
                     if int(units) < int(quantity):
                         cancelable = False
+                        sku_list.append(sku)
                         break
                 else:
+                    sku_list.append(sku)
                     cancelable = False
                     break
             else:
+                sku_list.append(sku)
                 cancelable = False
                 break
         # end for
 
-        return cancelable
+        return sku_list
 
     def sendError(self, subject,  msg):
         try:
@@ -300,7 +311,7 @@ class SaveTrackingCodeHandler(BaseHandler):
             print str(ex)
             pass
 
-    def cancel(self, details):
+    def cancel(self, details, new_cellar_id):
 
         for detail in details:
 
