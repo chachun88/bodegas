@@ -26,7 +26,10 @@ class AddCityHandler(BaseHandler):
         city.name = self.get_argument("name","").encode("utf-8")
         guardado = city.Save()
 
-        identifier = int(self.get_argument("identifier",0))
+        identifier = self.get_argument("identifier",'')
+
+        if identifier == '':
+            identifier = 0
 
         if "success" in guardado:
             if identifier == 0:
