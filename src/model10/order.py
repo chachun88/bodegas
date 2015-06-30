@@ -168,6 +168,14 @@ class Order(BaseModel):
     def shipping_id(self, value):
         self._shipping_id = value
 
+    @property
+    def additional_info(self):
+        return self._additional_info
+
+    @additional_info.setter
+    def additional_info(self, value):
+        self._additional_info = value
+
     def __init__(self):
         BaseModel.__init__(self)
         self.table = "Order"
@@ -297,6 +305,7 @@ class Order(BaseModel):
                 self.shipping_id            = order["shipping_id"]
                 self.customer_email         = order["email"]
                 self.voucher                = order["voucher"]
+                self.additional_info        = order["additional_info"]
                 return self.ShowSuccessMessage(order)
             else:
                 return self.ShowError("Pedido no encontrado")

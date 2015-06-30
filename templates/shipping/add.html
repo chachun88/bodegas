@@ -37,7 +37,10 @@
 				<div class="control-group body">
 					<label for="Ciudad_From" class="col-md-3">Ciudad Origen</label>
 					<div class="col-md-5">
-						<select name="from_city_id" class="form-control">
+						<select name="from_city_id" 
+								data-placeholder="Ciudad Origen"
+                                class="chzn-select select-block-level" 
+                                tabindex="-1">
 							{% for c in cities %}
 								{% if int(shipping.from_city_id) == 0 %}
 									{% if c['name'] == "Santiago" %}
@@ -59,7 +62,10 @@
 				<div class="control-group body">
 					<label for="Ciudad_To" class="col-md-3">Ciudad Destino</label>
 					<div class="col-md-5">
-						<select name="to_city_id" class="form-control">
+						<select name="to_city_id" 
+								data-placeholder="Ciudad Destino"
+								class="chzn-select select-block-level" 
+								tabindex="-1">
 							{% for c in cities %}
 								{% if int(shipping.to_city_id) == 0 %}
 									<option value="{{c['id']}}">{{c['name']}}</option>
