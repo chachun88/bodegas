@@ -19,6 +19,7 @@ from lp.globals import enviroment, Enviroment
 
 from ..globals import *
 
+
 class AddCityHandler(BaseHandler):
 
     @tornado.web.authenticated
@@ -37,6 +38,7 @@ class AddCityHandler(BaseHandler):
                 self.redirect("/shipping/save?identifier={id}".format(id=identifier))
         else:
             self.redirect("/shipping/save?dn=error&mensaje="+guardado["error"])
+
 
 class SaveHandler(BaseHandler):
 
@@ -64,7 +66,6 @@ class SaveHandler(BaseHandler):
             if "error" in res:
                 print res
                 self.write(res["error"])
-
 
         if "success" in cities:
             self.render("shipping/add.html",cities=cities["success"],shipping=shipping,dn=dn,mensaje=mensaje)
@@ -233,7 +234,7 @@ class SaveTrackingCodeHandler(BaseHandler):
 
         self.write(json_util.dumps(resultado))
 
-    def validateEmpty(self, params = []):
+    def validateEmpty(self, params=[]):
 
         empty = False
 
@@ -251,8 +252,6 @@ class SaveTrackingCodeHandler(BaseHandler):
 
             sku = detail["sku"]
             quantity = detail["quantity"]
-            operation = Kardex.OPERATION_SELL
-            sell_price = detail["price"]
 
             _size = Size()
             _size.name = detail["size"]
@@ -260,17 +259,13 @@ class SaveTrackingCodeHandler(BaseHandler):
 
             if "success" in res_name:
                 size = _size.id
-                color = detail["color"]
-                user = 'Sistema - Despacho'
 
                 k = Kardex()
                 find_kardex = k.FindKardex(sku, new_cellar_id, size)
 
-                balance_price = 0
                 units = 0
 
                 if "success" in find_kardex:
-                    balance_price = k.balance_price
                     units = k.balance_units
 
                     if int(units) < int(quantity):
