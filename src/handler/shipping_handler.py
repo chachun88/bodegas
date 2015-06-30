@@ -81,9 +81,9 @@ class SaveHandler(BaseHandler):
         shipping.price = self.get_argument("price",0)
         shipping.edited = bool(self.get_argument("edited", False))
         shipping.charge_type = self.get_argument("charge_type",1)
-        
+
         guardado = shipping.Save()
-        
+
         if "success" in guardado:
 
             if shipping.identifier == "":
@@ -92,6 +92,7 @@ class SaveHandler(BaseHandler):
                 self.redirect("/shipping/save?identifier={id}".format(id=shipping.identifier))
         else:
             self.write(guardado["error"])
+
 
 class ListHandler(BaseHandler):
 
@@ -107,6 +108,7 @@ class ListHandler(BaseHandler):
         else:
             self.write(res_lista["error"])
 
+
 class ActionHandler(BaseHandler):
 
     @tornado.web.authenticated
@@ -118,12 +120,12 @@ class ActionHandler(BaseHandler):
         if action == "":
             self.write("Debe seleccionar una acción")
         else:
-            
             res = shipping.Action(action)
             if "success" in res:
                 self.redirect("/shipping/list")
             else:
                 self.write(res["error"])
+
 
 class RemoveHandler(BaseHandler):
 
