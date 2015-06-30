@@ -251,14 +251,14 @@
 		}
 
 		//upc(artículo)
-		cont = 0;
-		esp=0;
+		// cont = 0;
+		// esp=0;
 
-		while (!espacios && (cont < upc.length)) {
-			if (upc.charAt(cont) == " ")
-				esp++;
-			cont++;
-		}
+		// while (!espacios && (cont < upc.length)) {
+		// 	if (upc.charAt(cont) == " ")
+		// 		esp++;
+		// 	cont++;
+		// }
 
 		/*if (upc.length == esp){
 			alert ("Falta ingresar artículo");
@@ -324,6 +324,13 @@
 			alert ("Falta ingresar precio de compra");
 			return false;
 		}
+
+		var order = [];
+		$('ul.image-list img').each(function(){
+			var index = $(this).attr("index");
+			order.push(index);
+		});
+		$("input[name='image_order']").val(order.join());
 
 		return true
 	});

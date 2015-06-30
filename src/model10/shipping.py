@@ -10,7 +10,7 @@ class Shipping(BaseModel):
     def __init__(self):
         BaseModel.__init__(self)
         self.table = 'Shipping'
-        self._identifier = 0
+        self._identifier = ''
         self._to_city_id = 0
         self._from_city_id = 0
         self._edited = False
@@ -106,6 +106,8 @@ class Shipping(BaseModel):
 
     def Save(self):
 
+        print self.identifier
+
         if self.identifier != "":
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -133,6 +135,8 @@ class Shipping(BaseModel):
                 cur.close()
 
         else:
+
+            print "insert"
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             query = '''insert into "Shipping" (from_city_id,to_city_id,correos_price,chilexpress_price,price,edited,charge_type) values (%(from_city_id)s,%(to_city_id)s,%(correos_price)s,%(chilexpress_price)s,%(price)s,%(edited)s,%(charge_type)s) returning id'''
@@ -298,3 +302,29 @@ class Shipping(BaseModel):
             finally:
                 cur.close()
                 self.connection.close()
+
+    def exists(self, from_city_id, to_city_id):
+
+        if from_city_id == None:
+            return self.ShowError("origen no puede estar vacio")
+        elif to_city_id == None:
+            return self.ShowError("destino no puede estar vacio")
+        else:
+            query = '''\
+                    select id from "Shipping" 
+                    where from_city_id = %(from_city_id)s 
+                    and to_city_id = %(to_city_id)s'''
+            parameters = {
+                "from_city_id": from_city_id,
+                "to_city_id": to_city_id
+            }
+            cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            try:
+                cursor.execute(query, parameters)
+                if cursor.rowcount > 0:
+                    return self.ShowSuccessMessage(True)
+                else:
+                    return self.ShowSuccessMessage(False)
+            except Exception, e:
+                return self.ShowError("error al buscar precio de despacho, {}".format(
+                    str(e)))
