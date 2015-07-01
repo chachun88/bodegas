@@ -1161,3 +1161,28 @@ class Product(BaseModel):
         finally:
             cur.close()
             self.connection.commit()
+
+    def getIdBySku(self, sku):
+
+        product_id = None
+
+        cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''
+                select id from "Product"
+                where sku = %(sku)s
+                '''
+        parameters = {
+            "sku": sku
+        }
+
+        try:
+            cursor.execute(query, parameters)
+            product_id = cursor.fetchone()['id']
+            self.connection.commit()
+        except Exception, e:
+            print str(e)
+        finally:
+            cursor.close()
+
+        return product_id

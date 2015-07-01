@@ -14,6 +14,7 @@ from ..model10.cellar import Cellar
 from ..model10.product import Product
 from ..model10.size import Size
 from ..model10.kardex import Kardex
+from ..model10.order import Order
 
 from bson import json_util
 
@@ -631,24 +632,15 @@ class CellarEasyHandler(BaseHandler):
                         self.write(json_util.dumps({"state": "error", "message": res_add_product["error"]}))
                 else:
 
-                    if int(units) >= int(quantity): 
+                    if int(units) >= int(quantity):
 
-                        if operation == "mov":
+                        order = Order()
+                        reserved = order.getReservedProducts()
 
-                            kardex = Kardex()
-
-                            kardex.product_sku = sku
-                            kardex.units = quantity
-                            kardex.price = balance_price
-                            kardex.size_id = _size.id
-                            kardex.color = product.color
-                            kardex.operation_type = Kardex.OPERATION_MOV_OUT
-                            kardex.user = self.get_user_email()
-                            kardex.cellar_identifier = cellar_id
-
-                            res_remove = kardex.Insert()
-
-                            if "success" in res_remove:
+                        if sku in reserved:
+                            self.write(json_util.dumps({"state": "error", "message": "Producto reservado"}))
+                        else:
+                            if operation == "mov":
 
                                 kardex = Kardex()
 
@@ -657,35 +649,50 @@ class CellarEasyHandler(BaseHandler):
                                 kardex.price = balance_price
                                 kardex.size_id = _size.id
                                 kardex.color = product.color
-                                kardex.operation_type = Kardex.OPERATION_MOV_IN
+                                kardex.operation_type = Kardex.OPERATION_MOV_OUT
                                 kardex.user = self.get_user_email()
-                                kardex.cellar_identifier = new_cellar
+                                kardex.cellar_identifier = cellar_id
 
-                                res_add_product = kardex.Insert()
+                                res_remove = kardex.Insert()
 
-                                if "success" in res_add_product:
-                                    self.write(json_util.dumps({"state": "ok", "message": "Stock movido exitosamente"}))
+                                if "success" in res_remove:
+
+                                    kardex = Kardex()
+
+                                    kardex.product_sku = sku
+                                    kardex.units = quantity
+                                    kardex.price = balance_price
+                                    kardex.size_id = _size.id
+                                    kardex.color = product.color
+                                    kardex.operation_type = Kardex.OPERATION_MOV_IN
+                                    kardex.user = self.get_user_email()
+                                    kardex.cellar_identifier = new_cellar
+
+                                    res_add_product = kardex.Insert()
+
+                                    if "success" in res_add_product:
+                                        self.write(json_util.dumps({"state": "ok", "message": "Stock movido exitosamente"}))
+                                    else:
+                                        self.write(json_util.dumps({"state": "error", "message": res_add_product["error"]}))
                                 else:
-                                    self.write(json_util.dumps({"state": "error", "message": res_add_product["error"]}))
+                                    self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))                        
+
                             else:
-                                self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))                        
 
-                        else:
+                                kardex.product_sku = sku
+                                kardex.units = quantity
+                                kardex.sell_price = price
+                                kardex.size_id = _size.id
+                                kardex.color = product.color
+                                kardex.operation_type = Kardex.OPERATION_SELL
+                                kardex.user = self.get_user_email()
 
-                            kardex.product_sku = sku
-                            kardex.units = quantity
-                            kardex.sell_price = price
-                            kardex.size_id = _size.id
-                            kardex.color = product.color
-                            kardex.operation_type = Kardex.OPERATION_SELL
-                            kardex.user = self.get_user_email()
+                                res_remove = kardex.Insert()
 
-                            res_remove = kardex.Insert()
-
-                            if "success" in res_remove:
-                                self.write(json_util.dumps({"state": "ok", "message": "Stock sacado exitosamente"}))
-                            else:
-                                self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))
+                                if "success" in res_remove:
+                                    self.write(json_util.dumps({"state": "ok", "message": "Stock sacado exitosamente"}))
+                                else:
+                                    self.write(json_util.dumps({"state": "error", "message": res_remove["error"]}))
 
                     else:
                         self.write(json_util.dumps({"state": "error", "message": "Stock insuficiente"}))
@@ -696,3 +703,11 @@ class CellarEasyHandler(BaseHandler):
     ## invalidate xsfr cookie for ajax use
     def check_xsrf_cookie(self):
         pass
+
+
+class TestingHandler(BaseHandler):
+
+    def get(self):
+        order = Order()
+        reserved = order.getReservedProducts()
+        self.write(json_util.dumps(reserved))

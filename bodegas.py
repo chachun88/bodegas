@@ -101,6 +101,7 @@ class Application(tornado.web.Application):
             (r"/cellar/selectforsale", SelectForSaleHandler),
             (r"/cellar/selectreservation", SelectReservationHandler),
             (r"/cellar/easy", CellarEasyHandler),
+            (r"/cellar/testing", TestingHandler),
 
             # order
             (r"/order/list", OrderHandler),
