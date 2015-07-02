@@ -14,6 +14,7 @@ from ..model10.order import Order
 from ..model10.product import Product
 from ..model10.shipping import Shipping
 from ..model10.customer import Customer
+from ..model10.cellar import Cellar
 from emails import TrackingCustomer
 
 from datetime import datetime
@@ -156,7 +157,25 @@ class OrderActionsHandler(BaseHandler):
 
             elif accion == ACCIONES_CANCELADO:
 
-                # response = order.ChangeStateOrders(valores,Order.ESTADO_CANCELADO)
+                cellar_id = None
+                web_cellar = None
+
+                cellar = Cellar()
+                res_reservation_cellar = cellar.GetReservationCellar()
+
+                errores = []
+
+                if "success" in res_reservation_cellar:
+                    cellar_id = res_reservation_cellar["success"]
+                else:
+                    return self.ShowError(res_reservation_cellar["error"])
+
+                res_web_cellar = cellar.GetWebCellar()
+
+                if "success" in res_web_cellar:
+                    web_cellar = res_web_cellar["success"]
+                else:
+                    errores.append("bodega web no encontrado")
 
                 _order = Order()
                 res_order = _order.InitWithId(v)
@@ -165,7 +184,7 @@ class OrderActionsHandler(BaseHandler):
 
                     if _order.state == Order.ESTADO_CONFIRMADO or _order.state == Order.ESTADO_PENDIENTE or _order.ESTADO_PARA_DESPACHO:
 
-                        res_cancel = order.cancel(v)
+                        res_cancel = order.cancel(v, cellar_id, web_cellar)
 
                         if "success" in res_cancel:
                             response = order.ChangeStateOrders(

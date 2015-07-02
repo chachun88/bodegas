@@ -8,6 +8,7 @@ from category import Category
 import psycopg2
 import psycopg2.extras
 from product_size import Product_Size
+from order import Order
 import math
 
 class Product(BaseModel):
@@ -1186,3 +1187,41 @@ class Product(BaseModel):
             cursor.close()
 
         return product_id
+
+    def reserved(self, sku, size):
+
+        product = Product()
+        product_id = product.getIdBySku(sku)
+
+        total = 0
+
+        cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = '''
+                select sum(quantity) as total from "Order_Detail" od
+                inner join "Order" o
+                on o.id = od.order_id
+                where od.product_id = %(product_id)s and od.size = %(size)s
+                and ((o.state = %(pending)s and o.payment_type = %(payment_type)s) 
+                   or o.state = %(confirmed)s or o.state = %(to_shipping)s)
+                group by od.product_id
+                '''
+        parameters = {
+            "product_id": product_id,
+            "size": size,
+            "pending": Order.ESTADO_PENDIENTE,
+            "payment_type": 1,
+            "confirmed": Order.ESTADO_CONFIRMADO,
+            "to_shipping": Order.ESTADO_PARA_DESPACHO
+        }
+        
+        try:
+            cursor.execute(query, parameters)
+            res = cursor.fetchone()
+            total = res['total']
+        except Exception, e:
+            print str(e)
+        finally:
+            cursor.close()
+            self.connection.close()
+
+        return total

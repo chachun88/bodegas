@@ -5,9 +5,8 @@ from basemodel import BaseModel
 # from bson.objectid import ObjectId
 
 from kardex import Kardex
-from product import Product
 from size import Size
-
+from product import Product
 from bson import json_util
 
 import psycopg2

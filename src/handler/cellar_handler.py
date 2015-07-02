@@ -634,11 +634,13 @@ class CellarEasyHandler(BaseHandler):
 
                     if int(units) >= int(quantity):
 
-                        order = Order()
-                        reserved = order.getReservedProducts()
+                        product = Product()
+                        reserved = product.reserved(sku, size)
 
-                        if sku in reserved:
-                            self.write(json_util.dumps({"state": "error", "message": "Producto reservado"}))
+                        salidas_permitidas = int(units) - reserved
+
+                        if int(quantity) > salidas_permitidas:
+                            self.write(json_util.dumps({"state": "error", "message": "ERROR!!! cantidad supera {} unidade(s) permitidas(s)".format(salidas_permitidas)}))
                         else:
                             if operation == "mov":
 

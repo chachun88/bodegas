@@ -4,10 +4,8 @@
 from basemodel import BaseModel
 import psycopg2
 import psycopg2.extras
-from cellar import Cellar
 from order_detail import OrderDetail
 from kardex import Kardex
-from product import Product
 
 class Order(BaseModel):
 
@@ -460,20 +458,9 @@ class Order(BaseModel):
             self.connection.close()
             cur.close()
 
-    def cancel(self, identificador):
-
-        cellar_id = None
-        web_cellar = None
-
-        cellar = Cellar()
-        res_reservation_cellar = cellar.GetReservationCellar()
+    def cancel(self, identificador, cellar_id, web_cellar):
 
         errores = []
-
-        if "success" in res_reservation_cellar:
-            cellar_id = res_reservation_cellar["success"]
-        else:
-            return self.ShowError(res_reservation_cellar["error"])
 
         if identificador == "":
             return self.ShowError("identificador viene vacio")
@@ -518,14 +505,6 @@ class Order(BaseModel):
                             errores.append("Pedido {} no es posible devolver stock a bodega".format(identificador))
                         else:
 
-                            cellar = Cellar()
-                            res_web_cellar = cellar.GetWebCellar()
-
-                            if "success" in res_web_cellar:
-                                web_cellar = res_web_cellar["success"]
-                            else:
-                                errores.append("bodega web no encontrado")
-
                             # mueve c/u de los productos desde la bodega de reserva a la bodega web
                             kardex = Kardex()
                             res = kardex.moveOrder(details, web_cellar, cellar_id)
@@ -545,55 +524,3 @@ class Order(BaseModel):
                 return self.ShowError(errores)
             else:
                 return self.ShowSuccessMessage("ok")
-
-    def getReservedOrders(self):
-
-        cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-        query = '''
-                select sku from "Product"
-                where id = any(%(products)s)
-                '''
-
-        parameters = {
-            "products": products
-        }
-
-        try:
-            cursor.execute(query, parameters)
-            _sku = cursor.fetchall()
-            self.connection.close()
-            for _s in _sku:
-                sku_list.append(_s['sku'])
-        except Exception, e:
-            print str(e)
-        finally:
-            cursor.close()
-            self.connection.close()
-
-    def reserved(self, sku, size):
-
-        product = Product()
-        product_id = product.getIdBySku(sku)
-
-        cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = '''
-                select sum(quantity) as total from "Order_Detail" od
-                inner join "Order" o
-                on o.id = od.order_id
-                where od.product_id = %(product_id)s and od.size = %(size)s
-                and ((o.state = %(pending)s and o.payment_type = %(payment_type)s) 
-                   or o.state = %(confirmed)s or o.state = %(to_shipping)s)
-                group by od.product_id
-                '''
-        parameters = {
-            "product_id": product_id,
-            "size": size,
-            "pending": Order.ESTADO_PENDIENTE,
-            "payment_type": 1,
-            "confirmed": Order.ESTADO_CONFIRMADO,
-            "to_shipping": Order.ESTADO_PARA_DESPACHO
-        }
-        return sku_list
-
-
