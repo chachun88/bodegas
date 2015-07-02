@@ -131,26 +131,6 @@ class ProductAddHandler(BaseHandler):
         else:
             image_name=''
         '''
-        image_order = self.get_argument("image_order", "").encode("utf-8").split(",")
-        filelist = self.request.files
-        product_sku = self.get_argument("sku", "")
-        photolist = ['','','','','','']
-
-        new_list = ['','','','','','']
-
-        for x in range(6):
-            photolist[x] = "{}_{}.png".format(x, product_sku.encode('utf-8'))
-
-        index = 0
-        for order in image_order:
-            if "image" in filelist:
-                filename = self.saveImage( filelist["image"][int(order)], product_sku, index )
-                new_list[index] = filename
-            else:
-                new_list[index] = photolist[int(order)]
-            index += 1
-
-        print new_list
 
         # if the category does not exist is created
         category = Category()
@@ -169,7 +149,33 @@ class ProductAddHandler(BaseHandler):
 
         # print "type:{} value:{}".format(type(res),res)
 
+        image_order = self.get_argument("image_order", "").encode("utf-8").split(",")
+        filelist = self.request.files
+        product_sku = self.get_argument("sku", "")
+
+        photolist = ['','','','','','']
+
+        new_list = ['','','','','','']
+
         if "success" in res:
+
+            photolist[0] = prod.image
+            photolist[1] = prod.image_2
+            photolist[2] = prod.image_3
+            photolist[3] = prod.image_4
+            photolist[4] = prod.image_5
+            photolist[5] = prod.image_6
+
+            index = 0
+            for order in image_order:
+                if "image" in filelist:
+                    filename = self.saveImage( filelist["image"][int(order)], product_sku, index )
+                    new_list[index] = filename
+                else:
+                    new_list[index] = photolist[int(order)]
+                index += 1
+
+            print new_list
 
             prod.category   = self.get_argument("category", "")
             prod.sku        = self.get_argument("sku", "")
@@ -216,6 +222,18 @@ class ProductAddHandler(BaseHandler):
                 self.write(res_save["error"])
 
         else:
+
+            for x in range(6):
+                photolist[x] = "{}_{}.png".format(x, product_sku.encode('utf-8'))
+
+            index = 0
+            for order in image_order:
+                if "image" in filelist:
+                    filename = self.saveImage( filelist["image"][int(order)], product_sku, index )
+                    new_list[index] = filename
+                else:
+                    new_list[index] = photolist[int(order)]
+                index += 1
 
             prod.category   = self.get_argument("category", "").encode("utf-8")
             prod.sku        = self.get_argument("sku", "").encode("utf-8")
