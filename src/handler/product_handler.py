@@ -294,7 +294,8 @@ class ProductEditHandler(BaseHandler):
         res_tags = tag.List(1,100000)
 
         sizes = []
-        res_sizes = prod.GetSizes()
+        size = Size()
+        res_sizes = size.list()
 
         if "success" in res_sizes:
             sizes = res_sizes["success"]
