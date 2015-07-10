@@ -5,6 +5,14 @@ $(document).ready(function() {
     image_list = new ImagesPreviewController(image_list_class);
 });
 
+
+var LPFile = function(name, img)
+{
+    this.name = name === undefined ? "" : name;
+    this.img = img === undefined ? "" : img;
+};
+
+
 var ImagesPreviewController = function(image_list_class) {
     this.model = [];
     this.view = new ImagesPreviewView(this, image_list_class);
@@ -22,6 +30,7 @@ ImagesPreviewView.prototype.initEvents = function() {
         function() {
 
             var files = $(this).get(0).files;
+
             if(files.length>6){
                 alert("No puede subir mas de 6 fotos");
                 $(this).val('');
@@ -54,11 +63,7 @@ ImagesPreviewView.prototype.initEvents = function() {
                         $(this).val('');
                         $(image_list_class).html('');
                     } else {
-                        self.loadImages( files, function()
-                        {
-                            // console.log("llega");
-                            self.controller.ClearFileList();
-                        } );
+                        self.loadImages( files );
                     }
                 }
             }
@@ -71,34 +76,36 @@ ImagesPreviewView.prototype.initEvents = function() {
 };
 
 
-ImagesPreviewView.prototype.loadImages = function(image_list, images_loaded) 
+ImagesPreviewView.prototype.loadImage = function(file) 
+{
+    var self = this;
+    var reader = new FileReader();
+    reader.onload = function(e) 
+    {
+        // console.log(e.target.result);
+        self.controller.setImageData(file.name, e.target.result);
+    };
+
+    self.controller.AddFile(file.name);
+    reader.readAsDataURL(file);
+};
+
+
+ImagesPreviewView.prototype.loadImages = function(image_list) 
 {
     var self = this;
     var counter = 0;
     var length = image_list.length;
-    images_loaded = images_loaded === undefined ? function(){} : images_loaded;
+    self.controller.ClearFileList();
 
     for (var i = 0; i < image_list.length; i++) 
     {
-        var _file = image_list[i];
-        var reader = new FileReader();
-        reader.onload = function(e) 
-        {
-            // console.log(e.target.result);
-            self.controller.AddFile(e.target.result, _file['name']);
-            counter += 1;
-
-            if (counter == length)
-            {
-                images_loaded();
-            }
-        };
-
-        reader.readAsDataURL(_file);
+        self.loadImage(image_list[i]);
     }
 };
 
-ImagesPreviewView.prototype.render = function() {
+ImagesPreviewView.prototype.render = function() 
+{
     // console.log("render");
     var images = this.controller.getImages();
     $(this.image_list_class).html("");
@@ -113,8 +120,23 @@ ImagesPreviewView.prototype.render = function() {
     }
 };
 
-ImagesPreviewController.prototype.AddFile = function(img, name) {
-    this.model.push({"name":name, "img": img});
+ImagesPreviewController.prototype.AddFile = function(name) 
+{
+    var file = new LPFile(name);
+    this.model.push(file);
+};
+
+ImagesPreviewController.prototype.setImageData = function(name, data) 
+{
+    for (var i = 0; i < this.model.length; i++) 
+    {
+        var image = this.model[i];
+        if (image.name === name)
+        {
+            image.img = data;
+        }
+    }
+
     this.view.render();
 };
 
