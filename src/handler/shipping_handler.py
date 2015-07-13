@@ -16,7 +16,7 @@ from ..model10.kardex import Kardex
 from ..model10.size import Size
 import datetime
 from lp.globals import enviroment, Enviroment
-
+import pytz
 from ..globals import *
 
 
@@ -347,7 +347,7 @@ class SaveTrackingCodeHandler(BaseHandler):
                         kardex = Kardex()
                         kardex.product_sku = sku
                         kardex.cellar_identifier = new_cellar_id
-                        kardex.date = str(datetime.datetime.now().isoformat())
+                        kardex.date = str(datetime.datetime.now(pytz.timezone('Chile/Continental')).isoformat())
                         kardex.operation_type = operation
                         kardex.units = quantity
                         kardex.price = balance_price

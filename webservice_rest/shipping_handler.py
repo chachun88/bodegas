@@ -7,7 +7,7 @@ from model10.product import Product
 from model10.kardex import Kardex
 from model10.order_detail import OrderDetail
 from model10.size import Size
-
+import pytz
 from base_handler import BaseHandler
 from bson import json_util
 
@@ -164,7 +164,7 @@ class SaveTrackingHandler(BaseHandler):
 
                         kardex.product_sku = sku
                         kardex.cellar_identifier = new_cellar_id
-                        kardex.date = str(datetime.datetime.now().isoformat())
+                        kardex.date = str(datetime.datetime.now(pytz.timezone('Chile/Continental')).isoformat())
 
                         kardex.operation_type = operation
                         kardex.units = quantity

@@ -7,7 +7,8 @@ import psycopg2
 import psycopg2.extras
 import datetime
 from product_size import Product_Size
-from size import Size
+import pytz
+
 
 class Kardex(BaseModel):
     def __init__(self):
@@ -319,7 +320,7 @@ class Kardex(BaseModel):
             kardex = Kardex()
             kardex.product_sku = d["sku"]
             kardex.cellar_identifier = cellar_id
-            kardex.date = str(datetime.datetime.now().isoformat())
+            kardex.date = str(datetime.datetime.now(pytz.timezone('Chile/Continental')).isoformat())
 
             kardex.operation_type = Kardex.OPERATION_MOV_OUT
             kardex.units = d['quantity']

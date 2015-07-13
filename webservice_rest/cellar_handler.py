@@ -9,6 +9,7 @@ from base_handler import BaseHandler
 from model10.cellar import Cellar
 from model10.kardex import Kardex
 from model10.size import Size
+import pytz
 
 
 class CellarAddHandler(BaseHandler):
@@ -166,7 +167,7 @@ class CellarProductsAddHandler(BaseHandler):
 
         kardex.product_sku = product_sku
         kardex.cellar_identifier = cellar_id
-        kardex.date = str(datetime.datetime.now().isoformat())
+        kardex.date = str(datetime.datetime.now(pytz.timezone('Chile/Continental')).isoformat())
 
         kardex.operation_type = operation
         kardex.units = quantity

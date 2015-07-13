@@ -6,6 +6,7 @@ from model10.cellar import Cellar
 from model10.kardex import Kardex
 from model10.order_detail import OrderDetail
 from bson import json_util
+import pytz
 
 from base_handler import BaseHandler
 import datetime
@@ -49,7 +50,7 @@ class AddOrderHandler(BaseHandler):
         order = Order()
 
         order.id                = self.get_argument("id", "")
-        order.date              = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+        order.date              = datetime.now(pytz.timezone('Chile/Continental')).strftime('%d-%m-%Y %H:%M:%S')
         order.salesman          = self.get_argument("salesman", "")
         order.customer          = self.get_argument("customer", "")
         order.subtotal          = self.get_argument("subtotal", "")

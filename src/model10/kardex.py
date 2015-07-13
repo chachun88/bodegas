@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from basemodel import BaseModel
-# from cellar import Cellar
+import pytz
 import psycopg2
 import psycopg2.extras
 import datetime
@@ -24,7 +24,7 @@ class Kardex(BaseModel):
         self._balance_units = 0
         self._balance_price = 0.0
         self._balance_total = 0.0
-        self._date = str(datetime.datetime.now().isoformat())
+        self._date = str(datetime.datetime.now(pytz.timezone('Chile/Continental')).isoformat())
         self._user = ""
         self._product_id = ""
 
@@ -331,7 +331,7 @@ class Kardex(BaseModel):
             kardex = Kardex()
             kardex.product_sku = d["sku"]
             kardex.cellar_identifier = cellar_id
-            kardex.date = str(datetime.datetime.now().isoformat())
+            kardex.date = str(datetime.datetime.now(pytz.timezone('Chile/Continental')).isoformat())
 
             kardex.operation_type = Kardex.OPERATION_MOV_OUT
             kardex.units = d['quantity']

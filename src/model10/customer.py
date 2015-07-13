@@ -7,7 +7,7 @@ from basemodel import BaseModel
 from contact import Contact
 import psycopg2
 import psycopg2.extras
-
+import pytz
 from datetime import datetime
 
 ESTADO_PENDIENTE = 1
@@ -378,7 +378,7 @@ class Customer(BaseModel):
                 parametros = {
                 "ids":map(int, results),
                 "status":int(state),
-                "approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+                "approval_date":datetime.now(pytz.timezone('Chile/Continental')).strftime('%d-%m-%Y %H:%M:%S')
                 }
                 print cur.mogrify(query,parametros)
                 cur.execute(query,parametros)

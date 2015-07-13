@@ -21,6 +21,8 @@ from datetime import datetime
 import sendgrid
 from bson import json_util
 
+import pytz
+
 ACCIONES_ELIMINAR = 1
 ACCIONES_CONFIRMAR = 2
 ACCIONES_PARA_DESPACHO = 3
@@ -70,7 +72,7 @@ class AddOrderHandler(BaseHandler):
         order = Order()
 
         order.id = self.get_argument("id", "")
-        order.date = datetime.now()
+        order.date = datetime.now(pytz.timezone('Chile/Continental'))
         order.salesman = self.get_argument("salesman", "")
         order.customer = self.get_argument("customer", "")
         order.subtotal = self.get_argument("subtotal", "")
