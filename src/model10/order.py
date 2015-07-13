@@ -209,7 +209,7 @@ class Order(BaseModel):
 
         query = '''
                 select o.id,
-                to_char(o.date, 'DD/MM/YY HH12:MI') as date,
+                to_char(o.date, 'DD/MM/YY HH24:MI') as date,
                 o.state,
                 o.source,
                 o.items_quantity,
