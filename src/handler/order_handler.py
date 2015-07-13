@@ -72,7 +72,7 @@ class AddOrderHandler(BaseHandler):
         order = Order()
 
         order.id = self.get_argument("id", "")
-        order.date = datetime.now(pytz.timezone('Chile/Continental'))
+        order.date = datetime.now(pytz.timezone('Chile/Continental').isoformat())
         order.salesman = self.get_argument("salesman", "")
         order.customer = self.get_argument("customer", "")
         order.subtotal = self.get_argument("subtotal", "")
