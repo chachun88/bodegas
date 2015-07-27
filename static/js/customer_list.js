@@ -77,19 +77,20 @@ $(document).ready(function(){
                     return '<input type="checkbox" name="clientes" class="iCheck" value="' + row.id + '">';
                 }
             },
-            { "targets": 1,"data": "status", "orderable": true },
-            { "targets": 2,"data": "name", "orderable": true },
-            { "targets": 3,"data": "rut", "orderable": true },
-            { "targets": 4,"data": "type", "orderable": true },
+            { "targets": 1, "data": "status", "orderable": true },
+            { "targets": 2, "data": "name", "orderable": true },
+            { "targets": 3, "data": "email", "orderable": true },
+            { "targets": 4, "data": "rut", "orderable": true },
+            { "targets": 5, "data": "type", "orderable": true },
             { 
-                "targets": 5,
+                "targets": 6,
                 "data": "bussiness",
                 "orderable": true
             },
-            { "targets": 6,"data": "registration_date", "orderable": true },
-            { "targets": 7,"data": "last_view", "orderable": true },
+            { "targets": 7, "data": "registration_date", "orderable": true },
+            { "targets": 8, "data": "last_view", "orderable": true },
             { 
-                "targets": 8,
+                "targets": 9,
                 "data": null, 
                 "orderable": false,
                 render: function ( data, type, row ) {

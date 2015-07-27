@@ -275,7 +275,8 @@ class Customer(BaseModel):
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         query = '''\
-                select u.id,
+                select  u.id,
+                        u.email,
                         u.name,
                         nullif(u.rut,'') as rut,
                         ut.name as type,
