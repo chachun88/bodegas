@@ -64,7 +64,7 @@ class CustomerHandler(BaseHandler):
         if "success" in res_total_pages:
             total_pages = res_total_pages["success"]
 
-        print clientes
+        # print clientes
 
         self.render("customer/list.html",
                     side_menu=self.side_menu,
