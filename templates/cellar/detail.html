@@ -2,13 +2,23 @@
 
 {% block title %}Bodega "{{ cellar.name }}" {% end %}
 {% block caption %}Se muestra una lista de los productos disponibles en la bodega{% end %}
-
+{% block css %}
+    <link href="/{{nocache_static}}/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="/{{nocache_static}}/css/dataTables.tableTools.min.css" rel="stylesheet">
+{% end %}
+{% block javascript %}
+<!-- <script type="text/javascript" src="/{{nocache_static}}/js/lp.js" charset="utf-8"></script> -->
+<script type="text/javascript" src="/{{nocache_static}}/js/jquery.dataTables.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/{{nocache_static}}/js/dataTables.tableTools.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/{{nocache_static}}/js/cellar/detail.js" charset="utf-8"></script>
+{% end %}
 {% block body %}
 <div class="col-md-12">
 	<section class="widget">
 		<div class="body">
-		<a type="button" href="/cellar" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm" style="float:right; ">Volver</a>
-			<table class="table table-striped">
+			<a type="button" href="/cellar" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm" style="float:right; ">Volver</a>
+			<input type="hidden" id="cellar_id" name="cellar_id" value="{{cellar.id}}">
+			<table id="cellar_detail" class="table table-striped">
 				<thead>
 					<tr>
 						<th>SKU</th>
@@ -19,20 +29,6 @@
 						<th>Saldo ($)</th>
 					</tr>
 				</thead>
-				<tbody>
-					{% for p in productos %}
-						{% if int(p["balance_units"]) != 0%}
-						<tr>
-							<td>{{ p["sku"]}}</td>
-							<td>{{ p["name"] }}</td>
-							<td>{{ p["size"] }}</td>
-							<td>{{ p["color"] }}</td>
-							<td>{{ int(p["balance_units"]) }}</td>
-							<td>{{ MoneyFormat(p["balance_total"]) }}</td>	
-						</tr>
-						{% end %}
-					{% end %}
-				</tbody>
 			</table>
 		</div>
 	</section>

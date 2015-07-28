@@ -366,15 +366,40 @@ class Cellar(BaseModel):
             self.connection.close()
             cur.close()
 
-    def ListProducts(self, page=1, items=30):
+    def ListProducts(self, page=1, items=30, column='name', direction='asc', term=''):
+
+        offset = (int(page)-1)*items
 
         rtn_data = []
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''select distinct product_sku, size_id from "Kardex" where cellar_id = %(id)s order by product_sku, size_id'''
+        p = re.compile(r'^(<|>|<=|>=|=)(\d+)$')
+        m = p.match(term)
+
+        where = ''
+
+        if not m and term != '':
+            where = " where lower(p.sku) like %(term)s or lower(p.name) like %(term)s"
+
+        query = '''
+                select product_sku, size_id
+                from
+                (select distinct product_sku, size_id 
+                from "Kardex" 
+                where cellar_id = %(id)s 
+                order by product_sku, size_id) k
+                inner join "Product" p
+                on p.sku = k.product_sku
+                {where}
+                limit %(limit)s
+                offset %(offset)s'''.format(where=where)
+
         parametros = {
-            "id": self.id
+            "id": self.id,
+            "limit": items,
+            "offset": offset,
+            "term": '%{}%'.format(term)
         }
         cur.execute(query, parametros)
         pproduct_sku = cur.fetchall()
@@ -408,7 +433,28 @@ class Cellar(BaseModel):
                         prod_print["size_id"] = kardex.size_id
                         prod_print["size"] = size.name
 
-                        rtn_data.append(prod_print)
+                        if m:
+                            # print "match"
+                            operador = m.group(1)
+                            valor = m.group(2)
+
+                            if operador == '<':
+                                if kardex.balance_units < int(valor):
+                                    rtn_data.append(prod_print)
+                            elif operador == '>':
+                                if kardex.balance_units > int(valor):
+                                    rtn_data.append(prod_print)
+                            elif operador == '>=':
+                                if kardex.balance_units >= int(valor):
+                                    rtn_data.append(prod_print)
+                            elif operador == '<=':
+                                if kardex.balance_units <= int(valor):
+                                    rtn_data.append(prod_print)
+                            elif operador == '=':
+                                if kardex.balance_units == int(valor):
+                                    rtn_data.append(prod_print)
+                        else:
+                            rtn_data.append(prod_print)
 
                     # else:
                     #     return res_size_id
@@ -419,7 +465,49 @@ class Cellar(BaseModel):
             else:
                 return response_obj
 
-        return {"success": rtn_data}
+        if direction == 'desc':
+            newlist = sorted(rtn_data, key=lambda k: k[column], reverse=True)
+        else:
+            newlist = sorted(rtn_data, key=lambda k: k[column])
+
+        return {"success": newlist}
+
+    def TotalProducts(self, term=''):
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        where = ''
+        if term != '':
+            where = " where lower(p.sku) like %(term)s or lower(p.name) like %(term)s"
+
+        query = '''
+                select count(1) as total
+                from
+                (select distinct product_sku, size_id 
+                from "Kardex" 
+                where cellar_id = %(id)s 
+                order by product_sku, size_id) k
+                inner join "Product" p
+                on p.sku = k.product_sku
+                {where}
+                '''.format(where=where)
+
+        parametros = {
+            "id": self.id,
+            "term": '%{}%'.format(term)
+        }
+
+        try:
+            # print cur.mogrify(query, parametros)
+            cur.execute(query, parametros)
+            return cur.fetchone()['total']
+        except Exception, e:
+            print str(e)
+            return 0
+        finally:
+            cur.close()
+            self.connection.close()
+
 
     def ListKardex(self, day, fromm, until):
 

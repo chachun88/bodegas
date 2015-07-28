@@ -17,6 +17,7 @@ from ..model10.kardex import Kardex
 from ..model10.order import Order
 
 from bson import json_util
+import re
 
 
 class CellarHandler(BaseHandler):
@@ -426,6 +427,7 @@ class CellarInputHandler(BaseHandler):
         else:
             self.write(response["error"])
 
+
 class CellarDetailHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -434,20 +436,53 @@ class CellarDetailHandler(BaseHandler):
 
         cellar = Cellar()
         cellar.InitById(idd)
-        res = cellar.ListProducts()
-        productos = []
+        # res = cellar.ListProducts()
+        # productos = []
 
-        if "success" in res:
-            productos = res["success"]
-        else:
-            print res
+        # if "success" in res:
+        #     productos = res["success"]
+        # else:
+        #     print res
 
-        self.render("cellar/detail.html", side_menu=self.side_menu, cellar=cellar, productos=productos)
+        self.render("cellar/detail.html", side_menu=self.side_menu, cellar=cellar)
 
     @tornado.web.authenticated
     def post(self):
 
-        pass
+        idd = self.get_argument("id", "")
+        start = int(self.get_argument("start", 0))
+        items = self.get_argument("items", 20)
+        term = self.get_argument("search[value]","")
+
+        columns = [
+            "sku",
+            "name",
+            "size",
+            "color",
+            "balance_units",
+            "balance_total"
+        ]
+
+        column = int(self.get_argument("order[0][column]"))
+        direction = self.get_argument("order[0][dir]")
+
+        page = int(start / items) + 1
+
+        cellar = Cellar()
+        cellar.InitById(idd)
+        res = cellar.ListProducts(page, items, columns[column], direction, term)
+        productos = res["success"]
+
+        if "success" in res:
+            result = {
+                "recordsTotal": cellar.TotalProducts(),
+                "recordsFiltered": cellar.TotalProducts(term),
+                "data": productos
+            }
+        else:
+            print res
+
+        self.write(json_util.dumps(result))
 
 class CellarComboboxHandler(BaseHandler):   
 
