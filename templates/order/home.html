@@ -107,66 +107,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for p in pedidos %}
-                    <tr>
-                        <td>
-                            {% if int(p["state"]) != 3 %}
-                                <input type="checkbox" name="pedidos" class="iCheck" value="{{p['order_id']}}" tracking-code="-">
-                            {% else %}
-                                <input type="checkbox" name="pedidos" class="iCheck" value="{{p['order_id']}}" tracking-code="{{p['tracking_code']}}">
-                            {% end %}
-                        </td>
-                        <td>
-                            {{p["order_id"]}}
-                        </td>
-                        <td>
-                            {{p["date"]}}
-                        </td>
-                        <td>
-                            {{p["customer"]}}
-                        </td>
-                        <td>
-                            {{ p["tipo_cliente"] }}
-                        </td>
-                        <td>
-                            {{p["source"]}}
-                        </td>
-                        <!-- <td>
-                            {{p["items_quantity"]}}
-                        </td> -->
-                        <td>
-                            {{money_format(p["total"])}}
-                        </td>
-                        <td>
-                            {% if int(p["state"]) == 1 %}
-                                {% if int(p["payment_type"]) == 1 %}
-                                    <span class="label label-warning">POR CONFIRMAR</span>
-                                {% elif int(p["payment_type"]) == 2 %}
-                                    <span class="label label-warning">RECHAZADO</span>
-                                {% end %}
-                            {% elif int(p["state"]) == 2 %}
-                                <span class="label label-important">CONFIRMADO</span>
-                            {% elif int(p["state"]) == 3 %}
-                                <span class="label label-info">LISTO PARA DESPACHO</span>
-                            {% elif int(p["state"]) == 4 %}
-                                <span class="label label-success">DESPACHADO</span>
-                            {% else %}
-                                <span class="label label-default">CANCELADO</span>
-                            {% end %}
-                        </td>
-                        <td>
-                            {% if int(p["payment_type"]) == 1 %}
-                                TRANSFERENCIA
-                            {% elif int(p["payment_type"]) == 2 %}
-                                WEBPAY
-                            {% end %}
-                        </td>
-                        <td></td>
-                        <td>
-                            <a class="btn btn-primary" href="/order-detail/list?order_id={{p['order_id']}}">Ver Detalle</a>
-                        </td>
-                    </tr>
-                    {% end %}
                 </tbody>
             </table>
             <footer></footer>
