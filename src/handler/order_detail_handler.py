@@ -11,6 +11,7 @@ from basehandler import BaseHandler
 from ..model10.order_detail import OrderDetail
 from ..model10.order import Order
 from ..model10.webpay import Webpay
+from ..model10.contact import Contact
 
 
 class ListOrderDetailHandler(BaseHandler):
@@ -29,8 +30,20 @@ class ListOrderDetailHandler(BaseHandler):
 
         webpay_data = {}
 
+        datos_facturacion = Contact()
+        datos_facturacion.InitById(order.billing_id)
+        datos_despacho = Contact()
+        datos_despacho.InitById(order.billing_id)
+
         if "error" in response:
-            self.render("order_detail/list.html",dn=response["error"],order_detail=od_list,order=order, webpay_data=webpay_data)
+            self.render("order_detail/list.html",
+                        dn=response["error"],
+                        order_detail=od_list,
+                        order=order,
+                        webpay_data=webpay_data,
+                        datos_despacho=datos_despacho,
+                        datos_facturacion=datos_facturacion)
+
         elif order.payment_type == 2:
 
             webpay = Webpay()
@@ -100,17 +113,42 @@ class ListOrderDetailHandler(BaseHandler):
                 print res_webpay["error"]
 
         if order_id == "":
-            self.render("order_detail/list.html",dn="Pedido solicitado no existe",order_detail=od_list,order=order, webpay_data=webpay_data)
+            self.render("order_detail/list.html",dn="Pedido solicitado no existe",
+                        order_detail=od_list,
+                        order=order,
+                        webpay_data=webpay_data,
+                        datos_facturacion=datos_facturacion,
+                        datos_despacho=datos_despacho)
         else:
             try:
                 response = order_detail.ListByOrderId(order_id)
                 if "success" in response:
                     od_list = response["success"]
-                    self.render("order_detail/list.html",dn="",order_detail=od_list,order=order, webpay_data=webpay_data)
+
+                    self.render("order_detail/list.html",
+                                dn="",
+                                order_detail=od_list,
+                                order=order,
+                                webpay_data=webpay_data,
+                                datos_despacho=datos_despacho,
+                                datos_facturacion=datos_facturacion)
                 else:
-                    self.render("order_detail/list.html",dn=response["error"],order_detail=od_list,order=order, webpay_data=webpay_data)
+                    self.render("order_detail/list.html",
+                                dn=response["error"],
+                                order_detail=od_list,
+                                order=order,
+                                webpay_data=webpay_data,
+                                datos_despacho=datos_despacho,
+                                datos_facturacion=datos_facturacion)
             except Exception, e:
-                self.render("order_detail/list.html",dn="bpf",error=str(e),order_detail=od_list,order=order, webpay_data=webpay_data)
+                self.render("order_detail/list.html",
+                            dn="bpf",
+                            error=str(e),
+                            order_detail=od_list,
+                            order=order,
+                            webpay_data=webpay_data,
+                            datos_facturacion=datos_facturacion,
+                            datos_despacho=datos_despacho)
 
 
 class AddOrderDetailHandler(BaseHandler):

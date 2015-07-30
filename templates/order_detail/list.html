@@ -26,41 +26,72 @@
 				<div class="row">
 					<div class="col-md-1"></div>
 					<div class="col-md-10">
-						<h3>Datos del Cliente</h3>
+						<h3>Datos del facturaci&oacute;n</h3>
 						<table class="table table-bordered">
 							<thead>
-								<tr>
-									
-									
-									
-									
-									
-								</tr>
+								<tr></tr>
 							</thead>
 							<tbody>
 								<tr>
 									<th>Cliente</th>
-									<td>{{order.customer}}</td>
+									<td>{{datos_facturacion.name}}</td>
 								</tr>
 								<tr>
 									<th>Email</th>
-									<td>{{order.customer_email}}</td>
+									<td>{{datos_facturacion.email}}</td>
 								</tr>
 								<tr>
 									<th>Tel&eacute;fono</th>
-									<td>{{order.telephone}}</td>
+									<td>{{datos_facturacion.telephone}}</td>
 								</tr>
 								<tr>
 									<th>Direcci&oacute;n</th>
-									<td>{{order.address}}</td>
+									<td>{{datos_facturacion.address}}</td>
 								</tr>
 								<tr>
 									<th>Comuna</th>
-									<td>{{order.city}}</td>
+									<td>{{datos_facturacion.city}}</td>
 								</tr>
 								<tr>
 									<th>Informaci&oacute;n Adicional</th>
-									<td>{{order.additional_info}}</td>
+									<td>{{datos_facturacion.additional_info}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-10">
+						<h3>Datos de Despacho</h3>
+						<table class="table table-bordered">
+							<thead>
+								<tr></tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th>Cliente</th>
+									<td>{{datos_despacho.name}}</td>
+								</tr>
+								<tr>
+									<th>Email</th>
+									<td>{{datos_despacho.email}}</td>
+								</tr>
+								<tr>
+									<th>Tel&eacute;fono</th>
+									<td>{{datos_despacho.telephone}}</td>
+								</tr>
+								<tr>
+									<th>Direcci&oacute;n</th>
+									<td>{{datos_despacho.address}}</td>
+								</tr>
+								<tr>
+									<th>Comuna</th>
+									<td>{{datos_despacho.city}}</td>
+								</tr>
+								<tr>
+									<th>Informaci&oacute;n Adicional</th>
+									<td>{{datos_despacho.additional_info}}</td>
 								</tr>
 							</tbody>
 						</table>
