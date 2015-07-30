@@ -132,3 +132,7 @@ th.state-filter {vertical-align: middle !important;}
 section#detalle_pedido th, section#detalle_pedido td{
     font-size: 13px;
 }
+.btn-back {
+    float: right;
+    margin-bottom: 15px;
+}
