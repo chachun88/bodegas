@@ -20,7 +20,7 @@ class ProductListHandler(BaseHandler):
         self.set_active(Menu.PRODUCTOS_LISTA)  # change menu active item
 
         page = self.get_argument("page", 1)
-        items = self.get_argument("items", 30)
+        items = int(self.get_argument("length", 20))
         dn = self.get_argument("dn", "")
         message = self.get_argument("message", "")
 
@@ -53,7 +53,7 @@ class ProductListHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
         start = int(self.get_argument("start", 0))
-        items = self.get_argument("items", 20)
+        items = int(self.get_argument("length", 20))
         term = self.get_argument("search[value]","")
         query = ""
 

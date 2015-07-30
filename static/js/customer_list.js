@@ -35,7 +35,7 @@ $(document).ready(function(){
                 //d.start = d.start
             }
         },
-        "lengthChange": false,
+        "lengthChange": true,
         "pageLength": 20,
         "dom": 'T<"clear">lfrtip',
         "tableTools": {
