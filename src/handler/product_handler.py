@@ -77,6 +77,8 @@ class ProductAddHandler(BaseHandler):
 
         self.set_active(Menu.PRODUCTOS_CARGA)  # change menu active item
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         tags = []
         tag = Tag()
         res_tags = tag.List(1,100000)
@@ -91,8 +93,13 @@ class ProductAddHandler(BaseHandler):
         if "success" in res_tags:
             tags = res_tags["success"]
 
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
         prod = Product()
-        self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="add", tags=tags, sizes=sizes)
+        self.render("product{}/add.html".format(pjax_str), dn="", side_menu=self.side_menu, product=prod, tit="add", tags=tags, sizes=sizes)
 
     @tornado.web.authenticated
     def post(self):

@@ -379,7 +379,14 @@ class ProductsExcelHandler(BaseHandler):
             "warnings" : warnings
         }
 
-        self.render("product/out.html", args=args)
+        pjax = bool(self.get_argument("_pjax", False))
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
+        self.render("product{}/out.html".format(pjax_str), args=args)
 
     @tornado.web.authenticated
     @tornado.web.asynchronous

@@ -37,7 +37,14 @@ class OrderHandler(BaseHandler):
 
         self.set_active(Menu.PEDIDOS_LISTA)
 
-        self.render("order/home.html",
+        pjax = bool(self.get_argument("_pjax", False))
+
+        pjax_str = ''
+
+        if pjax:
+          pjax_str = '/ajax'
+
+        self.render("order{}/home.html".format(pjax_str),
                     side_menu=self.side_menu,
                     dn=self.get_argument("dn", ""))
 

@@ -9,12 +9,7 @@
     <link href="/{{nocache_static}}/css/dataTables.tableTools.min.css" rel="stylesheet">
     <link href="/{{nocache_static}}/css/fastedit.css" rel="stylesheet">
 {% end %}
-{% block javascript %}
-<script type="text/javascript" src="/{{nocache_static}}/js/lp.js" charset="utf-8"></script>
-<script type="text/javascript" src="/{{nocache_static}}/js/jquery.dataTables.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="/{{nocache_static}}/js/dataTables.tableTools.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="/{{nocache_static}}/js/product_list.js" charset="utf-8"></script>
-{% end %}
+
 {% block body %}
     {% if int(2) in current_user["permissions"] %}
         {% if dn == "bpf" %}
