@@ -1,5 +1,5 @@
 body {
-    background-image: url('../img/mosaic-background-9.jpg') !important;
+    background: url('../img/mosaic-background-9.jpg') no-repeat center center fixed !important;
     background-size: 100% !important;
 }
 th{
