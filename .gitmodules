@@ -1,3 +1,3 @@
 [submodule "src/model"]
 	path = src/model
-	url = http://gogs.ondev.today/lp/bodegas.model.git
+url=http://gogs.ondev.today/loadingplay/bodegas.model.git
