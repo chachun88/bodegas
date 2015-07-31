@@ -5,6 +5,9 @@ body {
 th{
     text-transform: capitalize;
 }
+nav#sidebar {
+    position: fixed !important;
+}
 #perm.form-control{
   overflow:visible; 
   height: auto;
