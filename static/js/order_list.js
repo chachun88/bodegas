@@ -30,9 +30,11 @@ var ValidateTracking = function(){
                     if(html_res != ''){
                         alert(html_res);
                     } else {
+                        $('#myModal').modal('hide');
                         $("#pedidos").DataTable().ajax.reload(null, false);
                     }
                 } else {
+                    $('#myModal').modal('hide');
                     $("#pedidos").DataTable().ajax.reload(null, false);
                 }
             }
@@ -253,9 +255,11 @@ $(document).ready(function(){
                         if(html_res !== ''){
                             alert(html_res);
                         } else {
+                            $('#myModal').modal('hide');
                             $("#pedidos").DataTable().ajax.reload(null, false);
                         }
                     } else {
+                        $('#myModal').modal('hide');
                         $("#pedidos").DataTable().ajax.reload(null, false);
                     }
                 }
