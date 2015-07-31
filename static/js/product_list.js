@@ -84,7 +84,10 @@ var FastEdit = function(form_id){
     });
 };
 
-$(document).ready(function(){
+$(document).on('pjax:end ready',function(){
+
+    console.log("sajkdhasjkd");
+
     $('#fastedit-textarea').wysihtml5({
         "font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
         "emphasis": true, //Italics, bold, etc. Default true

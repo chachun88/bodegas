@@ -46,7 +46,7 @@ var ValidateTracking = function(){
 }
 
 
-$(document).ready(function(){
+$(document).on('pjax:end ready',function(){
 
     $('#pedidos').DataTable({
         "serverSide": true,

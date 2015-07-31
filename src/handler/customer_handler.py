@@ -54,6 +54,8 @@ class CustomerHandler(BaseHandler):
         page = int(self.get_argument("page", 1))
         items = int(self.get_argument("items", 20))
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         total_pages = 1
 
         customer = Customer()
@@ -64,9 +66,12 @@ class CustomerHandler(BaseHandler):
         if "success" in res_total_pages:
             total_pages = res_total_pages["success"]
 
-        # print clientes
+        pjax_str = ''
 
-        self.render("customer/list.html",
+        if pjax:
+            pjax_str = '/ajax'
+
+        self.render("customer{}/list.html".format(pjax_str),
                     side_menu=self.side_menu,
                     clientes=clientes, 
                     dn=self.get_argument("dn", ""),

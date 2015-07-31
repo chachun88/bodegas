@@ -29,9 +29,16 @@ class ReportHandler(BaseHandler):
         fromm = self.get_argument("from", "from")
         until = self.get_argument("until", "until")
 
+        pjax = bool(self.get_argument("_pjax", False))
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
         data = Cellar().ListKardex(day, fromm, until)
 
-        self.render("report/home.html", 
+        self.render("report{}/home.html".format(pjax_str), 
                     side_menu=self.side_menu, 
                     data=data,
                     data_str=json_util.dumps(data))

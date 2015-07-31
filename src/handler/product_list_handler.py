@@ -24,6 +24,8 @@ class ProductListHandler(BaseHandler):
         dn = self.get_argument("dn", "")
         message = self.get_argument("message", "")
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         product = Product()
         product_list = []
 
@@ -39,9 +41,11 @@ class ProductListHandler(BaseHandler):
         if "success" in res_total_pages:
             total_pages = res_total_pages["success"]
 
-        # print total_pages
+        pjax_str = ''
 
-        self.render("product/list.html", 
+        if pjax:
+            pjax_str = '/ajax'
+        self.render("product{}/list.html".format(pjax_str), 
                     dn=dn, 
                     side_menu=self.side_menu,
                     product_list=product_list,

@@ -1,0 +1,339 @@
+{% extends "../base_ajax.html" %}
+
+{% block javascript %}
+<script src="/{{nocache_static}}/js/multiple_upload.js"></script>
+{% end %}
+
+{% block title %}
+	{% if tit == "edit" %}
+		Editar Producto 
+	{% elif tit == "add" %}
+		Agregar Producto
+	{% end %}
+{% end %}
+
+{% block caption %}
+	{% if int(2) in current_user["permissions"] %}
+		{% if tit == "edit" %}
+			permite editar un producto en el maestro de productos 
+		{% elif tit == "add" %}
+			permite agregar un producto al maestro de productos
+		{% end %}
+	{% else %}
+		sección no autorizada
+	{% end %}
+{% end %}
+
+{% block body %}
+	{% if int(2) in current_user["permissions"] %}
+		{% if dn == "bpf" %}
+		<div class="alert alert-warning alert-success-nohidden">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<strong><i class="fa fa-check"></i> Problema al agregar productos!</strong> SKU ya existe.
+		</div>
+		{% end %}
+		<div class="col-md-7">
+			<section class="widget">
+				<div class="body">
+					<form action="/product/add" id="product-form" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+						<fieldset>
+						{% if tit == "edit" %}
+							<legend class="section">Editar Producto</legend>
+						{% elif tit == "add"  %}
+							<legend class="section">Agregar Producto</legend>
+						{% end %}
+							<div class="control-group">
+								<label class="control-label" for="prefix">Categoría</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Categoría" name="category" type="text" class="form-control" value="{{ product.category }}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">SKU</label>
+								<div class="controls form-group">
+									<div class="col-sm-8">
+									{% if tit == "edit" %}
+									<input placeholder="SKU" id="sku" name="sku_edit" required="required" type="text" class="form-control" value="{{ product.sku }}" disabled>
+									<input name="sku" type="hidden" class="form-control" value="{{ product.sku }}">
+									{% else %}
+									<input placeholder="SKU" id="sku" name="sku" required="required" type="text" class="form-control" value="{{ product.sku }}" required>
+									{% end %}
+									</div>
+								</div>
+							</div>
+							<!-- <div class="control-group">
+								<label class="control-label" for="prefix">Artículo</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Artículo" id="upc" name="upc" type="text" class="form-control" value="{{ product.upc }}"></div>
+								</div>
+							</div> -->
+							<div class="control-group">
+								<label class="control-label" for="prefix">Nombre</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Nombre" id="name" name="name" required="required" type="text" class="form-control" value="{{ product.name }}" required></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Descripción</label>
+								<div class="controls form-group">
+									<div class="col-sm-8">
+										<!-- <input placeholder="Descripción" name="description" type="text"  value=""> -->
+										<textarea id="wysihtml5-textarea" placeholder="Descripci&oacute;n" name="description" class="form-control" autofocus>{{ product.description }}</textarea>
+									</div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Tallas</label>
+								<div class="controls form-group">
+									{% for s in sizes %}
+									<input type="checkbox" name="size" value="{{s['name']}}" {% if s['name'] in product.size %}checked{% end %}> {{s['name']}}<br/>
+									{% end %}
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Combinación</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Color" id="colors" name="color" type="text" class="form-control" value="{{ product.color }}" required></div>
+								</div>
+							</div>
+							{% try %}
+							<div class="control-group">
+								<label class="control-label" for="prefix">Precio de compra</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Precio de compra" name="price" type="number" step="any" min="1" class="form-control" value="{{ product.price }}" required></div>
+								</div>
+							</div>
+							{% except %}
+								<div class="control-group">
+									<label class="control-label" for="prefix">Precio de compra</label>
+									<div class="controls form-group">
+										<div class="col-sm-8"><input placeholder="Precio de compra" id="price" name="price" type="number" step="any" min="1"  class="form-control" value="0" required></div>
+									</div>
+								</div>
+							{% end %}
+							<div class="control-group">
+								<label class="control-label" for="prefix">Precio de venta</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Precio de venta" id="sell_price" name="sell_price" type="number" step="any" min="1"  class="form-control" value="{{product.sell_price}}" required></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Precio de venta por mayor (neto)</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Precio de venta por mayor" id="bulk_price" name="bulk_price" type="number" step="any" min="1"  class="form-control" value="{{product.bulk_price}}" required></div>
+								</div>
+							</div>
+                            <div class="control-group">
+                                <label class="control-label" for="prefix">Precio promoci&oacute;n</label>
+                                <div class="controls form-group">
+                                    <div class="col-sm-8"><input placeholder="Precio promoci&oacute;n" id="promotion_price" name="promotion_price" type="number" step="any" min="0"  class="form-control" value="{{product.promotion_price}}"></div>
+                                </div>
+                            </div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Proveedor</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Proveedor" name="manufacturer"  type="text" class="form-control" value="{{ product.manufacturer }}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Marca</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Marca" name="brand" type="text" class="form-control" value="{{ product.brand }}"></div>
+								</div>
+							</div>
+							{% if tit == "edit" %}
+							<div class="control-group">
+								<label class="control-label" for="prefix">Tags</label>
+								<div class="controls form-group">
+									<div class="col-sm-8">
+										<select data-placeholder="Tags Asociados"
+			                                class="chzn-select select-block-level" tabindex="-1"
+			                                multiple="multiple"
+			                                name="tags" 
+			                                id="multiple">
+			                                {% for p in tags %}
+			                                    {% if p['id'] in product.tags %}
+			                                        <option value="{{p['id']}}" selected="selected">{{p['name']}}</option>
+			                                    {% else %}
+			                                        <option value="{{p['id']}}">{{p['name']}}</option>
+			                                    {% end %}
+			                                {% end %}
+			                            </select>
+			                        </div>
+								</div>
+							</div>
+							{% else %}
+							<div class="control-group">
+								<label class="control-label" for="prefix">Tags</label>
+								<div class="controls form-group">
+									<div class="col-sm-8">
+										<select data-placeholder="Tags Asociados"
+			                                class="chzn-select select-block-level" tabindex="-1"
+			                                multiple="multiple"
+			                                name="tags" 
+			                                id="multiple">
+			                                {% for p in tags %}
+			                                    <option value="{{p['id']}}">{{p['name']}}</option>
+			                                {% end %}
+			                            </select>
+			                        </div>
+								</div>
+							</div>
+							{% end %}
+							<div class="control-group">
+								<label class="control-label" for="prefix">Delivery</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Delivery" name="delivery"  type="numeric" class="form-control" value="{{product.delivery}}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Cu&aacute;l es tu talla</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Cu&aacute;l es tu talla" name="which_size"  type="text" class="form-control" value="{{product.which_size}}"></div>
+								</div>
+							</div>
+							
+							<div class="control-group">
+								<label class="control-label" for="prefix">Imagen</label>
+								<div class="controls form-group">
+									<div class="col-sm-8">
+										<input type="file" name="image" multiple />
+										<input type="hidden" name="image_order">
+										<script type="template" class="template-image" >
+										    <li>
+												<img src=";;src;;" image-name=";;image_name;;" index=";;index;;"/>
+										    </li>
+										</script>
+										<ul class="image-list col-sm-12">
+											
+											{% if product.image != '' %}
+												<li>
+													<img src="/image/{{ product.image }}?mw=100" image-name="{{ product.image }}" index="0"/>
+												</li>
+											{% end %}
+											{% if product.image_2 != '' %}
+												<li>
+													<img src="/image/{{ product.image_2 }}?mw=100" image-name="{{ product.image_2 }}" index="1"/>
+												</li>
+											{% end %}
+											{% if product.image_3 != '' %}
+												<li>
+													<img src="/image/{{ product.image_3 }}?mw=100" image-name="{{ product.image_3 }}" index="2"/>
+												</li>
+											{% end %}
+											{% if product.image_4 != '' %}
+												<li>
+													<img src="/image/{{ product.image_4 }}?mw=100" image-name="{{ product.image_4 }}" index="3"/>
+												</li>
+											{% end %}
+											{% if product.image_5 != '' %}
+												<li>
+													<img src="/image/{{ product.image_5 }}?mw=100" image-name="{{ product.image_5 }}" index="4"/>
+												</li>
+											{% end %}
+											{% if product.image_6 != '' %}
+												<li>
+													<img src="/image/{{ product.image_6 }}?mw=100" image-name="{{ product.image_6 }}" index="5"/>
+												</li>
+											{% end %}
+										</ul>
+									</div>
+								</div>
+							</div>
+
+
+							<!--
+							<div class="control-group">
+								<label class="control-label" for="prefix">Color</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Color" name="color" required="required" type="text" class="form-control" value="{{ product.color }}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Material</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Material" name="material" type="text" class="form-control" value="{{ product.material }}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Viñeta 1</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Viñeta 1" name="bullet_1" type="text" class="form-control" value="{{ product.bullet_1 }}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Viñeta 2</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Viñeta 2" name="bullet_2" type="text" class="form-control" value="{{ product.bullet_2 }}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Viñeta 3</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Viñeta 3" name="bullet_3" type="text" class="form-control" value="{{ product.bullet_3 }}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Moneda</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Moneda" name="currency" type="text" class="form-control" value="{{ product.currency }}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Imagen 2</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Imagen 2" name="image_2" type="text" class="form-control" value="{{ product.image_2 }}"></div>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="prefix">Imagen 3</label>
+								<div class="controls form-group">
+									<div class="col-sm-8"><input placeholder="Imagen 3" name="image_3" type="text" class="form-control" value="{{ product.image_3 }}"></div>
+								</div>
+							</div>
+							-->
+						</fieldset>
+						<div class="form-actions">
+							
+						{% if tit == "edit" %}
+							<button type="submit" class="btn btn-primary">Guardar</button>
+						{% elif tit == "add"  %}
+							<button type="submit" class="btn btn-primary">Validar y agregar</button>
+						{% end %}
+							<a href="/product/list" class="btn btn-default">Cancelar</a>
+						</div>
+						{% raw xsrf_form_html() %}
+					</form>
+				</div>
+			</section>
+		</div>
+
+		<script type="text/javascript">
+
+			$(document).ready(function()
+				{
+
+					$('#wysihtml5-textarea').wysihtml5({
+						"font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
+						"emphasis": true, //Italics, bold, etc. Default true
+						"lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+						"html": false, //Button which allows you to edit the generated HTML. Default false
+						"link": false, //Button to insert a link. Default true
+						"image": false, //Button to insert an image. Default true,
+						"color": false, //Button to change color of font  
+						"locale": "es"
+					});
+
+					// $('ul.image-list img').each(function(){
+					// 	var index = $(this).attr("index");
+					// 	order.push(index);
+					// });
+
+					// $("input[name='image_order']").val(order.join());
+
+					$('ul.image-list').sortable();
+
+				});
+		</script>
+	{% end %}
+{% end %}

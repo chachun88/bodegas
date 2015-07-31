@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).on('pjax:end ready',function(){
     $("#aplicar").click(function(){
 
         var action = $("#default-select").val();

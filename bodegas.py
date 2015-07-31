@@ -30,6 +30,7 @@ from src.handler.order_detail_handler import *
 from src.handler.customer_handler import *
 from src.handler.tag_handler import *
 from src.handler.shipping_handler import *
+from src.handler.examples_handler import *
 
 from config import *
 
@@ -153,7 +154,10 @@ class Application(tornado.web.Application):
             (r"/shipping/savecity",     AddCityHandler),
             (r"/shipping/action",       ActionHandler),
             (r"/shipping/remove",       RemoveHandler),
-            (r"/shipping/save_tracking",       SaveTrackingCodeHandler)
+            (r"/shipping/save_tracking",       SaveTrackingCodeHandler),
+
+            (r"/examples/pjax",       PjaxHandler),
+            (r"/examples/pjax2",       Pjax2Handler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 
