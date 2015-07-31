@@ -1,3 +1,6 @@
+body {
+    background-image: url('../img/mosaic-background-3.jpg');
+}
 th{
     text-transform: capitalize;
 }
