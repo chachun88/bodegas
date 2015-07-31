@@ -1,5 +1,12 @@
+body {
+    background: url('../img/mosaic-background-9.jpg') no-repeat center center fixed !important;
+    background-size: 100% !important;
+}
 th{
     text-transform: capitalize;
+}
+nav#sidebar {
+    position: fixed !important;
 }
 #perm.form-control{
   overflow:visible; 
