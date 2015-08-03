@@ -86,8 +86,6 @@ var FastEdit = function(form_id){
 
 $(document).on('pjax:end ready',function(){
 
-    console.log("sajkdhasjkd");
-
     $('#fastedit-textarea').wysihtml5({
         "font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
         "emphasis": true, //Italics, bold, etc. Default true
@@ -99,147 +97,149 @@ $(document).on('pjax:end ready',function(){
         "locale": "es"
     });
 
-    var products_table = $('#productos').DataTable({
-        "order": [[ 3, "asc" ]],
-        "serverSide": true,
-        "processing": true,
-        "ajax": {
-            url: "/product/list",
-            type: "post",
-            data: function ( d ) {
-                //d.start = d.start
-            }
-        },
-        "lengthChange": true,
-        "pageLength": 20,
-        "dom": 'T<"clear">lfrtip',
-        "tableTools": {
-            "sSwfPath": "../static/swf/copy_csv_xls_pdf.swf",
-            "aButtons": [
-                {
-                    "sExtends": "copy",
-                    "sButtonText": "Copiar",
-                    fnComplete: function(nButton, oConfig, flash, text) {
-                        var lines = text.split('\n').length;
-                        if (oConfig.bHeader) lines--;
-                        if (this.s.dt.nTFoot !== null && oConfig.bFooter) lines--;
-                        var plural = (lines==1) ? "" : "s";
-                        this.fnInfo( '<h6>Tabla copiada</h6>'+
-                            '<p>'+lines+' fila'+plural+' copiada' + plural +' al portapapeles.</p>',
-                            1500
-                        );
+    if ( !$.fn.dataTable.isDataTable( '#productos' ) ) {
+        var products_table = $('#productos').DataTable({
+            "order": [[ 3, "asc" ]],
+            "serverSide": true,
+            "processing": true,
+            "ajax": {
+                url: "/product/list",
+                type: "post",
+                data: function ( d ) {
+                    //d.start = d.start
+                }
+            },
+            "lengthChange": true,
+            "pageLength": 20,
+            "dom": 'T<"clear">lfrtip',
+            "tableTools": {
+                "sSwfPath": "../static/swf/copy_csv_xls_pdf.swf",
+                "aButtons": [
+                    {
+                        "sExtends": "copy",
+                        "sButtonText": "Copiar",
+                        fnComplete: function(nButton, oConfig, flash, text) {
+                            var lines = text.split('\n').length;
+                            if (oConfig.bHeader) lines--;
+                            if (this.s.dt.nTFoot !== null && oConfig.bFooter) lines--;
+                            var plural = (lines==1) ? "" : "s";
+                            this.fnInfo( '<h6>Tabla copiada</h6>'+
+                                '<p>'+lines+' fila'+plural+' copiada' + plural +' al portapapeles.</p>',
+                                1500
+                            );
+                        }
+                    },
+                    "xls",
+                    {
+                        "sExtends": "pdf",
+                        "sButtonText": "PDF"
+                    },
+                    {
+                        "sExtends": "print",
+                        "sButtonText": "Imprimir",
+                        fnClick: function() {
+                            window.print();
+                        }
+                    }
+                ]
+            },
+            "columnDefs": [
+                {   "targets": 0,
+                    "data": "for_sale", 
+                    "orderable": true,
+                    render: function ( data, type, row ) {
+                        if(row.for_sale == 1){
+                            return '<a class=\"for_sale\" onclick=\"for_sale(\'' +
+                                   row.id + 
+                                   '\')"><i class="fa fa-eye" id="' +
+                                   row.id +
+                                   '"></i></a>';
+                        } else {
+                            return '<a class=\"for_sale\" onclick=\"for_sale(\'' +
+                                   row.id + 
+                                   '\')"><i class="fa fa-eye disabled" id="' +
+                                   row.id + '"></i></a>';
+                        }
                     }
                 },
-                "xls",
-                {
-                    "sExtends": "pdf",
-                    "sButtonText": "PDF"
+                { 
+                    "targets": 1,
+                    "data": "image", 
+                    "orderable": false,
+                    render: function(data, type, row){
+                        // console.log(row.image);
+                        return '<img src=\"/image/' + row.image + '?mw=60\" width=\"60\">';
+                    }
                 },
-                {
-                    "sExtends": "print",
-                    "sButtonText": "Imprimir",
-                    fnClick: function() {
-                        window.print();
+                { "targets": 2,"data": "sku", "orderable": true },
+                { "targets": 3,"data": "name", "orderable": true },
+                { "targets": 4,"data": "size", "orderable": false },
+                { "targets": 5,"data": "color", "orderable": true },
+                { 
+                    "targets": 6,
+                    "data": "price",
+                    "orderable": true,
+                    render: function(data, type, row){
+                        return row.price.formatMoney(0);
+                    }
+                },
+                { 
+                    "targets": 7,
+                    "data": "sell_price", 
+                    "orderable": true,
+                    render: function(data, type, row){
+                        return row.sell_price.formatMoney(0);
+                    }
+                },
+                { 
+                    "targets": 8,
+                    "data": "promotion_price", 
+                    "orderable": true,
+                    render: function(data, type, row){
+                        return row.promotion_price.formatMoney(0);
+                    }
+                },
+                { 
+                    "targets": 9,
+                    "data": "bulk_price", 
+                    "orderable": true,
+                    render: function(data, type, row){
+                        return row.bulk_price.formatMoney(0);
+                    }
+                },
+                { 
+                    "targets": 10,
+                    "data": null, 
+                    "orderable": false,
+                    render: function(data, type, row){
+                        var botones = '<a class="btn btn-sm btn-primary" href="/product/edit?id=' + row.id + '">Editar</a>'+
+                                    '<br/>' +
+                                    '<a class="btn btn-sm btn-danger" href="/product/remove?id='+ row.id +
+                                    '" onclick="return confirm("¿Está seguro que desea eliminar el producto?");">'+
+                                    'Eliminar' +
+                                    '</a>' +
+                                    '<br/>' +
+                                    "<input type='hidden' id='" + row.sku + "' value='" + JSON.stringify(row) + "'>" +
+                                    "<a class=\"btn btn-warning btn-sm\" onclick=\"formFastEdit('" + row.sku + "')\">Edici&oacute;n R&aacute;pida</a>"
+                        return botones;
                     }
                 }
-            ]
-        },
-        "columnDefs": [
-            {   "targets": 0,
-                "data": "for_sale", 
-                "orderable": true,
-                render: function ( data, type, row ) {
-                    if(row.for_sale == 1){
-                        return '<a class=\"for_sale\" onclick=\"for_sale(\'' +
-                               row.id + 
-                               '\')"><i class="fa fa-eye" id="' +
-                               row.id +
-                               '"></i></a>';
-                    } else {
-                        return '<a class=\"for_sale\" onclick=\"for_sale(\'' +
-                               row.id + 
-                               '\')"><i class="fa fa-eye disabled" id="' +
-                               row.id + '"></i></a>';
-                    }
-                }
-            },
-            { 
-                "targets": 1,
-                "data": "image", 
-                "orderable": false,
-                render: function(data, type, row){
-                    // console.log(row.image);
-                    return '<img src=\"/image/' + row.image + '?mw=60\" width=\"60\">';
-                }
-            },
-            { "targets": 2,"data": "sku", "orderable": true },
-            { "targets": 3,"data": "name", "orderable": true },
-            { "targets": 4,"data": "size", "orderable": false },
-            { "targets": 5,"data": "color", "orderable": true },
-            { 
-                "targets": 6,
-                "data": "price",
-                "orderable": true,
-                render: function(data, type, row){
-                    return row.price.formatMoney(0);
-                }
-            },
-            { 
-                "targets": 7,
-                "data": "sell_price", 
-                "orderable": true,
-                render: function(data, type, row){
-                    return row.sell_price.formatMoney(0);
-                }
-            },
-            { 
-                "targets": 8,
-                "data": "promotion_price", 
-                "orderable": true,
-                render: function(data, type, row){
-                    return row.promotion_price.formatMoney(0);
-                }
-            },
-            { 
-                "targets": 9,
-                "data": "bulk_price", 
-                "orderable": true,
-                render: function(data, type, row){
-                    return row.bulk_price.formatMoney(0);
-                }
-            },
-            { 
-                "targets": 10,
-                "data": null, 
-                "orderable": false,
-                render: function(data, type, row){
-                    var botones = '<a class="btn btn-sm btn-primary" href="/product/edit?id=' + row.id + '">Editar</a>'+
-                                '<br/>' +
-                                '<a class="btn btn-sm btn-danger" href="/product/remove?id='+ row.id +
-                                '" onclick="return confirm("¿Está seguro que desea eliminar el producto?");">'+
-                                'Eliminar' +
-                                '</a>' +
-                                '<br/>' +
-                                "<input type='hidden' id='" + row.sku + "' value='" + JSON.stringify(row) + "'>" +
-                                "<a class=\"btn btn-warning btn-sm\" onclick=\"formFastEdit('" + row.sku + "')\">Edici&oacute;n R&aacute;pida</a>"
-                    return botones;
-                }
+            ],
+            "language":{
+                "zeroRecords": "No hay resultados para esta busqueda",
+                "search": "Busqueda:",
+                "paginate": {
+                    "first":      "Primera",
+                    "last":       "Ultima",
+                    "next":       "Siguiente",
+                    "previous":   "Anterior"
+                },
+                "info":           "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+                "infoEmpty":      "Mostrando 0 a 0 de 0 entradas",
+                "processing":     "Cargando..."
             }
-        ],
-        "language":{
-            "zeroRecords": "No hay resultados para esta busqueda",
-            "search": "Busqueda:",
-            "paginate": {
-                "first":      "Primera",
-                "last":       "Ultima",
-                "next":       "Siguiente",
-                "previous":   "Anterior"
-            },
-            "info":           "Mostrando _START_ a _END_ de _TOTAL_ entradas",
-            "infoEmpty":      "Mostrando 0 a 0 de 0 entradas",
-            "processing":     "Cargando..."
-        }
-    });
+        });
+    }
 
     $('input[type=search]').on( 'keyup', function () {
         $('input#hidden_search').val( this.value );

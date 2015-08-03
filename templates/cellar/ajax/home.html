@@ -1,0 +1,186 @@
+{% extends "../../base_ajax.html" %}
+
+{% block title %}Lista de bodegas {% end %}
+{% block caption %}muestra las bodegas que existen{% end %}
+
+{% block body %}
+{% if dn == "t" %}
+<div class="alert alert-success alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> bodega creada correctamente.
+</div>
+{% elif dn == "dnt" %}
+<div class="alert alert-success alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> No se ha guardado!</strong> bodega ya existe.
+</div>
+{% elif dn == "bpt" %}
+<div class="alert alert-success alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Bien hecho!</strong> se han agregado productos.
+</div>
+{% elif dn == "bpf" %}
+<div class="alert alert-warning alert-success-nohidden">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	<strong><i class="fa fa-check"></i> Problema al agregar productos!</strong> ha fallado al agregar productos.
+</div>
+{% end %}
+<div class="col-md-12">
+	<section class="widget">
+		<div class="body">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<!-- <th></th> -->
+						<th>Nombre</th>
+						<th>Descripción</th>
+						<!--
+						<th>Total entradas</th>
+						<th>Total salidas</th>
+						-->
+						<th>Saldo (unidades)</th>
+						<th>Saldo ($)</th>
+						<th>Eliminar</th>
+						<th>Entradas Fáciles</th>
+						<th>Salidas Fáciles</th>
+						<!--
+						<th>Entradas</th>
+						<th>Salidas</th>
+						-->
+					</tr>
+				</thead>
+				<tbody>
+					{% for p in data %}
+					<tr>
+						<!-- <td class="for_sale">
+							<a class="for_sale" onclick="for_sale('{{p['id']}}')">
+								{% if int(p["for_sale"]) == 0 %}
+								<i class="fa fa-eye disabled" id="{{p['id']}}"></i>
+								{% else %}
+								<i class="fa fa-eye" id="{{p['id']}}"></i>
+								{% end %}
+							</a>
+						</td> -->
+						<td>
+							{% if int(p["id"]) in current_user["cellar_permissions"] %}
+							<a href="/cellar/detail?id={{ str(p['id']) }}">{{ p["name"] }}</a>
+							{% else %}
+							{{ p["name"] }}
+							{% end %}
+						</td>
+						<td>{{ p["description"] }}</td>
+						<!--
+						<td>-</td>
+						<td>-</td>
+						-->
+						<td>{{ p["total_units"] }}</td>
+						<td>{{ MoneyFormat(p["total_price"]) }}</td>
+						<td>
+							{% if int(4) in current_user["permissions"] %}
+							{% if reservation_cellar_id != p['id'] and web_cellar_id != p['id'] %}
+							<button type="button" cellar-id="{{ str(p['id']) }}" class="btn btn-danger btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-danger .btn-sm">
+								Eliminar
+							</button>
+							{% end %}
+							{% else %}
+							-
+							{% end %}
+						</td>
+						<td>
+							{% if int(p["id"]) in current_user["cellar_permissions"] and reservation_cellar_id != p['id'] %}
+							<a type="button" href="/cellar/easyinput?id={{ str(p['id']) }}" cellar-id="{{ str(p['id']) }}" class="btn btn-info btn-sm" data-placement="top" data-original-title=".btn .btn-info .btn-sm">
+								Entrada Fácil
+							</a>
+							{% else %}
+							-
+							{% end %}
+						</td>
+						<td>
+							{% if int(p["id"]) in current_user["cellar_permissions"] and reservation_cellar_id != p['id'] %}
+							<a type="button" href="/cellar/easyoutput?id={{ str(p['id']) }}" cellar-id="{{ str(p['id']) }}" class="btn btn-success btn-sm" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+								Salida Fácil
+							</a>
+							{% else %}
+							-
+							{% end %}
+						</td>
+						<!--
+						<td>
+							<a type="button" href="/cellar/input?id={{ str(p['id']) }}" cellar-id="{{ str(p['id']) }}" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+								Entrada
+							</a>
+						</td>
+						<td>
+							<a type="button" href="/cellar/output?id={{ str(p['id']) }}" cellar-id="{{ str(p['id']) }}" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
+								Salida
+							</a>
+						</td>
+						-->
+					</tr>
+					{% end %}
+				</tbody>
+			</table>
+<!-- 			<ul class="pagination no-margin">
+				<li class="disabled"><a href="#">Prev</a></li>
+				<li><a href="#">1</a></li>
+				<li class="active"><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li><a href="#">4</a></li>
+				<li><a href="#">Next</a></li>
+			</ul> -->
+		</div>
+	</section>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$(".btn-delete").click(function()
+	{
+		var cell = $(this);
+		var cellar_id = $(this).attr("cellar-id");
+		var message = "¿Realmente desea eliminar esta bodega? \n"+
+					"Todos los productos de esta bodega serán eliminados";
+
+
+		if (confirm(message)) 
+		{
+			$.ajax({
+				url: "/cellar/remove?id=" + cellar_id
+			}).done(function(data) {
+
+				try
+				{
+					if (data.hasOwnProperty( "error" )) {
+						var error_message = data[ "error" ];
+						alert ( error_message );
+						return;
+					}
+				}
+				catch(exception)
+				{
+					console.log( "no se pudo remover" );
+				}
+
+				if (cell.hasClass("btn-danger")) 
+				{
+					cell.removeClass("btn-danger");
+					cell.addClass("btn-success");
+					cell.html("Eliminado");
+
+					cell.parent().parent().animate({
+						opacity: 0.0,
+						height:"toggle"
+					}, 3000, function() {
+
+						cell.parent().parent().css("display", "none");
+					});
+				}
+
+				console.log(data);
+			});
+		}
+
+	});
+});
+</script>
+{% end %}

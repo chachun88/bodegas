@@ -19,11 +19,18 @@ class UserHandler(BaseHandler):
     def get(self):
         self.set_active(Menu.USUARIOS_LISTAR)
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         usr = User()
 
         # detect if is comming from the add user form
         dn = self.get_argument("dn", "f")  # by default f for false
-        self.render("user/home.html", 
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+        self.render("user{}/home.html".format(pjax_str), 
                     side_menu=self.side_menu, 
                     user_list=usr.GetList(), 
                     dn=dn, 

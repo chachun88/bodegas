@@ -1,0 +1,71 @@
+{% extends "../../base_ajax.html" %}
+
+{% block title %}Listado de precios {% end %}
+{% block caption %}se muestra una lista de los costos de despacho{% end %}
+
+{% block body %}
+
+<div class="col-md-12">
+	<section class="widget">
+		<div class="body">
+			<form action="/shipping/action" method="post">
+				<fieldset>
+					<div class="col-md-6">
+						<select class="form-control" name="action">
+							<option value="">Seleccione una acci&oacute;n</option>
+							<option value="chilexpress_price">Aplicar Chilexpress</option>
+							<option value="correos_price">Aplicar Correos de Chile</option>
+							<option value="correos_edited">Aplicar Correos Excepto Editados</option>
+							<option value="chilexpress_edited">Aplicar Chilexpress Excepto Editados</option>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<button type="submit" class="btn btn-primary">Aplicar</button>
+					</div>
+					{% raw xsrf_form_html() %}
+				</fieldset>
+			</form>
+		</div>
+		<div class="body">
+			<table class="table table-striped table-images">
+				<thead>
+					<tr>
+						<th>Origen</th>
+						<th>Destino</th>
+						<th>Correos de Chile</th>
+						<th>Chilexpress</th>
+						<th>Giani Da Firenze</th>
+						<th>Editado</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for shipping in lista %}
+					<tr>
+						<th>{{shipping["origen"]}}</th>
+						<th>
+							{{shipping["destino"]}}
+						</th>
+						<th>{{shipping["correos_price"]}}</th>
+						<th>{{shipping["chilexpress_price"]}}</th>
+						<th>{{shipping["price"]}}</th>
+						<th>
+							{% if shipping["edited"] %}
+							<i class="fa fa-check"></i>
+							{% else %}
+							<i class="fa fa-times"></i>
+							{% end %}
+						</th>
+						<th>
+							<a class="btn btn-primary" href="/shipping/save?identifier={{shipping['id']}}">Editar</a>
+							<a class="btn btn-danger" href="/shipping/remove?identifier={{shipping['id']}}">Eliminar</a>
+						</th>
+					</tr>
+					{% end %}
+				</tbody>
+			</table>
+		</div>
+	</section>
+</div>
+
+{% end %}

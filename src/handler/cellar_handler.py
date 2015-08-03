@@ -27,6 +27,8 @@ class CellarHandler(BaseHandler):
 
         self.set_active(Menu.BODEGAS_LISTAR)  # change menu active item
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         data = Cellar().List(1, 100)
 
         cellar = Cellar()
@@ -47,10 +49,13 @@ class CellarHandler(BaseHandler):
         elif debugMode:
             print res_web_cellar["error"]
 
-        # print self.current_user
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
 
         self.render(
-            "cellar/home.html",
+            "cellar{}/home.html".format(pjax_str),
             side_menu=self.side_menu, 
             data=data, 
             dn=self.get_argument("dn", ""), 
@@ -70,8 +75,6 @@ class CellarOutputHandler(BaseHandler):
 
         product = Product()
         # product.InitById(product_id)
-
-        
 
         self.render("cellar/output.html", 
             operation="Salidas", 
@@ -111,7 +114,7 @@ class CellarOutputHandler(BaseHandler):
             redirect = "bpf"
 
         self.redirect("/cellar?dn=" + redirect)
-        
+
     def check_xsrf_cookie(self):
         pass
 
@@ -153,7 +156,7 @@ class CellarEasyInputHandler(BaseHandler):
                     products=products, 
                     product_list=lista, 
                     tallas=tallas)
-    
+
     @tornado.web.authenticated
     def post(self):
 
@@ -517,6 +520,8 @@ class SelectForSaleHandler(BaseHandler):
 
         self.set_active(Menu.BODEGAS_FORSALE)
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         cellar = Cellar()
         selected = cellar.GetWebCellar()
         data = Cellar().List(1, 100)
@@ -525,8 +530,13 @@ class SelectForSaleHandler(BaseHandler):
 
         if "success" in selected:
             cellar_id = selected["success"]
-        
-        self.render("cellar/selectforsale.html",cellars=data,cellar_id=cellar_id)
+
+        pjax_str  = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
+        self.render("cellar{}/selectforsale.html".format(pjax_str),cellars=data,cellar_id=cellar_id)
 
     @tornado.web.authenticated
     def post(self):
@@ -551,12 +561,19 @@ class SelectReservationHandler(BaseHandler):
         selected = cellar.GetReservationCellar()
         data = Cellar().List(1, 100)
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         cellar_id = ""
 
         if "success" in selected:
             cellar_id = selected["success"]
-        
-        self.render("cellar/selectreservation.html",cellars=data,cellar_id=cellar_id)
+
+        pjax_str  = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
+        self.render("cellar{}/selectreservation.html".format(pjax_str),cellars=data,cellar_id=cellar_id)
 
     @tornado.web.authenticated
     def post(self):
@@ -576,6 +593,8 @@ class CellarEasyHandler(BaseHandler):
     def get(self):
 
         self.set_active(Menu.BODEGAS_FACIL)
+
+        pjax = bool(self.get_argument("_pjax", False))
 
         cellar = Cellar()
         res_list = cellar.FindById(self.current_user["cellar_permissions"])
@@ -599,7 +618,12 @@ class CellarEasyHandler(BaseHandler):
         if "success" in res_tallas:
             tallas = res_tallas["success"]
 
-        self.render("cellar/easy.html", 
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
+        self.render("cellar{}/easy.html".format(pjax_str), 
                     operation="Entradas ", 
                     opp="in", 
                     side_menu=self.side_menu, 

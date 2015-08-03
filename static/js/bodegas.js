@@ -47,6 +47,10 @@ $(document).on('pjax:end ready',function() {
 		$("#load").addClass("fa");
 	});
 
+	$(".chzn-select").each(function(){
+        $(this).select2($(this).data());
+    });
+
 	/*	//// Llenar combobox de output.html
 		$(".name").change(function(){
 			alert("entra");		

@@ -50,6 +50,8 @@ class SaveHandler(BaseHandler):
 
         self.set_active(Menu.SHIPPING_SAVE)
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         city = City()
         cities = city.List()
 
@@ -70,8 +72,13 @@ class SaveHandler(BaseHandler):
                 print res
                 self.write(res["error"])
 
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
         if "success" in cities:
-            self.render("shipping/add.html",cities=cities["success"],shipping=shipping,dn=dn,mensaje=mensaje)
+            self.render("shipping{}/add.html".format(pjax_str),cities=cities["success"],shipping=shipping,dn=dn,mensaje=mensaje)
         else:
             self.write(cities["error"])
 
@@ -107,10 +114,17 @@ class ListHandler(BaseHandler):
 
         self.set_active(Menu.SHIPPING_LIST)
 
+        pjax = bool(self.get_argument("_pjax", False))
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
         shipping = Shipping()
         res_lista = shipping.List()
         if "success" in res_lista:
-            self.render("shipping/list.html",lista=res_lista["success"])
+            self.render("shipping{}/list.html".format(pjax_str),lista=res_lista["success"])
         else:
             self.write(res_lista["error"])
 

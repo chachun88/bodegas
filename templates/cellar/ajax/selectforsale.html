@@ -1,0 +1,52 @@
+{% extends "../../base_ajax.html" %}
+
+{% block title %}Bodega Web {% end %}
+{% block caption %}
+{% if int(4) in current_user["permissions"] %}
+	Selecciona una bodega para la venta web
+{% else %}
+	sección no autorizada
+{% end %}
+{% end %}
+
+{% block body %}
+{% if int(4) in current_user["permissions"] %}
+<div class="col-md-7">
+	<section class="widget">
+		<form id="selectforsale" class="form-horizontal label-left" method="post" action="/cellar/selectforsale" enctype="multipart/form-data">
+			<fieldset>
+				<legend class="section">Seleccionar bodega</legend>
+				<div class="control-group">
+					<label for="" class="control-label">Nombre</label>
+					<div class="controls form-group">
+						<div class="col-sm-8">
+							<select name="cellar_id">
+								<option value="">Seleccione una bodega</option>
+								{% for ce in cellars %}
+									{% if str(ce["id"]) == str(cellar_id) %}
+										<option value="{{ce['id']}}" selected>{{ce['name']}}</option>
+									{% else %}
+										<option value="{{ce['id']}}">{{ce['name']}}</option>
+									{% end %}
+								{% end %}
+							</select>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<div class="form-actions">
+				<button type="button" onclick="Send('selectforsale')" class="btn btn-primary">Guardar</button>
+			</div>
+			{% raw xsrf_form_html() %}
+		</form>
+	</section>
+</div>
+{% else %}
+<div class="col-md-12">
+	<section class="widget">
+		<div style="float:right;">
+		</div>
+	</section>
+</div>
+{% end %}
+{% end %}

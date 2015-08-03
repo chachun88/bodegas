@@ -48,6 +48,8 @@ class StockExcelHandler(BaseHandler):
 
         self.set_active(Menu.PRODUCTOS_CARGA_STOCK)  # change menu active item
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         dn = self.get_argument("dn", "f")
         filename = self.get_argument("filename", "")
         w = []
@@ -62,7 +64,12 @@ class StockExcelHandler(BaseHandler):
             "filename" : filename
         }
 
-        self.render("product/home.html", args=args)
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
+        self.render("product{}/home.html".format(pjax_str), args=args)
 
     @tornado.web.asynchronous
     @tornado.gen.engine

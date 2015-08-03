@@ -1,0 +1,118 @@
+{% extends "../../base_ajax.html" %}
+
+{% block title %}
+{% if dn == "t1" %}
+    Editar
+{% else %}
+    Agregar
+{% end %}
+{% end %}
+{% block caption %}
+    un usuario
+{% end %}
+
+{% block body %}
+
+{% if dn == "t" %}
+<div class="alert alert-success alert-success-nohidden">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <strong><i class="fa fa-check"></i> Bien hecho!</strong> Usuario agregado correctamente.
+</div>
+{% end %}
+{% if warnings != "" %}
+    {% for w in warnings.split(",") %}
+    <div class="alert alert-warning alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong><i class="fa fa-check"></i> Error!</strong> {{w}}
+    </div>
+    {% end %}
+{% end %}
+
+{% if int(5) in current_user["permissions"] %}
+<div class="col-md-7">
+    <section class="widget">
+        <form action="/user/add" class="form-horizontal label-left" method="post" id="user-form" enctype="multipart/form-data">
+            <fieldset>
+                <legend class="section">Agregar usuario</legend>
+                <div class="control-group">
+                    <label for="" class="control-label">Nombre</label>
+                    <div class="controls form-group">
+                        <div class="col-sm-8"><input placeholder="Nombre" name="name" required="required" type="text" class="form-control" value="{{ user.name }}"></div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="" class="control-label">Apellido</label>
+                    <div class="controls form-group">
+                        <div class="col-sm-8"><input placeholder="Apellido" name="lastname" required="required" type="text" class="form-control" value="{{ user.lastname }}"></div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="" class="control-label">Email</label>
+                    <div class="controls form-group">
+                        <div class="col-sm-8"><input id="email" placeholder="ejemplo@gianidafirenze.cl" name="email" required="required" type="email" class="form-control" value="{{ user.email }}"></div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="" class="control-label">Contraseña</label>
+                    <div class="controls form-group">
+                        <div class="col-sm-8"><input id="pass_1" placeholder="contraseña" name="password" required="required" type="password" class="form-control" onchange="form.re_password.pattern = this.value;" value="{{user.password}}"></div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="" class="control-label">Repita contraseña</label>
+                    <div class="controls form-group">
+                        <div class="col-sm-8"><input id="pass_2" placeholder="contraseña" name="re_password"  type="password" class="form-control"  value="{{user.password}}" required></div>
+                    </div>
+                </div>
+                <style type="text/css">
+                    .objMovible { position:absolute; cursor:pointer }
+                </style>
+                <div class="control-group">
+                    <label for="" class="control-label">Permisos</label>
+                    <div class="controls form-group">
+                        <div class="col-sm-8">
+                            <select name="type_id">
+                                <option value="">---Seleccione---</option>
+                                <option value="2">Administrador</option>
+                                <option value="1">Gestion</option>
+                                <option value="6">Bodega</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="" class="control-label">Bodegas</label>
+                    <div class="controls form-group">
+                        <div class="col-sm-8">
+                            {% for c in cellars %}
+                                {% if c['id'] in user.cellars %}
+                                    <input type="checkbox" name="cellars" value="{{c['id']}}" class="btn-sm btn-primary" checked> {{ c["name"] }}
+                                {% else %}
+                                    <input type="checkbox" name="cellars" value="{{c['id']}}" class="btn-sm btn-primary"> {{ c["name"] }}
+                                {% end %}
+                                <br/>
+                            {% end %}
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <input type="hidden" name="id" value="{{ user.id }}">
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Validar y agregar</button>
+                <button type="reset" class="btn btn-default">Limpiar</button>
+            </div>
+            {% raw xsrf_form_html() %}
+        </form>
+    </section>
+</div>
+{% else %}
+<div class="col-md-12">
+    <section class="widget">
+        <div class="body">
+            <div class="alert alert-danger">Secci&oacute;n No Autorizada</div>
+        </div>
+    </section>
+</div>
+{% end %}
+{% end %}

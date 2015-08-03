@@ -25,14 +25,19 @@ class TagHandler(BaseHandler):
 
         page = self.get_argument("page",1)
         items = self.get_argument("items",20)
+        pjax = bool(self.get_argument("_pjax", False))
 
         tag = Tag()
         res = tag.List(page,items)
 
+        pjax_str = ''
+        if pjax:
+            pjax_str = '/ajax'
+
         if "success" in res:
-            self.render("tag/list.html",lista=res["success"],dn="")
+            self.render("tag{}/list.html".format(pjax_str),lista=res["success"],dn="")
         else:
-            self.render("tag/list.html",dn="error",mensaje=res["error"])
+            self.render("tag{}/list.html".format(pjax_str),dn="error",mensaje=res["error"])
 
 class RemoveTagHandler(BaseHandler):
 
@@ -123,11 +128,18 @@ class AddHandler(BaseHandler):
 
         self.set_active(Menu.TAGS_ADD)
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         tag = Tag()
         product = Product()
         lista = product.GetList(0,0)["success"]
         asociados = []
-        self.render("tag/save.html", tag=tag, mode="add", product_list=lista, dn="", asociados=asociados)
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+        self.render("tag{}/save.html".format(pjax_str), tag=tag, mode="add", product_list=lista, dn="", asociados=asociados)
 
     @tornado.web.authenticated
     def post(self):

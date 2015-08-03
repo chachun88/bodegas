@@ -296,6 +296,8 @@ class ProductEditHandler(BaseHandler):
     def get(self):
         self.set_active(Menu.PRODUCTOS_CARGA)
 
+        pjax = bool(self.get_argument("_pjax", False))
+
         prod = Product()
         res = prod.InitById(self.get_argument("id", ""))
 
@@ -317,10 +319,15 @@ class ProductEditHandler(BaseHandler):
         elif debugMode:
             print res_tags["error"]
 
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
         if "success" in res:
-            self.render("product/add.html", dn="", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
+            self.render("product{}/add.html".format(pjax_str), dn="", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
         else:
-            self.render("product/add.html", dn="bpf", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
+            self.render("product{}/add.html".format(pjax_str), dn="bpf", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
 
 
 class FastEditHandler(BaseHandler):

@@ -20,9 +20,13 @@ class CellarAddHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         self.set_active(Menu.BODEGAS_AGREGAR) # change menu active item
+        pjax = bool(self.get_argument("_pjax", False))
         city = City()
         cities = city.List()
-        self.render("cellar/add.html", side_menu=self.side_menu,cities=cities["success"])
+        pjax_str = ''
+        if pjax:
+            pjax_str = '/ajax'
+        self.render("cellar{}/add.html".format(pjax_str), side_menu=self.side_menu,cities=cities["success"])
 
     @tornado.web.authenticated
     def post(self):

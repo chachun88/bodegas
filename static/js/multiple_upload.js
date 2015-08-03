@@ -1,7 +1,7 @@
 var image_list = null;
 var image_list_class = '.image-list';
 
-$(document).ready(function() {
+$(document).on('ready pjax:end', function() {
     image_list = new ImagesPreviewController(image_list_class);
 });
 

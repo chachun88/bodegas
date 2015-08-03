@@ -29,13 +29,20 @@ class UserAddHandler(BaseHandler):
         user_id = self.get_argument("id", "")
         dn = self.get_argument("dn", "")
 
+        pjax = bool(self.get_argument("_pjax", False))
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
         if user_id != "":
 
             response = usr.InitById(user_id)
 
             if "success" in response:
                 dn = "t1"
-                self.render("user/add.html", 
+                self.render("user{}/add.html".format(pjax_str), 
                     side_menu=self.side_menu, 
                     user=usr, 
                     cellars=cellar.List(1,100), 
@@ -46,7 +53,7 @@ class UserAddHandler(BaseHandler):
 
         else:
 
-            self.render("user/add.html", 
+            self.render("user{}/add.html".format(pjax_str), 
                 side_menu=self.side_menu, 
                 user=usr, 
                 cellars=cellar.List(1,100), 
