@@ -15,29 +15,14 @@
 // 	$('div.wrap').fadeIn();
 // });
 
-var showLoaderTimeout = function(){
-	setTimeout(function(){
-	    $('div.wrap').addClass('hiding');
-	    $('.loader-wrap').removeClass('hide');
-	    setTimeout(function(){
-	        $('.loader-wrap').removeClass('hiding');
-	    }, 0);
-	}, 200);
-};
-
 $(document).on('pjax:send', function(){
-    showLoaderTimeout();
+    $('div.wrap').fadeOut().delay(1000);
+	$('.loader-wrap').fadeIn();
 });
 
-$(document).on('pjax:loaded', function(){
-    clearTimeout(showLoaderTimeout);
-    $('.loader-wrap').addClass('hiding');
-    $('div.wrap').removeClass('hiding');
-    var view = this;
-    $('.loader-wrap').one($.support.transition.end, function () {
-        $('.loader-wrap').addClass('hide');
-        $('div.wrap').removeClass('hiding');
-    }).emulateTransitionEnd(200);
+$(document).on('pjax:complete', function(){
+	$('.loader-wrap').fadeOut().delay(1000);
+	$('div.wrap').fadeIn();
 });
 
 $(document).pjax('a', 'div.wrap', {"timeout": 50000});

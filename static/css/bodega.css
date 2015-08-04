@@ -148,3 +148,21 @@ section#detalle_pedido th, section#detalle_pedido td{
     border: none !important;
     height: 95px !important;
 }
+
+.loader-wrap {
+    text-align: center;
+    display: none;
+    position: fixed;
+    top: 30%;
+    width: 100%;
+}
+
+.loader-wrap > span {
+    font-size: 25px;
+    color: white;
+}
+
+.glyphicon-spin {
+    -webkit-animation: spin 1000ms infinite linear;
+    animation: spin 1000ms infinite linear;
+}
