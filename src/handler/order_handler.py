@@ -42,7 +42,7 @@ class OrderHandler(BaseHandler):
         pjax_str = ''
 
         if pjax:
-          pjax_str = '/ajax'
+            pjax_str = '/ajax'
 
         self.render("order{}/home.html".format(pjax_str),
                     side_menu=self.side_menu,
@@ -64,7 +64,8 @@ class AddOrderHandler(BaseHandler):
         order = Order()
 
         order.id = self.get_argument("id", "")
-        order.date = datetime.now(pytz.timezone('Chile/Continental').isoformat())
+        order.date = datetime.now(
+            pytz.timezone('Chile/Continental').isoformat())
         order.salesman = self.get_argument("salesman", "")
         order.customer = self.get_argument("customer", "")
         order.subtotal = self.get_argument("subtotal", "")
@@ -89,7 +90,7 @@ class AddOrderHandler(BaseHandler):
 
 class OrderActionsHandler(BaseHandler):
 
-    @tornado.web.authenticated
+    # @tornado.web.authenticated
     def post(self):
 
         order = Order()
@@ -193,9 +194,11 @@ class OrderActionsHandler(BaseHandler):
                     resultado.append(res_order)
 
             ''' replaced by shipping_handler.SaveTrackingCodeHandler'''
-
+        print '--------------------'
         print resultado
+        print '--------------------'
         self.write(json_util.dumps(resultado))
+        return
 
         # elif accion == ACCIONES_DESPACHADO:
 
@@ -247,7 +250,7 @@ class OrderAjaxListHandler(BaseHandler):
     def get(self):
         start = int(self.get_argument("start", 0))
         items = int(self.get_argument("length", 20))
-        term = self.get_argument("search[value]","")
+        term = self.get_argument("search[value]", "")
         query = ""
 
         if term != "":
@@ -297,7 +300,8 @@ class OrderAjaxListHandler(BaseHandler):
             direction = 'desc'
 
         order = Order()
-        pedidos = order.List(page, items, query, columns[column], direction, "%{}%".format(term))
+        pedidos = order.List(
+            page, items, query, columns[column], direction, "%{}%".format(term))
         res_total_items = order.getTotalItems(query, "%{}%".format(term))
 
         if "success" in res_total_items:

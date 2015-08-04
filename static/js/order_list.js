@@ -207,7 +207,7 @@ $(document).on('pjax:end ready',function(){
         $('input[type=search]').trigger('keyup');
     });
 
-    $("#aplicar").click(function(e){
+    $("#aplicar-orders").click(function(e){
 
         e.preventDefault();
 
