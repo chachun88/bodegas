@@ -246,6 +246,7 @@ $(document).on('pjax:end ready',function(){
                 url: "/orders/actions",
                 data: "values=" + valores_checkbox + "&action=" + action,
                 type: "post",
+                async: false,
                 dataType: 'json',
                 success: function(html) {
 
@@ -261,6 +262,7 @@ $(document).on('pjax:end ready',function(){
                             }
                         }
                         if(html_res !== ''){
+                            console.log(html_res);
                             alert(html_res);
                         } else {
                             $('#myModal').modal('hide');
