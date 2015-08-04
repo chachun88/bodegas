@@ -175,7 +175,7 @@ $(document).on('pjax:end ready',function(){
                     "orderable": false,
                     render: function ( data, type, row ) {
                         if ( type === 'display' ) {
-                            return '<button class="btn btn-primary btn-sm detail-button" href="/order-detail/list?order_id=' + row.order_id + '">Ver Detalle</button>';
+                            return '<button class="btn btn-primary btn-sm detail-button" onclick="location.href=\"/order-detail/list?order_id=\"' + row.order_id + '\">Ver Detalle</button>';
                         }
                         return data;
                     }
