@@ -1,5 +1,5 @@
 body {
-    background: url('../img/mosaic-background-9.jpg') no-repeat center center fixed !important;
+    background: url('../img/background-2.png') no-repeat center center fixed !important;
     background-size: 100% !important;
 }
 th{
@@ -142,4 +142,9 @@ section#detalle_pedido th, section#detalle_pedido td{
 .btn-back {
     float: right;
     margin-bottom: 15px;
+}
+
+.dataTables_wrapper .dataTables_processing {
+    border: none !important;
+    height: 95px !important;
 }

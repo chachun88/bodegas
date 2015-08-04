@@ -49,7 +49,6 @@ var ValidateTracking = function(){
     }
 };
 
-
 $(document).on('pjax:end ready',function(){
 
     if ( !$.fn.dataTable.isDataTable( '#pedidos' ) ) {
@@ -136,7 +135,7 @@ $(document).on('pjax:end ready',function(){
                         if (row.state == 1) {
                             if (row.payment_type == 1) {
                                 return '<span class="label label-warning">POR CONFIRMAR</span>';
-                            } else if(row.payment_type == 3) {
+                            } else if (row.payment_type == 3) {
                                 return '<span class="label label-warning">CONVENIDO</span>';
                             } else {
                                 return '<span class="label label-danger">RECHAZADO</span>';
@@ -161,6 +160,8 @@ $(document).on('pjax:end ready',function(){
                     {
                         if(row.payment_type == 1){
                             return 'TRANSFERENCIA';
+                        } else if(row.payment_type == 3){
+                            return 'CONVENIDO';
                         } else {
                             return 'WEBPAY';
                         }
@@ -194,7 +195,7 @@ $(document).on('pjax:end ready',function(){
                 },
                 "info":           "Mostrando _START_ a _END_ de _TOTAL_ entradas",
                 "infoEmpty":      "Mostrando 0 a 0 de 0 entradas",
-                "processing":     "Cargando..."
+                "processing":     "<img src='/static/img/loading.gif'/>"
             }
         });
     }

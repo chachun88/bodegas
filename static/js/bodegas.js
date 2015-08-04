@@ -6,14 +6,40 @@
 // 	pageLoad();
 // 	PjaxApp.onPageLoad(pageLoad);
 // });
-$(document).on('pjax:send', function() {
-	$('div.wrap').fadeOut();
-	$('.loader-wrap').fadeIn();
+// $(document).on('pjax:send', function() {
+// 	$('div.wrap').fadeOut();
+// 	$('.loader-wrap').fadeIn();
+// });
+// $(document).on('pjax:complete', function() {
+// 	$('.loader-wrap').fadeOut();
+// 	$('div.wrap').fadeIn();
+// });
+
+var showLoaderTimeout = function(){
+	setTimeout(function(){
+	    $('div.wrap').addClass('hiding');
+	    $('.loader-wrap').removeClass('hide');
+	    setTimeout(function(){
+	        $('.loader-wrap').removeClass('hiding');
+	    }, 0);
+	}, 200);
+};
+
+$(document).on('pjax:send', function(){
+    showLoaderTimeout();
 });
-$(document).on('pjax:complete', function() {
-	$('.loader-wrap').fadeOut();
-	$('div.wrap').fadeIn();
+
+$(document).on('pjax:loaded', function(){
+    clearTimeout(showLoaderTimeout);
+    $('.loader-wrap').addClass('hiding');
+    $('div.wrap').removeClass('hiding');
+    var view = this;
+    $('.loader-wrap').one($.support.transition.end, function () {
+        $('.loader-wrap').addClass('hide');
+        $('div.wrap').removeClass('hiding');
+    }).emulateTransitionEnd(200);
 });
+
 $(document).pjax('a', 'div.wrap', {"timeout": 50000});
 
 $(document).on('pjax:end ready',function() {
