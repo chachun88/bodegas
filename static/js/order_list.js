@@ -262,15 +262,11 @@ $(document).on('pjax:end ready',function(){
                             alert(html_res);
                         } else {
                             $('#myModal').modal('hide');
-                            if($('#pedidos').length){
-                                $("#pedidos").DataTable().ajax.reload(null, false);
-                            }
+                            $("#pedidos").DataTable().ajax.reload(null, false);
                         }
                     } else {
                         $('#myModal').modal('hide');
-                        if($('#pedidos').length){
-                            $("#pedidos").DataTable().ajax.reload(null, false);
-                        }
+                        $("#pedidos").DataTable().ajax.reload(null, false);
                     }
                 }
             });
