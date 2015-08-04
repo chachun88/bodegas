@@ -194,11 +194,11 @@ class OrderActionsHandler(BaseHandler):
                     resultado.append(res_order)
 
             ''' replaced by shipping_handler.SaveTrackingCodeHandler'''
-        print '--------------------'
-        print resultado
-        print '--------------------'
+        # print '--------------------'
+        # print resultado
+        # print '--------------------'
         self.write(json_util.dumps(resultado))
-        return
+        # return
 
         # elif accion == ACCIONES_DESPACHADO:
 
