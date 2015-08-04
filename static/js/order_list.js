@@ -207,7 +207,9 @@ $(document).on('pjax:end ready',function(){
         $('input[type=search]').trigger('keyup');
     });
 
-    $("#aplicar").click(function(){
+    $("#aplicar").click(function(e){
+
+        e.preventDefault();
 
         var action = $("#default-select").val();
         var chkArray = [];
