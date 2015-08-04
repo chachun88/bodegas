@@ -194,6 +194,7 @@ class OrderActionsHandler(BaseHandler):
 
             ''' replaced by shipping_handler.SaveTrackingCodeHandler'''
 
+        print resultado
         self.write(json_util.dumps(resultado))
 
         # elif accion == ACCIONES_DESPACHADO:

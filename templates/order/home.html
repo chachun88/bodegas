@@ -2,16 +2,6 @@
 
 {% block title %}Listado de pedidos {% end %}
 {% block caption %}se muestra una lista general de todos los pedidos{% end %}
-{% block css %}
-    <link href="/{{nocache_static}}/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="/{{nocache_static}}/css/dataTables.tableTools.min.css" rel="stylesheet">
-{% end %}
-{% block javascript %}
-<script type="text/javascript" src="/{{nocache_static}}/js/lp.js" charset="utf-8"></script>
-<script type="text/javascript" src="/{{nocache_static}}/js/jquery.dataTables.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="/{{nocache_static}}/js/dataTables.tableTools.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="/{{nocache_static}}/js/order_list.js" charset="utf-8"></script>
-{% end %}
 {% block body %}
 
 {% if dn == "bpf" %}

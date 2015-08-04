@@ -47,7 +47,7 @@ $(document).on('pjax:end ready',function() {
 		$("#load").addClass("fa");
 	});
 
-	$(".chzn-select").each(function(){
+	$("select.chzn-select").each(function(){
         $(this).select2($(this).data());
     });
 
