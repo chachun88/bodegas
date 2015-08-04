@@ -16,12 +16,12 @@
 // });
 
 $(document).on('pjax:send', function(){
-    $('div.wrap').fadeOut().delay(1000);
+    $('div.wrap').fadeOut(200);
 	$('.loader-wrap').fadeIn();
 });
 
-$(document).on('pjax:complete', function(){
-	$('.loader-wrap').fadeOut().delay(1000);
+$(document).on('pjax:success', function(){
+	$('.loader-wrap').fadeOut(200).delay(2000);
 	$('div.wrap').fadeIn();
 });
 

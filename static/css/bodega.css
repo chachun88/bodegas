@@ -151,7 +151,6 @@ section#detalle_pedido th, section#detalle_pedido td{
 
 .loader-wrap {
     text-align: center;
-    display: none;
     position: fixed;
     top: 30%;
     width: 100%;
