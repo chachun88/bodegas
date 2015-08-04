@@ -19,27 +19,10 @@ class ProductListHandler(BaseHandler):
     def get(self):
         self.set_active(Menu.PRODUCTOS_LISTA)  # change menu active item
 
-        page = self.get_argument("page", 1)
-        items = int(self.get_argument("length", 20))
         dn = self.get_argument("dn", "")
         message = self.get_argument("message", "")
 
         pjax = bool(self.get_argument("_pjax", False))
-
-        product = Product()
-        product_list = []
-
-        res_list = product.GetList(page, items)
-
-        if "success" in res_list:
-            product_list = res_list["success"]
-
-        total_pages = 0
-
-        res_total_pages = product.GetListTotalPages(items)
-
-        if "success" in res_total_pages:
-            total_pages = res_total_pages["success"]
 
         pjax_str = ''
 
@@ -47,12 +30,7 @@ class ProductListHandler(BaseHandler):
             pjax_str = '/ajax'
         self.render("product{}/list.html".format(pjax_str), 
                     dn=dn, 
-                    side_menu=self.side_menu,
-                    product_list=product_list,
-                    page=page,
-                    message = message,
-                    total_pages=float(total_pages),
-                    dumps=json_util.dumps)
+                    side_menu=self.side_menu)
 
     @tornado.web.authenticated
     def post(self):
@@ -72,7 +50,6 @@ class ProductListHandler(BaseHandler):
             "p.sku",
             "p.name",
             "p.size",
-            "p.color",
             "p.price",
             "p.sell_price",
             "p.promotion_price",

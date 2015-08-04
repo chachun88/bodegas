@@ -174,9 +174,8 @@ $(document).on('pjax:end ready',function(){
                 { "targets": 2,"data": "sku", "orderable": true },
                 { "targets": 3,"data": "name", "orderable": true },
                 { "targets": 4,"data": "size", "orderable": false },
-                { "targets": 5,"data": "color", "orderable": true },
                 { 
-                    "targets": 6,
+                    "targets": 5,
                     "data": "price",
                     "orderable": true,
                     render: function(data, type, row){
@@ -184,7 +183,7 @@ $(document).on('pjax:end ready',function(){
                     }
                 },
                 { 
-                    "targets": 7,
+                    "targets": 6,
                     "data": "sell_price", 
                     "orderable": true,
                     render: function(data, type, row){
@@ -192,7 +191,7 @@ $(document).on('pjax:end ready',function(){
                     }
                 },
                 { 
-                    "targets": 8,
+                    "targets": 7,
                     "data": "promotion_price", 
                     "orderable": true,
                     render: function(data, type, row){
@@ -200,7 +199,7 @@ $(document).on('pjax:end ready',function(){
                     }
                 },
                 { 
-                    "targets": 9,
+                    "targets": 8,
                     "data": "bulk_price", 
                     "orderable": true,
                     render: function(data, type, row){
@@ -208,7 +207,7 @@ $(document).on('pjax:end ready',function(){
                     }
                 },
                 { 
-                    "targets": 10,
+                    "targets": 9,
                     "data": null, 
                     "orderable": false,
                     render: function(data, type, row){

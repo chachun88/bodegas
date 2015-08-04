@@ -154,7 +154,6 @@
                                 <th class="hidden-xs " >SKU</th>
                                 <th class="" >Nombre</th>
                                 <th class="hidden-xs">Tallas</th>
-                                <th class="hidden-xs">Combinación</th>
                                 <th class="hidden-xs">Precio Compra</th>
                                 <th class="hidden-xs">Precio Venta</th>
                                 <th class="hidden-xs-portrait ">Precio Promoci&oacute;n</th>
@@ -163,44 +162,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for p in product_list %}
-                            <tr>
-                                <th class="for_sale">
-                                    <a class="for_sale" onclick="for_sale('{{p["id"]}}')">
-                                        {% if int(p["for_sale"]) == 0 %}
-                                        <i class="fa fa-eye disabled" id="{{p['id']}}"></i>
-                                        {% else %}
-                                        <i class="fa fa-eye" id="{{p['id']}}"></i>
-                                        {% end %}
-                                    </a>
-                                </th>
-                                <td>
-                                    <img src="/image/{{ p["image"] }}?mw=60" width="60">
-                                    <!--<input type="checkbox" />-->
-                                </td>
-                                <td class="sku-{{p['sku']}}">{{ p["sku"] }}</td>
-                                <td class="name-{{p['sku']}}">{{ p["name"] }}</td> 
-                                <td>{{ p["size"] }}</td>    
-                                <td class="color-{{p['sku']}}">{{ p["color"] }}</td>    
-                                <td class="price-{{p['sku']}}">{{money_format(p['price'])}}</td>
-                                <td class="sell_price-{{p['sku']}}">{{money_format(p['sell_price'])}}</td>
-                                <td class="promotion_price-{{p['sku']}}">{{money_format(p['promotion_price'])}}</td>
-                                <td class="bulk_price-{{p['sku']}}">{{money_format(p['bulk_price'])}}</td>
-                                <td>
-                                    <a class="btn btn-sm btn-primary" href="/product/edit?id={{p['id']}}">
-                                        Editar
-                                    </a>
-                                    <br/>
-                                    <a class="btn btn-sm btn-danger" href="/product/remove?id={{p['id']}}" onclick="return confirm('¿Está seguro que desea eliminar el producto?');">
-                                        Eliminar
-                                    </a>
-                                    <br/>
-                                    <input type="hidden" id="{{p['sku']}}" value="{{dumps(p)}}">
-                                    <a class="btn btn-warning btn-sm" onclick="formFastEdit('{{p['sku']}}')">Edici&oacute;n R&aacute;pida</a>
-                                </td>
-                            </tr>
-                            
-                            {% end %}
                         </tbody>
                     </table>
                 </div>
