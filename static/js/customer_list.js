@@ -18,7 +18,7 @@ $(document).on('pjax:end ready',function(){
             type: "post",
             success: function(html){
                 if(html=="ok"){
-                    location.reload();
+                    $('#clientes').DataTable().ajax.reload(null, false);
                 } else {
                     alert(html);
                 }

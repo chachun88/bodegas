@@ -19,6 +19,8 @@ from datetime import datetime
 from bson import json_util
 
 import sendgrid
+import os.path
+from tornado import template
 
 ACCIONES_ACEPTAR = 1
 ACCIONES_PENDIENTE = 2
@@ -162,7 +164,7 @@ class CustomerActionsHandler(BaseHandler):
             try:
                 customer.ChangeState(valores,ESTADO_ACEPTADO)
 
-                for v in valores:
+                for v in valores.split(","):
 
                     try:
                         customer = Customer()
@@ -180,7 +182,7 @@ class CustomerActionsHandler(BaseHandler):
                         mensaje.set_html(html)
                         status, msg = sg.send(mensaje)
 
-                        # print status
+                        print msg
 
                     except Exception, e:
                         print str(e)
