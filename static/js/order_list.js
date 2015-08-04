@@ -136,6 +136,8 @@ $(document).on('pjax:end ready',function(){
                         if (row.state == 1) {
                             if (row.payment_type == 1) {
                                 return '<span class="label label-warning">POR CONFIRMAR</span>';
+                            } else if(row.payment_type == 3) {
+                                return '<span class="label label-warning">CONVENIDO</span>';
                             } else {
                                 return '<span class="label label-danger">RECHAZADO</span>';
                             }
