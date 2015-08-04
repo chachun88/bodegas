@@ -7,7 +7,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from ..globals import Menu
+from ..globals import *
 
 from basehandler import BaseHandler
 from ..model10.customer import Customer
@@ -17,6 +17,8 @@ from ..model10.city import City
 from datetime import datetime
 
 from bson import json_util
+
+import sendgrid
 
 ACCIONES_ACEPTAR = 1
 ACCIONES_PENDIENTE = 2
@@ -132,6 +134,12 @@ class CustomerSaveHandler(BaseHandler):
 
 class CustomerActionsHandler(BaseHandler):
 
+    @staticmethod
+    def generateMail(file_name, **kwargs):
+        base_directory = os.path.join("templates", "mail")
+        loader = template.Loader(base_directory)
+        return loader.load(file_name).generate(**kwargs)
+
     @tornado.web.authenticated
     def post(self):
 
@@ -153,6 +161,30 @@ class CustomerActionsHandler(BaseHandler):
         if accion == ACCIONES_ACEPTAR:
             try:
                 customer.ChangeState(valores,ESTADO_ACEPTADO)
+
+                for v in valores:
+
+                    try:
+                        customer = Customer()
+                        customer.InitById(v)
+                        html = self.generateMail(
+                                        "confirmacionregistro.html",
+                                        name=customer.name)
+
+                        sg = sendgrid.SendGridClient(usuario_sendgrid, pass_sendgrid)
+                        mensaje = sendgrid.Mail()
+                        mensaje.set_from(
+                            "{nombre} <{mail}>".format(nombre='Giani Da Firenze', mail=from_giani))
+                        mensaje.add_to(customer.email)
+                        mensaje.set_subject("Confirmacion Acceso Mayorista GDF")
+                        mensaje.set_html(html)
+                        status, msg = sg.send(mensaje)
+
+                        # print status
+
+                    except Exception, e:
+                        print str(e)
+
                 self.write("ok")
             except Exception,e:
                 self.write(str(e))
