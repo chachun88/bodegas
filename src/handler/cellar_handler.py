@@ -437,6 +437,13 @@ class CellarDetailHandler(BaseHandler):
 
         idd = self.get_argument("id", "")
 
+        pjax = bool(self.get_argument("_pjax", False))
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
         cellar = Cellar()
         cellar.InitById(idd)
         # res = cellar.ListProducts()
@@ -447,7 +454,7 @@ class CellarDetailHandler(BaseHandler):
         # else:
         #     print res
 
-        self.render("cellar/detail.html", side_menu=self.side_menu, cellar=cellar)
+        self.render("cellar{}/detail.html".format(pjax_str), side_menu=self.side_menu, cellar=cellar)
 
     @tornado.web.authenticated
     def post(self):
