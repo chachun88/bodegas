@@ -175,6 +175,15 @@ class Order(BaseModel):
     def additional_info(self, value):
         self._additional_info = value
 
+    @property
+    def user_id(self):
+        return self._user_id
+
+    @user_id.setter
+    def user_id(self, value):
+        self._user_id = value
+    
+
     def __init__(self):
         BaseModel.__init__(self)
         self.table = "Order"
@@ -198,6 +207,7 @@ class Order(BaseModel):
         self._payment_type = ""
         self._billing_id = ""
         self._shipping_id = ""
+        self._user_id = ""
 
     def List(self, page, items, query="", column="o.id", dir='desc', term=""):
 
@@ -305,6 +315,7 @@ class Order(BaseModel):
                 self.customer_email         = order["email"]
                 self.voucher                = order["voucher"]
                 self.additional_info        = order["additional_info"]
+                self.user_id                = order["user_id"]
                 return self.ShowSuccessMessage(order)
             else:
                 return self.ShowError("Pedido no encontrado")

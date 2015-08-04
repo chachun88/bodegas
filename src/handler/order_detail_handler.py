@@ -12,6 +12,7 @@ from ..model10.order_detail import OrderDetail
 from ..model10.order import Order
 from ..model10.webpay import Webpay
 from ..model10.contact import Contact
+from ..model10.customer import Customer
 
 
 class ListOrderDetailHandler(BaseHandler):
@@ -25,6 +26,10 @@ class ListOrderDetailHandler(BaseHandler):
 
         order = Order()
         response = order.InitWithId(order_id)
+
+        customer = Customer()
+
+        customer.InitById(order.user_id)
 
         order_detail = OrderDetail()
 
@@ -42,7 +47,8 @@ class ListOrderDetailHandler(BaseHandler):
                         order=order,
                         webpay_data=webpay_data,
                         datos_despacho=datos_despacho,
-                        datos_facturacion=datos_facturacion)
+                        datos_facturacion=datos_facturacion,
+                        customer=customer)
 
         elif order.payment_type == 2:
 
@@ -131,7 +137,8 @@ class ListOrderDetailHandler(BaseHandler):
                                 order=order,
                                 webpay_data=webpay_data,
                                 datos_despacho=datos_despacho,
-                                datos_facturacion=datos_facturacion)
+                                datos_facturacion=datos_facturacion,
+                                customer=customer)
                 else:
                     self.render("order_detail/list.html",
                                 dn=response["error"],
@@ -139,7 +146,8 @@ class ListOrderDetailHandler(BaseHandler):
                                 order=order,
                                 webpay_data=webpay_data,
                                 datos_despacho=datos_despacho,
-                                datos_facturacion=datos_facturacion)
+                                datos_facturacion=datos_facturacion,
+                                customer=customer)
             except Exception, e:
                 self.render("order_detail/list.html",
                             dn="bpf",
@@ -148,7 +156,8 @@ class ListOrderDetailHandler(BaseHandler):
                             order=order,
                             webpay_data=webpay_data,
                             datos_facturacion=datos_facturacion,
-                            datos_despacho=datos_despacho)
+                            datos_despacho=datos_despacho,
+                            customer=customer)
 
 
 class AddOrderDetailHandler(BaseHandler):
