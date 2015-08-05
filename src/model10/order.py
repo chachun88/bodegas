@@ -182,7 +182,22 @@ class Order(BaseModel):
     @user_id.setter
     def user_id(self, value):
         self._user_id = value
-    
+
+    @property
+    def shipping_info(self):
+        return self._shipping_info
+
+    @shipping_info.setter
+    def shipping_info(self, value):
+        self._shipping_info = value
+
+    @property
+    def billing_info(self):
+        return self._billing_info
+
+    @billing_info.setter
+    def billing_info(self, value):
+        self._billing_info = value
 
     def __init__(self):
         BaseModel.__init__(self)
@@ -208,6 +223,8 @@ class Order(BaseModel):
         self._billing_id = ""
         self._shipping_id = ""
         self._user_id = ""
+        self._shipping_info = ''
+        self._billing_info = ''
 
     def List(self, page, items, query="", column="o.id", dir='desc', term=""):
 
@@ -227,6 +244,8 @@ class Order(BaseModel):
                 o.total,
                 o.payment_type,
                 o.tracking_code,
+                o.shipping_info,
+                o.billing_info,
                 coalesce(c.name, '') || ' ' || coalesce(c.lastname, '') as customer,
                 c.*,
                 ut.name as tipo_cliente,
@@ -316,6 +335,8 @@ class Order(BaseModel):
                 self.voucher                = order["voucher"]
                 self.additional_info        = order["additional_info"]
                 self.user_id                = order["user_id"]
+                self.billing_info           = order['billing_info']
+                self.shipping_info          = order['shipping_info']
                 return self.ShowSuccessMessage(order)
             else:
                 return self.ShowError("Pedido no encontrado")
@@ -353,9 +374,39 @@ class Order(BaseModel):
         cur = self.connection.cursor(
             cursor_factory=psycopg2.extras.RealDictCursor)
 
-        query = '''insert into "Order" (date,source,items_quantity,state,user_id,subtotal,shipping,tax,total,type,products_quantity, payment_type, billing_id, shipping_id)'''
-        query += ''' values(%(date)s,%(source)s,%(items_quantity)s,%(state)s,%(user_id)s,%(subtotal)s,%(shipping)s,%(tax)s,%(total)s,%(type)s,%(products_quantity)s%(payment_type)s,%(billing_id)s,%(shipping_id)s)'''
-        query += ''' returning id'''
+        query = '''
+                insert into "Order" (date,
+                                    source,
+                                    items_quantity,
+                                    state,
+                                    user_id,
+                                    subtotal,
+                                    shipping,
+                                    tax,
+                                    total,
+                                    type,
+                                    products_quantity,
+                                    payment_type,
+                                    billing_id,
+                                    shipping_id,
+                                    shipping_info,
+                                    billing_info)
+                values(%(date)s,
+                        %(source)s,
+                        %(items_quantity)s,
+                        %(state)s,
+                        %(user_id)s,
+                        %(subtotal)s,
+                        %(shipping)s,
+                        %(tax)s,
+                        %(total)s,
+                        %(type)s,
+                        %(products_quantity)s%(payment_type)s,
+                        %(billing_id)s,
+                        %(shipping_id)s,
+                        %(shipping_info)s,
+                        %(billing_info)s)
+                returning id'''
 
         parametros = {
             "date": self.date,
@@ -371,7 +422,9 @@ class Order(BaseModel):
             "type": self.type,
             "payment_type": self.payment_type,
             "billing_id": self.billing_id,
-            "shipping_id": self.shipping_id
+            "shipping_id": self.shipping_id,
+            "shipping_info": self.shipping_info,
+            "billing_info": self.billing_info
         }
 
         cur.execute(query, parametros)
