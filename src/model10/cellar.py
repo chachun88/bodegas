@@ -366,7 +366,7 @@ class Cellar(BaseModel):
             self.connection.close()
             cur.close()
 
-    def ListProducts(self, page=1, items=30, column='name', direction='asc', term=''):
+    def ListProducts(self, page=1, items=30, column='balance_units', direction='desc', term=''):
 
         offset = (int(page)-1)*items
 
@@ -454,7 +454,20 @@ class Cellar(BaseModel):
                                 if kardex.balance_units == int(valor):
                                     rtn_data.append(prod_print)
                         else:
-                            rtn_data.append(prod_print)
+
+                            reservation_cellar = Cellar()
+                            res = reservation_cellar.GetReservationCellar()
+                            res_id = 0
+
+                            if "success" in res:
+                                res_id = res['success']
+
+
+                            if self.id != res_id:
+                                rtn_data.append(prod_print)
+                            elif int(kardex.balance_units) > 0:
+                                rtn_data.append(prod_print)
+
 
                     # else:
                     #     return res_size_id
@@ -478,15 +491,28 @@ class Cellar(BaseModel):
 
         where = ''
         if term != '':
-            where = " where lower(p.sku) like %(term)s or lower(p.name) like %(term)s"
+            where = " where (lower(p.sku) like %(term)s or lower(p.name) like %(term)s) "
+
+        reservation_cellar = Cellar()
+        res = reservation_cellar.GetReservationCellar()
+        res_id = 0
+
+        if "success" in res:
+            res_id = res['success']
+
+        if self.id == res_id:
+            if term != '':
+                where += 'and k.balance_units > 0'
+            else:
+                where = " where k.balance_units > 0"
 
         query = '''
                 select count(1) as total
                 from
-                (select distinct product_sku, size_id 
+                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units 
                 from "Kardex" 
                 where cellar_id = %(id)s 
-                order by product_sku, size_id) k
+                order by product_sku, size_id, date desc, id desc) k
                 inner join "Product" p
                 on p.sku = k.product_sku
                 {where}
