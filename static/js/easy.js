@@ -1,6 +1,6 @@
-$(document).ready(function() {
+$(document).on('ready pjax:end', function() {
 
-    $("#salida select#sku").change(function() {
+    $("#salida select#sku").on('change', function() {
 
         var json_string = $("#salida input#product_list").val()
         obj = $.parseJSON(json_string);
