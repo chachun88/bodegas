@@ -461,7 +461,7 @@ class CellarDetailHandler(BaseHandler):
 
         idd = self.get_argument("id", "")
         start = int(self.get_argument("start", 0))
-        items = self.get_argument("items", 20)
+        items = self.get_argument("length", 20)
         term = self.get_argument("search[value]","")
 
         columns = [
