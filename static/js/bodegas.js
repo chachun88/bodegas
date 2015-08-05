@@ -15,6 +15,10 @@
 // 	$('div.wrap').fadeIn();
 // });
 
+$(document).ready(function(){
+	$('ul.side-nav').pjax_menu('data-target'); 
+});
+
 $(document).on('pjax:send', function(){
     $('div.wrap').fadeOut(200);
 	$('.loader-wrap').fadeIn();

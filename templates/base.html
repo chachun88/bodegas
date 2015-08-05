@@ -78,6 +78,7 @@
 
 		<script type="text/javascript" src="/{{nocache_static}}/js/lp.autocomplete.js"></script>
 		<script src="/{{nocache_static}}/bower_components/jquery-pjax/jquery.pjax.js"></script>
+		<script src="/{{nocache_static}}/js/pjax_nav.js"></script>
 		<script type="text/javascript" src="/{{nocache_static}}/js/bodegas.js"></script>
 
 		<!-- page specific -->
@@ -108,7 +109,7 @@
 						{% if "sub_menu" in m %}
 						<a class="accordion-toggle" data-toggle="collapse" data-parent="#side-nav" href="#forms-collapse_{{ cnt }}"><i class="fa fa-{{ m['icon'] }}"></i> <span class="name">{{ m['name'] }}</span></a>
 						{% else %}
-						<a href="{{ m['link'] }}" ><i class="fa fa-{{ m['icon'] }}"></i> <span class="name">{{ m['name'] }}</span></a>
+						<a href="{{ m['link'] }}" data-target="{{ m['link'] }}" ><i class="fa fa-{{ m['icon'] }}"></i> <span class="name">{{ m['name'] }}</span></a>
 						{% end %}
 						{% if "sub_menu" in m %}
 							{% if "active" in m['class'] %}
@@ -117,7 +118,7 @@
 							<ul id="forms-collapse_{{ cnt }}" class="panel-collapse collapse" style="height: 0px;">
 							{% end %}
 						{% for sm in m["sub_menu"] %}
-							<li class="{{ sm['class'] }}"><a href="{{ sm['link'] }}">{{ sm['name'] }}</a></li>
+							<li class="{{ sm['class'] }}"><a href="{{ sm['link'] }}" data-target="{{ sm['link'] }}">{{ sm['name'] }}</a></li>
 						{% end %}
 						</ul>
 						{% end %}
