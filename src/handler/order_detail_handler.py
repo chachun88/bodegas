@@ -38,7 +38,7 @@ class ListOrderDetailHandler(BaseHandler):
         datos_facturacion = Contact()
         datos_facturacion.InitById(order.billing_id)
         datos_despacho = Contact()
-        datos_despacho.InitById(order.billing_id)
+        datos_despacho.InitById(order.shipping_id)
 
         if "error" in response:
             self.render("order_detail/list.html",
