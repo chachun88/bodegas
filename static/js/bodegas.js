@@ -17,6 +17,7 @@
 
 $(document).ready(function(){
 	$('ul.side-nav').pjax_menu('data-target'); 
+	$('.loader-wrap').fadeOut();
 });
 
 $(document).on('pjax:send', function(){
