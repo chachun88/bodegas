@@ -10,7 +10,9 @@
 {% block caption %}
     un usuario
 {% end %}
-
+{% block javascript %}
+    <script src="/{{nocache_static}}/js/user/add.js"></script>
+{% end %}
 {% block body %}
 
 {% if dn == "t" %}
@@ -71,7 +73,8 @@
                     <label for="" class="control-label">Permisos</label>
                     <div class="controls form-group">
                         <div class="col-sm-8">
-                            <select name="type_id">
+                            <input type="hidden" id="user_type_id" value="{{user.type_id}}"/>
+                            <select id="type_id" name="type_id">
                                 <option value="">---Seleccione---</option>
                                 <option value="2">Administrador</option>
                                 <option value="1">Gestion</option>
