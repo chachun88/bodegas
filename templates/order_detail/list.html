@@ -14,6 +14,12 @@
 			<div class="body">
 				<div class="row">
 					<div class="col-md-1"></div>
+					<div class="col-md-10 text-right">
+						<button class="btn btn-primary" onclick="print()">Imprimir</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-1"></div>
 					<div class="col-md-9">
 						<h3>Pedido N&deg; {{order.id}}</h3>
 					</div>
@@ -223,12 +229,6 @@
 					</div>
 				</div>
 				{% end %}
-				<div class="row">
-					<div class="col-md-1"></div>
-					<div class="col-md-10 text-right">
-						<button class="btn btn-primary" onclick="print()">Imprimir</button>
-					</div>
-				</div>
 			</div>
 		</section>
 	</div>
