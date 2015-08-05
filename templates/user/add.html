@@ -10,7 +10,9 @@
 {% block caption %}
     un usuario
 {% end %}
-
+{% block javascript %}
+    <script src="/{{nocache_static}}/js/user/add.js"></script>
+{% end %}
 {% block body %}
 
 {% if dn == "t" %}
