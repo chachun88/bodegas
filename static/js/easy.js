@@ -156,7 +156,7 @@ $(document).on('ready pjax:end', function() {
         return false;
     });
 
-    $("a.a_tab").click(function(event){
+    $("a.a_tab").on('click', function(event){
         event.preventDefault();
         var identifier = $(this).attr("href");
         $(this).removeClass("btn-default").addClass('btn-info').siblings().removeClass('btn-info').addClass('btn-default');
