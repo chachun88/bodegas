@@ -380,15 +380,35 @@ class Cellar(BaseModel):
         where = ''
 
         if not m and term != '':
-            where = " where lower(p.sku) like %(term)s or lower(p.name) like %(term)s"
+            where = " where (lower(p.sku) like %(term)s or lower(p.name) like %(term)s)"
+
+        reservation_cellar = Cellar()
+        res = reservation_cellar.GetReservationCellar()
+        res_id = 0
+
+        if "success" in res:
+            res_id = res['success']
+
+        if m:
+            if where != '':
+                where += ' and k.balance_units {}'.format(term)
+            else:
+                where = ' where k.balance_units {}'.format(term)
+
+        else:
+            if self.id == res_id:
+                if where != '':
+                    where += ' and balance_units > 0 '
+                else:
+                    where = ' where balance_units > 0 '
 
         query = '''
                 select product_sku, size_id
                 from
-                (select distinct product_sku, size_id 
+                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units 
                 from "Kardex" 
                 where cellar_id = %(id)s 
-                order by product_sku, size_id) k
+                order by product_sku, size_id, date desc, id desc) k
                 inner join "Product" p
                 on p.sku = k.product_sku
                 {where}
@@ -433,40 +453,7 @@ class Cellar(BaseModel):
                         prod_print["size_id"] = kardex.size_id
                         prod_print["size"] = size.name
 
-                        if m:
-                            # print "match"
-                            operador = m.group(1)
-                            valor = m.group(2)
-
-                            if operador == '<':
-                                if kardex.balance_units < int(valor):
-                                    rtn_data.append(prod_print)
-                            elif operador == '>':
-                                if kardex.balance_units > int(valor):
-                                    rtn_data.append(prod_print)
-                            elif operador == '>=':
-                                if kardex.balance_units >= int(valor):
-                                    rtn_data.append(prod_print)
-                            elif operador == '<=':
-                                if kardex.balance_units <= int(valor):
-                                    rtn_data.append(prod_print)
-                            elif operador == '=':
-                                if kardex.balance_units == int(valor):
-                                    rtn_data.append(prod_print)
-                        else:
-
-                            reservation_cellar = Cellar()
-                            res = reservation_cellar.GetReservationCellar()
-                            res_id = 0
-
-                            if "success" in res:
-                                res_id = res['success']
-
-
-                            if self.id != res_id:
-                                rtn_data.append(prod_print)
-                            elif int(kardex.balance_units) > 0:
-                                rtn_data.append(prod_print)
+                        rtn_data.append(prod_print)
 
 
                     # else:
