@@ -706,7 +706,10 @@ class CellarEasyHandler(BaseHandler):
                         salidas_permitidas = int(units) - reserved
 
                         if int(quantity) > salidas_permitidas:
-                            self.write(json_util.dumps({"state": "error", "message": "ERROR!!! cantidad supera {} unidade(s) permitidas(s)".format(salidas_permitidas)}))
+                            if salidas_permitidas > 0:
+                                self.write(json_util.dumps({"state": "error", "message": "ERROR!!! cantidad supera {} unidade(s) permitidas(s)".format(salidas_permitidas)}))
+                            else:
+                                self.write(json_util.dumps({"state": "error", "message": "ERROR!!! Las unidades restantes estan reservadas"}))
                         else:
                             if operation == "mov":
 
