@@ -1213,7 +1213,7 @@ class Product(BaseModel):
             "confirmed": Order.ESTADO_CONFIRMADO,
             "to_shipping": Order.ESTADO_PARA_DESPACHO
         }
-        
+
         try:
             cursor.execute(query, parameters)
             res = cursor.fetchone()

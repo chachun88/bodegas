@@ -7,7 +7,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 
-from ..globals import Menu, debugMode
+from ..globals import Menu, debugMode, reserve_cellar_id
 
 from basehandler import BaseHandler
 from ..model10.cellar import Cellar
@@ -700,8 +700,17 @@ class CellarEasyHandler(BaseHandler):
 
                     if int(units) >= int(quantity):
 
-                        product = Product()
-                        reserved = product.reserved(sku, size)
+                        id_bodega_reserva = reserve_cellar_id
+                        res_id_bodega_reserva = cellar.GetReservationCellar()
+
+                        if "success" in res_id_bodega_reserva:
+                            id_bodega_reserva = res_id_bodega_reserva["success"]
+
+                        if cellar_id == id_bodega_reserva:
+                            product = Product()
+                            reserved = product.reserved(sku, size)
+                        else:
+                            reserved = 0
 
                         salidas_permitidas = int(units) - reserved
 
