@@ -32,6 +32,8 @@ class BannerHandler(BaseHandler):
         historia = self.save('historia', self.get_argument("historia", ""))
         registro = self.save('registro', self.get_argument("registro", ""))
         mayorista = self.save('mayorista', self.get_argument("mayorista", ""))
+        background_registro = self.save('background_registro', self.get_argument("background_registro", ""))
+        background_mayorista = self.save('background_mayorista', self.get_argument("background_mayorista", ""))
 
         nuevo = self.save('nuevo', self.get_argument("nuevo", ""))
         sale = self.save('sale', self.get_argument("sale", ""))

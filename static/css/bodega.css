@@ -215,3 +215,7 @@ section#detalle_pedido th, section#detalle_pedido td{
     display: inline-block !important;
     background: url('/static/img/plus.png') no-repeat center center;
 }
+
+.col-md-3 > div.row.special-row > div{
+    height: 415px !important;
+}
