@@ -1,5 +1,6 @@
 {% extends "../../base_ajax.html" %}
 {% block body %}
+<form action="/banner" method="post">
     <div class="container-fluid banner">
         <div class="col-md-3">
             <div class="row">
@@ -34,7 +35,7 @@
                 <div class="col-md-6">
                     <h4>Ir a la tienda</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="tienda" />
+                        <input type="file" class="upload" name="tienda-caluga" />
                     </div>
                 </div>
             </div>
@@ -42,7 +43,7 @@
                 <div class="col-md-12">
                     <h4>Nuevo</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="nuevo" />
+                        <input type="file" class="upload" name="nuevo-caluga" />
                     </div>
                 </div>
             </div>
@@ -85,20 +86,19 @@
                     <div class="col-md-4">
                         <h4>Nuevo</h4>
                         <div class="row">
-                            <span>Subir</span>
-                            <input type="file" class="upload" name="mayorista" />
+                            <input type="file" class="upload" name="nuevo" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <h4>Sale</h4>
                         <div class="row">
-                            <input type="file" class="upload" name="mayorista" />
+                            <input type="file" class="upload" name="sale" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <h4>Tienda</h4>
                         <div class="row">
-                            <input type="file" class="upload" name="mayorista" />
+                            <input type="file" class="upload" name="tienda" />
                         </div>
                     </div>
                 </div>
@@ -106,9 +106,13 @@
             <div class="row">
                 <div class="col-md-12 secciones">
                     <h3>Background</h3>
-                    <input type="file" class="upload" name="mayorista" />
+                    <input type="file" class="upload" name="background" />
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-info">Guardar</button>
+        </div>
     </div>
+</form>
 {% end %}
