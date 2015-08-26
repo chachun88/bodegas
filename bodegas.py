@@ -31,6 +31,7 @@ from src.handler.customer_handler import *
 from src.handler.tag_handler import *
 from src.handler.shipping_handler import *
 from src.handler.examples_handler import *
+from src.handler.banner_handler import *
 
 from config import *
 
@@ -157,7 +158,10 @@ class Application(tornado.web.Application):
             (r"/shipping/save_tracking",       SaveTrackingCodeHandler),
 
             (r"/examples/pjax",       PjaxHandler),
-            (r"/examples/pjax2",       Pjax2Handler)
+            (r"/examples/pjax2",       Pjax2Handler),
+
+            #banner
+            (r"/banner",       BannerHandler)
         ]
         tornado.web.Application.__init__(self, handlers, **settings)
 
@@ -227,7 +231,8 @@ class Application(tornado.web.Application):
                  {"class": "", "name": Menu.SHIPPING_SAVE,
                   "link": "/shipping/save"}
              ]},
-            {"class": "panel", "name": Menu.SALIR, "icon": "sign-out", "link": "/auth/login"}, ]
+            {"class": "panel", "name": "banner", "icon": "sign-out", "link": "/banner"},
+            {"class": "panel", "name": Menu.SALIR, "icon": "sign-out", "link": "/auth/login"} ]
 
 
 def main():
