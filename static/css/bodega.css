@@ -166,7 +166,7 @@ section#detalle_pedido th, section#detalle_pedido td{
     animation: spin 1000ms infinite linear;
 }
 
-.banner > .col-md-3 > .row > div {
+.banner > .col-md-4 > .row > div {
     border: 1px solid #666;
     background-color: white;
     height: 200px;
@@ -216,6 +216,6 @@ section#detalle_pedido th, section#detalle_pedido td{
     background: url('/static/img/plus.png') no-repeat center center;
 }
 
-.col-md-3 > div.row.special-row > div{
+.col-md-4 > div.row.special-row > div{
     height: 415px !important;
 }
