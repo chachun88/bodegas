@@ -10,19 +10,19 @@
                         <div class="col-sm-4">
                             <div class="row">Banner 1</div>
                             <div class="row">
-                                <input type="file" class="upload" name="banner1" />
+                                <input type="file" class="upload" name="banner1" src="{{banner('banner1').thumbnail}}" valor="{{banner('banner1').image}}"/>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="row">Banner 2</div>
                             <div class="row">
-                                <input type="file" class="upload" name="banner2" />
+                                <input type="file" class="upload" name="banner2" src="{{banner('banner2').thumbnail}}" valor="{{banner('banner2').image}}"/>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="row">Banner 3</div>
                             <div class="row">
-                                <input type="file" class="upload" name="banner3" />
+                                <input type="file" class="upload" name="banner3" src="{{banner('banner3').thumbnail}}" valor="{{banner('banner3').image}}"/>
                             </div>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                 <div class="col-md-6">
                     <h4>Ir a la tienda</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="tienda-caluga" />
+                        <input type="file" class="upload" name="tienda-caluga" src="{{banner('caluga_ir_tienda').thumbnail}}" valor="{{banner('caluga_ir_tienda').image}}"/>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 <div class="col-md-12">
                     <h4>Nuevo</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="nuevo-caluga" />
+                        <input type="file" class="upload" name="nuevo-caluga" src="{{banner('caluga_nuevo').thumbnail}}" valor="{{banner('caluga_nuevo').image}}"/>
                     </div>
                 </div>
             </div>
@@ -51,13 +51,13 @@
                 <div class="col-md-6">
                     <h4>Instagram</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="instagram" />
+                        <input type="file" class="upload" name="instagram" src="{{banner('instagram').thumbnail}}" valor="{{banner('instagram').image}}"/>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <h4>Historia</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="historia" />
+                        <input type="file" class="upload" name="historia" src="{{banner('historia').thumbnail}}" valor="{{banner('historia').image}}"/>
                     </div>
                 </div>
             </div>
@@ -68,21 +68,21 @@
                 <div class="col-md-4">
                     <h5>Background Registro</h5>
                     <div class="row">
-                        <input type="file" class="upload" name="background_registro" />
+                        <input type="file" class="upload" name="background_registro" src="{{banner('background_registro').thumbnail}}" valor="{{banner('background_registro').image}}"/>
                     </div>
                     <h5>Registro</h5>
                     <div class="row">
-                        <input type="file" class="upload" name="registro" />
+                        <input type="file" class="upload" name="registro" src="{{banner('registro').thumbnail}}" valor="{{banner('registro').image}}"/>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <h5>Background Mayorista</h5>
                     <div class="row">
-                        <input type="file" class="upload" name="background_mayorista" />
+                        <input type="file" class="upload" name="background_mayorista" src="{{banner('background_mayorista').thumbnail}}" valor="{{banner('background_mayorista').image}}"/>
                     </div>
                     <h5>Mayorista</h5>
                     <div class="row">
-                        <input type="file" class="upload" name="mayorista" />
+                        <input type="file" class="upload" name="mayorista" src="{{banner('mayorista').thumbnail}}" valor="{{banner('mayorista').image}}"/>
                     </div>
                 </div>
             </div>
@@ -94,19 +94,19 @@
                     <div class="col-md-4">
                         <h4>Nuevo</h4>
                         <div class="row">
-                            <input type="file" class="upload" name="nuevo" />
+                            <input type="file" class="upload" name="nuevo" src="{{banner('nuevo').thumbnail}}" valor="{{banner('nuevo').image}}"/>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <h4>Sale</h4>
                         <div class="row">
-                            <input type="file" class="upload" name="sale" />
+                            <input type="file" class="upload" name="sale" src="{{banner('sale').thumbnail}}" valor="{{banner('sale').image}}"/>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <h4>Tienda</h4>
                         <div class="row">
-                            <input type="file" class="upload" name="tienda" />
+                            <input type="file" class="upload" name="tienda" src="{{banner('tienda').thumbnail}}" valor="{{banner('tienda').image}}"/>
                         </div>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
             <div class="row">
                 <div class="col-md-12 secciones">
                     <h3>Background</h3>
-                    <input type="file" class="upload" name="background" />
+                    <input type="file" class="upload" name="background" src="{{banner('background').thumbnail or ''}}" valor="{{banner('background').image or ''}}"/>
                 </div>
             </div>
         </div>

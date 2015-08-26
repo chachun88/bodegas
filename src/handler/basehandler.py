@@ -11,6 +11,7 @@ import locale
 import os
 from lp.globals import enviroment, Enviroment
 from tornado.options import options
+from ..model10.banner import Banner
 # from loadingplay.multilang.lang import lpautoSelectCurrentLang
 
 
@@ -108,6 +109,12 @@ class BaseHandler(tornado.web.RequestHandler):
            return "static"
        return tornado.options.options["nocache_static"]
 
+    @staticmethod
+    def getBannerByName(name):
+        banner = Banner()
+        banner.initByName(name)
+        return banner
+
     def render(self, template_name ,**kwargs):
 
         # loading current_user
@@ -123,6 +130,7 @@ class BaseHandler(tornado.web.RequestHandler):
         kwargs["CustomDateFormat"] = self.CustomDateFormat
         kwargs["money_format"] = self.money_format
         kwargs["nocache_static"] = self.nocache_static()
+        kwargs["banner"] = self.getBannerByName
 
         # overrided method
         tornado.web.RequestHandler.render(self, template_name, **kwargs)

@@ -219,3 +219,8 @@ section#detalle_pedido th, section#detalle_pedido td{
 .col-md-4 > div.row.special-row > div{
     height: 415px !important;
 }
+
+.imgup-delete-button {
+    top: 0;
+    right: 5px;
+}
