@@ -1,0 +1,97 @@
+/**
+ * reset css
+ */
+.imgup *
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    text-align: left;
+}
+
+.imgup>ul>li
+{
+    display: block;
+    border: gray solid 1px;
+    float: left;
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    position: relative;
+    margin-left: 5px;
+}
+
+.imgup>ul>li>.img-container
+{
+    text-align: center;
+    max-height: 100%;  
+    max-width: 100%; 
+    width: auto;
+    position: absolute;  
+    top: 0;  
+    bottom: 0;  
+    left: 0;  
+    right: 0;  
+    margin: auto;
+}
+
+.imgup>ul>li>.img-container>.imgup-image
+{
+    max-height: 100%;  
+    max-width: 100%; 
+    width: auto;
+    position: absolute;  
+    top: 0;  
+    bottom: 0;  
+    left: 0;  
+    right: 0;  
+    margin: auto;
+}
+
+.imgup>ul>li>.imgup-add-input
+{
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+}
+
+
+.imgup-progress
+{
+    border: gray solid 1px;
+    height: 15px;
+    margin-top: 50%;
+    width: 90%;
+    display: inline-block;
+}
+
+.imgup-progress-bar
+{
+    background: black;
+    height: 100%;
+    opacity: 0.2;
+    width: 100%;
+}
+
+.template 
+{
+    display: none;
+}
+
+.red-border>li
+{
+    border: red solid 1px!important;
+}
+
+.caption
+{
+    display: block;
+    position: absolute;
+    text-shadow: 2px 2px white;
+}
+
+.imgup-delete-button
+{
+    position: absolute;
+}

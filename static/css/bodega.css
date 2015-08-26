@@ -169,7 +169,7 @@ section#detalle_pedido th, section#detalle_pedido td{
 .banner > .col-md-3 > .row > div {
     border: 1px solid #666;
     background-color: white;
-    height: 150px;
+    height: 200px;
 }
 
 .banner > .row {
@@ -198,6 +198,20 @@ section#detalle_pedido th, section#detalle_pedido td{
     text-align: center;
 }
 
+.secciones {
+    height: 250px !important;
+}
+
 .banner > div {
     margin-right: 10px;
+}
+
+.imgup * {
+    text-align: center !important;
+}
+
+.imgup>ul>li {
+    float: none !important;
+    display: inline-block !important;
+    background: url('/static/img/plus.png') no-repeat center center;
 }

@@ -1,0 +1,29 @@
+{
+  "name": "file_uploader",
+  "authors": [
+    "ricardo <ricardo@loadingplay.com>"
+  ],
+  "license": "MIT",
+  "homepage": "http://www.loadingplay.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "qunit": "~1.18.0"
+  },
+  "_release": "3f13f3b7a4",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "3f13f3b7a48fc413addf65daff44e0f6c5c7df23"
+  },
+  "_source": "https://github.com/k1ltr0/jquery.ajax.uploader.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/k1ltr0/jquery.ajax.uploader.git",
+  "_direct": true
+}

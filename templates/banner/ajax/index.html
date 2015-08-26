@@ -1,24 +1,114 @@
 {% extends "../../base_ajax.html" %}
 {% block body %}
     <div class="container-fluid banner">
-        <div class="row">
-            <div class="col-md-12">Banner</div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Banner</h4>
+                    <div class="row text-center">
+                        <div class="col-sm-4">
+                            <div class="row">Banner 1</div>
+                            <div class="row">
+                                <input type="file" class="upload" name="banner1" />
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="row">Banner 2</div>
+                            <div class="row">
+                                <input type="file" class="upload" name="banner2" />
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="row">Banner 3</div>
+                            <div class="row">
+                                <input type="file" class="upload" name="banner3" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Video</h4>
+                </div>
+                <div class="col-md-6">
+                    <h4>Ir a la tienda</h4>
+                    <div class="row">
+                        <input type="file" class="upload" name="tienda" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Nuevo</h4>
+                    <div class="row">
+                        <input type="file" class="upload" name="nuevo" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Instagram</h4>
+                    <div class="row">
+                        <input type="file" class="upload" name="instagram" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>Historia</h4>
+                    <div class="row">
+                        <input type="file" class="upload" name="historia" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Menu</h4>
+                </div>
+                <div class="col-md-4">
+                    <h4>Registro</h4>
+                    <div class="row">
+                        <input type="file" class="upload" name="registro" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h4>Mayorista</h4>
+                    <div class="row">
+                        <input type="file" class="upload" name="mayorista" />
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">Video</div>
-            <div class="col-md-6">Ir a la tienda</div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">Nuevo</div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">Instagram</div>
-            <div class="col-md-6">Historia</div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">Menu</div>
-            <div class="col-md-4">Registro</div>
-            <div class="col-md-4">Mayorista</div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12 secciones">
+                    <h3>Secciones</h3>
+                    <div class="col-md-4">
+                        <h4>Nuevo</h4>
+                        <div class="row">
+                            <span>Subir</span>
+                            <input type="file" class="upload" name="mayorista" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Sale</h4>
+                        <div class="row">
+                            <input type="file" class="upload" name="mayorista" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Tienda</h4>
+                        <div class="row">
+                            <input type="file" class="upload" name="mayorista" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 secciones">
+                    <h3>Background</h3>
+                    <input type="file" class="upload" name="mayorista" />
+                </div>
+            </div>
         </div>
     </div>
 {% end %}

@@ -1,5 +1,6 @@
 {% extends "../base.html" %}
 {% block body %}
+<form action="/banner" method="post">
     <div class="container-fluid banner">
         <div class="col-md-3">
             <div class="row">
@@ -9,28 +10,19 @@
                         <div class="col-sm-4">
                             <div class="row">Banner 1</div>
                             <div class="row">
-                                <div class="fileUpload btn btn-sm btn-primary">
-                                    <span>Subir</span>
-                                    <input type="file" class="upload" name="banner1" />
-                                </div>
+                                <input type="file" class="upload" name="banner1" />
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="row">Banner 2</div>
                             <div class="row">
-                                <div class="fileUpload btn btn-sm btn-primary">
-                                    <span>Subir</span>
-                                    <input type="file" class="upload" name="banner2" />
-                                </div>
+                                <input type="file" class="upload" name="banner2" />
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="row">Banner 3</div>
                             <div class="row">
-                                <div class="fileUpload btn btn-sm btn-primary">
-                                    <span>Subir</span>
-                                    <input type="file" class="upload" name="banner3" />
-                                </div>
+                                <input type="file" class="upload" name="banner3" />
                             </div>
                         </div>
                     </div>
@@ -43,10 +35,7 @@
                 <div class="col-md-6">
                     <h4>Ir a la tienda</h4>
                     <div class="row">
-                        <div class="fileUpload btn btn-sm btn-primary">
-                            <span>Subir</span>
-                            <input type="file" class="upload" name="tienda" />
-                        </div>
+                        <input type="file" class="upload" name="tienda-caluga" />
                     </div>
                 </div>
             </div>
@@ -54,10 +43,7 @@
                 <div class="col-md-12">
                     <h4>Nuevo</h4>
                     <div class="row">
-                        <div class="fileUpload btn btn-sm btn-primary">
-                            <span>Subir</span>
-                            <input type="file" class="upload" name="nuevo" />
-                        </div>
+                        <input type="file" class="upload" name="nuevo-caluga" />
                     </div>
                 </div>
             </div>
@@ -65,19 +51,13 @@
                 <div class="col-md-6">
                     <h4>Instagram</h4>
                     <div class="row">
-                        <div class="fileUpload btn btn-sm btn-primary">
-                            <span>Subir</span>
-                            <input type="file" class="upload" name="instagram" />
-                        </div>
+                        <input type="file" class="upload" name="instagram" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <h4>Historia</h4>
                     <div class="row">
-                        <div class="fileUpload btn btn-sm btn-primary">
-                            <span>Subir</span>
-                            <input type="file" class="upload" name="historia" />
-                        </div>
+                        <input type="file" class="upload" name="historia" />
                     </div>
                 </div>
             </div>
@@ -88,19 +68,13 @@
                 <div class="col-md-4">
                     <h4>Registro</h4>
                     <div class="row">
-                        <div class="fileUpload btn btn-sm btn-primary">
-                            <span>Subir</span>
-                            <input type="file" class="upload" name="registro" />
-                        </div>
+                        <input type="file" class="upload" name="registro" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <h4>Mayorista</h4>
                     <div class="row">
-                        <div class="fileUpload btn btn-sm btn-primary">
-                            <span>Subir</span>
-                            <input type="file" class="upload" name="mayorista" />
-                        </div>
+                        <input type="file" class="upload" name="mayorista" />
                     </div>
                 </div>
             </div>
@@ -112,28 +86,19 @@
                     <div class="col-md-4">
                         <h4>Nuevo</h4>
                         <div class="row">
-                            <div class="fileUpload btn btn-sm btn-primary">
-                                <span>Subir</span>
-                                <input type="file" class="upload" name="mayorista" />
-                            </div>
+                            <input type="file" class="upload" name="nuevo" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <h4>Sale</h4>
                         <div class="row">
-                            <div class="fileUpload btn btn-sm btn-primary">
-                                <span>Subir</span>
-                                <input type="file" class="upload" name="mayorista" />
-                            </div>
+                            <input type="file" class="upload" name="sale" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <h4>Tienda</h4>
                         <div class="row">
-                            <div class="fileUpload btn btn-sm btn-primary">
-                                <span>Subir</span>
-                                <input type="file" class="upload" name="mayorista" />
-                            </div>
+                            <input type="file" class="upload" name="tienda" />
                         </div>
                     </div>
                 </div>
@@ -141,12 +106,13 @@
             <div class="row">
                 <div class="col-md-12 secciones">
                     <h3>Background</h3>
-                    <div class="fileUpload btn btn-sm btn-primary">
-                        <span>Subir</span>
-                        <input type="file" class="upload" name="mayorista" />
-                    </div>
+                    <input type="file" class="upload" name="background" />
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-info">Guardar</button>
+        </div>
     </div>
+</form>
 {% end %}
