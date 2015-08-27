@@ -2,7 +2,7 @@
 {% block body %}
 <form action="/banner" method="post">
     <div class="container-fluid banner">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="row">
                 <div class="col-md-12">
                     <h4>Banner</h4>
@@ -10,19 +10,19 @@
                         <div class="col-sm-4">
                             <div class="row">Banner 1</div>
                             <div class="row">
-                                <input type="file" class="upload" name="banner1" />
+                                <input type="file" class="upload" name="banner1" src="{{banner('banner1').thumbnail}}" valor='{"image":"{{banner("banner1").image}}", "thumb_200": "{{banner("banner1").thumbnail}}"}'/>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="row">Banner 2</div>
                             <div class="row">
-                                <input type="file" class="upload" name="banner2" />
+                                <input type="file" class="upload" name="banner2" src="{{banner('banner2').thumbnail}}" valor='{"image":"{{banner("banner2").image}}", "thumb_200": "{{banner("banner2").thumbnail}}"}'/>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="row">Banner 3</div>
                             <div class="row">
-                                <input type="file" class="upload" name="banner3" />
+                                <input type="file" class="upload" name="banner3" src="{{banner('banner3').thumbnail}}" valor='{"image":"{{banner("banner3").image}}", "thumb_200": "{{banner("banner3").thumbnail}}"}'/>
                             </div>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                 <div class="col-md-6">
                     <h4>Ir a la tienda</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="tienda-caluga" />
+                        <input type="file" class="upload" name="tienda-caluga" src="{{banner('caluga_ir_tienda').thumbnail}}" valor='{"image":"{{banner("caluga_ir_tienda").image}}", "thumb_200": "{{banner("caluga_ir_tienda").thumbnail}}"}'/>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 <div class="col-md-12">
                     <h4>Nuevo</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="nuevo-caluga" />
+                        <input type="file" class="upload" name="nuevo-caluga" src="{{banner('caluga_nuevo').thumbnail}}" valor='{"image":"{{banner("caluga_nuevo").image}}", "thumb_200": "{{banner("caluga_nuevo").thumbnail}}"}'/>
                     </div>
                 </div>
             </div>
@@ -51,54 +51,74 @@
                 <div class="col-md-6">
                     <h4>Instagram</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="instagram" />
+                        <input type="file" class="upload" name="instagram" src="{{banner('instagram').thumbnail}}" valor='{"image":"{{banner("instagram").image}}", "thumb_200": "{{banner("instagram").thumbnail}}"}'/>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <h4>Historia</h4>
                     <div class="row">
-                        <input type="file" class="upload" name="historia" />
+                        <input type="file" class="upload" name="historia" src="{{banner('historia').thumbnail}}" valor='{"image":"{{banner("historia").image}}", "thumb_200": "{{banner("historia").thumbnail}}"}'/>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row special-row">
                 <div class="col-md-4">
                     <h4>Menu</h4>
                 </div>
                 <div class="col-md-4">
-                    <h4>Registro</h4>
+                    <h5>Background Registro</h5>
                     <div class="row">
-                        <input type="file" class="upload" name="registro" />
+                        <input type="file" class="upload" name="background_registro" src="{{banner('background_registro').thumbnail}}" valor='{"image":"{{banner("background_registro").image}}", "thumb_200": "{{banner("background_registro").thumbnail}}"}'/>
+                    </div>
+                    <h5>Registro</h5>
+                    <div class="row">
+                        <input type="file" class="upload" name="registro" src="{{banner('registro').thumbnail}}" valor='{"image":"{{banner("registro").image}}", "thumb_200": "{{banner("registro").thumbnail}}"}'/>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <h4>Mayorista</h4>
+                    <h5>Background Mayorista</h5>
                     <div class="row">
-                        <input type="file" class="upload" name="mayorista" />
+                        <input type="file" class="upload" name="background_mayorista" src="{{banner('background_mayorista').thumbnail}}" valor='{"image":"{{banner("background_mayorista").image}}", "thumb_200": "{{banner("background_mayorista").thumbnail}}"}'/>
+                    </div>
+                    <h5>Mayorista</h5>
+                    <div class="row">
+                        <input type="file" class="upload" name="mayorista" src="{{banner('mayorista').thumbnail}}" valor='{"image":"{{banner("mayorista").image}}", "thumb_200": "{{banner("mayorista").thumbnail}}"}'/>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <button type="button" id="preview-home" class="btn btn-info" url-local="{{url_local}}">Preview</button>
+            </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="row">
                 <div class="col-md-12 secciones">
                     <h3>Secciones</h3>
                     <div class="col-md-4">
                         <h4>Nuevo</h4>
                         <div class="row">
-                            <input type="file" class="upload" name="nuevo" />
+                            <button type="button" id="preview-section" class="btn btn-info" tag="nuevo" url-local="{{url_local}}">Preview</button>
+                        </div>
+                        <div class="row">
+                            <input type="file" class="upload" name="nuevo" src="{{banner('nuevo').thumbnail}}" valor='{"image":"{{banner("nuevo").image}}", "thumb_200": "{{banner("nuevo").thumbnail}}"}'/>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <h4>Sale</h4>
                         <div class="row">
-                            <input type="file" class="upload" name="sale" />
+                            <button type="button" id="preview-section" class="btn btn-info" tag="sale" url-local="{{url_local}}">Preview</button>
+                        </div>
+                        <div class="row">
+                            <input type="file" class="upload" name="sale" src="{{banner('sale').thumbnail}}" valor='{"image":"{{banner("sale").image}}", "thumb_200": "{{banner("sale").thumbnail}}"}'/>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <h4>Tienda</h4>
                         <div class="row">
-                            <input type="file" class="upload" name="tienda" />
+                            <button type="button" id="preview-section" class="btn btn-info" tag="tienda" url-local="{{url_local}}">Preview</button>
+                        </div>
+                        <div class="row">
+                            <input type="file" class="upload" name="tienda" src="{{banner('tienda').thumbnail}}" valor='{"image":"{{banner("tienda").image}}", "thumb_200": "{{banner("tienda").thumbnail}}"}'/>
                         </div>
                     </div>
                 </div>
@@ -106,8 +126,11 @@
             <div class="row">
                 <div class="col-md-12 secciones">
                     <h3>Background</h3>
-                    <input type="file" class="upload" name="background" />
+                    <input type="file" class="upload" name="background" src="{{banner('background').thumbnail or ''}}" valor='{"image":"{{banner("background").image}}", "thumb_200": "{{banner("background").thumbnail}}"}'/>
                 </div>
+            </div>
+            <div class="row">
+                <button type="button" id="preview-section" class="btn btn-info">Preview</button>
             </div>
         </div>
         <div class="col-md-3">
