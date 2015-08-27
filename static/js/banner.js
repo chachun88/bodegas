@@ -17,7 +17,7 @@
 // }
 
 
-$(document).on('ready pjax:ready', function(){
+$(document).on('ready pjax:end', function(){
     
 
     $("input.upload:file").each(function(){
