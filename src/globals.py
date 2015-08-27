@@ -13,7 +13,7 @@ reutilizado por estefy en bodegas
 '''
 
 import os
- from lp.globals import enviroment, Enviroment
+from lp.globals import enviroment, Enviroment
 
 if os.name == "nt":
     debugMode = True
