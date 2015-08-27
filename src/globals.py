@@ -13,6 +13,7 @@ reutilizado por estefy en bodegas
 '''
 
 import os
+ from lp.globals import enviroment, Enviroment
 
 if os.name == "nt":
     debugMode = True
@@ -45,7 +46,12 @@ usuario_sendgrid = 'nailuj41'
 pass_sendgrid = 'Equipo_2112'
 
 # setting vars
-if debugMode:
+if enviroment == Enviroment.LOCAL:
+    userMode = "local"
+    port = BODEGA_DEBUG_PORT
+    ws_port = DEBUG_WS_PORT
+    url_local = "http://localhost:8502"
+elif enviroment == Enviroment.ONDEV:
     userMode = "test"
     port = BODEGA_DEBUG_PORT
     ws_port = DEBUG_WS_PORT
