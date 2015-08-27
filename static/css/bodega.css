@@ -169,7 +169,7 @@ section#detalle_pedido th, section#detalle_pedido td{
 .banner > .col-md-4 > .row > div {
     border: 1px solid #666;
     background-color: white;
-    height: 200px;
+    padding: 10px;
 }
 
 .banner > .row {
@@ -198,9 +198,9 @@ section#detalle_pedido th, section#detalle_pedido td{
     text-align: center;
 }
 
-.secciones {
+/*.secciones {
     height: 250px !important;
-}
+}*/
 
 .banner > div {
     margin-right: 10px;
@@ -219,8 +219,12 @@ section#detalle_pedido th, section#detalle_pedido td{
     background: url('/static/img/plus.png') no-repeat center center;
 }
 
-.col-md-4 > div.row.special-row > div{
-    height: 415px !important;
+.row.special-row {
+    display: flex;
+}
+
+.row.special-row > .special-col{
+    align-items: stretch;
 }
 
 .imgup-delete-button {
@@ -230,4 +234,8 @@ section#detalle_pedido th, section#detalle_pedido td{
 
 .imgup>ul>li.imgup-hidden {
     display: none !important;
+}
+
+.banner button.save {
+    margin: 10px 0;
 }
