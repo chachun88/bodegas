@@ -68,7 +68,15 @@ $(document).ready(function(){
         // evt.preventDefault();
 
         var ready = true;
-        
+
+        var input = [];
+
+        $("input:text").each(function(){
+            if(!$(this).fileuploader('isready')){
+                ready = false;
+            }
+        });
+
         if (!ready)
         {
             alert("Por favor espere que las fotos terminen de subirse");
@@ -80,6 +88,13 @@ $(document).ready(function(){
     });
 
     $(document).on('click', 'button#preview-home', function(){
-        location.href = 'http://giani.ondev.today/preview/home?' + $("form").serialize();
+        var action = $(this).attr("url-local") + '/preview/home';
+        $("form").attr('action', action);
+        $("form").submit();
+    });
+    $(document).on('click', 'button#preview-section', function(){
+        var action = $(this).attr("url-local") + '/preview/section?tag=' + $(this).attr("tag");
+        $("form").attr('action', action);
+        $("form").submit();
     });
 });

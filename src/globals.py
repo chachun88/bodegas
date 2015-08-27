@@ -56,6 +56,7 @@ else:
     ws_port = WS_PORT
     url_local = "http://www.gianidafirenze.cl"
 
+# url_local = "http://localhost:8502"
 webservice_url += ":{}".format(ws_port)
 
 # print "{}".format(debugMode)

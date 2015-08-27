@@ -4,6 +4,7 @@
 from basehandler import BaseHandler
 from bson import json_util
 from src.model10.banner import Banner
+from src.globals import *
 
 
 class BannerHandler(BaseHandler):
@@ -17,8 +18,7 @@ class BannerHandler(BaseHandler):
         if pjax:
             pjax_str = '/ajax'
 
-        self.render(
-            "banner{}/index.html".format(pjax_str))
+        self.render("banner{}/index.html".format(pjax_str), url_local=url_local)
 
     def post(self):
 
