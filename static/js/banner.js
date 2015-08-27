@@ -80,6 +80,6 @@ $(document).ready(function(){
     });
 
     $(document).on('click', 'button#preview-home', function(){
-        location.href = 'http://localhost:8502/preview/home?' + $("form").serialize();
+        location.href = 'http://giani.ondev.today/preview/home?' + $("form").serialize();
     });
 });
