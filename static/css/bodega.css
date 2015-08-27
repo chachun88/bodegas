@@ -213,6 +213,9 @@ section#detalle_pedido th, section#detalle_pedido td{
 .imgup>ul>li {
     float: none !important;
     display: inline-block !important;
+}
+
+.imgup>ul>li.imgup-add-input-container {
     background: url('/static/img/plus.png') no-repeat center center;
 }
 
@@ -223,4 +226,8 @@ section#detalle_pedido th, section#detalle_pedido td{
 .imgup-delete-button {
     top: 0;
     right: 5px;
+}
+
+.imgup>ul>li.imgup-hidden {
+    display: none !important;
 }

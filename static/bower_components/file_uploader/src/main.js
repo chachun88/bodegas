@@ -23,10 +23,6 @@
 
             return ready;
         },
-        somefunction : function()
-        {
-            console.log('class: ' + this.attr('class'));
-        },
         loadimages : function(images)
         {
             this.each(function()
@@ -52,6 +48,7 @@
             response_type : 'string',
             thumbnail : '',
             thumbnail_origin : 'local', // remote
+            hidden_class : 'imgup-hidden',
             multi : true,
             highlight_spot: false,
             templates : {
