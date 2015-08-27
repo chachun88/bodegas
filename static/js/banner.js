@@ -97,4 +97,9 @@ $(document).on('ready pjax:end', function(){
         $("form").attr('action', action);
         $("form").submit();
     });
+    $(document).on('click', 'button:submit', function(){
+        $("form").attr('action', '/banner');
+        $("form").removeAttr("target");
+        $("form").submit();
+    });
 });
