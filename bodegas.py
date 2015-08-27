@@ -231,7 +231,7 @@ class Application(tornado.web.Application):
                  {"class": "", "name": Menu.SHIPPING_SAVE,
                   "link": "/shipping/save"}
              ]},
-            {"class": "panel", "name": "banner", "icon": "sign-out", "link": "/banner"},
+            {"class": "panel", "name": Menu.BANNER, "icon": "picture-o", "link": "/banner"},
             {"class": "panel", "name": Menu.SALIR, "icon": "sign-out", "link": "/auth/login"} ]
 
 

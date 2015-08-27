@@ -124,6 +124,8 @@ class Menu:
     SHIPPING_LIST = "Lista de precios"
     SHIPPING_SAVE = "Agregar precio"
 
+    BANNER = "Banner"
+
     SALIR = "Salir"
 
     CONFIGURACION = "Configuración"
