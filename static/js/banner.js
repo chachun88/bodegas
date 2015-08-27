@@ -1,3 +1,22 @@
+// function isJSON(value)
+// {
+//     var is_json = false;
+//         // detect if an string can be converted to json
+//     try
+//     {
+//         var val = $.parseJSON(value);
+//         is_json = true;
+//     }
+//     catch(ex)
+//     {
+//         // nothing here
+//         is_json = false;
+//     }
+
+//     return is_json;
+// }
+
+
 $(document).ready(function(){
     
 
@@ -6,23 +25,41 @@ $(document).ready(function(){
         var name = $(this).attr("name");
         var value = $(this).attr("valor");
 
-        console.log(typeof(value));
-
         if(src === ""){
             $(this).fileuploader({
                 "multi": false,
                 "uploadurl" : 'https://static.loadingplay.com/image/upload'
             });
         } else {
+
+            // var is_json = isJSON(value);  // detect if remote
+
+            // if (is_json)  // load from remote 
+            // {
             $(this).fileuploader({
                 "multi": false,
                 "uploadurl" : 'https://static.loadingplay.com/image/upload',
                 "images": [{
-                    "name" : src,
-                    "src" : '',
+                    "name" : 'name.png',
+                    "src" : src,
                     "value" : value
-                }]
+                }],
+                "thumbnail": "thumb_200",
+                "thumbnail_origin": "remote"
             });
+            // }
+            // else  // load thumbnail from local
+            // {
+            //     $(this).fileuploader({
+            //         "multi": false,
+            //         "uploadurl" : 'https://static.loadingplay.com/image/upload',
+            //         "images": [{
+            //             "name" : 'name.png',
+            //             "src" : src,
+            //             "value" : value
+            //         }]
+            //     });
+            // }
         }
     });
 
@@ -40,5 +77,9 @@ $(document).ready(function(){
         return ready;
 
         // console.log("eeee");
+    });
+
+    $(document).on('click', 'button#preview-home', function(){
+        location.href = 'http://localhost:8502/preview/home?' + $("form").serialize();
     });
 });
