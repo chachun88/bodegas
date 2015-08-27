@@ -67,7 +67,7 @@ $(document).ready(function(){
     {
         // evt.preventDefault();
 
-        var ready = false;
+        var ready = true;
         
         if (!ready)
         {
