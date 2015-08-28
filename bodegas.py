@@ -104,6 +104,7 @@ class Application(tornado.web.Application):
             (r"/cellar/selectreservation", SelectReservationHandler),
             (r"/cellar/easy", CellarEasyHandler),
             (r"/cellar/testing", TestingHandler),
+            (r"/cellar/easyoutput_ajax", EasyOutputListHandler),
 
             # order
             (r"/order/list", OrderHandler),

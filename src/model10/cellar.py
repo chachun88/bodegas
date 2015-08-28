@@ -379,6 +379,8 @@ class Cellar(BaseModel):
 
         where = ''
 
+        print term
+
         if not m and term != '':
             where = " where (lower(p.sku) like %(term)s or lower(p.name) like %(term)s)"
 
@@ -403,74 +405,89 @@ class Cellar(BaseModel):
                     where = ' where balance_units > 0 '
 
         query = '''
-                select product_sku, size_id
+                select p.sku, k.balance_units,
+                p.name, p.brand, p.color, s.name as size, p.manufacturer, k.balance_total
                 from
-                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units 
+                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units, balance_total 
                 from "Kardex" 
-                where cellar_id = %(id)s 
+                where cellar_id = %(cellar_id)s 
                 order by product_sku, size_id, date desc, id desc) k
                 inner join "Product" p
                 on p.sku = k.product_sku
+                inner join "Size" s
+                on s.id = k.size_id
                 {where}
+                order by {column} {direction}
                 limit %(limit)s
-                offset %(offset)s'''.format(where=where)
+                offset %(offset)s'''.format(where=where,column=column,direction=direction)
 
         parametros = {
             "id": self.id,
             "limit": items,
             "offset": offset,
-            "term": '%{}%'.format(term)
+            "term": '%{}%'.format(term),
+            "cellar_id": self.id
         }
-        cur.execute(query, parametros)
-        pproduct_sku = cur.fetchall()
 
-        kardex = Kardex()
+        print cur.mogrify(query, parametros)
 
-        for p in pproduct_sku:
-            product = Product()
-            # print "SKU:{}".format(p["product_sku"])
-            response_obj = product.InitBySku(p["product_sku"])
+        try:
+            cur.execute(query, parametros)
+            productos = cur.fetchall()
+            return self.ShowSuccessMessage(productos)
+        except:
+            return self.ShowError("Ocurrio una excepcion")
+        finally:
+            cur.close()
+            self.connection.close()
 
-            if "error" not in response_obj:
+        # kardex = Kardex()
 
-                prod_print = response_obj["success"]
+        # for p in pproduct_sku:
+        #     product = Product()
+        #     # print "SKU:{}".format(p["product_sku"])
+        #     response_obj = product.InitBySku(p["product_sku"])
 
-                kardex_find = kardex.FindKardex(
-                    p["product_sku"], self.id, p["size_id"])
+        #     if "error" not in response_obj:
 
-                if "success" in kardex_find:
+        #         prod_print = response_obj["success"]
 
-                    size = Size()
-                    size.id = kardex.size_id
+        #         kardex_find = kardex.FindKardex(
+        #             p["product_sku"], self.id, p["size_id"])
 
-                    res_size_id = size.initById()
+        #         if "success" in kardex_find:
 
-                    if "success" in res_size_id:
+        #             size = Size()
+        #             size.id = kardex.size_id
 
-                        prod_print["balance_units"] = kardex.balance_units
-                        prod_print["balance_price"] = kardex.balance_price
-                        prod_print["balance_total"] = kardex.balance_total
-                        prod_print["size_id"] = kardex.size_id
-                        prod_print["size"] = size.name
+        #             res_size_id = size.initById()
 
-                        rtn_data.append(prod_print)
+        #             if "success" in res_size_id:
+
+        #                 prod_print["balance_units"] = kardex.balance_units
+        #                 prod_print["balance_price"] = kardex.balance_price
+        #                 prod_print["balance_total"] = kardex.balance_total
+        #                 prod_print["size_id"] = kardex.size_id
+        #                 prod_print["size"] = size.name
+
+        #                 rtn_data.append(prod_print)
 
 
-                    # else:
-                    #     return res_size_id
+        #             # else:
+        #             #     return res_size_id
 
-                else:
-                    return response_obj
+        #         else:
+        #             return response_obj
 
-            else:
-                return response_obj
+        #     else:
+        #         return response_obj
 
-        if direction == 'desc':
-            newlist = sorted(rtn_data, key=lambda k: k[column], reverse=True)
-        else:
-            newlist = sorted(rtn_data, key=lambda k: k[column])
+        # if direction == 'desc':
+        #     newlist = sorted(rtn_data, key=lambda k: k[column], reverse=True)
+        # else:
+        #     newlist = sorted(rtn_data, key=lambda k: k[column])
 
-        return {"success": newlist}
+        # return {"success": newlist}
 
     def TotalProducts(self, term=''):
 
@@ -496,12 +513,14 @@ class Cellar(BaseModel):
         query = '''
                 select count(1) as total
                 from
-                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units 
+                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units, balance_total 
                 from "Kardex" 
                 where cellar_id = %(id)s 
                 order by product_sku, size_id, date desc, id desc) k
                 inner join "Product" p
                 on p.sku = k.product_sku
+                inner join "Size" s
+                on s.id = k.size_id
                 {where}
                 '''.format(where=where)
 

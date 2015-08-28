@@ -233,7 +233,7 @@ class CellarEasyOutputHandler(BaseHandler):
         cellar = Cellar()
         cellar.InitById(self.get_argument("id", ""))
 
-        data = Cellar().List(1, 100)
+        data = Cellar().List(1, 10000)
 
         size = Size()
         res_tallas = size.list()
@@ -252,7 +252,7 @@ class CellarEasyOutputHandler(BaseHandler):
 
         products = []
 
-        res_cellar_products = cellar.ListProducts()
+        res_cellar_products = cellar.ListProducts(1, 10000)
 
         if "success" in res_cellar_products:
             products = res_cellar_products['success']
@@ -371,6 +371,44 @@ class CellarEasyOutputHandler(BaseHandler):
         pass
 
 
+class EasyOutputListHandler(BaseHandler):
+
+    def get(self):
+        start = int(self.get_argument("start", 0))
+        items = int(self.get_argument("length", 20))
+        term = self.get_argument("search[value]", "")
+        cellar_id = self.get_argument("cellar_id", "")
+        query = ""
+
+        columns = [
+            "p.sku",
+            "p.name",
+            "p.brand",
+            "p.manufacturer",
+            "s.name",
+            "p.color",
+            "k.balance_units"
+        ]
+
+        column = int(self.get_argument("order[0][column]"))
+        direction = self.get_argument("order[0][dir]")
+
+        page = int(start / items) + 1
+
+        total_items = 0
+
+        cellar = Cellar()
+        cellar.id = cellar_id
+        total_items = cellar.TotalProducts("%{}%".format(term))
+        bodegas = cellar.ListProducts(page, items, columns[column], direction, term)
+
+        result = {
+            "recordsTotal": total_items,
+            "recordsFiltered": total_items,
+            "data": bodegas["success"]
+        }
+
+        self.write(json_util.dumps(result))
 
 ######################
 #### cellar input ####
