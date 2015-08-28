@@ -132,11 +132,13 @@
             </div>
             <div class="row">
                 <div class="col-md-12 secciones">
-                    <h3>Background</h3>
+                    <h3>Background Footer Izq</h3>
                     <div class="row">
-                        <button type="button" id="preview-section" class="btn btn-info">Vista Previa</button>
+                        <button type="button" id="preview-background" class="btn btn-info">Vista Previa</button>
                     </div>
-                    <input type="file" class="upload" name="background" src="{{banner('background').thumbnail or ''}}" valor='{"image":"{{banner("background").image}}", "thumb_200": "{{banner("background").thumbnail}}"}'/>
+                    <input type="file" class="upload" name="background_footer_izq" src="{{banner('background_footer_izq').thumbnail or ''}}" valor='{"image":"{{banner("background_footer_izq").image}}", "thumb_200": "{{banner("background_footer_izq").thumbnail}}"}'/>
+                    <h3>Background Footer Der</h3>
+                    <input type="file" class="upload" name="background_footer_der" src="{{banner('background_footer_der').thumbnail or ''}}" valor='{"image":"{{banner("background_footer_der").image}}", "thumb_200": "{{banner("background_footer_der").thumbnail}}"}'/>
                 </div>
             </div>
         </div>

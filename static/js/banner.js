@@ -87,7 +87,7 @@ $(document).on('ready pjax:end', function(){
         // console.log("eeee");
     });
 
-    $(document).on('click', 'button#preview-home', function(){
+    $(document).on('click', 'button#preview-home, button#preview-background', function(){
         var action = $(this).attr("url-local") + '/preview/home';
         $("form").attr('action', action);
         $("form").submit();

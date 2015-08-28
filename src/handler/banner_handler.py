@@ -38,7 +38,8 @@ class BannerHandler(BaseHandler):
         nuevo = self.save('nuevo', self.get_argument("nuevo", ""))
         sale = self.save('sale', self.get_argument("sale", ""))
         tienda = self.save('tienda', self.get_argument("tienda", ""))
-        background = self.save('background', self.get_argument("background", ""))
+        background_footer_izq = self.save('background_footer_izq', self.get_argument("background_footer_izq", ""))
+        background_footer_der = self.save('background_footer_der', self.get_argument("background_footer_der", ""))
 
         self.redirect("/banner")
 
