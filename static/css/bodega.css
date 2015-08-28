@@ -166,13 +166,14 @@ section#detalle_pedido th, section#detalle_pedido td{
     animation: spin 1000ms infinite linear;
 }
 
-.banner .row {
+.banner > .col-md-4 > .row > div, .row.title {
+    border: 1px solid #666;
     background-color: white;
+    padding: 10px;
 }
 
 .banner > .row , .row.title{
     margin: 5px;
-    padding: 10px;
 }
 
 .banner .fileUpload {
@@ -244,8 +245,4 @@ section#detalle_pedido th, section#detalle_pedido td{
 
 .imageuploader-container {
     margin-top: -15px;
-}
-
-.banner #preview-background, .banner #preview-home {
-    margin: 15px 0;
 }
