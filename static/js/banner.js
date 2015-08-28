@@ -1,21 +1,21 @@
-// function isJSON(value)
-// {
-//     var is_json = false;
-//         // detect if an string can be converted to json
-//     try
-//     {
-//         var val = $.parseJSON(value);
-//         is_json = true;
-//     }
-//     catch(ex)
-//     {
-//         // nothing here
-//         is_json = false;
-//     }
+var ready = function(){
 
-//     return is_json;
-// }
+    var ready = true;
+    var input = [];
 
+    $("input:text").each(function(){
+        if(!$(this).fileuploader('isready')){
+            ready = false;
+        }
+    });
+
+    if (!ready)
+    {
+        alert("Por favor espere que las fotos terminen de subirse");
+    }
+
+    return ready;
+};
 
 $(document).on('ready pjax:end', function(){
     
@@ -63,43 +63,25 @@ $(document).on('ready pjax:end', function(){
         }
     });
 
-    $(document).on('click', 'button:submit', function(evt)
-    {
-        // evt.preventDefault();
-
-        var ready = true;
-
-        var input = [];
-
-        $("input:text").each(function(){
-            if(!$(this).fileuploader('isready')){
-                ready = false;
-            }
-        });
-
-        if (!ready)
-        {
-            alert("Por favor espere que las fotos terminen de subirse");
-        }
-
-        return ready;
-
-        // console.log("eeee");
-    });
-
     $(document).on('click', 'button#preview-home, button#preview-background', function(){
         var action = $(this).attr("url-local") + '/preview/home';
         $("form").attr('action', action);
-        $("form").submit();
+        if(ready()){
+            $("form").submit();
+        }
     });
     $(document).on('click', 'button#preview-section', function(){
         var action = $(this).attr("url-local") + '/preview/section?tag=' + $(this).attr("tag");
         $("form").attr('action', action);
-        $("form").submit();
+        if(ready()){
+            $("form").submit();
+        }
     });
     $(document).on('click', 'button:submit', function(){
         $("form").attr('action', '/banner');
         $("form").removeAttr("target");
-        $("form").submit();
+        if(ready()){
+            $("form").submit();
+        }
     });
 });
