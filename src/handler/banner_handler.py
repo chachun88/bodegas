@@ -40,6 +40,7 @@ class BannerHandler(BaseHandler):
         tienda = self.save('tienda', self.get_argument("tienda", ""))
         background_footer_izq = self.save('background_footer_izq', self.get_argument("background_footer_izq", ""))
         background_footer_der = self.save('background_footer_der', self.get_argument("background_footer_der", ""))
+        background_header = self.save('background_header', self.get_argument("background_header", ""))
 
         self.redirect("/banner")
 
