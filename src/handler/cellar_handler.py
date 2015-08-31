@@ -66,6 +66,9 @@ class CellarHandler(BaseHandler):
 class CellarOutputHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
+
+        pjax = bool(self.get_argument("_pjax", False))
+
         self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
         cellar = Cellar()
@@ -74,9 +77,13 @@ class CellarOutputHandler(BaseHandler):
         data = Cellar().List(1, 10)
 
         product = Product()
-        # product.InitById(product_id)
 
-        self.render("cellar/output.html", 
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
+        self.render("cellar{}/output.html".format(pjax_str), 
             operation="Salidas", 
             opp="out", 
             side_menu=self.side_menu, 
@@ -124,6 +131,13 @@ class CellarEasyInputHandler(BaseHandler):
     def get(self):
         self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
 
+        pjax = bool(self.get_argument("_pjax", False))
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
         cellar = Cellar()
         cellar.InitById(self.get_argument("id", ""))
 
@@ -148,7 +162,7 @@ class CellarEasyInputHandler(BaseHandler):
         if "success" in res_cellar_products:
             products = res_cellar_products['success']
 
-        self.render("cellar/easyinput.html", 
+        self.render("cellar{}/easyinput.html".format(pjax_str), 
                     operation="Entradas ", 
                     opp="in", 
                     side_menu=self.side_menu, 
@@ -257,7 +271,14 @@ class CellarEasyOutputHandler(BaseHandler):
         if "success" in res_cellar_products:
             products = res_cellar_products['success']
 
-        self.render("cellar/easyoutput.html", 
+        pjax = bool(self.get_argument("_pjax", False))
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
+        self.render("cellar{}/easyoutput.html".format(pjax_str), 
             cellar=cellar, 
             products=products, 
             cellarList=data,
@@ -422,7 +443,14 @@ class CellarInputHandler(BaseHandler):
         cellar = Cellar()
         cellar.InitById(self.get_argument("id", ""))
 
-        self.render("cellar/input.html",operation="Entradas ", opp="in", cellar=cellar)
+        pjax = bool(self.get_argument("_pjax", False))
+
+        pjax_str = ''
+
+        if pjax:
+            pjax_str = '/ajax'
+
+        self.render("cellar{}/input.html".format(pjax_str),operation="Entradas ", opp="in", cellar=cellar)
 
     @tornado.web.authenticated
     def post(self):
