@@ -12,8 +12,9 @@
                     <fieldset>
                         <legend>Salida</legend>
                         <input type="hidden" name="cellar_id" class="form-control" value="{{cellar.id}}">
-                        <input type="hidden" name="sku" class="form-control" value="">
+                        <input type="hidden" name="product_sku" class="form-control" value="">
                         <input type="hidden" name="size" class="form-control" value="">
+                        <input type="hidden" name="operation" class="form-control" value="sale">
                         <div class="control-group quantity">
                             <label class="control-label">Cantidad</label>
                             <div class="controls form-group">
@@ -47,11 +48,12 @@
             <div class="modal-body">
                 <form action="/cellar/easyoutput" method="post" enctype="multipart/form-data" class="form-horizontal">
                     <fieldset>
-                        <legend>Salida</legend>
+                        <legend>Movimiento</legend>
                         <input type="hidden" name="cellar_id" class="form-control" value="{{cellar.id}}">
-                        <input type="hidden" name="sku" class="form-control">
+                        <input type="hidden" name="product_sku" class="form-control">
                         <input type="hidden" name="size" class="form-control">
                         <input type="hidden" name="price" class="form-control"/>
+                        <input type="hidden" name="operation" class="form-control" value="mov" />
                         <div class="control-group quantity">
                             <label class="control-label">Cantidad</label>
                             <div class="controls form-group">
@@ -65,7 +67,7 @@
                             <div class="controls form-group">
                                 <select name="new_cellar">
                                 {% for c in cellarList %}
-                                    {% if reservation_cellar_id != c['id'] %}
+                                    {% if cellar.id != c['id'] %}
                                     <option value="{{ c['id'] }}"> {{ c["name"] }}</option>
                                     {{ cellar_name=c["name"] }}
                                     {% end %}

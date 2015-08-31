@@ -379,7 +379,7 @@ class Cellar(BaseModel):
 
         where = ''
 
-        print term
+        # print term
 
         if not m and term != '':
             where = " where (lower(p.sku) like %(term)s or lower(p.name) like %(term)s)"
@@ -429,7 +429,7 @@ class Cellar(BaseModel):
             "cellar_id": self.id
         }
 
-        print cur.mogrify(query, parametros)
+        # print cur.mogrify(query, parametros)
 
         try:
             cur.execute(query, parametros)

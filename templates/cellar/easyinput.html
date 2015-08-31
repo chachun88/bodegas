@@ -4,154 +4,64 @@
 {% block caption %}permite hacer ingresos de productos a una bodega{% end %}
 
 {% block body %}
-<div class="col-md-12" >
-	<div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-		<strong><i class="fa fa-check"></i> Bien hecho!</strong> <span class="mmessage"></span>
-	</div>
-</div>
+<div class="modal fade" id="modalBuy">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form action="/cellar/easyinput" method="post" enctype="multipart/form-data" class="form-horizontal">
+                    <fieldset>
+                        <legend>Salida</legend>
+                        <input type="hidden" name="cellar_id" class="form-control" value="{{cellar.id}}">
+                        <input type="hidden" name="product_sku" class="form-control" value="">
+                        <input type="hidden" name="size" class="form-control" value="">
+                        <input type="hidden" name="operation" class="form-control" value="buy">
+                        <div class="control-group quantity">
+                            <label class="control-label">Cantidad</label>
+                            <div class="controls form-group">
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" name="quantity" value="" placeholder="Cantidad">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group price">
+                            <label class="control-label">Precio</label>
+                            <div class="controls form-group">
+                                <div class="col-sm-7">
+                                    <input type="text" placeholder="Precio" name="price" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                        {% raw xsrf_form_html() %}
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="buy()">Guardar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <div class="col-md-12">
-	<section class="widget">
-		<div class="body">
-			<div>
-				<a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
-					Agregar producto a esta bodega
-				</a>
-				<div class="lptooltip col-sm-3" >
-					<div class="pointer">
-						<img src="/{{nocache_static}}/img/pointer.png" />
-					</div>
-					<form action="/cellar/easyinput" class="form-add" >
-						<fieldset>
-							<div class="control-group">
-								<label for="producto">Producto</label>
-								<div class="control form-group">
-									<div class="col-sm-12">
-										<select data-placeholder="Producto"
-				                            class="chzn-select select-block-level" tabindex="-1"
-				                            name="product_sku"
-				                            id="product_sku">
-				                            {% for p in product_list %}
-				                                <option value="{{p['sku']}}">{{p['sku']}}</option>
-				                            {% end %}
-				                        </select>
-									</div>
-								</div>
-							</div>
-							<div class="control-group">
-								<label for="" class="control-label">Cantidad</label>
-								<div class="controls form-group">
-									<div class="col-sm-12"><input type="number" required="required" name="quantity" min="1" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
-								</div>
-							</div>
-							<div class="control-group">
-								<label for="" class="control-label">Precio</label>
-								<div class="controls form-group">
-									<div class="col-sm-12"><input type="number" required="required" name="price" min="0" placeholder="precio de compra" autocomplete="off" class="form-control" value=""></div>
-								</div>
-							</div>
-							<div class="control-group">
-								<label for="" class="control-label">Talla</label>
-								<div class="controls form-group">
-									<div class="col-sm-12">
-										<select name="size">
-											{% for s in tallas %}
-											<option value="{{s['name']}}">{{s['name']}}</option>
-											{% end %}
-										</select>
-									</div>
-								</div>
-							</div>
-							<!-- <input type="hidden" name="color" id="color" value=""> -->
-							<div class="control-group">
-								<label for="" class="control-label"></label>
-								<div class="controls form-group">
-									<button type="submit" class="btn btn-primary">Agregar</button>
-								</div>
-							</div>
-						</fieldset>
-						
-						<input type="hidden" name="cellar_id" value="{{ cellar.id }}" />
-						<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
-					</form>
-				</div>
-			</div>
-			<a type="button" href="/cellar" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm" style="float:right; ">Volver</a>
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>Imagen</th>
-						<th>SKU</th>
-						<th>Nombre</th>
-						<th>Descripción</th>
-						<th>Marca</th>
-						<th>Fabricante</th>
-						<th>Talla</th>
-						<th>Color</th>
-						<th>Cantidad</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for p in products %}
-					<tr>
-						<td><img width=60 src="/image/{{ p['image'] }}?mw=60" /></td>
-						<td>{{ p["sku"] }}</td>
-						<td>{{ p["name"] }}</td>
-						<td>{% raw p["description"] %}</td>
-						<td>{{ p["brand"] }}</td>
-						<td>{{ p["manufacturer"] }}</td>
-						<td>{{ p["size"] }}</td>
-						<td>{{ p["color"] }}</td>
-						<td>{{ p["balance_units"] }}</td>
-						<td>
-							<a type="button" href="#!" class="btn btn-success btn-sm btn-delete btn-add" data-placement="top" data-original-title=".btn .btn-success .btn-sm">
-								Agregar de este producto
-							</a>
-							<div class="lptooltip col-sm-2" >
-								<div class="pointer">
-									<img src="/{{nocache_static}}/img/pointer.png" />
-								</div>
-
-
-								<!-- EASY INPUT -->
-								<form action="/cellar/easyinput" class="form-add" >
-									<fieldset>
-										<div class="control-group">
-											<label for="" class="control-label">Cantidad</label>
-											<div class="controls form-group">
-												<div class="col-sm-12"><input type="number" required="required" name="quantity" min="1" placeholder="cantidad de productos" autocomplete="off" class="form-control"></div>
-											</div>
-										</div>
-										<div class="control-group">
-											<label for="" class="control-label">Precio</label>
-											<div class="controls form-group">
-												<div class="col-sm-12"><input type="number" required="required" name="price" min="0" placeholder="precio de compra" autocomplete="off" class="form-control" value="{{p['price']}}"></div>
-											</div>
-										</div>
-										<input name="size" id="size" type="hidden" value="{{p['size']}}">
-										<input type="hidden" name="color" id="color" value="{{p['color']}}">
-										<div class="control-group">
-											<label for="" class="control-label"></label>
-											<div class="controls form-group">
-												<button type="submit" class="btn btn-primary">Agregar</button>
-											</div>
-										</div>
-									</fieldset>
-									<input type="hidden" name="product_sku" value='{{ p["sku"] }}' />
-									<input type="hidden" name="cellar_id" value="{{ cellar.id }}" />
-									<input type="hidden" name="product_name" value="{{ p["name"] }}" />
-									<input type="hidden" name="cellar_name" value="{{ cellar.name }}" />
-								</form>
-								<!-- EASY INPUT -->
-
-							</div>
-						</td>
-					</tr>
-					{% end %}
-				</tbody>
-			</table>
-		</div>
-	</section>
+    <section class="widget">
+        <div class="body">
+            <a type="button" href="/cellar" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm" style="float:right; ">Volver</a>
+            <table class="table table-striped" id="cellar_input" cellar_id="{{cellar.id}}">
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Nombre</th>
+                        <th>Marca</th>
+                        <th>Fabricante</th>
+                        <th>Talla</th>
+                        <th>Color</th>
+                        <th>Cantidad</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
 </div>
 {% end %}

@@ -1,8 +1,8 @@
 $(document).on('pjax:end ready',function(){
 
-    if ( !$.fn.dataTable.isDataTable( '#cellar_output' ) ) {
-        var cellar_id = $('#cellar_output').attr("cellar_id");
-        $('#cellar_output').DataTable({
+    if ( !$.fn.dataTable.isDataTable( '#cellar_input' ) ) {
+        var cellar_id = $('#cellar_input').attr("cellar_id");
+        $('#cellar_input').DataTable({
             "serverSide": true,
             "processing": true,
             "ajax": {
@@ -73,20 +73,7 @@ $(document).on('pjax:end ready',function(){
                         button += row.name;
                         button += '" price="';
                         button += row.balance_price;
-                        button += '">Sacar de esta bodega</button><br/><br/>';
-                        button += '<button class="btn btn-primary btn-sm move-button" size="';
-                        button += row.size;
-                        button += '" color="';
-                        button += row.color;
-                        button += '" sku="';
-                        button += row.sku;
-                        // button += '" cellar_id="';
-                        // button += row.cellar_id;
-                        button += '" name="';
-                        button += row.name;
-                        button += '" price="';
-                        button += row.balance_price;
-                        button += '">Mover a otra bodega</button>';
+                        button += '">Agregar de este producto</button>';
 
                         return button;
                     }
@@ -111,66 +98,30 @@ $(document).on('pjax:end ready',function(){
     $(document).on('click', ".sale-button", function(){
         var sku = $(this).attr("sku");
         var size = $(this).attr("size");
-        $("#modalSale input[name=product_sku]").val(sku);
-        $("#modalSale input[name=size]").val(size);
-        $('#modalSale').modal('show');
+        $("#modalBuy input[name=product_sku]").val(sku);
+        $("#modalBuy input[name=size]").val(size);
+        $('#modalBuy').modal('show');
     });
 
-    $(document).on('click', ".move-button", function(){
-        var sku = $(this).attr("sku");
-        var size = $(this).attr("size");
-        var price = $(this).attr("price");
-        $("#modalMove input[name=product_sku]").val(sku);
-        $("#modalMove input[name=size]").val(size);
-        $("#modalMove input[name=price]").val(price);
-        $('#modalMove').modal('show');
-    });
 });
 
-var sale = function(){
+var buy = function(){
     var validated = true;
-    $("#modalSale form input").each(function(){
+    $("#modalBuy form input").each(function(){
         if($(this).val()===''){
             validated = false;
         }
     });
     if(validated){
         $.ajax({
-            url: $('#modalSale form').attr("action"),
+            url: $('#modalBuy form').attr("action"),
             type: "post",
-            data: $('#modalSale form').serialize(),
+            data: $('#modalBuy form').serialize(),
             success: function(response){
                 if(response=="ok"){
-                    $("#modalSale").modal("hide");
-                    if($('#cellar_output').length){
-                        $("#cellar_output").DataTable().ajax.reload(null, false);
-                    }
-                }
-            }
-        });
-    } else {
-        alert("Debe llenar todos los campos");
-        return false;
-    }
-};
-
-var move = function(){
-    var validated = true;
-    $("#modalMove form input").each(function(){
-        if($(this).val()===''){
-            validated = false;
-        }
-    });
-    if(validated){
-        $.ajax({
-            url: $('#modalMove form').attr("action"),
-            type: "post",
-            data: $('#modalMove form').serialize(),
-            success: function(response){
-                if(response=="ok"){
-                    $("#modalMove").modal("hide");
-                    if($('#cellar_output').length){
-                        $("#cellar_output").DataTable().ajax.reload(null, false);
+                    $("#modalBuy").modal("hide");
+                    if($('#cellar_input').length){
+                        $("#cellar_input").DataTable().ajax.reload(null, false);
                     }
                 }
             }
