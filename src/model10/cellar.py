@@ -406,9 +406,9 @@ class Cellar(BaseModel):
 
         query = '''
                 select p.sku, k.balance_units,
-                p.name, p.brand, p.color, s.name as size, p.manufacturer, k.balance_total
+                p.name, p.brand, p.color, s.name as size, p.manufacturer, k.balance_total, k.balance_price
                 from
-                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units, balance_total 
+                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units, balance_total, balance_price 
                 from "Kardex" 
                 where cellar_id = %(cellar_id)s 
                 order by product_sku, size_id, date desc, id desc) k
@@ -513,7 +513,7 @@ class Cellar(BaseModel):
         query = '''
                 select count(1) as total
                 from
-                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units, balance_total 
+                (select distinct on (product_sku, size_id) product_sku, size_id, balance_units, balance_total, balance_price 
                 from "Kardex" 
                 where cellar_id = %(id)s 
                 order by product_sku, size_id, date desc, id desc) k

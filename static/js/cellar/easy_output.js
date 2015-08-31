@@ -46,21 +46,50 @@ $(document).on('pjax:end ready',function(){
                 ]
             },
             "columnDefs": [
-                { "targets": 0,"data": "sku", "orderable": true },
-                { "targets": 1,"data": "name", "orderable": true },
-                { "targets": 2,"data": "brand", "orderable": true },
-                { "targets": 3,"data": "manufacturer", "orderable": true },
-                { 
-                    "targets": 4,
-                    "data": "size",
-                    "orderable": true
-                },
-                { "targets": 5,"data": "color", "orderable": true },
-                //{ "targets": 6,"data": "items_quantity", "orderable": true },
-                { 
-                    "targets": 6,
-                    "data": "balance_units", 
-                    "orderable": true
+                { "targets": 0, "data": "sku", "orderable": true },
+                { "targets": 1, "data": "name", "orderable": true },
+                { "targets": 2, "data": "brand", "orderable": true },
+                { "targets": 3, "data": "manufacturer", "orderable": true },
+                { "targets": 4, "data": "size", "orderable": true },
+                { "targets": 5, "data": "color", "orderable": true },
+                { "targets": 6, "data": "balance_units", "orderable": true },
+                {
+                    "targets": 7,
+                    "data": null, 
+                    "orderable": false,
+                    render: function ( data, type, row ) {
+
+                        // console.log(data);
+
+                        var button = '<button class="btn btn-primary btn-sm sale-button" size="';
+                        button += row.size;
+                        button += '" color="';
+                        button += row.color;
+                        button += '" sku="';
+                        button += row.sku;
+                        // button += '" cellar_id="';
+                        // button += row.cellar_id;
+                        button += '" name="';
+                        button += row.name;
+                        button += '" price="';
+                        button += row.balance_price;
+                        button += '">Sacar de esta bodega</button><br/><br/>';
+                        button += '<button class="btn btn-primary btn-sm move-button" size="';
+                        button += row.size;
+                        button += '" color="';
+                        button += row.color;
+                        button += '" sku="';
+                        button += row.sku;
+                        // button += '" cellar_id="';
+                        // button += row.cellar_id;
+                        button += '" name="';
+                        button += row.name;
+                        button += '" price="';
+                        button += row.balance_price;
+                        button += '">Mover a otra bodega</button>';
+
+                        return button;
+                    }
                 }
             ],
             "language":{
@@ -78,4 +107,22 @@ $(document).on('pjax:end ready',function(){
             }
         });
     }
+
+    $(document).on('click', ".sale-button", function(){
+        var sku = $(this).attr("sku");
+        var size = $(this).attr("size");
+        $("#modalSale input[name=sku]").val(sku);
+        $("#modalSale input[name=size]").val(size);
+        $('#modalSale').modal('show');
+    });
+
+    $(document).on('click', ".move-button", function(){
+        var sku = $(this).attr("sku");
+        var size = $(this).attr("size");
+        var price = $(this).attr("price");
+        $("#modalMove input[name=sku]").val(sku);
+        $("#modalMove input[name=size]").val(size);
+        $("#modalMove input[name=price]").val(price);
+        $('#modalMove').modal('show');
+    });
 });

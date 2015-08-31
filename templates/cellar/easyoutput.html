@@ -4,77 +4,29 @@
 {% block caption %}permite hacer ingresos de productos a una bodega{% end %}
 
 {% block body %}
-<div class="modal fade" id="myModal">
+<div class="modal fade" id="modalSale">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <form action="/product/fastedit" id="fastedit" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form action="/cellar/easyoutput" method="post" enctype="multipart/form-data" class="form-horizontal">
                     <fieldset>
-                        <legend>Edici&oacute;n R&aacute;pida</legend>
-                        <input type="hidden" name="id" class="form-control" value="">
+                        <legend>Salida</legend>
+                        <input type="hidden" name="cellar_id" class="form-control" value="{{cellar.id}}">
                         <input type="hidden" name="sku" class="form-control" value="">
-                        <div class="control-group">
-                            <label class="control-label">Categor&iacute;a</label>
+                        <input type="hidden" name="size" class="form-control" value="">
+                        <div class="control-group quantity">
+                            <label class="control-label">Cantidad</label>
                             <div class="controls form-group">
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="text" name="category" value="" placeholder="Categor&iacute;a">
+                                    <input class="form-control" type="text" name="quantity" value="" placeholder="Cantidad">
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label">Nombre</label>
+                        <div class="control-group price">
+                            <label class="control-label">Precio</label>
                             <div class="controls form-group">
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="text" name="name" value="" placeholder="Nombre">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Descripci&oacute;n</label>
-                            <div class="controls form-group">
-                                <div class="col-sm-7">
-                                    <textarea id="fastedit-textarea" placeholder="Descripci&oacute;n" name="description" class="form-control" autofocus></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Color</label>
-                            <div class="controls form-group">
-                                <div class="col-sm-7">
-                                    <input type="text" class="form-control" name="color" placeholder="Combinaci&oacute;n" value="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Precio Venta</label>
-                            <div class="controls form-group">
-                                <div class="col-sm-7">
-                                    <input class="form-control" type="text" name="sell_price" value="" placeholder="Precio Venta">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Precio Promoci&oacute;n</label>
-                            <div class="controls form-group">
-                                <div class="col-sm-7">
-                                    <input class="form-control" type="text" name="promotion_price" value="" placeholder="Precio Promoción">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label class="control-label">Precio Por Mayor (neto)</label>
-                            <div class="controls form-group">
-                                <div class="col-sm-7">
-                                    <input class="form-control" type="text" name="bulk_price" value="" placeholder="Precio Promoción">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">Precio Compra</label>
-                            <div class="controls form-group">
-                                <div class="col-sm-7">
-                                    <input class="form-control" type="text" name="price" value="" placeholder="Precio Compra">
+                                    <input type="text" placeholder="Precio" name="price" class="form-control"/>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +36,50 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="return FastEdit('#fastedit')">Guardar</button>
+                <button type="button" class="btn btn-primary" onclick="sale()">Guardar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal fade" id="modalMove">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form action="/cellar/easyoutput" method="post" enctype="multipart/form-data" class="form-horizontal">
+                    <fieldset>
+                        <legend>Salida</legend>
+                        <input type="hidden" name="cellar_id" class="form-control" value="{{cellar.id}}">
+                        <input type="hidden" name="sku" class="form-control">
+                        <input type="hidden" name="size" class="form-control">
+                        <input type="hidden" name="price" class="form-control"/>
+                        <div class="control-group quantity">
+                            <label class="control-label">Cantidad</label>
+                            <div class="controls form-group">
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" name="quantity" value="" placeholder="Cantidad">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group new_cellar">
+                            <label class="control-label">Bodega Destino</label>
+                            <div class="controls form-group">
+                                <select name="new_cellar">
+                                {% for c in cellarList %}
+                                    {% if reservation_cellar_id != c['id'] %}
+                                    <option value="{{ c['id'] }}"> {{ c["name"] }}</option>
+                                    {{ cellar_name=c["name"] }}
+                                    {% end %}
+                                {% end %}
+                                </select>
+                            </div>
+                        </div>
+                        {% raw xsrf_form_html() %}
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="move()">Guardar</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -96,26 +91,25 @@
     </div>
 </div>
 <div class="col-md-12">
-	<section class="widget">
-		<div class="body">
-			<a type="button" href="/cellar" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm" style="float:right; ">Volver</a>
-			<table id="cellar_output" class="table table-striped" cellar_id="{{cellar.id}}">
-				<thead>
-					<tr>
-						<th>SKU</th>
-						<th>Nombre</th>
-						<th>Marca</th>
-						<th>Fabricante</th>
-						<th>Talla</th>
-						<th>Color</th>
-						<th>Cantidad</th>
-					</tr>
-				</thead>
-				<tbody>
-					
-				</tbody>
-			</table>
-		</div>
-	</section>
+    <section class="widget">
+        <div class="body">
+            <a type="button" href="/cellar" class="btn btn-success btn-sm btn-delete" data-placement="top" data-original-title=".btn .btn-success .btn-sm" style="float:right; ">Volver</a>
+            <table id="cellar_output" class="table table-striped" cellar_id="{{cellar.id}}">
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Nombre</th>
+                        <th>Marca</th>
+                        <th>Fabricante</th>
+                        <th>Talla</th>
+                        <th>Color</th>
+                        <th>Cantidad</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
 </div>
 {% end %}

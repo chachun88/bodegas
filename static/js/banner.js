@@ -3,7 +3,7 @@ var ready = function(){
     var ready = true;
     var input = [];
 
-    $("input:text").each(function(){
+    $(".banner input:text").each(function(){
         if(!$(this).fileuploader('isready')){
             ready = false;
         }
@@ -20,7 +20,7 @@ var ready = function(){
 $(document).on('ready pjax:end', function(){
     
 
-    $("input.upload:file").each(function(){
+    $(".banner input.upload:file").each(function(){
         var src = $(this).attr("src");
         var name = $(this).attr("name");
         var value = $(this).attr("valor");
@@ -63,21 +63,21 @@ $(document).on('ready pjax:end', function(){
         }
     });
 
-    $(document).on('click', 'button#preview-home, button#preview-background', function(){
+    $(document).on('click', '.banner button#preview-home, .banner button#preview-background', function(){
         var action = $(this).attr("url-local") + '/preview/home';
         $("form").attr('action', action);
         if(ready()){
             $("form").submit();
         }
     });
-    $(document).on('click', 'button#preview-section', function(){
+    $(document).on('click', '.banner button#preview-section', function(){
         var action = $(this).attr("url-local") + '/preview/section?tag=' + $(this).attr("tag");
         $("form").attr('action', action);
         if(ready()){
             $("form").submit();
         }
     });
-    $(document).on('click', 'button:submit', function(){
+    $(document).on('click', '.banner button:submit', function(){
         $("form").attr('action', '/banner');
         $("form").removeAttr("target");
         if(ready()){
