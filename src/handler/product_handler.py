@@ -455,3 +455,17 @@ class ProductRemoveHandler(BaseHandler):
             else:
                 self.redirect("/product/list?dn=bpe&message={}".format(res_remove["error"]))
                 # self.render("product/list.html", dn="bpe", side_menu=self.side_menu, product_list=product_list, message=res_remove["error"])
+
+
+class ChangePositionHandler(BaseHandler):
+
+    def post(self):
+        product_id = self.get_argument("product_id", "")
+        position = self.get_argument("position", "")
+
+        if product_id == '' or position == '':
+            self.write("product id or position is null")
+        else:
+            product = Product()
+            response = product.changePosition(product_id, position)
+            self.write(response)

@@ -1010,8 +1010,6 @@ class Product(BaseModel):
 
     def GetList(self, page = 1, items = 30, query = "", column = "p.name", direction = "asc", term=''):
 
-
-
         page = int(page)
         items = int(items)
         offset = (page - 1) * items
@@ -1282,3 +1280,26 @@ class Product(BaseModel):
             self.connection.close()
 
         return total
+
+    def changePosition(self, product_id, position):
+
+        cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = '''
+                update "Product"
+                set position = %(position)s
+                where id = %(product_id)s
+                '''
+        parameters = {
+            "product_id": product_id,
+            "position": position
+        }
+
+        try:
+            cursor.execute(query, parameters)
+            self.connection.commit()
+            return 'ok'
+        except Exception, e:
+            return 'error: {}'.format(str(e))
+        finally:
+            cursor.close()
+            self.connection.close()

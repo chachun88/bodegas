@@ -89,6 +89,7 @@ class Application(tornado.web.Application):
             (r"/product/fastedit", FastEditHandler),
             (r"/product/for_sale", ForSaleHandler),
             (r"/product/checkstock", CheckStockHandler),
+            (r"/product/change_position", ChangePositionHandler),
 
             # cellar
             (r"/cellar", CellarHandler),

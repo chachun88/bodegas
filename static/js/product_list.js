@@ -78,7 +78,10 @@ var FastEdit = function(form_id){
         success: function(obj){
             if(obj.success){
                 /*var search = $("input[type=search]").val();*/
-                $('input#hidden_search').trigger("keyup");
+                //$('input#hidden_search').trigger("keyup");
+                if($("#productos").length){
+                    $("#productos").DataTable().ajax.reload(null, false);
+                }
                 $('#myModal').modal('hide');
             } else {
                 alert(obj.error);
@@ -212,7 +215,30 @@ $(document).on('pjax:end ready',function(){
                 { 
                     "targets": 9,
                     "data": "position", 
-                    "orderable": true
+                    "orderable": true,
+                    render: function(data, type, row){
+
+                        var total = products_table.page.info().recordsTotal;
+
+
+                        var botones = '<select class="position" id="';
+                        botones += row.id;
+                        botones += '">';
+                        
+                        for(var i=1; i<=total; i++){
+                            botones += '<option value="';
+                            botones += i;
+                            if(i===row.position){
+                                botones += '" selected>';
+                            } else {
+                                botones += '">';
+                            }
+                            botones += i;
+                            botones += '</option>';
+                        }
+                        botones += '</select>';
+                        return botones;
+                    }
                 },
                 { 
                     "targets": 10,
@@ -253,5 +279,23 @@ $(document).on('pjax:end ready',function(){
     });
     $('input#hidden_search').on( 'keyup', function () {
         products_table.search( this.value ).draw();
+    });
+    $(document).on('change', "select.position", function(){
+        var product_id = $(this).attr("id");
+        var position = $(this).val();
+        $.ajax({
+            url: "/product/change_position",
+            type: "post",
+            data: "product_id=" + product_id + "&position=" + position,
+            success: function(response){
+                if(response==='ok'){
+                    if($("#productos".length)){
+                        $("#productos").DataTable().ajax.reload(null, false);
+                    }
+                } else {
+                    alert(response);
+                }
+            }
+        });
     });
 });
