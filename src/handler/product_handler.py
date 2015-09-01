@@ -352,6 +352,7 @@ class FastEditHandler(BaseHandler):
             # prod.brand = self.get_argument("brand","")
             # prod.which_size = self.get_argument("which_size","")
             # prod.for_sale = self.get_argument("for_sale",0)
+            prod.position = self.get_argument("position", 1)
             promotion_price = self.get_argument("promotion_price", 0)
             if promotion_price != "":
                 prod.promotion_price = promotion_price

@@ -32,6 +32,7 @@ var formFastEdit = function(sku){
     var size = json_obj.size; // tipo string
     var upc = json_obj.upc;
     var which_size = json_obj.which_size;
+    var position = json_obj.position;
 
     var form = $("#fastedit");
 
@@ -47,6 +48,7 @@ var formFastEdit = function(sku){
     //$("input[name='brand']", form).val(brand);
     $("input[name='promotion_price']", form).val(promotion_price);
     $("input[name='bulk_price']", form).val(bulk_price);
+    $("input[name='position']", form).val(position);
     $('#myModal').modal('show');
 };
 
@@ -66,6 +68,7 @@ var FastEdit = function(form_id){
     json_obj.price = $(form_id+" input[name='price']").val();
     json_obj.promotion_price = $(form_id+" input[name='promotion_price']").val();
     json_obj.bulk_price = $(form_id+" input[name='bulk_price']").val();
+    json_obj.position = $(form_id+" input[name='position']").val();
     $("#"+sku).val(JSON.stringify(json_obj));
     
     $.ajax({
@@ -208,6 +211,11 @@ $(document).on('pjax:end ready',function(){
                 },
                 { 
                     "targets": 9,
+                    "data": "position", 
+                    "orderable": true
+                },
+                { 
+                    "targets": 10,
                     "data": null, 
                     "orderable": false,
                     render: function(data, type, row){
@@ -219,7 +227,7 @@ $(document).on('pjax:end ready',function(){
                                     '</a>' +
                                     '<br/>' +
                                     "<input type='hidden' id='" + row.sku + "' value='" + JSON.stringify(row) + "'>" +
-                                    "<a class=\"btn btn-warning btn-sm\" onclick=\"formFastEdit('" + row.sku + "')\">Edici&oacute;n R&aacute;pida</a>"
+                                    "<a class=\"btn btn-warning btn-sm\" onclick=\"formFastEdit('" + row.sku + "')\">Edici&oacute;n R&aacute;pida</a>";
                         return botones;
                     }
                 }
