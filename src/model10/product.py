@@ -44,6 +44,8 @@ class Product(BaseModel):
         self._size_id = ""
         self._bulk_price = 0
         self._position = 1
+        self._added = 0
+        self._sold = 0
 
         # self.collection = db.product
 
@@ -281,6 +283,22 @@ class Product(BaseModel):
     def position(self, value):
         self._position = value
 
+    @property
+    def added(self):
+        return self._added
+
+    @added.setter
+    def added(self, value):
+        self._added = value
+
+    @property
+    def sold(self):
+        return self._sold
+
+    @sold.setter
+    def sold(self, value):
+        self._sold = value
+
     def GetCellars(self):
         return ''
 
@@ -315,7 +333,9 @@ class Product(BaseModel):
                 "delivery": self.delivery,
                 "size_id": self.size_id,
                 "bulk_price" : self.bulk_price,
-                "position": self.position
+                "position": self.position,
+                "added": self.added,
+                "sold": self.sold
             }
 
             return rtn_data
@@ -369,6 +389,8 @@ class Product(BaseModel):
             ,promotion_price = %(promotion_price)s
             ,bulk_price = %(bulk_price)s
             ,position = %(position)s
+            ,sold = %(sold)s
+            ,added = %(added)s
             ,delivery = %(delivery)s where sku = %(sku)s and deleted = %(deleted)s returning id'''
 
             category = Category()
@@ -404,7 +426,9 @@ class Product(BaseModel):
                 "sell_price": self.sell_price,
                 "bulk_price" : self.bulk_price,
                 "deleted": False,
-                "position": self.position
+                "position": self.position,
+                "sold": self.sold,
+                "added": self.added
             }
 
             cur = self.connection.cursor(
@@ -503,6 +527,8 @@ class Product(BaseModel):
             , promotion_price = %(promotion_price)s
             , bulk_price = %(bulk_price)s
             , position = %(position)s
+            , sold = %(sold)s
+            , added = %(added)s
             , delivery = %(delivery)s where id = %(id)s and deleted = %(deleted)s'''
 
             category = Category()
@@ -539,7 +565,9 @@ class Product(BaseModel):
                 "promotion_price": self.promotion_price,
                 "bulk_price" : self.bulk_price,
                 "deleted": False,
-                "position": self.position
+                "position": self.position,
+                "sold": self.sold,
+                "added": self.added
             }
 
             # print "existe id:{}".format(cur.mogrify(q,p))
@@ -636,7 +664,9 @@ class Product(BaseModel):
                                         promotion_price,
                                         bulk_price,
                                         deleted,
-                                        position)
+                                        position,
+                                        added,
+                                        sold)
             values (%(delivery)s,
                     %(which_size)s,
                     %(name)s,
@@ -662,7 +692,9 @@ class Product(BaseModel):
                     %(promotion_price)s,
                     %(bulk_price)s,
                     %(deleted)s,
-                    %(position)s) returning id'''
+                    %(position)s,
+                    %(added)s,
+                    %(sold)s) returning id'''
 
             p = {
                 "name": self.name,
@@ -690,7 +722,9 @@ class Product(BaseModel):
                 "promotion_price": self.promotion_price,
                 "bulk_price" : self.bulk_price,
                 "deleted": False,
-                "position": self.position
+                "position": self.position,
+                "sold": self.sold,
+                "added": self.added
             }
 
             # print cur.mogrify(q.strip(),p)
@@ -813,6 +847,8 @@ class Product(BaseModel):
             self.promotion_price = producto["promotion_price"]
             self.bulk_price = producto["bulk_price"]
             self.position = producto["position"]
+            self.added = producto["added"]
+            self.sold = producto["sold"]
 
             tag = Tag()
             response = tag.GetTagsByProductId(producto["id"])
@@ -890,6 +926,8 @@ class Product(BaseModel):
                 self.promotion_price = producto["promotion_price"]
                 self.bulk_price = producto["bulk_price"]
                 self.position = producto["position"]
+                self.added = producto["added"]
+                self.sold = producto["sold"]
                 return self.ShowSuccessMessage(producto)
             else:
                 return self.ShowError("product cannot be initialized")
