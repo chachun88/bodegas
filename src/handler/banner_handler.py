@@ -52,8 +52,7 @@ class BannerHandler(BaseHandler):
         banner.image = self.getImageUrl(json)
         banner.thumbnail = self.getThumbnail(json)
 
-        if banner.image != '':
-            banner.save()
+        banner.save()
 
     def getImageUrl(self, json):
 
