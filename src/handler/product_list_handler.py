@@ -54,7 +54,7 @@ class ProductListHandler(BaseHandler):
             "p.sell_price",
             "p.promotion_price",
             "p.bulk_price",
-            "p.position"
+            "nullif(p.position, 0)"
         ]
 
         column = int(self.get_argument("order[0][column]"))

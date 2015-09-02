@@ -43,7 +43,7 @@ class Product(BaseModel):
         self._promotion_price = 0  # precio promocion
         self._size_id = ""
         self._bulk_price = 0
-        self._position = 1
+        self._position = 0
         self._added = 0
         self._sold = 0
 
@@ -1019,7 +1019,7 @@ class Product(BaseModel):
         try:
             if page == 0 and items == 0:
                 q = '''\
-                select string_agg(s.name,',') as size, 
+                select nullif(position, 0) as position, string_agg(s.name,',') as size, 
                 p.*, 
                 c.name as category from "Product" p 
                 inner join "Category" c on c.id = p.category_id 
@@ -1037,7 +1037,7 @@ class Product(BaseModel):
                 }
             else:
                 q = '''\
-                select string_agg(s.name,',') as size, 
+                select nullif(position, 0) as position, string_agg(s.name,',') as size, 
                 p.*, 
                 c.name as category from "Product" p 
                 inner join "Category" c on c.id = p.category_id 

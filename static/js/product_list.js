@@ -218,14 +218,11 @@ $(document).on('pjax:end ready',function(){
                     "orderable": true,
                     render: function(data, type, row){
 
-                        var total = products_table.page.info().recordsTotal;
-
-
                         var botones = '<select class="position" id="';
                         botones += row.id;
                         botones += '">';
                         
-                        for(var i=1; i<=total; i++){
+                        for(var i=1; i<=32; i++){
                             botones += '<option value="';
                             botones += i;
                             if(i===row.position){
@@ -236,6 +233,14 @@ $(document).on('pjax:end ready',function(){
                             botones += i;
                             botones += '</option>';
                         }
+                        botones += '<option value="';
+                        botones += 0;
+                        if(0===row.position){
+                            botones += '" selected>';
+                        } else {
+                            botones += '">';
+                        }
+                        botones += 'Random</option>';
                         botones += '</select>';
                         return botones;
                     }
