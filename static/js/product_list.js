@@ -230,7 +230,7 @@ $(document).on('pjax:end ready',function(){
                             botones += '">';
                         }
                         botones += 'Random</option>';
-                        botones += '</select>';
+
 
                         for(var i=1; i<=32; i++){
                             botones += '<option value="';
@@ -243,6 +243,8 @@ $(document).on('pjax:end ready',function(){
                             botones += i;
                             botones += '</option>';
                         }
+
+                        botones += '</select>';
 
                         return botones;
                     }
