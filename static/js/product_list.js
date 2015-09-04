@@ -221,7 +221,17 @@ $(document).on('pjax:end ready',function(){
                         var botones = '<select class="position" id="';
                         botones += row.id;
                         botones += '">';
-                        
+
+                        botones += '<option value="';
+                        botones += 0;
+                        if(0===row.position){
+                            botones += '" selected>';
+                        } else {
+                            botones += '">';
+                        }
+                        botones += 'Random</option>';
+                        botones += '</select>';
+
                         for(var i=1; i<=32; i++){
                             botones += '<option value="';
                             botones += i;
@@ -233,15 +243,7 @@ $(document).on('pjax:end ready',function(){
                             botones += i;
                             botones += '</option>';
                         }
-                        botones += '<option value="';
-                        botones += 0;
-                        if(0===row.position){
-                            botones += '" selected>';
-                        } else {
-                            botones += '">';
-                        }
-                        botones += 'Random</option>';
-                        botones += '</select>';
+
                         return botones;
                     }
                 },
