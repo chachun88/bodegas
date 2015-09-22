@@ -571,7 +571,7 @@ class Order(BaseModel):
 
                             # mueve c/u de los productos desde la bodega de reserva a la bodega web
                             kardex = Kardex()
-                            res = kardex.moveOrder(details, web_cellar, cellar_id)
+                            res = kardex.moveOrder(details, web_cellar, cellar_id, identificador)
 
                             if "error" in res:
                                 errores.append("error en el pedido {}, {}".format(identificador, res["error"]))

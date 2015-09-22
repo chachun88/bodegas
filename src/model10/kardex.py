@@ -27,6 +27,7 @@ class Kardex(BaseModel):
         self._date = str(datetime.datetime.now(pytz.timezone('Chile/Continental')).isoformat())
         self._user = ""
         self._product_id = ""
+        self._order_id = None
 
     OPERATION_BUY = "buy"
     OPERATION_SELL= "sell"
@@ -152,6 +153,14 @@ class Kardex(BaseModel):
     def date(self, value):
         self._date = value
 
+    @property
+    def order_id(self):
+        return self._order_id
+
+    @order_id.setter
+    def order_id(self, value):
+        self._order_id = value
+
     def FindKardex(self, product_sku, cellar_identifier, size_id):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -183,7 +192,7 @@ class Kardex(BaseModel):
             self.date = kardex["date"]
             self.user = kardex["user"]
             self.cellar_identifier = kardex["cellar_id"]
-
+            self.order_id = kardex["order_id"]
             return self.ShowSuccessMessage(kardex)
 
         except Exception,e:
@@ -232,6 +241,7 @@ class Kardex(BaseModel):
                 new_kardex.date = kardex["date"]
                 new_kardex.user = kardex["user"]
                 new_kardex.cellar_identifier = kardex["cellar_id"]
+                new_kardex.order_id = kardex["order_id"]
             return self.ShowSuccessMessage(new_kardex)
         except Exception, e:
             return self.ShowError("kardex not found, {}".format(str(e)))
@@ -310,11 +320,42 @@ class Kardex(BaseModel):
             "balance_price":self.balance_price,
             "balance_total":self.balance_total,
             "date":self.date,
-            "user":self.user
+            "user":self.user,
+            "order_id": self.order_id
         }
 
         try:
-            query = '''insert into "Kardex" (balance_total,product_sku,cellar_id,operation_type,units,price,sell_price,size_id,color,total,balance_units,balance_price,date,"user") values (%(balance_total)s,%(product_sku)s,%(cellar_id)s,%(operation_type)s,%(units)s,%(price)s,%(sell_price)s,%(size_id)s,%(color)s,%(total)s,%(balance_units)s,%(balance_price)s,%(date)s,%(user)s)'''
+            query = '''\
+                    insert into "Kardex"( balance_total,
+                                          product_sku,
+                                          cellar_id,
+                                          operation_type,
+                                          units,
+                                          price,
+                                          sell_price,
+                                          size_id,
+                                          color,
+                                          total,
+                                          balance_units,
+                                          balance_price,
+                                          date,
+                                          "user",
+                                          order_id) 
+                    values (%(balance_total)s,
+                            %(product_sku)s,
+                            %(cellar_id)s,
+                            %(operation_type)s,
+                            %(units)s,
+                            %(price)s,
+                            %(sell_price)s,
+                            %(size_id)s,
+                            %(color)s,
+                            %(total)s,
+                            %(balance_units)s,
+                            %(balance_price)s,
+                            %(date)s,
+                            %(user)s,
+                            %(order_id)s)'''
             # print cur.mogrify(query,parametros)
             cur.execute(query,parametros)
             self.connection.commit()
@@ -322,7 +363,7 @@ class Kardex(BaseModel):
         except Exception,e:
             return self.ShowError("an error inserting kardex, error:{}".format(str(e)))
 
-    def moveOrder(self, details, web_cellar, cellar_id):
+    def moveOrder(self, details, web_cellar, cellar_id, order_id):
 
         errors = []
 
@@ -332,7 +373,7 @@ class Kardex(BaseModel):
             kardex.product_sku = d["sku"]
             kardex.cellar_identifier = cellar_id
             kardex.date = str(datetime.datetime.now(pytz.timezone('Chile/Continental')).isoformat())
-
+            kardex.order_id = order_id
             kardex.operation_type = Kardex.OPERATION_MOV_OUT
             kardex.units = d['quantity']
             kardex.price = d['price']

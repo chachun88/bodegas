@@ -369,7 +369,7 @@ class SaveTrackingCodeHandler(BaseHandler):
                         kardex.sell_price = sell_price
                         kardex.color = color
                         kardex.user = user
-
+                        kardex.order_id = detail["order_id"]
                         response_kardex = kardex.Insert()
 
                         if "error" in response_kardex:
