@@ -13,6 +13,7 @@ from basehandler import BaseHandler
 from ..model10.customer import Customer
 from ..model10.contact import Contact
 from ..model10.city import City
+from ..model10.user import User
 
 from datetime import datetime
 
@@ -434,19 +435,23 @@ class PasswordRecovery(BaseHandler):
 
     def get(self):
 
-        self.render( "auth/password_recovery.html" )
+        self.write(json_util.dumps({"state": "error", "message": "metodo no permitido"}))
 
     def post(self):
         try:
-            email = self.get_argument("email", "")
+
+            user_id = self.get_argument("user_id", "")
+
+            customer = Customer()
+            customer.InitById(user_id)
+
+            email = customer.email
 
             if email == "":
-                raise Exception( "El email ingresado no es válido" )
+                self.write(json_util.dumps({"state": "error", "message": "debe ingresar email"}))
             if (User()).PassRecovery( email ):
-                # self.write( "se ha enviado un correo" )
-                self.render( "auth/success.html" )
+                self.write(json_util.dumps({"state": "ok", "message": "correo enviado exitosamente"}))
             else:
-                # self.write( "no se ha podido recuperar la contraseña" )
-                self.render( "auth/fail.html", message="no se ha podido recuperar la contraseña" )
+                self.write(json_util.dumps({"state": "error", "message": "usuario no existe"}))
         except Exception, e:
-            self.render( "auth/fail.html", message=str(e) )
+            self.write(json_util.dumps({"state": "error", "message": "excepcion {}".format(str(e))}))

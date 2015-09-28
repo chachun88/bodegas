@@ -54,49 +54,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for c in clientes %}
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="clientes" class="iCheck" value="{{c['id']}}">
-                        </td>
-                        
-                        <td>
-                            {{c["status"]}}
-                        </td>
-                        <td>
-                            {{c["name"]}}
-                        </td>
-                        <td>
-                            {{c['email'] or ''}}
-                        </td>
-                        <td>
-                            {{c["rut"]}}
-                        </td>
-                        <td>
-                            {{c["type"]}}
-                        </td>
-                        <td>
-                            {{c["bussiness"]}}
-                        </td>
-                        <td>
-                            {{c["registration_date"]}}
-                        </td>
-                        <td>
-                            {{c["last_view"]}}
-                        </td>
-                        <td>
-                            <p>
-                                <a class="btn btn-sm btn-success" href="/customer/view_contact?user_id={{c['id']}}">Ver Direcciones</a>
-                            </p>
-                            <p>
-                                <a class="btn btn-sm btn-info" href="/customer/add_contact?user_id={{c['id']}}">Agregar Dirección</a>
-                            </p>
-                            <p>
-                                <a class="btn btn-sm btn-primary" href="/customer/save?id={{c['id']}}">Editar</a>
-                            </p>
-                        </td>
-                    </tr>
-                    {% end %}
                 </tbody>
             </table>
         </div>

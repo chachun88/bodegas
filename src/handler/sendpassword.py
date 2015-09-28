@@ -17,31 +17,6 @@ import json
 from src.globals import *
 
 
-class EnviarClaveHandler(BaseHandler):
-
-    def post(self):
-        email = self.get_argument("email")
-        if(len(email) > 0):
-            usuario = self.db.user.find_one(
-                {"mail": email, "tipo": "registrado"})
-            if usuario:
-                clave = str(randrange(100))
-                clave = hashlib.md5(clave).hexdigest()[:6]
-                self.db.user.update(
-                    {"_id": usuario["_id"]}, {"$set": {"password": clave}})
-
-                # if lptranslate("lang") == "es":
-                Email(usuario["mail"], str(usuario["_id"]), clave)
-                # elif lptranslate("lang") == "en":
-                #     EmailEn(usuario["mail"], str(usuario["_id"]), clave)
-
-                self.redirect("/")
-            else:
-                self.write("Usuario no se encuentra registrado")
-        else:
-            self.write("Ingrese email por favor")
-
-
 def RegistrationEmail(username,email):
 
     html = """\
@@ -401,16 +376,14 @@ def RegistrationEmail(username,email):
 
 def Email(to, userid, clave, name=""):
 
-    fromaddr = options.email
+    # print "User id {} clave {} name {}".format(userid, clave, name)
+
+    fromaddr = from_giani
     toaddrs = to
     msg = MIMEMultipart('alternative')
     msg['Subject'] = "Restablecimiento de clave de la cuenta Giani da Firenze"
     msg['From'] = "Giani da Firenze " + "<" + fromaddr + ">"
     msg['To'] = toaddrs
-
-    # Credentials (if needed)
-    username = options.user
-    password = options.password
 
     html = """\
     <html xmlns=""><head>
@@ -853,11 +826,11 @@ def Email(to, userid, clave, name=""):
     # server.sendmail(fromaddr, toaddrs, msg.as_string())
     # server.quit()
 
-    sg = sendgrid.SendGridClient(sendgrid_user, sendgrid_pass)
+    sg = sendgrid.SendGridClient(usuario_sendgrid, pass_sendgrid)
 
     message = sendgrid.Mail()
     message.set_from("{nombre} <{mail}>".format(
-        nombre="Giani Da Firenze", mail=email_giani))
+        nombre="Giani Da Firenze", mail=from_giani))
     message.add_to(to)
     message.set_subject("Reestablece tu contraseña")
     message.set_html(html)

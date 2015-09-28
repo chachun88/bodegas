@@ -5,7 +5,7 @@ from basemodel import BaseModel
 import psycopg2
 import psycopg2.extras
 import random
-#from ..handler.sendpassword import Email
+from ..handler.sendpassword import Email
 import hashlib
 
 
@@ -13,6 +13,9 @@ class UserType():
     GESTION = 1
     BODEGA = 6
     ADMINISTRADOR = 2
+    CLIENTE = "Cliente"
+    VISITA = "Visita"
+    EMPRESA = "Cliente Mayorista"
 
 
 class Permission():
@@ -26,6 +29,10 @@ class Permission():
 
 
 class User(BaseModel):
+
+    ACEPTADO = 2
+    PENDIENTE = 1
+
     def __init__(self):
         BaseModel.__init__(self)
         # self.collection = db.salesman
@@ -55,7 +62,7 @@ class User(BaseModel):
 
     @salesman_id.setter
     def salesman_id(self, value):
-        self._salesman_id = value    
+        self._salesman_id = value
 
     @property
     def name(self):
@@ -434,7 +441,6 @@ class User(BaseModel):
 
     def Exist(self, email='', _id=0):
 
-
         if email != "":
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -442,14 +448,13 @@ class User(BaseModel):
             q = '''\
                 select count(*) as cnt from "User" 
                 where email = %(email)s 
-                and type_id = any(%(type_id)s)
-                and status = %(status)s'''
+                and type_id = any(%(type_id)s)'''
 
             p = { 
                 "email" : email,
                 "type_id": [self.getUserTypeID(UserType.CLIENTE), 
-                            self.getUserTypeID(UserType.VISITA)],
-                "status": self.ACEPTADO
+                            self.getUserTypeID(UserType.VISITA),
+                            self.getUserTypeID(UserType.EMPRESA)]
             }
 
             try:
@@ -457,11 +462,13 @@ class User(BaseModel):
                 cur.execute( q, p )
                 data = cur.fetchone()
                 if data["cnt"] > 0:
+                    # print "si"
                     return self.ShowSuccessMessage(True)
                 else:
+                    # print "no"
                     return self.ShowSuccessMessage(False)
             except Exception, e:
-                print "exists, {}".format(str(e))
+                # print "exists, {}".format(str(e))
                 return self.ShowError(str(e))
             finally:
                 cur.close()
@@ -491,7 +498,7 @@ class User(BaseModel):
                 cur.close()
                 self.connection.close()
 
-    def ChangePassword(self, id, password):
+    def ChangePassword(self, _id, password):
         try:
 
             p = '''\
@@ -499,7 +506,7 @@ class User(BaseModel):
                 set password = %(password)s 
                 where id = %(id)s and type_id = any(%(type_id)s)'''
             q = { 
-                "id": id, 
+                "id": _id, 
                 "password" : password,
                 "type_id": [
                     self.getUserTypeID(UserType.CLIENTE), 
@@ -509,11 +516,11 @@ class User(BaseModel):
             }
 
             # c
-
+            # print "1"
             cur = self.connection.cursor( cursor_factory=psycopg2.extras.DictCursor )
+            # print cur.mogrify(p, q)
             cur.execute( p,q )
             self.connection.commit()
-
         except Exception, e:
             print str( e )
             raise Exception( "no se ha podido cambiar la contraseña" )
@@ -522,7 +529,7 @@ class User(BaseModel):
 
         query = '''SELECT id FROM "User_Types" WHERE name = %(name)s'''
         params = {"name" : user_type}
-        return lp_model.execute_query(query, params)[0]["id"]
+        return lp_model.execute_query(query, params, True)[0]["id"]
 
     def RandomPass(self):
 
@@ -534,55 +541,64 @@ class User(BaseModel):
             next_index = random.randrange(len(alphabet))
             mypw = mypw + alphabet[next_index]
 
-    def PassRecovery( self, email ):
-        try:
-            exists = self.Exist( email )
-
-            if "success" in exists:
-                if exists["success"]:
-
-                    password = ""
-                    user_id = ""
-
-                    p = ''' select name, password, id from "User" 
-                    where email = %(email)s 
-                    and (type_id = %(user_type)s or type_id = %(user_type_visita)s)'''
-                    q = {
-                        "email": email,
-                        "user_type": self.getUserTypeID(UserType.CLIENTE),
-                        "user_type_visita": self.getUserTypeID(UserType.VISITA)
-                    }
-
-                    cur = self.connection.cursor(  cursor_factory=psycopg2.extras.RealDictCursor )
-
-                    cur.execute(p,q)
-                    data = cur.fetchone()
-
-                    password = data["password"]
-                    user_id = "{}".format(data["id"])
-                    name = data["name"]
-
-                    new_password = self.RandomPass()
-
-                    m = hashlib.md5()
-
-                    m.update(new_password)
-
-                    password = m.hexdigest()
-
-                    self.ChangePassword(user_id,password)
-
-                    Email( email, user_id, new_password, name )
-
-                    return True
-
-                else:
-                    return False
-            else:
-                print exists["error"]
-                raise Exception( "no se ha podido recuperar la contraseña, {}".format(exists["error"]) )
-        except Exception, e:
-            print "no se ha podido recuperar la contrasena : {}".format(str( e ))
-            raise Exception( "no se ha podido recuperar la contraseña" )
-
         return mypw
+
+    def PassRecovery( self, email ):
+        # try:
+        exists = self.Exist( email )
+
+        if "success" in exists:
+
+            if exists["success"]:
+
+                password = ""
+                user_id = ""
+
+                p = '''\
+                    select name, password, id from "User" 
+                    where email = %(email)s 
+                    and type_id = any(%(user_type)s)'''
+                q = {
+                    "email": email,
+                    "user_type": [
+                                    self.getUserTypeID(UserType.CLIENTE),
+                                    self.getUserTypeID(UserType.VISITA),
+                                    self.getUserTypeID(UserType.EMPRESA)
+                                ]
+                }
+
+                cur = self.connection.cursor(  cursor_factory=psycopg2.extras.RealDictCursor )
+
+                cur.execute(p,q)
+
+                data = cur.fetchone()
+
+                password = data["password"]
+                user_id = "{}".format(data["id"])
+                name = data["name"]
+
+                new_password = self.RandomPass()
+
+                m = hashlib.md5()
+
+                m.update(new_password)
+
+                password = m.hexdigest()
+
+                # print "user_id {}".format(user_id)
+
+                self.ChangePassword(user_id,password)
+
+                Email( email, user_id, new_password, name )
+
+                return True
+
+            else:
+                return False
+        else:
+            print exists["error"]
+            raise Exception( "no se ha podido recuperar la contraseña, {}".format(exists["error"]) )
+        # except Exception, e:
+        #     print "no se ha podido recuperar la contrasena : {}".format(str( e ))
+        #     raise Exception( "no se ha podido recuperar la contraseña" )
+

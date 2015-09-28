@@ -32,7 +32,7 @@ from src.handler.tag_handler import *
 from src.handler.shipping_handler import *
 from src.handler.examples_handler import *
 from src.handler.banner_handler import *
-
+from src.handler.customer_handler import *
 from config import *
 
 # something
@@ -142,6 +142,7 @@ class Application(tornado.web.Application):
             (r"/customer/add_contact", CustomerAddContactHandler),
             (r"/customer/view_contact", CustomerViewContactHandler),
             (r"/customer/list_ajax", CustomerAjaxListHandler),
+            (r"/customer/send_password_email", PasswordRecovery),
 
             (r"/contact/actions", ContactActionsHandler),
             (r"/customer/edit_contact", EditContactHandler),

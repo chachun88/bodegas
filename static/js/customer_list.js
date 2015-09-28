@@ -95,12 +95,7 @@ $(document).on('pjax:end ready',function(){
                     "data": null, 
                     "orderable": false,
                     render: function ( data, type, row ) {
-                        var button = '<p><a class="btn btn-sm btn-success" href="/customer/view_contact?user_id='
-                                   + row.id
-                                   + '">Ver Contactos</a></p>'
-                                   + '<p><button class="btn btn-sm btn-success enviar-clave" user_id="'
-                                   + row.id
-                                   + '">Enviar contrase&ntilde;a</button></p>';
+                    var button = '<p><a class="btn btn-sm btn-success" href="/customer/view_contact?user_id=' + row.id + '">Ver Contactos</a></p>' + '<p><button class="btn btn-sm btn-success enviar-clave" user_id="' + row.id + '">Enviar contrase&ntilde;a</button></p>';
                         return button;
                     } 
                 }
@@ -134,13 +129,16 @@ $(document).on('pjax:end ready',function(){
     $(document).on("click", ".enviar-clave", function(){
         var user_id = $(this).attr("user_id");
         $.ajax({
-            url: 'send_password_email',
+            url: '/customer/send_password_email',
             data: 'user_id=' + user_id,
             dataType: 'json',
             type: 'post',
             success: function(response){
                 var json_str = JSON.stringify(response);
                 var json = $.parseJSON(json_str);
+                if(json.state!==undefined){
+                    alert(json.message);
+                }
             }
         });
     });

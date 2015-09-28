@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 
 from bson import json_util
-from bson.objectid import ObjectId
 from basemodel import BaseModel
 from contact import Contact
 import psycopg2
@@ -13,18 +12,21 @@ from datetime import datetime
 ESTADO_PENDIENTE = 1
 ESTADO_ACEPTADO = 2
 
+
 class Customer(BaseModel):
 
     @property
     def id(self):
         return self._id
+
     @id.setter
     def id(self, value):
         self._id = value
-    
+
     @property
     def name(self):
         return self._name
+
     @name.setter
     def name(self, value):
         self._name = value
@@ -32,41 +34,47 @@ class Customer(BaseModel):
     @property
     def lastname(self):
         return self._lastname
+
     @lastname.setter
     def lastname(self, value):
         self._lastname = value
-    
+
     @property
     def rut(self):
         return self._rut
+
     @rut.setter
     def rut(self, value):
         self._rut = value
-    
+
     @property
     def contact(self):
         return self._contact
+
     @contact.setter
     def contact(self, value):
         self._contact = value
-    
+
     @property
     def bussiness(self):
         return self._bussiness
+
     @bussiness.setter
     def bussiness(self, value):
         self._bussiness = value
-    
+
     @property
     def registration_date(self):
         return self._registration_date
+
     @registration_date.setter
     def registration_date(self, value):
         self._registration_date = value
-    
+
     @property
     def approval_date(self):
         return self._approval_date
+
     @approval_date.setter
     def approval_date(self, value):
         self._approval_date = value
@@ -74,6 +82,7 @@ class Customer(BaseModel):
     @property
     def status(self):
         return self._status
+
     @status.setter
     def status(self, value):
         self._status = value
@@ -81,20 +90,23 @@ class Customer(BaseModel):
     @property
     def first_view(self):
         return self._first_view
+
     @first_view.setter
     def first_view(self, value):
         self._first_view = value
-    
+
     @property
     def last_view(self):
         return self._last_view
+
     @last_view.setter
     def last_view(self, value):
         self._last_view = value
-    
+
     @property
     def type(self):
         return self._type
+
     @type.setter
     def type(self, value):
         self._type = value
@@ -102,13 +114,15 @@ class Customer(BaseModel):
     @property
     def username(self):
         return self._username
+
     @username.setter
     def username(self, value):
         self._username = value
-    
+
     @property
     def password(self):
         return self._password
+
     @password.setter
     def password(self, value):
         self._password = value
@@ -116,10 +130,10 @@ class Customer(BaseModel):
     @property
     def email(self):
         return self._email
+
     @email.setter
     def email(self, value):
         self._email = value
-    
 
     def __init__(self):
         BaseModel.__init__(self)
@@ -174,7 +188,7 @@ class Customer(BaseModel):
             else:
                 return self.ShowError("customer not found")
         except Exception,e:
-            return self.ShowError(str(e))
+            return self.ShowError("error init by id {}".format(str(e)))
         finally:
             cur.close()
             self.connection.close()
@@ -235,12 +249,12 @@ class Customer(BaseModel):
     def Edit(self):
 
         customer = {
-        "name": self.name,
-        "lastname": self.lastname,
-        "type": self.type,
-        "bussiness": self.bussiness,
-        "id":self.id,
-        "email":self.email
+            "name": self.name,
+            "lastname": self.lastname,
+            "type": self.type,
+            "bussiness": self.bussiness,
+            "id":self.id,
+            "email":self.email
         }
 
         # try:
@@ -260,7 +274,7 @@ class Customer(BaseModel):
         try:
             cur.execute(query,customer)
             self.connection.commit()
-            
+
             return self.ShowSuccessMessage(self.id)
 
         except Exception,e:
@@ -367,7 +381,7 @@ class Customer(BaseModel):
             cur.close()
 
     def ChangeState(self,ids,state):
-        
+
         results = ids.split(",")
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -377,28 +391,28 @@ class Customer(BaseModel):
             try:
                 query = '''update "User" set status = %(status)s, approval_date = to_date(%(approval_date)s,'DD-MM-YYYY HH24:MI:SS') where id = ANY(%(ids)s)'''
                 parametros = {
-                "ids":map(int, results),
-                "status":int(state),
-                "approval_date":datetime.now(pytz.timezone('Chile/Continental')).strftime('%d-%m-%Y %H:%M:%S')
+                    "ids":map(int, results),
+                    "status":int(state),
+                    "approval_date":datetime.now(pytz.timezone('Chile/Continental')).strftime('%d-%m-%Y %H:%M:%S')
                 }
-                print cur.mogrify(query,parametros)
+                # print cur.mogrify(query,parametros)
                 cur.execute(query,parametros)
                 self.connection.commit()
                 return self.ShowSuccessMessage("users {} status has been changed to acepted".format(ids))
             except Exception,e:
                 return self.ShowError(str(e))
-            
-            #self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state,"approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')}},multi=True)
+
+            # self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state,"approval_date":datetime.now().strftime('%d-%m-%Y %H:%M:%S')}},multi=True)
         else:
             # self.collection.update({"id":{"$in":[int(n) for n in ids.split(",")]}},{"$set":{"status":state}},multi=True)
 
             try:
                 query = '''update "User" set status = %(status)s where id = ANY(%(ids)s)'''
                 parametros = {
-                "ids":map(int, results),
-                "status":int(state)
+                    "ids":map(int, results),
+                    "status":int(state)
                 }
-                print cur.mogrify(query,parametros)
+                # print cur.mogrify(query,parametros)
                 cur.execute(query,parametros)
                 self.connection.commit()
                 return self.ShowSuccessMessage("users {} status has been changed to {}".format(ids,state))
