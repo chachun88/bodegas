@@ -428,3 +428,25 @@ class CustomerAjaxListHandler(BaseHandler):
         }
 
         self.write(json_util.dumps(result))
+
+
+class PasswordRecovery(BaseHandler):
+
+    def get(self):
+
+        self.render( "auth/password_recovery.html" )
+
+    def post(self):
+        try:
+            email = self.get_argument("email", "")
+
+            if email == "":
+                raise Exception( "El email ingresado no es válido" )
+            if (User()).PassRecovery( email ):
+                # self.write( "se ha enviado un correo" )
+                self.render( "auth/success.html" )
+            else:
+                # self.write( "no se ha podido recuperar la contraseña" )
+                self.render( "auth/fail.html", message="no se ha podido recuperar la contraseña" )
+        except Exception, e:
+            self.render( "auth/fail.html", message=str(e) )
