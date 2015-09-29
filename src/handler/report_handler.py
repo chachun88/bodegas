@@ -42,9 +42,9 @@ class ReportHandler(BaseHandler):
         if "success" in res_size:
             sizes = res_size["success"]
 
-        sku = self.get_argument("sku", "")
-        size_id = self.get_argument("size_id", "")
-        cellar_id = self.get_argument("cellar_id", "")
+        sku = self.get_argument("sku", 0)
+        size_id = self.get_argument("size_id", 0)
+        cellar_id = self.get_argument("cellar_id", 0)
 
         if sku != "":
 
