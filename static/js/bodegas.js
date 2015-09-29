@@ -418,7 +418,7 @@ $(document).on('pjax:end ready',function() {
 			var action = $("#showKardex").attr("action");
 			var url = action + '?' + data;
 			$(this).attr("href", url);
-			$.pjax.click(event, {container: "div.wrap", timeout: 50000});
+			$.pjax.click(event, {container: "div#movimientos", fragment: "div#movimientos", timeout: 50000});
 		});
 	}
 
