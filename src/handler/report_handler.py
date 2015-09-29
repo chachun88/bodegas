@@ -46,7 +46,7 @@ class ReportHandler(BaseHandler):
         size_id = self.get_argument("size_id", 0)
         cellar_id = self.get_argument("cellar_id", 0)
 
-        if sku != "":
+        if sku != 0:
 
             cellar = Cellar()
             cellar.InitById(cellar_id)
