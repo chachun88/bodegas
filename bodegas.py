@@ -33,6 +33,8 @@ from src.handler.shipping_handler import *
 from src.handler.examples_handler import *
 from src.handler.banner_handler import *
 from src.handler.customer_handler import *
+from src.handler.kardex_handler import *
+
 from config import *
 
 # something
@@ -160,6 +162,9 @@ class Application(tornado.web.Application):
             (r"/examples/pjax",       PjaxHandler),
             (r"/examples/pjax2",       Pjax2Handler),
 
+            (r"/kardex", KardexHandler),
+
+
             #banner
             (r"/banner",       BannerHandler)
         ]
@@ -171,7 +176,9 @@ class Application(tornado.web.Application):
             {"class": "panel", "name": Menu.INFORMES, "icon": "bar-chart-o", "link": "/",
              "sub_menu": [
                  {"class": "",
-                  "name": Menu.INFORMES_POR_BODEGA, "link": "/"}
+                  "name": Menu.INFORMES_POR_BODEGA, "link": "/"},
+                 {"class": "",
+                  "name": Menu.INFORMES_POR_PRODUCTO, "link": "/kardex"}
              ]},
             {"class": "panel", "name": Menu.PRODUCTOS, "icon": "home", "link": "/product",
              "sub_menu": [

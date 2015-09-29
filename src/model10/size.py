@@ -175,3 +175,4 @@ class Size(BaseModel):
             cur.close()
             self.connection.close()
 
+

@@ -403,17 +403,9 @@ $(document).on('pjax:end ready',function() {
 
 	/*$("table#productos").DataTable();*/
 
-	// $(document).on("click", "a#searchKardex", function(event){
-	// 	// event.preventDefault();
-	// 	var data = $("#showKardex").serialize();
-	// 	var action = $("#showKardex").attr("action");
-	// 	var url = action + '?' + data;
-	// 	location.href = url;
-	// 	// return true;
-	// });
-
 	if ($.support.pjax) {
 		$(document).on("click", "a#searchKardex", function(event){
+			console.log("akshdka");
 			var data = $("#showKardex").serialize();
 			var action = $("#showKardex").attr("action");
 			var url = action + '?' + data;
@@ -421,6 +413,7 @@ $(document).on('pjax:end ready',function() {
 			$.pjax.click(event, {container: "div.wrap", timeout: 50000});
 		});
 	}
+
 
 });
 

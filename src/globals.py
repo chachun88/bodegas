@@ -76,6 +76,7 @@ class Menu:
 
     # sub_menu
     INFORMES_POR_BODEGA = "Informe por bodega"
+    INFORMES_POR_PRODUCTO = "Movimientos por producto"
     # end sub_menu
 
     PRODUCTOS = "Productos"
