@@ -18,16 +18,10 @@ from ..model10.product import Product
 
 class ReportHandler(BaseHandler):
 
-    data = []
-
     @tornado.web.authenticated
     def get(self):
 
-        self.set_active(Menu.INFORMES_POR_BODEGA)
-
-        day = self.get_argument("day", "today")
-        fromm = self.get_argument("from", "from")
-        until = self.get_argument("until", "until")
+        self.set_active(Menu.BODEGAS_LISTAR)  # change menu active item
 
         pjax = bool(self.get_argument("_pjax", False))
 
@@ -36,90 +30,39 @@ class ReportHandler(BaseHandler):
         if pjax:
             pjax_str = '/ajax'
 
-        data = Cellar().ListKardex(day, fromm, until)
+        _c = Cellar()
+        cellars = _c.List(1, 100)
 
-        self.render("report{}/home.html".format(pjax_str), 
-                    side_menu=self.side_menu, 
-                    data=data,
-                    data_str=json_util.dumps(data))
+        _p = Product()
+        res_list = _p.GetList(0, 0)
+        products = []
+        if "success" in res_list:
+            products = res_list["success"]
 
-    @tornado.web.authenticated
-    def post(self):
+        _s = Size()
+        res_size = _s.list()
+        sizes = []
+        if "success" in res_size:
+            sizes = res_size["success"]
 
-        self.set_active(Menu.INFORMES_POR_BODEGA)
+        sku = self.get_argument("sku", "")
+        size_id = self.get_argument("size_id", "")
+        cellar_id = self.get_argument("cellar_id", "")
 
-        day = self.get_argument("day", "")
-        fromm = self.get_argument("from", "")
-        until = self.get_argument("until", "")
+        if sku != "":
 
-        data = Cellar().ListKardex(day, fromm, until)
+            cellar = Cellar()
+            cellar.InitById(cellar_id)
+            res = cellar.FindProductKardex(sku, cellar_id, size_id, True)
 
-        self.render("report/period.html", 
-                    side_menu=self.side_menu, 
-                    data=data, 
-                    data_str=json_util.dumps(data))
-
-    def check_xsrf_cookie(self):
-        pass
-
-
-class ReportUploadHandler(BaseHandler):
-
-    @tornado.web.authenticated
-    def get(self):
-        pass
-
-    @tornado.web.authenticated
-    def post(self):
-
-        data_str = self.get_argument("load", "")
-
-        data = json_util.loads(data_str)
-
-        cellar = Cellar().List(1, 100)
-        # data = json_util.dumps(len(data))
-
-        tit = ["SKU", "Talla", "Precio U. Compra", "Precio U. Venta",
-               "Cantidad", "Total", "Usuario", "Bodega"]
-
-        item_length = len(data)
-
-        matriz = []
-
-        for i in range(item_length):
-            matriz.append([])
-            if "product_sku" in data[i]:
-                matriz[i].append(data[i]["product_sku"])
-            if "size" in data[i]:
-                matriz[i].append(data[i]["size"])
-            if "balance_price" in data[i]:
-                matriz[i].append(data[i]["balance_price"])
-            if "sell_price" in data[i]:
-                matriz[i].append(data[i]["sell_price"])
-            if "units" in data[i]:
-                matriz[i].append(data[i]["units"])
-            if "sell_price" in data[i] and "units" in data[i]:
-                total = int(data[i]["sell_price"]) * int(data[i]["units"])
-                matriz[i].append(total)
-            if "user" in data[i]:
-                matriz[i].append(data[i]["user"])
-
-            for c in cellar:
-                # print "DATA:{}".format(data[i])
-                if data[i]["cellar_id"] == str(c["id"]):
-                    matriz[i].append(c["name"])
-
-        tras = zip(*matriz)
-
-        # lol = [[1,2,3],[4,5,6],[7,8,9]]
-        # print lol
-        item_length = len(tras[0])
-
-        with open('uploads/informe.csv', 'wb') as test_file:
-            file_writer = csv.writer(test_file, delimiter=';')
-            file_writer.writerow([x for x in tit])
-            for i in range(item_length):
-                file_writer.writerow([x[i] for x in tras])
-
-    def check_xsrf_cookie(self):
-        pass
+            if "success" in res:
+                self.render("report{}/home.html".format(pjax_str), 
+                            detail=res["success"], 
+                            cellars=cellars, 
+                            products=products,
+                            sizes=sizes)
+        else:
+            self.render("report{}/home.html".format(pjax_str), 
+                        cellars=cellars, 
+                        products=products,
+                        sizes=sizes)
