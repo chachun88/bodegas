@@ -670,7 +670,12 @@ class Cellar(BaseModel):
                            c.name, 
                            k.balance_units, 
                            k.units, 
-                           k.operation_type 
+                           k.operation_type,
+                           CASE WHEN k.operation_type='sell' THEN 'Venta'
+                                WHEN k.operation_type='mov_out' THEN 'Mov. salida'
+                                WHEN k.operation_type='mov_in' THEN 'Mov. entrada'
+                                WHEN k.operation_type='buy' THEN 'Compra'
+                           END as operation
                      from "Kardex" k
                inner join "Cellar" c
                        on c.id = k.cellar_id

@@ -94,10 +94,15 @@
                                     <tr>
                                         <td>{{d["date"]}}</td>
                                         <td>{{d["user"]}}</td>
-                                        <td>{{d["operation_type"]}}</td>
+                                        <td>{{d["operation"]}}</td>
                                         <td>{{d["name"]}}</td>
-                                        <td>{{d["units"]}}</td>
-                                        <td>{{d["balance_units"]}}</td>
+                                        <td class="text-right">
+                                            {% if d["operation_type"] == 'sell' or d["operation_type"] == 'mov_out' %}
+                                            -
+                                            {% end %}
+                                            {{d["units"]}}
+                                        </td>
+                                        <td class="text-right">{{d["balance_units"]}}</td>
                                     </tr>
                                 {% end %}
                             </tbody>
