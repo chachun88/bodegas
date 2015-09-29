@@ -618,33 +618,67 @@ class Cellar(BaseModel):
             data = cur.fetchall()
             return data
 
-    def FindProductKardex(self, product_sku, cellar_identifier, size_id):
+    def FindProductKardex(self, product_sku, cellar_identifier, size_id, _all=False):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        if cellar_identifier == "remove" and size_id == "remove":
+        if not _all:
+            if cellar_identifier == "remove" and size_id == "remove":
 
-            query = '''\
-                    select coalesce(sum(balance_units),0) as total 
-                    from (select distinct on(cellar_id, size_id) balance_units 
-                            from "Kardex" where product_sku = %(product_sku)s 
-                            order by cellar_id, size_id, date desc) as t'''
-            parametros = {
-                "product_sku": product_sku
-            }
+                query = '''\
+                        select coalesce(sum(balance_units),0) as total 
+                        from (select distinct on(cellar_id, size_id) balance_units 
+                                from "Kardex" where product_sku = %(product_sku)s 
+                                order by cellar_id, size_id, date desc) as t'''
+                parametros = {
+                    "product_sku": product_sku
+                }
 
-            try:
-                cur.execute(query, parametros)
-                result = cur.fetchone()
-                return self.ShowSuccessMessage(result["total"])
-            except Exception, e:
-                return self.ShowError("get total by sku and size, {}".format(str(e)))
-            finally:
-                self.connection.close()
-                cur.close()
+                try:
+                    cur.execute(query, parametros)
+                    result = cur.fetchone()
+                    return self.ShowSuccessMessage(result["total"])
+                except Exception, e:
+                    return self.ShowError("get total by sku and size, {}".format(str(e)))
+                finally:
+                    self.connection.close()
+                    cur.close()
+            else:
+
+                query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s group by operation_type'''
+                parametros = {
+                    "product_sku": product_sku,
+                    "cellar_id": cellar_identifier,
+                    "size_id": size_id
+                }
+
+                # print cur.mogrify(query, parametros)
+
+                try:
+                    cur.execute(query, parametros)
+                    result = cur.fetchall()
+                    return self.ShowSuccessMessage(result)
+                except Exception, e:
+                    return self.ShowError("get total by sku and size, {}".format(str(e)))
+                finally:
+                    self.connection.close()
+                    cur.close()
         else:
 
-            query = '''select sum(units) as total, operation_type from "Kardex" where product_sku = %(product_sku)s and cellar_id = %(cellar_id)s and size_id = %(size_id)s group by operation_type'''
+            query = '''\
+                    select to_char(k.date, 'DD-MM-YYYY HH24:MI:SS') as date, 
+                           k."user", 
+                           c.name, 
+                           k.balance_units, 
+                           k.units, 
+                           k.operation_type 
+                     from "Kardex" k
+               inner join "Cellar" c
+                       on c.id = k.cellar_id
+                    where k.product_sku = %(product_sku)s 
+                      and k.cellar_id = %(cellar_id)s 
+                      and k.size_id = %(size_id)s 
+                    order by k.date desc, k.id desc'''
             parametros = {
                 "product_sku": product_sku,
                 "cellar_id": cellar_identifier,
@@ -658,7 +692,7 @@ class Cellar(BaseModel):
                 result = cur.fetchall()
                 return self.ShowSuccessMessage(result)
             except Exception, e:
-                return self.ShowError("get total by sku and size, {}".format(str(e)))
+                return self.ShowError("list kardex, {}".format(str(e)))
             finally:
                 self.connection.close()
                 cur.close()

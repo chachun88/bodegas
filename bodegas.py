@@ -33,6 +33,7 @@ from src.handler.shipping_handler import *
 from src.handler.examples_handler import *
 from src.handler.banner_handler import *
 from src.handler.customer_handler import *
+from src.handler.kardex_handler import *
 from config import *
 
 # something
@@ -162,6 +163,8 @@ class Application(tornado.web.Application):
 
             (r"/examples/pjax",       PjaxHandler),
             (r"/examples/pjax2",       Pjax2Handler),
+
+            (r"/kardex", KardexHandler),
 
             #banner
             (r"/banner",       BannerHandler)

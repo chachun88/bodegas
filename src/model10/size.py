@@ -145,3 +145,33 @@ class Size(BaseModel):
 
             cur.close()
             self.connection.close()
+
+    def getSizesByProductId(self, product_id=''):
+
+        if product_id == '':
+            return self.ShowError("product id is empty")
+
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = '''
+                select s.id, s.name
+                from "Size" s
+                inner join "Product_Size" ps
+                on ps.size_id = s.id
+                inner join "Product" p
+                on p.id = ps.product_id
+                where p.id = %(product_id)s
+                '''
+        parameters = {
+            "product_id": product_id
+        }
+        try:
+            cur.execute(query, parameters)
+            sizes = cur.fetchall()
+            return self.ShowSuccessMessage(sizes)
+        except Exception, e:
+            return self.ShowError("Error getting sizes by product id {}".format(str(e)))
+        finally:
+            cur.close()
+            self.connection.close()
+
