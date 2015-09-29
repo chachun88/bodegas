@@ -403,6 +403,18 @@ $(document).on('pjax:end ready',function() {
 
 	/*$("table#productos").DataTable();*/
 
+	if ($.support.pjax) {
+		$(document).on("click", "a#searchKardex", function(event){
+			console.log("akshdka");
+			var data = $("#showKardex").serialize();
+			var action = $("#showKardex").attr("action");
+			var url = action + '?' + data;
+			$(this).attr("href", url);
+			$.pjax.click(event, {container: "div.wrap", timeout: 50000});
+		});
+	}
+
+
 });
 
 var for_sale = function(product_id) {

@@ -1,0 +1,113 @@
+{% extends "../../base_ajax.html" %}
+{% block title %}Informe de bodegas {% end %}
+{% block caption %}
+{% if int(6) in current_user["permissions"] %}
+    muestra las salidas realizadas
+{% else %}
+    sección no autorizada
+{% end %}
+{% end %}
+{% block body %}
+{% if int(6) in current_user["permissions"] %}
+    <div class="col-md-12">
+        <section class="widget">
+            <div class="row">
+                <form id="showKardex" action="/kardex" class="form-horizontal col-md-6">
+                    <div class="form-group">
+                        <label class="col-sm-2 text-right">Producto</label>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-5">
+                            <select name="sku"
+                                data-placeholder="Productos"
+                                class="chzn-select select-block-level"
+                                tabindex="-1"
+                                name="sku">
+                                {% for p in products %}
+                                    {% if sku == p['sku'] %}
+                                        <option value="{{p['sku']}}" selected>{{p['name']}} {{p['color']}}</option>
+                                    {% else %}
+                                        <option value="{{p['sku']}}">{{p['name']}} {{p['color']}}</option>
+                                    {% end %}
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 text-right">Bodega</label>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-5">
+                            <select name="cellar_id"
+                                class="chzn-select">
+                                {% for c in cellars %}
+                                    {% if int(cellar_id) == c['id'] %}
+                                        <option value="{{c['id']}}" selected>{{c['name']}}</option>
+                                    {% else %}
+                                        <option value="{{c['id']}}">{{c['name']}}</option>
+                                    {% end %}
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 text-right">Tallas</label>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-5">
+                            <select name="size_id"
+                                class="chzn-select">
+                                {% for s in sizes %}
+                                    {% if int(size_id) == s['id'] %}
+                                        <option value="{{s['id']}}" selected>{{s['name']}}</option>
+                                    {% else %}
+                                        <option value="{{s['id']}}">{{s['name']}}</option>
+                                    {% end %}
+                                {% end %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 text-right">
+                            <a class="btn btn-primary" id="searchKardex">Buscar</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+    {% try %}
+    {% if len(detail) > 0 %}
+        <div class="col-md-12">
+            <section class="widget">
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <table class="table table-condensed">
+                            <thead>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Operaci&oacute;n</th>
+                                <th>Bodega</th>
+                                <th>Unidades</th>
+                                <th>Total<br/>Unidades</th>
+                            </thead>
+                            <tbody>
+                                {% for d in detail %}
+                                    <tr>
+                                        <td>{{d["date"]}}</td>
+                                        <td>{{d["user"]}}</td>
+                                        <td>{{d["operation_type"]}}</td>
+                                        <td>{{d["name"]}}</td>
+                                        <td>{{d["units"]}}</td>
+                                        <td>{{d["balance_units"]}}</td>
+                                    </tr>
+                                {% end %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    {% end %}
+    {% except %}
+{% end %}
+{% end %}
+{% end %}
