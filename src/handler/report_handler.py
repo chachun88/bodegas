@@ -6,11 +6,11 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
-
-from basehandler import BaseHandler
 from ..globals import Menu
+from basehandler import BaseHandler
 from ..model10.cellar import Cellar
 from ..model10.product import Product
+from ..model10.size import Size
 
 
 class ReportHandler(BaseHandler):
