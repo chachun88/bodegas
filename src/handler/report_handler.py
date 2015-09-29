@@ -57,9 +57,15 @@ class ReportHandler(BaseHandler):
                             detail=res["success"], 
                             cellars=cellars, 
                             products=products,
-                            sizes=sizes)
+                            sizes=sizes,
+                            sku=sku,
+                            size_id=size_id,
+                            cellar_id=cellar_id)
         else:
             self.render("report{}/home.html".format(pjax_str), 
                         cellars=cellars, 
                         products=products,
-                        sizes=sizes)
+                        sizes=sizes,
+                        sku=sku,
+                        size_id=size_id,
+                        cellar_id=cellar_id)

@@ -23,7 +23,11 @@
 										tabindex="-1"
 										name="sku">
 									{% for p in products %}
+										{% if sku == p['sku'] %}
+										<option value="{{p['sku']}}" selected>{{p['name']}} {{p['color']}}</option>
+										{% else %}
 										<option value="{{p['sku']}}">{{p['name']}} {{p['color']}}</option>
+										{% end %}
 									{% end %}
 								</select>
 							</div>
@@ -35,7 +39,11 @@
 								<select name="cellar_id" 
 										class="chzn-select">
 									{% for c in cellars %}
+										{% if int(cellar_id) == c['id'] %}
+										<option value="{{c['id']}}" selected>{{c['name']}}</option>
+										{% else %}
 										<option value="{{c['id']}}">{{c['name']}}</option>
+										{% end %}
 									{% end %}
 								</select>
 							</div>
@@ -47,7 +55,11 @@
 								<select name="size_id" 
 										class="chzn-select">
 									{% for s in sizes %}
+										{% if int(size_id) == s['id'] %}
+										<option value="{{s['id']}}" selected>{{s['name']}}</option>
+										{% else %}
 										<option value="{{s['id']}}">{{s['name']}}</option>
+										{% end %}
 									{% end %}
 								</select>
 							</div>
@@ -61,9 +73,9 @@
 				</div>
 			</section>
 		</div>
+		<div class="col-md-12" id="movimientos">
 		{% try %}
 			{% if len(detail) > 0 %}
-			<div class="col-md-12" id="movimientos">
 				<section class="widget">
 					<div class="row">
 						<div class="col-sm-1"></div>
@@ -93,9 +105,9 @@
 						</div>
 					</div>
 				</section>
-			</div>
 			{% end %}
 		{% except %}
 		{% end %}
+		</div>
 	{% end %}
 {% end %}
