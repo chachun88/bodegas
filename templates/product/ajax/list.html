@@ -8,6 +8,13 @@
     <link href="/{{nocache_static}}/css/fastedit.css" rel="stylesheet">
 {% end %}
 {% block body %}
+<div class="modal fade" id="iframe_detalle">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <iframe src="" width="100%" height="100%" frameborder="0" allowtransparency="true"></iframe> 
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
     {% if int(2) in current_user["permissions"] %}
         {% if dn == "bpf" %}
         <div class="alert alert-warning alert-success-nohidden">
