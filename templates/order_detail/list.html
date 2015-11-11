@@ -174,11 +174,11 @@
 				</div>
 				{% if order.voucher != '' %}
 				<div class="row">
-					<div class="col-md-10">
+					<div class="col-md-8 col-md-offset-2">
 						{% if order.voucher.split(".")[-1] == 'pdf' %}
-							<iframe width="100%" frameborder="0" height="500" src="/uploads/images/{{order.voucher}}?mw=-1">
+							<iframe id="voucher" width="100%" frameborder="0" height="500" src="/uploads/images/{{order.voucher}}?mw=-1">
 						{% else %}
-							<iframe width="100%" frameborder="0" height="500" src="/image/{{order.voucher}}?mw=400">
+							<iframe id="voucher" width="100%" frameborder="0" height="500" src="/image/{{order.voucher}}?mw=400">
 						{% end %}
 					</div>
 				</div>

@@ -254,7 +254,7 @@ $(document).on('pjax:end ready',function(){
                     "data": null, 
                     "orderable": false,
                     render: function(data, type, row){
-                        var botones = '<a class="btn btn-sm btn-primary" href="/product/edit?id=' + row.id + '">Editar</a>'+
+                        var botones = '<button class="btn btn-sm btn-primary detail-button" href="/product/edit?_pjax=true&id=' + row.id + '">Editar</button>'+
                                     '<br/>' +
                                     '<a class="btn btn-sm btn-danger" href="/product/remove?id='+ row.id +
                                     '" onclick="return confirm("¿Está seguro que desea eliminar el producto?");">'+
@@ -306,5 +306,10 @@ $(document).on('pjax:end ready',function(){
                 }
             }
         });
+    });
+    $(document).on('click', "button.detail-button", function(e){
+        e.preventDefault();
+        $("#iframe_detalle iframe").attr('src', $(this).attr('href'));
+        $("#iframe_detalle").modal('show');
     });
 });

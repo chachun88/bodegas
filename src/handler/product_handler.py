@@ -224,7 +224,7 @@ class ProductAddHandler(BaseHandler):
             # print res_save
 
             if "success" in res_save:
-                self.redirect("/product/list")
+                self.render("message.html",msg="El producto ha sido guardado exitosamente")
             else:
                 # self.redirect("/product/edit?id={}".format(prod.identifier))
                 self.write(res_save["error"])

@@ -1,5 +1,71 @@
 {% extends "../../base_ajax.html" %}
 
+{% block javascript %}
+	<script src="/{{nocache_static}}/lib/jquery/jquery-2.0.3.min.js"></script>
+
+	<!-- jquery plugins -->
+	<script src="/{{nocache_static}}/lib/icheck.js/jquery.icheck.js"></script>
+	<script src="/{{nocache_static}}/lib/sparkline/jquery.sparkline.js"></script>
+	<script src="/{{nocache_static}}/lib/jquery-ui-1.10.3.custom.js"></script>
+	<script src="/{{nocache_static}}/lib/jquery.slimscroll.js"></script>
+
+	<script src="/{{nocache_static}}/lib/jquery-maskedinput/jquery.maskedinput.js"></script>
+	<script src="/{{nocache_static}}/lib/parsley/parsley.js"> </script>
+	<script src="/{{nocache_static}}/lib/select2.js"></script>
+	<script src="/{{nocache_static}}/lib/jquery.autogrow-textarea.js"></script>
+
+
+
+
+	<!-- bootstrap default plugins -->
+	<script src="/{{nocache_static}}/lib/bootstrap/transition.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap/collapse.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap/alert.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap/tooltip.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap/popover.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap/button.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap/tab.js"> </script>
+	<script src="/{{nocache_static}}/lib/bootstrap/dropdown.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap/modal.js"></script>
+
+	<script src="/{{nocache_static}}/lib/bootstrap-select/bootstrap-select.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap-switch.js"></script>
+
+	<script src="/{{nocache_static}}/lib/bootstrap-datepicker.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap-select/bootstrap-select.js"></script>
+	<script src="/{{nocache_static}}/lib/wysihtml5/wysihtml5-0.3.0_rc2.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap-switch.js"></script>
+	<script src="/{{nocache_static}}/lib/bootstrap-colorpicker.js"></script>
+
+
+	<!-- basic application js-->
+	<script src="/{{nocache_static}}/js/app.js"></script>
+	<script src="/{{nocache_static}}/js/settings.js"></script>
+	<script src="/{{nocache_static}}/js/lp-checkbox.js"></script>
+
+	<script type="text/javascript" src="/{{nocache_static}}/js/lp.autocomplete.js"></script>
+	<script src="/{{nocache_static}}/bower_components/jquery-pjax/jquery.pjax.js"></script>
+	<script src="/{{nocache_static}}/js/pjax_nav.js"></script>
+	
+
+	<!-- page specific -->
+	<script type="text/javascript" src="/{{nocache_static}}/js/forms-elemets.js"></script>
+	<script type="text/javascript" src="/{{nocache_static}}/js/lp.js" charset="utf-8"></script>
+	<script type="text/javascript" src="/{{nocache_static}}/js/jquery.dataTables.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="/{{nocache_static}}/js/dataTables.tableTools.min.js" charset="utf-8"></script>
+	<!--<script type="text/javascript" src="/{{nocache_static}}/js/product_list.js" charset="utf-8"></script>
+	<script type="text/javascript" src="/{{nocache_static}}/js/customer_list.js"></script>
+	<script type="text/javascript" src="/{{nocache_static}}/js/order_list.js"></script>
+	<script type="text/javascript" src="/{{nocache_static}}/js/cellar/detail.js"></script>-->
+	<script src="/{{nocache_static}}/js/multiple_upload.js"></script>
+	<script type="text/javascript" src="/{{nocache_static}}/js/easy.js"></script>
+	<script type="text/javascript" src="/{{nocache_static}}/bower_components/file_uploader/dist/fileuploader.js"></script>
+	<!--<script type="text/javascript" src="/{{nocache_static}}/js/banner.js"></script>-->
+	<!--<script type="text/javascript" src="/{{nocache_static}}/js/cellar/easy_output.js"></script>-->
+	<!--<script type="text/javascript" src="/{{nocache_static}}/js/cellar/easy_input.js"></script>-->
+	<script type="text/javascript" src="/{{nocache_static}}/js/bodegas.js"></script>
+{% end %}
 
 {% block title %}
 	{% if tit == "edit" %}
@@ -22,6 +88,8 @@
 {% end %}
 
 {% block body %}
+<link href="/{{nocache_static}}/css/application.min.css" rel="stylesheet">
+<link href="/{{nocache_static}}/css/bodega.css" rel="stylesheet">
 	{% if int(2) in current_user["permissions"] %}
 		{% if dn == "bpf" %}
 		<div class="alert alert-warning alert-success-nohidden">
@@ -29,7 +97,7 @@
 			<strong><i class="fa fa-check"></i> Problema al agregar productos!</strong> SKU ya existe.
 		</div>
 		{% end %}
-		<div class="col-md-7">
+		<div class="col-md-7 col-md-offset-1">
 			<section class="widget">
 				<div class="body">
 					<form action="/product/add" id="product-form" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
