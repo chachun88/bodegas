@@ -1,82 +1,63 @@
-{% extends "../base.html" %}
-
-{% block title %}Contactos{% end %}
-{% block javascript %}
+<link href="/{{nocache_static}}/css/application.min.css" rel="stylesheet">
+<link href="/{{nocache_static}}/css/bodega.css" rel="stylesheet">
+<script src="/{{nocache_static}}/lib/jquery/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="/{{nocache_static}}/js/contact_list.js"></script>
-{% end %}
-{% block body %}
 
-<div class="col-md-12">
-	<section class="widget">
-		<div class="body">
-			<table class="table table-striped table-images">
-				<thead>
-					<tr>
-						<th class="action">
-							<select data-placeholder="Acciones"
-							data-minimum-results-for-search="10"
-							tabindex="-1"
-							class="chzn-select select-block-level" id="default-select">
-								<option value=""></option>
-								<option value="3">Eliminar</option>
-							</select>
-						</th>
-						<th>
-							<button type="button" id="aplicar" class="btn btn-primary">Aplicar</button>
-						</th>
-					</tr>
-				</thead>
-			</table>
-			<table class="table table-striped table-images">
-				<thead>
-					<tr>
-						<th></th>
-						<th>ID</th>
-						<th>Nombre</th>
-						<th>Direcci&oacute;n</th>
-						<th>Tel&eacute;fono</th>
-						<th>Email</th>
-						<th>ID Cliente</th>
-						<th>Tipo</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for c in contactos %}
-					<tr>
-						<td>
-							<input type="checkbox" name="contactos" class="iCheck" value="{{c['id']}}">
-						</td>
-						<td>
-							{{c['id']}}
-						</td>
-						<td>
-							{{c['name']}}
-						</td>
-						<td>
-							{{c['address']}}
-						</td>
-						<td>
-							{{c['telephone']}}
-						</td>
-						<td>
-							{{c['email']}}
-						</td>
-						<td>
-							{{c['user_id']}}
-						</td>
-						<td>
-							{{c['type']}}
-						</td>
-						<td>
-							<a href="/customer/edit_contact?id={{c['id']}}" class="btn btn-primary">Editar</a>
-						</td>
-					</tr>
-					{% end %}
-				</tbody>
-			</table>
+<body class="background-dark" >
+	<div class="row top50">
+		<div class="col-md-10 col-md-offset-1">
+			<section class="widget" id="detalle-pedido">
+				<div class="body">
+					<table class="table table-striped table-images">
+						<thead>
+							<tr>
+								<th></th>
+								<th>ID</th>
+								<th>Nombre</th>
+								<th>Direcci&oacute;n</th>
+								<th>Tel&eacute;fono</th>
+								<th>Email</th>
+								<th>ID Cliente</th>
+								<th>Tipo</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for c in contactos %}
+							<tr>
+								<td>
+									<input type="checkbox" name="contactos" class="iCheck" value="{{c['id']}}">
+								</td>
+								<td>
+									{{c['id']}}
+								</td>
+								<td>
+									{{c['name']}}
+								</td>
+								<td>
+									{{c['address']}}
+								</td>
+								<td>
+									{{c['telephone']}}
+								</td>
+								<td>
+									{{c['email']}}
+								</td>
+								<td>
+									{{c['user_id']}}
+								</td>
+								<td>
+									{{c['type']}}
+								</td>
+								<td>
+									<a href="/customer/edit_contact?id={{c['id']}}" class="btn btn-primary">Editar</a>
+								</td>
+							</tr>
+							{% end %}
+						</tbody>
+					</table>
+				</div>
+			</section>
 		</div>
-	</section>
-</div>
-
-{% end %}
+	</div>
+</body>

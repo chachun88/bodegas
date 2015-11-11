@@ -1,23 +1,7 @@
-{% extends "../base.html" %}
-{% block title %}
-    {% if mode == "edit" %}
-        Editar Contacto Cliente 
-    {% elif mode == "add" %}
-        Agregar Contacto Cliente
-    {% end %}
-{% end %}
-{% block caption %}
-    {% if int(5) in current_user["permissions"] %}
-        {% if mode == "edit" %}
-            permite editar un contacto para un cliente
-        {% elif mode == "add" %}
-            permite agregar un contacto para un cliente
-        {% end %}
-    {% else %}
-        sección no autorizada
-    {% end %}
-{% end %}           
-{% block body %}
+<link href="/{{nocache_static}}/css/application.min.css" rel="stylesheet">
+<link href="/{{nocache_static}}/css/bodega.css" rel="stylesheet">
+<script src="/{{nocache_static}}/lib/jquery/jquery-2.0.3.min.js"></script>
+<div class="row top50">
     {% if int(5) in current_user["permissions"] %}
         {% if dn == "bpf" %}
         <div class="alert alert-warning alert-success-nohidden">
@@ -25,7 +9,7 @@
             <strong><i class="fa fa-check"></i> Problema al agregar productos!</strong> SKU ya existe.
         </div>
         {% end %}
-        <div class="col-md-7">
+        <div class="col-md-7 col-md-offset-3">
             <section class="widget">
                 <div class="body">
                     <form action="/customer/edit_contact" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
@@ -145,4 +129,4 @@
             </section>
         </div>
     {% end %}
-{% end %}
+</div>

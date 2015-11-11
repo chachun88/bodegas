@@ -95,7 +95,7 @@ $(document).on('pjax:end ready',function(){
                     "data": null, 
                     "orderable": false,
                     render: function ( data, type, row ) {
-                    var button = '<p><a class="btn btn-sm btn-success" href="/customer/view_contact?user_id=' + row.id + '">Ver Contactos</a></p>' + '<p><button class="btn btn-sm btn-success enviar-clave" user_id="' + row.id + '">Enviar contrase&ntilde;a</button></p>';
+                    var button = '<p><button class="btn btn-sm btn-success detail-button" href="/customer/view_contact?_pjax=true&user_id=' + row.id + '">Ver Contactos</a></button>' + '<p><button class="btn btn-sm btn-success enviar-clave" user_id="' + row.id + '">Enviar contrase&ntilde;a</button></p>';
                         return button;
                     } 
                 }
@@ -141,5 +141,11 @@ $(document).on('pjax:end ready',function(){
                 }
             }
         });
+    });
+
+    $(document).on('click', "button.detail-button", function(e){
+        e.preventDefault();
+        $("#iframe_detalle iframe").attr('src', $(this).attr('href'));
+        $("#iframe_detalle").modal('show');
     });
 });

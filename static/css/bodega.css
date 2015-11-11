@@ -243,3 +243,7 @@ section#detalle_pedido th, section#detalle_pedido td{
 .imageuploader-container {
     margin-top: -35px;
 }
+
+.top50 {
+    margin-top: 50px;
+}
