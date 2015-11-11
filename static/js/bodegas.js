@@ -414,6 +414,12 @@ $(document).on('pjax:end ready',function() {
 		});
 	}
 
+	$(document).on("click", ".quantity-filter", function(){
+		var sign = $(this).attr("sign");
+		var number = $("#quantity-filter").val();
+		$("input[type=search]").val(sign+number);
+		$("input[type=search]").trigger("keyup");
+	});
 
 });
 
