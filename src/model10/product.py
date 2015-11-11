@@ -1087,7 +1087,10 @@ class Product(BaseModel):
             cur.execute(q, p)
             total_items = float(cur.rowcount)
             items = float(items)
-            total_page = math.ceil(total_items/items)
+            try:
+                total_page = math.ceil(total_items/items)
+            except:
+                total_page = 1
             return self.ShowSuccessMessage(total_page)
 
         except Exception, e:

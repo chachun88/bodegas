@@ -252,6 +252,8 @@ class OrderAjaxListHandler(BaseHandler):
     def get(self):
         start = int(self.get_argument("start", 0))
         items = int(self.get_argument("length", 20))
+        if items == -1:
+          items = 0
         term = self.get_argument("search[value]", "")
         query = ""
 
@@ -292,7 +294,10 @@ class OrderAjaxListHandler(BaseHandler):
         column = int(self.get_argument("order[0][column]"))
         direction = self.get_argument("order[0][dir]")
 
-        page = int(start / items) + 1
+        try:
+          page = int(start / items) + 1
+        except:
+          page = 0
 
         total_items = 0
 

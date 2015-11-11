@@ -182,6 +182,7 @@ $(document).on('pjax:end ready',function(){
                     }
                 }
             ],
+            "lengthMenu": [[ 10, 25, 50, 100, 200, 300, 400, 500, -1 ],[ 10, 25, 50, 100, 200, 300, 400, 500, "Todos" ]],
             "language":{
                 "zeroRecords": "No hay resultados para esta busqueda",
                 "search": "Busqueda:",

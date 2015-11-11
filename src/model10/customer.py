@@ -288,34 +288,56 @@ class Customer(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        query = '''\
-                select  u.id,
-                        u.email,
-                        u.name,
-                        nullif(u.rut,'') as rut,
-                        ut.name as type,
-                        nullif(u.bussiness,'') as bussiness,
-                        to_char(u.registration_date, 'DD/MM/YY HH12:MI') as registration_date,
-                        to_char(u.last_view, 'DD/MM/YY HH12:MI') as last_view,
-                        CASE WHEN u.status=1 THEN 'PENDIENTE'
-                            WHEN u.status=2 THEN 'ACEPTADO'
-                        END as status
-                from "User" u 
-                inner join "User_Types" ut on ut.id = u.type_id 
-                where (u.type_id = 4 or u.type_id = 3) 
-                    and u.email <> '' 
-                    and u.deleted = 0 
-                    {query}
-                order by {column} {dir} 
-                nulls last
-                limit %(limit)s 
-                offset %(offset)s'''.format(query=query,column=column,dir=dir)
+        if current_page == 0 and items_per_page == 0:
+            query = '''\
+                    select  u.id,
+                            u.email,
+                            u.name,
+                            nullif(u.rut,'') as rut,
+                            ut.name as type,
+                            nullif(u.bussiness,'') as bussiness,
+                            to_char(u.registration_date, 'DD/MM/YY HH12:MI') as registration_date,
+                            to_char(u.last_view, 'DD/MM/YY HH12:MI') as last_view,
+                            CASE WHEN u.status=1 THEN 'PENDIENTE'
+                                WHEN u.status=2 THEN 'ACEPTADO'
+                            END as status
+                    from "User" u 
+                    inner join "User_Types" ut on ut.id = u.type_id 
+                    where (u.type_id = 4 or u.type_id = 3) 
+                        and u.email <> '' 
+                        and u.deleted = 0 
+                        {query}
+                    order by {column} {dir} 
+                    nulls last'''.format(query=query,column=column,dir=dir)
 
-        parametros = {
-            "limit":items_per_page,
-            "offset":skip,
-            "term": term
-        }
+            parametros = {
+                "term": term
+            }
+        else:
+            query = '''\
+                    select  u.id,
+                            u.email,
+                            u.name,
+                            nullif(u.rut,'') as rut,
+                            ut.name as type,
+                            nullif(u.bussiness,'') as bussiness,
+                            to_char(u.registration_date, 'DD/MM/YY HH12:MI') as registration_date,
+                            to_char(u.last_view, 'DD/MM/YY HH12:MI') as last_view,
+                            CASE WHEN u.status=1 THEN 'PENDIENTE'
+                                WHEN u.status=2 THEN 'ACEPTADO'
+                            END as status
+                    from "User" u 
+                    inner join "User_Types" ut on ut.id = u.type_id 
+                    where (u.type_id = 4 or u.type_id = 3) 
+                        and u.email <> '' 
+                        and u.deleted = 0 
+                        {query}
+                    order by {column} {dir} 
+                    nulls last'''.format(query=query,column=column,dir=dir)
+
+            parametros = {
+                "term": term
+            }
 
         # print cur.mogrify(query, parametros)
         try:
