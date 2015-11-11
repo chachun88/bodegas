@@ -325,7 +325,7 @@ class ProductEditHandler(BaseHandler):
             pjax_str = '/ajax'
 
         if "success" in res:
-            self.render("product{}/add.html".format(pjax_str), dn="", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
+            self.render("product{}/edit.html".format(pjax_str), dn="", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
         else:
             self.render("product{}/add.html".format(pjax_str), dn="bpf", side_menu=self.side_menu, product=prod, tit="edit", tags=tags, sizes=sizes)
 
