@@ -256,7 +256,7 @@ class Order(BaseModel):
                     from "Order" o 
                     inner join "User" u on u.id = o.user_id 
                     inner join "Contact" c on c.id = o.billing_id 
-                    inner join "City" ct on ct.id = c.city_id 
+                    left join "City" ct on ct.id = c.city_id 
                     inner join "User_Types" ut on ut.id = u.type_id
                     left join "Webpay" w on w."ORDER_ID" = o.id
                     {query}
@@ -288,7 +288,7 @@ class Order(BaseModel):
                     from "Order" o 
                     inner join "User" u on u.id = o.user_id 
                     inner join "Contact" c on c.id = o.billing_id 
-                    inner join "City" ct on ct.id = c.city_id 
+                    left join "City" ct on ct.id = c.city_id 
                     inner join "User_Types" ut on ut.id = u.type_id
                     left join "Webpay" w on w."ORDER_ID" = o.id
                     {query}
@@ -328,11 +328,12 @@ class Order(BaseModel):
                 c.*,
                 o.id as order_id,
                 u.email, 
-                ct.name as city 
+                coalesce(ct.name, coalesce(po.name, '')) as city 
                 from "Order" o 
                 inner join "User" u on u.id = o.user_id 
                 inner join "Contact" c on c.id = o.billing_id 
-                inner join "City" ct on ct.id = c.city_id 
+                left join "City" ct on ct.id = c.city_id 
+                left join "Post_Office" po on po.id = o.post_office_id
                 where o.id = %(id)s 
                 limit 1'''
 

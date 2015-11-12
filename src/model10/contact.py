@@ -160,7 +160,7 @@ class Contact(BaseModel):
 						city.name as city 
 				from "Contact" c 
 				inner join "Contact_Types" ct on ct.id = c.type_id 
-				inner join "City" city on city.id = c.city_id
+				left join "City" city on city.id = c.city_id
 				where c.id = %(id)s limit 1'''
 
 		parametros = {
