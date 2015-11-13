@@ -95,7 +95,9 @@ $(document).on('pjax:end ready',function(){
                     "data": null, 
                     "orderable": false,
                     render: function ( data, type, row ) {
-                    var button = '<p><button class="btn btn-sm btn-success detail-button" href="/customer/view_contact?_pjax=true&user_id=' + row.id + '">Ver Contactos</a></button>' + '<p><button class="btn btn-sm btn-success enviar-clave" user_id="' + row.id + '">Enviar contrase&ntilde;a</button></p>';
+                    var button = '<p><button class="btn btn-sm btn-success detail-button" href="/customer/view_contact?_pjax=true&user_id=' + row.id + '">Ver Direcciones</a></button>' 
+                               + '<p><button class="btn btn-sm btn-success enviar-clave" user_id="' + row.id + '">Enviar contrase&ntilde;a</button></p>'
+                               + '<p><button class="btn btn-sm btn-success detail-button" href="/customer/history?user_id=' + row.id + '">Historial Pedidos</a></button>';
                         return button;
                     } 
                 }

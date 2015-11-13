@@ -11,14 +11,9 @@
 					<table class="table table-striped table-images">
 						<thead>
 							<tr>
-								<th></th>
-								<th>ID</th>
-								<th>Nombre</th>
-								<th>Direcci&oacute;n</th>
-								<th>Tel&eacute;fono</th>
-								<th>Email</th>
 								<th>ID Cliente</th>
-								<th>Tipo</th>
+								<th>Direcci&oacute;n</th>
+								<th>Comuna / Regi&oacute;n</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -26,28 +21,13 @@
 							{% for c in contactos %}
 							<tr>
 								<td>
-									<input type="checkbox" name="contactos" class="iCheck" value="{{c['id']}}">
-								</td>
-								<td>
-									{{c['id']}}
-								</td>
-								<td>
-									{{c['name']}}
+									{{c['user_id']}}
 								</td>
 								<td>
 									{{c['address']}}
 								</td>
 								<td>
-									{{c['telephone']}}
-								</td>
-								<td>
-									{{c['email']}}
-								</td>
-								<td>
-									{{c['user_id']}}
-								</td>
-								<td>
-									{{c['type']}}
+									{{c['town']}}
 								</td>
 								<td>
 									<a href="/customer/edit_contact?id={{c['id']}}" class="btn btn-primary">Editar</a>

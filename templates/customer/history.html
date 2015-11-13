@@ -1,0 +1,69 @@
+<link href="/{{nocache_static}}/css/application.min.css" rel="stylesheet">
+<link href="/{{nocache_static}}/css/bodega.css" rel="stylesheet">
+
+<body>
+    <div class="row top25">
+        {% if len(pedidos) %}
+        <section class="col-md-10 col-md-offset-1 widget">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Metodo Pago</th>
+                        <th>C&oacute;digo Webpay</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in pedidos %}
+                        <tr>
+                            <td>{{o["order_id"]}}</td>
+                            <td>{{o["date"]}}</td>
+                            <td>{{o["total"]}}</td>
+                            <td>
+                                {% if o["state"] == 1 %}
+                                    {% if o["payment_type"] == 1 or o["payment_type"] == 3 %}
+                                        POR CONFIRMAR
+                                    {% else %}
+                                        RECHAZADO
+                                    {% end %}
+                                {% elif o["state"] == 2 %}
+                                    CONFIRMADO
+                                {% elif o["state"] == 3 %}
+                                    LISTO PARA DESPACHO
+                                {% elif o["state"] == 4 %}
+                                    DESPACHADO
+                                {% elif o["state"] == 5 %}
+                                    CANCELADO
+                                {% end %}
+                            </td>
+                            <td>
+                                {% if o["payment_type"] == 1 %}
+                                    TRANSFERENCIA
+                                {% elif o["payment_type"] == 3 %}
+                                    CONVENIDO
+                                {% else %}
+                                    WEBPAY
+                                {% end %}
+                            </td>
+                            <td>
+                                {{ o["trx_id"] or '' }}
+                            </td>
+                            <td>
+                                <a class="btn btn-primary btn-sm detail-button" href="/order-detail/list?order_id={{o['order_id']}}">Ver Detalle</a>
+                            </td>
+                        </tr>
+                    {% end %}
+                </tbody>
+            </table>
+        </section>
+        {% else %}
+        <section class="col-md-10 col-md-offset-1 widget">
+            <h4>No se han encontrado registros de compras para esta clienta</h4>
+        </section>
+        {% end %}
+    </div>
+</body>

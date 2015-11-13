@@ -142,6 +142,7 @@ class Application(tornado.web.Application):
             (r"/customer/view_contact", CustomerViewContactHandler),
             (r"/customer/list_ajax", CustomerAjaxListHandler),
             (r"/customer/send_password_email", PasswordRecovery),
+            (r"/customer/history", CustomerOrderHistoryHandler),
 
             (r"/contact/actions", ContactActionsHandler),
             (r"/customer/edit_contact", EditContactHandler),

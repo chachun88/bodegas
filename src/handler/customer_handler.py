@@ -14,6 +14,7 @@ from ..model10.customer import Customer
 from ..model10.contact import Contact
 from ..model10.city import City
 from ..model10.user import User
+from ..model10.order import Order
 
 from datetime import datetime
 
@@ -462,3 +463,15 @@ class PasswordRecovery(BaseHandler):
                 self.write(json_util.dumps({"state": "error", "message": "usuario no existe"}))
         except Exception, e:
             self.write(json_util.dumps({"state": "error", "message": "excepcion {}".format(str(e))}))
+
+
+class CustomerOrderHistoryHandler(BaseHandler):
+
+    def get(self):
+        user_id = self.get_argument("user_id", "")
+        order = Order()
+        pedidos = order.List(0, 0, query=" where o.user_id = {}".format(user_id))
+        self.render("customer/history.html", pedidos=pedidos)
+
+    def post(self):
+        pass

@@ -64,9 +64,13 @@
                                     <div class="col-sm-8">
                                         <select name="city">
                                             {% for c in cities %}
-                                                {% if int(contact.city_id) == int(c['id']) %}
-                                                    <option value="{{c['id']}}" selected>{{c['name']}}</option>
-                                                {% else %}
+                                                {% try %}
+                                                    {% if int(contact.city_id) == int(c['id']) %}
+                                                        <option value="{{c['id']}}" selected>{{c['name']}}</option>
+                                                    {% else %}
+                                                        <option value="{{c['id']}}">{{c['name']}}</option>
+                                                    {% end %}
+                                                {% except %}
                                                     <option value="{{c['id']}}">{{c['name']}}</option>
                                                 {% end %}
                                             {% end %}

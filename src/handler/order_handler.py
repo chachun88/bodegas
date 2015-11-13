@@ -277,7 +277,12 @@ class OrderAjaxListHandler(BaseHandler):
             elif term.lower() == 'webpay':
                 query = '''where o.payment_type = 2'''
             else:
+              try:
+                term = int(term)
+                query = """where o.id = %(term)s"""
+              except:
                 query = """where unaccent(lower(coalesce(c.name, '') || ' ' || coalesce(c.lastname, ''))) like %(term)s"""
+                term = "%{}%".format(term)
 
         columns = [
             ""
@@ -308,8 +313,8 @@ class OrderAjaxListHandler(BaseHandler):
 
         order = Order()
         pedidos = order.List(
-            page, items, query, columns[column], direction, "%{}%".format(term))
-        res_total_items = order.getTotalItems(query, "%{}%".format(term))
+            page, items, query, columns[column], direction, term)
+        res_total_items = order.getTotalItems(query, term)
 
         if "success" in res_total_items:
             total_items = res_total_items["success"]

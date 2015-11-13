@@ -304,7 +304,7 @@ class Order(BaseModel):
             }
 
         try:
-            print cur.mogrify(query, parametros)
+            # print cur.mogrify(query, parametros)
             cur.execute(query, parametros)
             lista = cur.fetchall()
             return lista
