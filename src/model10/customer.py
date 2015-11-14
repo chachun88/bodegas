@@ -333,13 +333,16 @@ class Customer(BaseModel):
                         and u.deleted = 0 
                         {query}
                     order by {column} {dir} 
-                    nulls last'''.format(query=query,column=column,dir=dir)
+                    nulls last
+                    limit %(items)s 
+                    offset %(offset)s'''.format(query=query,column=column,dir=dir)
 
             parametros = {
-                "term": term
+                "term": term,
+                "items": items_per_page,
+                "offset": skip
             }
 
-        # print cur.mogrify(query, parametros)
         try:
             cur.execute(query,parametros)
             lista = cur.fetchall()

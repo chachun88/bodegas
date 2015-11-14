@@ -37,7 +37,7 @@ $(document).on('pjax:end ready',function(){
                 }
             },
             "lengthChange": true,
-            "pageLength": 20,
+            "pageLength": 10,
             "dom": 'T<"clear">lfrtip',
             "tableTools": {
                 "sSwfPath": "../static/swf/copy_csv_xls_pdf.swf",

@@ -376,7 +376,7 @@ class CustomerAjaxListHandler(BaseHandler):
 
     def get(self):
         start = int(self.get_argument("start", 0))
-        items = int(self.get_argument("length", 20))
+        items = int(self.get_argument("length", 10))
 
         if items == -1:
             items = 0
