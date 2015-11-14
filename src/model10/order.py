@@ -6,6 +6,8 @@ import psycopg2
 import psycopg2.extras
 from order_detail import OrderDetail
 from kardex import Kardex
+from decimal import *
+
 
 class Order(BaseModel):
 
@@ -351,7 +353,7 @@ class Order(BaseModel):
                 self.type                   = order["type"]
                 self.telephone              = order["telephone"]
                 self.customer               = order["customer"]
-                self.subtotal               = order["subtotal"]
+                self.subtotal               = Decimal(order["subtotal"])
                 self.shipping               = order["shipping"]
                 self.tax                    = order["tax"]
                 self.total                  = order["total"]
