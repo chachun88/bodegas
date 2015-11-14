@@ -145,14 +145,14 @@
 										{{money_format(o["price"])}}
 									</td>
 									<td class="text-align-right">
-										{{money_format(float(o["subtotal"]))}}
+										{{money_format(o["subtotal"])}}
 									</td>
 								</tr>
 								{% end %}
 								<tr>
 									<td colspan="3"></td>
 									<td class="text-align-right">Subtotal</td>
-									<td class="text-align-right">{{money_format(float(int(order.subtotal)))}}</td>
+									<td class="text-align-right">{{money_format(order.subtotal)}}</td>
 								</tr>
 								<tr>
 									<td colspan="3"></td>
