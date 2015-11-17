@@ -98,7 +98,13 @@ table td {
 .table-report{
      margin-top: 30px;
 }
-
+th.buttons button, td.buttons button, th.buttons a, td.buttons a{
+    margin-top: 14px;
+    font-size: 18px;
+    color: #666;
+    background-color: transparent;
+    border: none;
+}
 .table th.for_sale, .table td.for_sale{
     line-height: 59px;
 }
@@ -132,7 +138,7 @@ tr.special_row > td > div{
 
 .no-sort { pointer-events: none!important; cursor: default!important; }
 span.state-filter {cursor: pointer;}
-th.state-filter {vertical-align: middle !important;}
+th.state-filter {vertical-align: middle !important; width: 550px;}
 .dataTables_processing { padding: 14px 0 34px 0; }
 #iframe_detalle .modal-dialog{
     height: 90%;

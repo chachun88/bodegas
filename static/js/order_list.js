@@ -109,12 +109,13 @@ $(document).on('pjax:end ready',function(){
                         return data;
                     }
                 },
-                { "targets": 1,"data": "order_id", "orderable": true },
+                { "targets": 1,"data": "order_id", "orderable": true, "width": "30px" },
                 { "targets": 2,"data": "date", "orderable": true },
                 { "targets": 3,"data": "customer", "orderable": true },
                 { 
                     "targets": 4,
                     "data": "tipo_cliente",
+                    "width": "70px",
                     "orderable": true
                 },
                 { "targets": 5,"data": "source", "orderable": true },
@@ -131,6 +132,7 @@ $(document).on('pjax:end ready',function(){
                     "targets": 7,
                     "data": "state",
                     "orderable": true,
+                    "width": "70px",
                     render: function(data, type, row) {
                         if (row.state == 1) {
                             if (row.payment_type == 1 || row.payment_type == 3) {
@@ -141,7 +143,7 @@ $(document).on('pjax:end ready',function(){
                         } else if (row.state == 2) {
                             return '<span class="label label-success">CONFIRMADO</span>';
                         } else if (row.state == 3) {
-                            return '<span class="label label-info">LISTO PARA DESPACHO</span>';
+                            return '<span class="label label-info">PARA DESPACHAR</span>';
                         } else if (row.state == 4) {
                             return '<span class="label label-primary">DESPACHADO</span>';
                         } else if (row.state == 5) {
@@ -154,6 +156,7 @@ $(document).on('pjax:end ready',function(){
                     "targets": 8,
                     "data": "payment_type",
                     "orderable": true,
+                    "width": "80px",
                     "render" : function(data, type, row)
                     {
                         if(row.payment_type == 1){
@@ -174,9 +177,11 @@ $(document).on('pjax:end ready',function(){
                     "targets": 10,
                     "data": null, 
                     "orderable": false,
+                    "width": "20px",
+                    "sClass": "buttons",
                     render: function ( data, type, row ) {
                         if ( type === 'display' ) {
-                            return '<button class="btn btn-primary btn-sm detail-button" href="/order-detail/list?order_id=' + row.order_id + '\">Ver Detalle</button>';
+                            return '<button class="btn btn-default detail-button" href="/order-detail/list?order_id=' + row.order_id + '\"><i class=\"fa fa-search-plus\"></i></button>';
                         }
                         return data;
                     }

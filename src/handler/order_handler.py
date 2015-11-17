@@ -264,7 +264,7 @@ class OrderAjaxListHandler(BaseHandler):
                 query = '''where o.state = 1 and o.payment_type = 2'''
             elif term.lower() == 'por confirmar':
                 query = '''where (o.state = 1 and o.payment_type = 1) or (o.state = 1 and o.payment_type = 3)'''
-            elif term.lower() == 'listo para despacho':
+            elif term.lower() == 'para despachar':
                 query = '''where o.state = 3'''
             elif term.lower() == 'despachado':
                 query = '''where o.state = 4'''

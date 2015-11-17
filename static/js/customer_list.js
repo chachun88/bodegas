@@ -94,10 +94,12 @@ $(document).on('pjax:end ready',function(){
                     "targets": 9,
                     "data": null, 
                     "orderable": false,
+                    "width": "120px",
+                    "sClass": "buttons",
                     render: function ( data, type, row ) {
-                    var button = '<p><button class="btn btn-sm btn-success detail-button" href="/customer/view_contact?_pjax=true&user_id=' + row.id + '">Ver Direcciones</a></button>' 
-                               + '<p><button class="btn btn-sm btn-success enviar-clave" user_id="' + row.id + '">Enviar contrase&ntilde;a</button></p>'
-                               + '<p><button class="btn btn-sm btn-success detail-button" href="/customer/history?user_id=' + row.id + '">Historial Pedidos</a></button>';
+                    var button = '<button class="btn btn-default detail-button" href="/customer/view_contact?_pjax=true&user_id=' + row.id + '"><i class="fa fa-home"></i></a></button>' 
+                               + '<button class="btn btn-default enviar-clave" user_id="' + row.id + '"><i class="fa fa-envelope-o"></i></button>'
+                               + '<button class="btn btn-default detail-button" href="/customer/history?user_id=' + row.id + '"><i class="fa fa-shopping-cart"></i></a></button>';
                         return button;
                     } 
                 }

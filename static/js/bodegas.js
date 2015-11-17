@@ -405,7 +405,6 @@ $(document).on('pjax:end ready',function() {
 
 	if ($.support.pjax) {
 		$(document).on("click", "a#searchKardex", function(event){
-			console.log("akshdka");
 			var data = $("#showKardex").serialize();
 			var action = $("#showKardex").attr("action");
 			var url = action + '?' + data;
@@ -414,8 +413,8 @@ $(document).on('pjax:end ready',function() {
 		});
 	}
 
-	$(document).on("click", ".quantity-filter", function(){
-		var sign = $(this).attr("sign");
+	$(document).on("click", "#buttonSearch", function(){
+		var sign = $("select[name=quantity-filter]").val();
 		var number = $("#quantity-filter").val();
 		$("input[type=search]").val(sign+number);
 		$("input[type=search]").trigger("keyup");

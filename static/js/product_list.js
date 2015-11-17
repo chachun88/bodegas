@@ -253,16 +253,16 @@ $(document).on('pjax:end ready',function(){
                     "targets": 10,
                     "data": null, 
                     "orderable": false,
+                    "sClass": "buttons",
+                    "width": "120px",
                     render: function(data, type, row){
-                        var botones = '<button class="btn btn-sm btn-primary detail-button" href="/product/edit?_pjax=true&id=' + row.id + '">Editar</button>'+
-                                    '<br/>' +
-                                    '<a class="btn btn-sm btn-danger" href="/product/remove?id='+ row.id +
+                        var botones = '<button class="btn btn-default detail-button" href="/product/edit?_pjax=true&id=' + row.id + '"><i class="fa fa-edit"></i></button>'+
+                                    '<a class="btn btn-default" href="/product/remove?id='+ row.id +
                                     '" onclick="return confirm("¿Está seguro que desea eliminar el producto?");">'+
-                                    'Eliminar' +
+                                    '<i class="fa fa-trash-o"></i>' +
                                     '</a>' +
-                                    '<br/>' +
                                     "<input type='hidden' id='" + row.sku + "' value='" + JSON.stringify(row) + "'>" +
-                                    "<a class=\"btn btn-warning btn-sm\" onclick=\"formFastEdit('" + row.sku + "')\">Edici&oacute;n R&aacute;pida</a>";
+                                    "<a class=\"btn btn-default\" onclick=\"formFastEdit('" + row.sku + "')\"><i class=\"fa fa-magic\"></i></a>";
                         return botones;
                     }
                 }

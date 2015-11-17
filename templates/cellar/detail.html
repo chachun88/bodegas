@@ -17,15 +17,20 @@
 	<section class="widget">
 		<div class="body">
 			<div class="row">
-				<div class="col-md-10 col-md-offset-2 text-right">
+				<div class="col-md-10 text-left">
 					
-					<button class="btn btn-sm btn-primary quantity-filter" sign="<">Menor</button>
-					<button class="btn btn-sm btn-primary quantity-filter" sign="<=">Menor o igual</button>
-					<button class="btn btn-sm btn-primary quantity-filter" sign="=">Igual</button>
-					<button class="btn btn-sm btn-primary quantity-filter" sign=">=">Mayor o igual</button>
-					<button class="btn btn-sm btn-primary quantity-filter" sign=">">Mayor</button>
-					<span>que</span>
+					<select name="quantity-filter" class="select2">
+						<option value="<">Menor</option>
+						<option value="<=">Menor o igual</option>
+						<option value="=">Igual</option>
+						<option value=">=">Mayor o igual</option>
+						<option value=">">Mayor</option>
+					</select>
+					<span>&nbsp;que&nbsp;</span>
 					<input type="text" id="quantity-filter">
+					<button class="btn btn-primary" id="buttonSearch">Buscar</button>
+				</div>
+				<div class="col-md-2 text-right">
 					<a type="button" href="/cellar" class="btn btn-success btn-sm btn-delete">Volver</a>
 				</div>
 			</div>
