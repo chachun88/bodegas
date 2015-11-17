@@ -105,7 +105,7 @@ $(document).on('pjax:end ready',function(){
 
     if ( !$.fn.dataTable.isDataTable( '#productos' ) ) {
         var products_table = $('#productos').DataTable({
-            "order": [[ 3, "asc" ]],
+            "order": [[ 2, "asc" ]],
             "serverSide": true,
             "processing": true,
             "ajax": {
@@ -171,25 +171,17 @@ $(document).on('pjax:end ready',function(){
                 { 
                     "targets": 1,
                     "data": "image", 
+                    "width": "60px",
                     "orderable": false,
                     render: function(data, type, row){
                         // console.log(row.image);
                         return '<img src=\"/image/' + row.image + '?mw=60\" width=\"60\">';
                     }
                 },
-                { "targets": 2,"data": "sku", "orderable": true },
-                { "targets": 3,"data": "name", "orderable": true },
-                { "targets": 4,"data": "size", "orderable": false },
+                { "targets": 2,"data": "name", "orderable": true, "width": "80px" },
+                { "targets": 3,"data": "size", "orderable": false, "width": "100px" },
                 { 
-                    "targets": 5,
-                    "data": "price",
-                    "orderable": true,
-                    render: function(data, type, row){
-                        return row.price.formatMoney(0);
-                    }
-                },
-                { 
-                    "targets": 6,
+                    "targets": 4,
                     "data": "sell_price", 
                     "orderable": true,
                     render: function(data, type, row){
@@ -197,7 +189,7 @@ $(document).on('pjax:end ready',function(){
                     }
                 },
                 { 
-                    "targets": 7,
+                    "targets": 5,
                     "data": "promotion_price", 
                     "orderable": true,
                     render: function(data, type, row){
@@ -205,7 +197,7 @@ $(document).on('pjax:end ready',function(){
                     }
                 },
                 { 
-                    "targets": 8,
+                    "targets": 6,
                     "data": "bulk_price", 
                     "orderable": true,
                     render: function(data, type, row){
@@ -213,7 +205,7 @@ $(document).on('pjax:end ready',function(){
                     }
                 },
                 { 
-                    "targets": 9,
+                    "targets": 7,
                     "data": "position", 
                     "orderable": true,
                     render: function(data, type, row){
@@ -250,11 +242,11 @@ $(document).on('pjax:end ready',function(){
                     }
                 },
                 { 
-                    "targets": 10,
+                    "targets": 8,
                     "data": null, 
                     "orderable": false,
                     "sClass": "buttons",
-                    "width": "120px",
+                    "width": "100px",
                     render: function(data, type, row){
                         var botones = '<button class="btn btn-default detail-button" href="/product/edit?_pjax=true&id=' + row.id + '"><i class="fa fa-edit"></i></button>'+
                                     '<a class="btn btn-default" href="/product/remove?id='+ row.id +

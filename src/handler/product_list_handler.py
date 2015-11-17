@@ -48,16 +48,13 @@ class ProductListHandler(BaseHandler):
 
         if term != "":
             query = """\
-                    and (unaccent(lower(coalesce(p.name, ''))) like %(term)s 
-                    or unaccent(lower(coalesce(p.sku, ''))) like %(term)s)"""
+                    and unaccent(lower(coalesce(p.name, ''))) like %(term)s"""
 
         columns = [
             "p.for_sale",
             "p.image",
-            "p.sku",
             "p.name",
             "p.size",
-            "p.price",
             "p.sell_price",
             "p.promotion_price",
             "p.bulk_price",
