@@ -56,10 +56,10 @@
 							<i class="fa fa-times"></i>
 							{% end %}
 						</th>
-						<th>
-							<a class="btn btn-primary" href="/shipping/save?identifier={{shipping['id']}}">Editar</a>
-							<a class="btn btn-danger" href="/shipping/remove?identifier={{shipping['id']}}">Eliminar</a>
-						</th>
+						<td class="buttons">
+							<a class="btn btn-default" href="/shipping/save?identifier={{shipping['id']}}"><i class="fa fa-edit"></i></a>
+							<a class="btn btn-default" href="/shipping/remove?identifier={{shipping['id']}}"><i class="fa fa-trash-o"></i></a>
+						</td>
 					</tr>
 					{% end %}
 				</tbody>
