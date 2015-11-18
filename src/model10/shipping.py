@@ -18,6 +18,7 @@ class Shipping(BaseModel):
         self._correos_price = 0
         self._chilexpress_price = 0
         self._charge_type = 1
+        self._post_office_id = None
 
     @property
     def identifier(self):
@@ -76,6 +77,13 @@ class Shipping(BaseModel):
     def charge_type(self, value):
         self._charge_type = value
     
+    @property
+    def post_office_id(self):
+        return self._post_office_id
+
+    @post_office_id.setter
+    def post_office_id(self, value):
+        self._post_office_id = value
 
     def List(self):
 
@@ -86,14 +94,17 @@ class Shipping(BaseModel):
                     select s.id,
                         c.name as origen, 
                         c2.name as destino, 
+                        po.name as suc_oficina,
                         s.correos_price, 
                         s.chilexpress_price, 
                         s.price, 
                         s.edited, 
-                        s.charge_type 
+                        s.charge_type,
+                        s.post_office_id 
                     from "Shipping" s 
                     left join "City" c on c.id = s.from_city_id 
                     left join "City" c2 on c2.id = s.to_city_id
+                    left join "Post_Office" po on po.id = s.post_office_id
                     order by origen asc, destino asc'''
             cur.execute(query)
             lista = cur.fetchall()
@@ -111,7 +122,17 @@ class Shipping(BaseModel):
         if self.identifier != "":
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            query = '''update "Shipping" set from_city_id = %(from_city_id)s, to_city_id = %(to_city_id)s, correos_price = %(correos_price)s, chilexpress_price = %(chilexpress_price)s, price = %(price)s, edited = %(edited)s, charge_type = %(charge_type)s where id = %(id)s'''
+            query = '''\
+                    update "Shipping" 
+                    set from_city_id = %(from_city_id)s, 
+                        to_city_id = %(to_city_id)s, 
+                        correos_price = %(correos_price)s, 
+                        chilexpress_price = %(chilexpress_price)s, 
+                        price = %(price)s, 
+                        edited = %(edited)s, 
+                        charge_type = %(charge_type)s,
+                        post_office_id = %(post_office_id)s 
+                    where id = %(id)s'''
             parameters = {
             "id":self.identifier,
             "from_city_id":self.from_city_id,
@@ -120,7 +141,8 @@ class Shipping(BaseModel):
             "chilexpress_price":self.chilexpress_price,
             "price":self.price,
             "edited":self.edited,
-            "charge_type":self.charge_type
+            "charge_type":self.charge_type,
+            "post_office_id": self.post_office_id
             }
 
             try:
@@ -139,15 +161,33 @@ class Shipping(BaseModel):
             print "insert"
 
             cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-            query = '''insert into "Shipping" (from_city_id,to_city_id,correos_price,chilexpress_price,price,edited,charge_type) values (%(from_city_id)s,%(to_city_id)s,%(correos_price)s,%(chilexpress_price)s,%(price)s,%(edited)s,%(charge_type)s) returning id'''
+            query = '''\
+                    insert into "Shipping" (from_city_id,
+                                            to_city_id,
+                                            correos_price,
+                                            chilexpress_price,
+                                            price,
+                                            edited,
+                                            charge_type,
+                                            post_office_id) 
+                    values (%(from_city_id)s,
+                            %(to_city_id)s,
+                            %(correos_price)s,
+                            %(chilexpress_price)s,
+                            %(price)s,
+                            %(edited)s,
+                            %(charge_type)s,
+                            %(post_office_id)s) 
+                    returning id'''
             parameters = {
-            "from_city_id":self.from_city_id,
-            "to_city_id":self.to_city_id,
-            "correos_price":self.correos_price,
-            "chilexpress_price":self.chilexpress_price,
-            "price":self.price,
-            "edited":self.edited,
-            "charge_type":self.charge_type
+                "from_city_id":self.from_city_id,
+                "to_city_id":self.to_city_id,
+                "correos_price":self.correos_price,
+                "chilexpress_price":self.chilexpress_price,
+                "price":self.price,
+                "edited":self.edited,
+                "charge_type":self.charge_type,
+                "post_office_id": self.post_office_id
             }
 
             try:
@@ -245,6 +285,7 @@ class Shipping(BaseModel):
                 self.chilexpress_price = shipping["chilexpress_price"]
                 self.price = shipping["price"]
                 self.charge_type = shipping["charge_type"]
+                self.post_office_id = shipping["post_office_id"]
                 return self.ShowSuccessMessage(shipping)
             except Exception,e:
                 return self.ShowError(str(e))
@@ -303,7 +344,7 @@ class Shipping(BaseModel):
                 cur.close()
                 self.connection.close()
 
-    def exists(self, from_city_id, to_city_id):
+    def exists(self, from_city_id, to_city_id, post_office_id=-1):
 
         if from_city_id == None:
             return self.ShowError("origen no puede estar vacio")
@@ -312,11 +353,12 @@ class Shipping(BaseModel):
         else:
             query = '''\
                     select id from "Shipping" 
-                    where from_city_id = %(from_city_id)s 
-                    and to_city_id = %(to_city_id)s'''
+                    where (from_city_id = %(from_city_id)s 
+                    and to_city_id = %(to_city_id)s) or post_office_id = %(post_office_id)s'''
             parameters = {
                 "from_city_id": from_city_id,
-                "to_city_id": to_city_id
+                "to_city_id": to_city_id,
+                "post_office_id": post_office_id
             }
             cursor = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             try:

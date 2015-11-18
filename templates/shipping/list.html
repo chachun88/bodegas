@@ -42,9 +42,9 @@
 				<tbody>
 					{% for shipping in lista %}
 					<tr>
-						<th>{{shipping["origen"]}}</th>
+						<th>{{shipping["origen"] or ''}}</th>
 						<th>
-							{{shipping["destino"]}}
+							{{shipping["destino"] or shipping["suc_oficina"]}}
 						</th>
 						<th>{{shipping["correos_price"]}}</th>
 						<th>{{shipping["chilexpress_price"]}}</th>

@@ -41,6 +41,7 @@
 								data-placeholder="Ciudad Origen"
                                 class="chzn-select select-block-level" 
                                 tabindex="-1">
+                                <option value="-1">---Seleccionar---</option>
 							{% for c in cities %}
 								{% if int(shipping.from_city_id) == 0 %}
 									{% if c['name'] == "Santiago" %}
@@ -66,6 +67,7 @@
 								data-placeholder="Ciudad Destino"
 								class="chzn-select select-block-level" 
 								tabindex="-1">
+								<option value="-1">---Seleccionar---</option>
 							{% for c in cities %}
 								{% if int(shipping.to_city_id) == 0 %}
 									<option value="{{c['id']}}">{{c['name']}}</option>
@@ -77,6 +79,20 @@
 									{% end %}
 								{% end %}
 							{% end %}
+						</select>
+					</div>
+				</div>
+				<div class="control-group body">
+					<label for="post_office_id" class="col-md-3">Sucursal Chilexpress</label>
+					<div class="col-md-5">
+						<select name="post_office_id" 
+								data-placeholder="Sucursal Chilexpress"
+								class="chzn-select select-block-level" 
+								tabindex="-1">
+								<option value="-1">---Seleccionar---</option>
+								{% for s in sucursales %}
+									<option value="{{s['id']}}">{{s['name']}}</option>
+								{% end %}
 						</select>
 					</div>
 				</div>
@@ -101,8 +117,8 @@
 				<div class="control-group body">
 					<label for="charge_type" class="col-md-3">Tipo de Cobro</label>
 					<div class="col-md-5">
-						<input type="radio" name="charge_type" value="1">Por items<br>
-						<input type="radio" name="charge_type" value="2">Por venta
+						<input type="radio" name="charge_type" value="1">&nbsp;&nbsp;&nbsp;Por items<br>
+						<input type="radio" name="charge_type" value="2">&nbsp;&nbsp;&nbsp;Por venta
 					</div>
 					<input type="hidden" id="selected_charge_type" value="{{shipping.charge_type}}">
 				</div>

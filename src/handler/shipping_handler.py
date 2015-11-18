@@ -14,6 +14,7 @@ from ..model10.cellar import Cellar
 from ..model10.order_detail import OrderDetail
 from ..model10.kardex import Kardex
 from ..model10.size import Size
+from ..model10.post_office import PostOffice
 import datetime
 from lp.globals import enviroment, Enviroment
 import pytz
@@ -66,10 +67,10 @@ class SaveHandler(BaseHandler):
             shipping.identifier = identifier
             res = shipping.InitById()
 
-            print res
+            # print res
 
             if "error" in res:
-                print res
+                # print res
                 self.write(res["error"])
 
         pjax_str = ''
@@ -77,8 +78,11 @@ class SaveHandler(BaseHandler):
         if pjax:
             pjax_str = '/ajax'
 
+        post_office = PostOffice()
+        list_po = post_office.List()
+
         if "success" in cities:
-            self.render("shipping{}/add.html".format(pjax_str),cities=cities["success"],shipping=shipping,dn=dn,mensaje=mensaje)
+            self.render("shipping{}/add.html".format(pjax_str),cities=cities["success"],shipping=shipping,dn=dn,mensaje=mensaje, sucursales=list_po["success"])
         else:
             self.write(cities["error"])
 
@@ -87,13 +91,18 @@ class SaveHandler(BaseHandler):
 
         shipping = Shipping()
         shipping.identifier = self.get_argument("identifier","")
-        shipping.from_city_id = self.get_argument("from_city_id",0)
-        shipping.to_city_id = self.get_argument("to_city_id",0)
+        shipping.from_city_id = self.get_argument("from_city_id",None)
+        if shipping.from_city_id == "-1":
+            shipping.from_city_id = None
+        shipping.to_city_id = self.get_argument("to_city_id",None)
+        if shipping.to_city_id == "-1":
+            shipping.to_city_id = None
         shipping.correos_price = self.get_argument("correos_price",0)
         shipping.chilexpress_price = self.get_argument("chilexpress_price",0)
         shipping.price = self.get_argument("price",0)
         shipping.edited = bool(self.get_argument("edited", False))
         shipping.charge_type = self.get_argument("charge_type",1)
+        shipping.post_office_id = self.get_argument("post_office_id", None)
 
         guardado = shipping.Save()
 
