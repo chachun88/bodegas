@@ -91,7 +91,15 @@
 								tabindex="-1">
 								<option value="-1">---Seleccionar---</option>
 								{% for s in sucursales %}
-									<option value="{{s['id']}}">{{s['name']}}</option>
+									{% if shipping.post_office_id is None %}
+										<option value="{{s['id']}}">{{s['name']}}</option>
+									{% else %}
+										{% if int(s['id']) == int(shipping.post_office_id) %}
+										<option value="{{s['id']}}" selected>{{s['name']}}</option>
+										{% else %}
+										<option value="{{s['id']}}">{{s['name']}}</option>
+										{% end %}
+									{% end %}
 								{% end %}
 						</select>
 					</div>
