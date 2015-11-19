@@ -83,28 +83,6 @@
 					</div>
 				</div>
 				<div class="control-group body">
-					<label for="post_office_id" class="col-md-3">Sucursal Chilexpress</label>
-					<div class="col-md-5">
-						<select name="post_office_id" 
-								data-placeholder="Sucursal Chilexpress"
-								class="chzn-select select-block-level" 
-								tabindex="-1">
-								<option value="-1">---Seleccionar---</option>
-								{% for s in sucursales %}
-									{% if shipping.post_office_id is None %}
-										<option value="{{s['id']}}">{{s['name']}}</option>
-									{% else %}
-										{% if int(s['id']) == int(shipping.post_office_id) %}
-										<option value="{{s['id']}}" selected>{{s['name']}}</option>
-										{% else %}
-										<option value="{{s['id']}}">{{s['name']}}</option>
-										{% end %}
-									{% end %}
-								{% end %}
-						</select>
-					</div>
-				</div>
-				<div class="control-group body">
 					<label for="PrecioCorreos" class="col-md-3">Precio Correos</label>
 					<div class="col-md-5">
 						<input type="text" name="correos_price" class="form-control" value="{{shipping.correos_price}}">
