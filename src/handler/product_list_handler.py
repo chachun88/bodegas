@@ -54,7 +54,7 @@ class ProductListHandler(BaseHandler):
             "p.for_sale",
             "p.image",
             "p.name",
-            "p.size",
+            "p.price",
             "p.sell_price",
             "p.promotion_price",
             "p.bulk_price",

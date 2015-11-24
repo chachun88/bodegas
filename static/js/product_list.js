@@ -179,7 +179,14 @@ $(document).on('pjax:end ready',function(){
                     }
                 },
                 { "targets": 2,"data": "name", "orderable": true, "width": "80px" },
-                { "targets": 3,"data": "size", "orderable": false, "width": "100px" },
+                { 
+                    "targets": 3,
+                    "data": "price", 
+                    "orderable": true,
+                    render: function(data, type, row){
+                        return row.price.formatMoney(0);
+                    }
+                },
                 { 
                     "targets": 4,
                     "data": "sell_price", 
@@ -304,5 +311,11 @@ $(document).on('pjax:end ready',function(){
         e.preventDefault();
         $("#iframe_detalle iframe").attr('src', $(this).attr('href'));
         $("#iframe_detalle").modal('show');
+    });
+
+    $('#iframe_detalle').on('hidden.bs.modal', function () {
+        if($("#productos".length)){
+            $("#productos").DataTable().ajax.reload(null, false);
+        }
     });
 });
