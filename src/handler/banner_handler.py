@@ -26,6 +26,12 @@ class BannerHandler(BaseHandler):
         banner2 = self.save('banner2', self.get_argument("banner2", ""))
         banner3 = self.save('banner3', self.get_argument("banner3", ""))
 
+        banner1_movil = self.save('banner1_movil', self.get_argument("banner1_movil", ""))
+        banner2_movil = self.save('banner2_movil', self.get_argument("banner2_movil", ""))
+        banner3_movil = self.save('banner3_movil', self.get_argument("banner3_movil", ""))
+
+        caluga_video = self.save('caluga_video', self.get_argument("caluga_video", ""))
+
         caluga_ir_tienda = self.save('caluga_ir_tienda', self.get_argument("tienda-caluga", ""))
         caluga_nuevo = self.save('caluga_nuevo', self.get_argument("nuevo-caluga", ""))
         instagram = self.save('instagram', self.get_argument("instagram", ""))
