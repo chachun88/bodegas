@@ -137,8 +137,7 @@ class OrderDetail(BaseModel):
                     inner join "Product_Size" ps on ps.product_sku = p.sku
                     inner join "Size" s on s.id = ps.size_id
                     inner join "Order" o on od.order_id = o.id 
-                    where od.order_id = %(order_id)s and s.name = od.size
-                    limit %(limit)s offset %(offset)s'''
+                    where od.order_id = %(order_id)s and s.name = od.size'''
 
             parameters = {
                 "order_id": order_id,
