@@ -148,6 +148,12 @@ $(document).on('pjax:end ready',function(){
                             return '<span class="label label-primary">DESPACHADO</span>';
                         } else if (row.state == 5) {
                             return '<span class="label label-danger">CANCELADO</span>';
+                        } else if (row.state == 6) {
+                            return '<span class="label label-danger">PENDIENTE WP</span>';
+                        } else if (row.state == 7) {
+                            return '<span class="label label-danger">RECHAZADO WP</span>';
+                        } else if (row.state == 8) {
+                            return '<span class="label label-danger">RECHAZADO COM</span>';
                         }
 
                     }

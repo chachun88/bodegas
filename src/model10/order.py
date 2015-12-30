@@ -14,6 +14,9 @@ class Order(BaseModel):
     ESTADO_PARA_DESPACHO = 3
     ESTADO_DESPACHADO = 4
     ESTADO_CANCELADO = 5
+    ESTADO_PENDIENTE_WP = 6
+    ESTADO_RECHAZADO_WP = 7
+    ESTADO_RECHAZADO_COMERCIO = 8
 
     @property
     def salesman(self):
