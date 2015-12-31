@@ -14,9 +14,7 @@ class Order(BaseModel):
     ESTADO_PARA_DESPACHO = 3
     ESTADO_DESPACHADO = 4
     ESTADO_CANCELADO = 5
-    ESTADO_PENDIENTE_WP = 6
-    ESTADO_RECHAZADO_WP = 7
-    ESTADO_RECHAZADO_COMERCIO = 8
+    ESTADO_RECHAZADO_WP = 6
 
     @property
     def salesman(self):
@@ -221,7 +219,7 @@ class Order(BaseModel):
         self._country = ""
         self._items_quantity = ""
         self._product_quantity = ""
-        self._state = ""
+        self._state = self.ESTADO_PENDIENTE
         self._payment_type = ""
         self._billing_id = ""
         self._shipping_id = ""
@@ -428,7 +426,8 @@ class Order(BaseModel):
                                     billing_id,
                                     shipping_id,
                                     shipping_info,
-                                    billing_info)
+                                    billing_info,
+                                    state)
                 values(%(date)s,
                         %(source)s,
                         %(items_quantity)s,
@@ -443,7 +442,8 @@ class Order(BaseModel):
                         %(billing_id)s,
                         %(shipping_id)s,
                         %(shipping_info)s,
-                        %(billing_info)s)
+                        %(billing_info)s,
+                        %(state)s)
                 returning id'''
 
         parametros = {
@@ -462,7 +462,8 @@ class Order(BaseModel):
             "billing_id": self.billing_id,
             "shipping_id": self.shipping_id,
             "shipping_info": self.shipping_info,
-            "billing_info": self.billing_info
+            "billing_info": self.billing_info,
+            "state": self.state
         }
 
         cur.execute(query, parametros)

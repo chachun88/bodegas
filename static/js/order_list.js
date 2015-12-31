@@ -138,7 +138,7 @@ $(document).on('pjax:end ready',function(){
                             if (row.payment_type == 1 || row.payment_type == 3) {
                                 return '<span class="label label-warning">POR CONFIRMAR</span>';
                             } else {
-                                return '<span class="label label-danger">RECHAZADO</span>';
+                                return '<span class="label label-danger">PENDIENTE</span>';
                             }
                         } else if (row.state == 2) {
                             return '<span class="label label-success">CONFIRMADO</span>';
@@ -149,13 +149,8 @@ $(document).on('pjax:end ready',function(){
                         } else if (row.state == 5) {
                             return '<span class="label label-danger">CANCELADO</span>';
                         } else if (row.state == 6) {
-                            return '<span class="label label-danger">PENDIENTE WP</span>';
-                        } else if (row.state == 7) {
-                            return '<span class="label label-danger">RECHAZADO WP</span>';
-                        } else if (row.state == 8) {
-                            return '<span class="label label-danger">RECHAZADO COM</span>';
+                            return '<span class="label label-danger">RECHAZADO</span>';
                         }
-
                     }
                 },
                 { 
