@@ -269,3 +269,6 @@ input, button {
 #clientes th:first-child, #pedidos th:first-child, #productos th:first-child {
     width: 5px !important;
 }
+.label-gray {
+    background-color: #c9c5c5;
+}
