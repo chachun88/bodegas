@@ -138,7 +138,7 @@ $(document).on('pjax:end ready',function(){
                             if (row.payment_type == 1 || row.payment_type == 3) {
                                 return '<span class="label label-warning">POR CONFIRMAR</span>';
                             } else {
-                                return '<span class="label label-danger">PENDIENTE</span>';
+                                return '<span class="label label-warning">PENDIENTE</span>';
                             }
                         } else if (row.state == 2) {
                             return '<span class="label label-success">CONFIRMADO</span>';
