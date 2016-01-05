@@ -130,6 +130,8 @@ class OrderActionsHandler(BaseHandler):
                             _order.customer_email, _order.customer, v)
                     elif _order.state == Order.ESTADO_PENDIENTE and _order.payment_type == 3:
                         order.ChangeStateOrders(v, Order.ESTADO_CONFIRMADO)
+                    elif _order.state == Order.ESTADO_RECHAZADO_WP and _order.payment_type == 2:
+                        order.ChangeStateOrders(v, Order.ESTADO_CONFIRMADO)
                     else:
                         resultado.append(
                             {"error": "el pedido {} no puede ser confirmado".format(_order.id)})
