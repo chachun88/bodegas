@@ -30,6 +30,7 @@ $(document).on('pjax:end ready',function(){
         $('#clientes').DataTable({
             "serverSide": true,
             "processing": true,
+            "order": [[ 1, "desc" ]],
             "ajax": {
                 url: "/customer/list_ajax",
                 data: function ( d ) {
@@ -82,16 +83,15 @@ $(document).on('pjax:end ready',function(){
                 { "targets": 2, "data": "name", "orderable": true },
                 { "targets": 3, "data": "email", "orderable": true },
                 { "targets": 4, "data": "rut", "orderable": true },
-                { "targets": 5, "data": "type", "orderable": true },
                 { 
-                    "targets": 6,
+                    "targets": 5,
                     "data": "bussiness",
                     "orderable": true
                 },
-                { "targets": 7, "data": "registration_date", "orderable": true },
-                { "targets": 8, "data": "last_view", "orderable": true },
+                { "targets": 6, "data": "registration_date", "orderable": true },
+                { "targets": 7, "data": "last_view", "orderable": true },
                 { 
-                    "targets": 9,
+                    "targets": 8,
                     "data": null, 
                     "orderable": false,
                     "width": "120px",

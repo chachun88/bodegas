@@ -397,11 +397,11 @@ class CustomerAjaxListHandler(BaseHandler):
                 query = """and (unaccent(lower(coalesce(u.name, ''))) like %(term)s or rut like %(term)s)"""
 
         columns = [
-            ""
+            "",
             "status",
             "name",
+            "email",
             "rut",
-            "type",
             "bussiness",
             "u.registration_date",
             "u.last_view"
@@ -417,11 +417,11 @@ class CustomerAjaxListHandler(BaseHandler):
 
         total_items = 0
 
-        if column != 0:
-            column -= 1
-        else:
-            column = 6
-            direction = 'desc'
+        # if column != 0:
+        #     column -= 1
+        # else:
+        #     column = 6
+        #     direction = 'desc'
 
         customer = Customer()
         clientes = customer.List(page, items, query, columns[column], direction, "%{}%".format(term))
