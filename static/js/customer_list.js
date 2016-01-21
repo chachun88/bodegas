@@ -131,6 +131,14 @@ $(document).on('pjax:end ready',function(){
         $('input[type=search]').trigger('keyup');
     });
 
+    $(document).on('click', "button.detail-button", function(e){
+        e.preventDefault();
+        $("#iframe_detalle iframe").attr('src', $(this).attr('href'));
+        $("#iframe_detalle").modal('show');
+    });
+});
+
+$(document).ready(function(){
     $(document).on("click", ".enviar-clave", function(){
         var user_id = $(this).attr("user_id");
         $.ajax({
@@ -146,11 +154,5 @@ $(document).on('pjax:end ready',function(){
                 }
             }
         });
-    });
-
-    $(document).on('click', "button.detail-button", function(e){
-        e.preventDefault();
-        $("#iframe_detalle iframe").attr('src', $(this).attr('href'));
-        $("#iframe_detalle").modal('show');
     });
 });
