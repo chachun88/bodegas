@@ -184,7 +184,7 @@
 					</div>
 				</div>
 				{% end %}
-				{% if int(order.payment_type) == 2 and (int(order.state) != 1 or int(order.state) != 6) %}
+				{% if int(order.payment_type) == 2 and (int(order.state) == 1 or int(order.state) == 6) %}
 				<div class="row">
 					<div class="col-md-1"></div>
 					<div class="col-md-10">
