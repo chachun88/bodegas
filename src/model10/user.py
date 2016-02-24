@@ -333,7 +333,7 @@ class User(BaseModel):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        # print permisos
+        # print items_query_anterior
         if items_query_anterior > 0:
 
             self.id = usuario['id']
@@ -356,6 +356,7 @@ class User(BaseModel):
                 "cellar_permissions": [int(cellar_id) for cellar_id in self.cellars],
                 "lastname":self.lastname
             }
+
 
             try:
                 cur.execute(q,p)
@@ -395,6 +396,7 @@ class User(BaseModel):
             }
 
             try:
+                # print cur.mogrify(q, p)
                 cur.execute(q,p)
                 self.connection.commit()
                 self.id = cur.fetchone()["id"]
@@ -422,7 +424,7 @@ class User(BaseModel):
                         ut.id as type_id
                 from "User" u 
                 inner join "Permission" p on p.id = any(u.permissions) 
-                inner join "Cellar" c on c.id = any(u.cellar_permissions) 
+                left join "Cellar" c on c.id = any(u.cellar_permissions) 
                 inner join "User_Types" ut on ut.id = u.type_id
                 where ut.id = any(%(user_type)s)
                 group by u.id, ut.name, ut.id limit %(limit)s offset %(offset)s'''
