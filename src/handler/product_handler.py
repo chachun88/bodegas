@@ -294,6 +294,7 @@ class ProductEditHandler(BaseHandler):
 
     @tornado.web.authenticated
     def get(self):
+
         self.set_active(Menu.PRODUCTOS_CARGA)
 
         pjax = bool(self.get_argument("_pjax", False))

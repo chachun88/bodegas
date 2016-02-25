@@ -34,6 +34,7 @@ from src.handler.examples_handler import *
 from src.handler.banner_handler import *
 from src.handler.customer_handler import *
 from src.handler.kardex_handler import *
+from src.handler.dafiti import *
 
 from config import *
 
@@ -164,6 +165,8 @@ class Application(tornado.web.Application):
             (r"/examples/pjax2",       Pjax2Handler),
 
             (r"/kardex", KardexHandler),
+
+            (r"/dafiti/synchronized/([^/]+)", DafitiSynchronizedHandler),
 
 
             #banner

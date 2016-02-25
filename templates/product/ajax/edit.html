@@ -65,6 +65,97 @@
 	<!--<script type="text/javascript" src="/{{nocache_static}}/js/cellar/easy_output.js"></script>-->
 	<!--<script type="text/javascript" src="/{{nocache_static}}/js/cellar/easy_input.js"></script>-->
 	<script type="text/javascript" src="/{{nocache_static}}/js/bodegas.js"></script>
+
+
+    <script type="text/javascript">
+        (function($)
+        {
+
+            var setColdStatus = function($btn)
+            {
+                $btn.removeClass('btn-success');
+                $btn.html('agregar a dafiti');
+            };
+
+            var setHotStatus = function($btn)
+            {
+                $btn.addClass('btn-success');
+                $btn.html('eliminar de dafiti');
+            };
+
+            var setColdRemoteStatus = function($btn)
+            {};
+
+            var setHotRemoteStatus = function($btn)
+            {};
+
+            var changeBtnStatus = function()
+            {
+                var $btn = $(this);
+
+                if ($btn.hasClass('btn-success'))
+                {
+                    setColdStatus($btn);
+                    setColdRemoteStatus($btn);
+                }
+                else
+                {
+                    setHotStatus($btn);
+                    setHotRemoteStatus($btn);
+                }
+            };
+
+            var btnClick = function(e)
+            {
+                e.preventDefault();
+                changeBtnStatus.call(this);
+            };
+
+            var ajaxIsSynchronized = function($btn, r)
+            {
+                try
+                {
+                    if (r.synchronized)
+                    {
+                        setHotStatus($btn);
+                    }
+                    else
+                    {
+                        setColdStatus($btn);
+                    }
+
+                    $btn.on('click', btnClick);
+                }
+                catch (ex)
+                {
+                    console.log(ex);
+                    // do nothing...
+                }
+            };
+
+            var detectInitialState = function()
+            {
+                var $btn = $(this);
+                var sku = $btn.attr('product-sku');
+                var url = '/dafiti/synchronized/' + sku;
+
+                $.get(url, function(r)
+                {
+                    ajaxIsSynchronized($btn, r)
+                });
+            };
+
+            $.fn.dafiti = function()
+            {
+                $(this).each(detectInitialState);
+            }
+        })(jQuery);
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.dafiti').dafiti();
+        });
+    </script>
 {% end %}
 
 {% block title %}
@@ -88,6 +179,7 @@
 {% end %}
 
 {% block body %}
+
 <link href="/{{nocache_static}}/css/application.min.css" rel="stylesheet">
 <link href="/{{nocache_static}}/css/bodega.css" rel="stylesheet">
 	{% if int(2) in current_user["permissions"] %}
@@ -103,7 +195,10 @@
 					<form action="/product/add" id="product-form" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 						<fieldset>
 						{% if tit == "edit" %}
-							<legend class="section">Editar Producto</legend>
+							<legend class="section">
+                                Editar Producto
+                                <button class="btn btn-xs dafiti right" product-sku="{{ product.sku }}" >cargando...</button>
+                            </legend>
 						{% elif tit == "add"  %}
 							<legend class="section">Agregar Producto</legend>
 						{% end %}
