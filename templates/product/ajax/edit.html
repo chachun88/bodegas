@@ -84,10 +84,22 @@
             };
 
             var setColdRemoteStatus = function($btn)
-            {};
+            {
+                var sku = $btn.attr('product-sku');
+                $.get("/dafiti/disableproduct/" + sku, function()
+                {
+                    // nothing here...
+                });
+            };
 
             var setHotRemoteStatus = function($btn)
-            {};
+            {
+                var sku = $btn.attr('product-sku');
+                $.get("/dafiti/enableproduct/" + sku, function()
+                {
+                    // nothing here...
+                });
+            };
 
             var changeBtnStatus = function()
             {

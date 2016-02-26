@@ -167,6 +167,8 @@ class Application(tornado.web.Application):
             (r"/kardex", KardexHandler),
 
             (r"/dafiti/synchronized/([^/]+)", DafitiSynchronizedHandler),
+            (r"/dafiti/enableproduct/([^/]+)", DafitiEnableProductHandler),
+            (r"/dafiti/disableproduct/([^/]+)", DafitiDisableProductHandler),
 
 
             #banner
