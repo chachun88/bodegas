@@ -4,6 +4,7 @@
 
 import dafiti
 from product import Product
+from size import Size
 from basemodel import BaseModel
 
 
@@ -34,12 +35,25 @@ class DafitiModel(BaseModel):
         p = Product()
         p.InitBySku(sku)
 
-        # @todo:validate product here
+        print p.size_id
 
+        sizes = []
+        s = Size()
+
+        for si in p.size_id:
+            s.id = si
+            s.initById()
+
+            sizes.append(s.name)
+
+        # @todo: resolver las tallas
+        # for s in sizes:
+
+        # @todo:validate product here
         response = self.client.product.Create(
             sku, Name=p.name, Description=p.description, 
             Brand="Giani Da Firenze", Price=p.sell_price,
-            PrimaryCategory=4, Variation="35")
+            PrimaryCategory=4, Variation=sizes[0])
 
         if response.type == dafiti.Response.ERROR:
             return

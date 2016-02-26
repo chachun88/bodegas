@@ -86,7 +86,7 @@
             var setColdRemoteStatus = function($btn)
             {
                 var sku = $btn.attr('product-sku');
-                $.get("/dafiti/disableproduct/" + sku, function()
+                $.get("/dafiti/product/" + sku, function()
                 {
                     // nothing here...
                 });
@@ -105,12 +105,7 @@
             {
                 var $btn = $(this);
 
-                if ($btn.hasClass('btn-success'))
-                {
-                    setColdStatus($btn);
-                    setColdRemoteStatus($btn);
-                }
-                else
+                if (!$btn.hasClass('btn-success'))
                 {
                     setHotStatus($btn);
                     setHotRemoteStatus($btn);

@@ -99,7 +99,7 @@ class Size(BaseModel):
             cur.execute(query,parametros)
 
             if cur.rowcount > 0:
-                
+
                 talla = cur.fetchone()
                 self.id = talla["id"]
 
