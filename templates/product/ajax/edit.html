@@ -68,8 +68,58 @@
 
 
     <script type="text/javascript">
+
         (function($)
         {
+            var CategorySelector = function()
+            {
+                this.model = [];
+                $('#category-selector-modal').modal({});
+            };
+
+            CategorySelector.prototype.launch = function(oncomplete) 
+            {
+                oncomplete = oncomplete || $.noop;
+
+                this.launchModal();
+                this.populateModel();
+
+                oncomplete();
+            };
+
+            CategorySelector.prototype.appendModalHTML = function() 
+            {
+                // var HTML = ' \
+                // <div id="category-selector-modal" >Cargando...</div>';
+                // $('body').append($(HTML));
+            };
+
+            CategorySelector.prototype.launchModal = function() 
+            {
+                $('#category-selector-modal').modal('show');
+            };
+
+            CategorySelector.prototype.populateModel = function() 
+            {
+                if (this.model.length === 0) 
+                {
+                    $.get('/dafiti/getcategories', function(r)
+                    {
+                        console.log(r);
+                    });
+                }
+            };
+
+            $.lp.categorySelector = function()
+            {
+                return new CategorySelector();
+            }
+        })(jQuery);
+
+        (function($)
+        {
+
+            var $category_selector = $.lp.categorySelector();
 
             var setColdStatus = function($btn)
             {
@@ -103,13 +153,17 @@
 
             var changeBtnStatus = function()
             {
-                var $btn = $(this);
-
-                if (!$btn.hasClass('btn-success'))
+                $category_selector.launch(function()
                 {
-                    setHotStatus($btn);
-                    setHotRemoteStatus($btn);
-                }
+                    return
+                    var $btn = $(this);
+
+                    if (!$btn.hasClass('btn-success'))
+                    {
+                        setHotStatus($btn);
+                        setHotRemoteStatus($btn);
+                    }
+                });
             };
 
             var btnClick = function(e)
@@ -186,6 +240,16 @@
 {% end %}
 
 {% block body %}
+
+<div class="modal fade" id="category-selector-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div>Cargando...</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <link href="/{{nocache_static}}/css/application.min.css" rel="stylesheet">
 <link href="/{{nocache_static}}/css/bodega.css" rel="stylesheet">

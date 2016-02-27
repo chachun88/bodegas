@@ -166,6 +166,7 @@ class Application(tornado.web.Application):
 
             (r"/kardex", KardexHandler),
 
+            (r"/dafiti/getcategories", DafitiGetCategoriesHandler),
             (r"/dafiti/synchronized/([^/]+)", DafitiSynchronizedHandler),
             (r"/dafiti/enableproduct/([^/]+)", DafitiEnableProductHandler),
             (r"/dafiti/disableproduct/([^/]+)", DafitiDisableProductHandler),

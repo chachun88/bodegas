@@ -27,3 +27,10 @@ class DafitiDisableProductHandler(BaseHandler):
     def get(self, sku):
         d = DafitiModel()
         d.RemoveProduct(sku)
+
+
+class DafitiGetCategoriesHandler(BaseHandler):
+
+    def get(self):
+        d = DafitiModel()
+        self.write(d.GetCategories())

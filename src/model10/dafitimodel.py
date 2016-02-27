@@ -35,8 +35,6 @@ class DafitiModel(BaseModel):
         p = Product()
         p.InitBySku(sku)
 
-        print p.size_id
-
         sizes = []
         s = Size()
 
@@ -70,3 +68,7 @@ class DafitiModel(BaseModel):
         response = self.client.product.Image(
             sku,
             *final_images)
+
+    def GetCategories(self):
+        r = self.client.category.Get()
+        return r.body
