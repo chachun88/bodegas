@@ -69,12 +69,19 @@
 
     <script type="text/javascript">
 
+        var placeholder = {"Category": [{"GlobalIdentifier": "", "Name": "Botines", "Children": {"Category": {"GlobalIdentifier": "", "Name": "Booties", "Children": "", "CategoryId": "148"}}, "CategoryId": "145"}, {"GlobalIdentifier": "", "Name": "Botas", "Children": "", "CategoryId": "514"}, {"GlobalIdentifier": "", "Name": "Zapatos de Vestir", "Children": {"Category": {"GlobalIdentifier": "", "Name": "Taco Chino", "Children": "", "CategoryId": "152"}}, "CategoryId": "14"}, {"GlobalIdentifier": "", "Name": "Ballerinas", "Children": "", "CategoryId": "29"}, {"GlobalIdentifier": "", "Name": "Zapatos de Fiesta", "Children": "", "CategoryId": "154"}, {"GlobalIdentifier": "", "Name": "Mocasines", "Children": "", "CategoryId": "153"}, {"GlobalIdentifier": "", "Name": "Zapatillas Urbanas", "Children": "", "CategoryId": "48"}, {"GlobalIdentifier": "", "Name": "Zapatillas Deportivas", "Children": "", "CategoryId": "49"}, {"GlobalIdentifier": "", "Name": "Sandalias Planas", "Children": "", "CategoryId": "160"}, {"GlobalIdentifier": "", "Name": "Sandalias", "Children": "", "CategoryId": "17"}, {"GlobalIdentifier": "", "Name": "Oxford", "Children": "", "CategoryId": "156"}, {"GlobalIdentifier": "", "Name": "Playeras", "Children": "", "CategoryId": "18"}]};
+
         (function($)
         {
+
             var CategorySelector = function()
             {
                 this.model = [];
-                $('#category-selector-modal').modal({});
+
+                var $category_selector = $('#category-selector-modal');
+                $category_selector.modal({});
+
+                this.initOnChange();
             };
 
             CategorySelector.prototype.launch = function(oncomplete) 
@@ -96,18 +103,112 @@
 
             CategorySelector.prototype.launchModal = function() 
             {
+                this.resetForm();
                 $('#category-selector-modal').modal('show');
             };
 
             CategorySelector.prototype.populateModel = function() 
             {
+                var self = this;
+
                 if (this.model.length === 0) 
                 {
-                    $.get('/dafiti/getcategories', function(r)
+                    var r = placeholder;
+                    setTimeout(function() 
                     {
-                        console.log(r);
-                    });
+                        self.formLoaded();
+
+                        for (var i = 0; i < r.Category.length; i++) {
+                            var c = r.Category[i];
+
+                            self.drawCategory(c);
+                        }
+
+                    }, 100);
+                    // $.get('/dafiti/getcategories', function(r)
+                    // {
+                    //     console.log(r);
+                    // });
                 }
+            };
+
+            CategorySelector.prototype.drawCategory = function(c) 
+            {
+                var name = c.Name;
+                var value = c.CategoryId;
+
+                if (c.Children !== '') 
+                {
+                    name += ' / ' + c.Children.Category.Name;
+                    value = c.CategoryId;
+                }
+
+                this.getSelect().append('<option value="' + value + '" >'+ name +'</option>');
+            };
+
+            CategorySelector.prototype.resetForm = function() 
+            {
+                this.getLoadingMessage().html('cargando...');
+                this.getSelect().addClass('hidden');
+                this.setFormWaiting();
+            };
+
+            CategorySelector.prototype.formLoaded = function() 
+            {
+                this.getLoadingMessage().html('');
+                this.getSelect().removeClass('hidden');
+            };
+
+            CategorySelector.prototype.getModalBody = function() 
+            {
+                return $('#category-selector-modal .modal-body');
+            };
+
+            CategorySelector.prototype.getLoadingMessage = function() 
+            {
+                return $('.category-selector-loading', this.getModalBody());
+            };
+
+            CategorySelector.prototype.getSelect = function() 
+            {
+                return $('select[name="category-selector-select"]', this.getModalBody());
+            };
+
+            CategorySelector.prototype.checkFormStatus = function() 
+            {
+                // enable if more than 1 is selected
+                if ($('option:selected', this.getSelect()).length > 0)
+                {
+                    this.setFormReady();
+                }
+                else
+                {
+                    this.setFormWaiting();
+                }
+            };
+
+            CategorySelector.prototype.setFormReady = function() 
+            {
+                $('.btn-send-to-dafiti').removeClass('hidden');
+            };
+
+            CategorySelector.prototype.setFormWaiting = function() 
+            {
+                $('.btn-send-to-dafiti').addClass('hidden');
+            };
+
+            CategorySelector.prototype.initOnChange = function() 
+            {
+                var self = this;
+
+                // wait select2
+                setTimeout(function()
+                {
+                    self.getSelect().on('change', function()
+                    {
+                        self.checkFormStatus();
+                    });
+                }, 1000);
             };
 
             $.lp.categorySelector = function()
@@ -244,9 +345,26 @@
 <div class="modal fade" id="category-selector-modal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body">
-                <div>Cargando...</div>
+            <div class="modal-header">
+                <h4 class="modal-title">Seleccione las categorias de dafiti</h4>
             </div>
+
+            <div class="modal-body">
+                <div class="category-selector-loading" >Cargando...</div>
+
+
+                <select data-placeholder="Categorías"
+                    class="chzn-select select-block-level hidden" tabindex="-1"
+                    multiple="multiple"
+                    name="category-selector-select" 
+                    id="multiple">
+                </select>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-send-to-dafiti" data-dismiss="modal" >Agregar a dafiti</button>
+            </div>
+
         </div>
     </div>
 </div>
