@@ -77,11 +77,15 @@
             var CategorySelector = function()
             {
                 this.model = [];
+                this.sending = false;
 
                 var $category_selector = $('#category-selector-modal');
                 $category_selector.modal({});
 
                 this.initOnChange();
+                this.initSendButton();
+
+                this.resetForm();
             };
 
             CategorySelector.prototype.launch = function(oncomplete) 
@@ -151,6 +155,7 @@
                 this.getLoadingMessage().html('cargando...');
                 this.getSelect().addClass('hidden');
                 this.setFormWaiting();
+                this.resetSendButton();
             };
 
             CategorySelector.prototype.formLoaded = function() 
@@ -187,6 +192,11 @@
                 }
             };
 
+            CategorySelector.prototype.resetSendButton = function() 
+            {
+                $('.btn-send-to-dafiti').html('Agregar a dafiti');
+            };
+
             CategorySelector.prototype.setFormReady = function() 
             {
                 $('.btn-send-to-dafiti').removeClass('hidden');
@@ -209,6 +219,24 @@
                         self.checkFormStatus();
                     });
                 }, 1000);
+            };
+
+            CategorySelector.prototype.initSendButton = function() 
+            {
+                var self = this;
+                
+                $(document).on('click', '.btn-send-to-dafiti', function(e)
+                {
+                    e.preventDefault();
+
+                    if (self.sending) 
+                    {
+                        return;
+                    }
+
+                    self.sending = true;
+                    $(this).html('enviando...');
+                });
             };
 
             $.lp.categorySelector = function()
@@ -362,7 +390,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-send-to-dafiti" data-dismiss="modal" >Agregar a dafiti</button>
+                <button type="button" class="btn btn-primary btn-send-to-dafiti" >Agregar a dafiti</button>
             </div>
 
         </div>
