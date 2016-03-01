@@ -276,7 +276,7 @@
             var setHotStatus = function($btn)
             {
                 $btn.addClass('btn-success');
-                $btn.html('eliminar de dafiti');
+                $btn.html('volver a sincronizar con dafiti');
             };
 
             var setColdRemoteStatus = function($btn)
@@ -310,11 +310,8 @@
 
                 $category_selector.launch(function(categories, color, season)
                 {
-                    if (!$btn.hasClass('btn-success'))
-                    {
-                        setHotStatus($btn);
-                        setHotRemoteStatus($btn, categories, color, season);
-                    }
+                    setHotStatus($btn);
+                    setHotRemoteStatus($btn, categories, color, season);
                 });
             };
 

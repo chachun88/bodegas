@@ -3,8 +3,11 @@
 
 
 import dafiti
+import json
 from product import Product
 from size import Size
+from kardex import Kardex
+from cellar import Cellar
 from basemodel import BaseModel
 from datetime import date
 
@@ -59,6 +62,7 @@ class DafitiModel(BaseModel):
         }
 
         response = dafiti.Response()
+        stock = self.getStock(sku, p.size_id[0])
 
         if not self.ProductExist(sku):
 
@@ -67,17 +71,19 @@ class DafitiModel(BaseModel):
                 Brand="Giani Da Firenze", Price=p.sell_price,
                 PrimaryCategory=main_category, Categories=categories.split(","),
                 Variation=sizes[0], ProductData=product_data,
-                Quantity=1)
+                Quantity=stock)
 
             if response.type == dafiti.Response.ERROR:
                 return
 
         else:
+
             response = self.client.product.Update(
                 sku, Name=p.name, Description=p.description, 
                 Brand="Giani Da Firenze", Price=p.sell_price,
                 PrimaryCategory=main_category, Categories=categories.split(","),
-                Variation=sizes[0], ProductData=product_data)
+                Variation=sizes[0], ProductData=product_data,
+                Quantity=stock)
 
         # preparing images for dafiti
         images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
@@ -91,6 +97,19 @@ class DafitiModel(BaseModel):
         response = self.client.product.Image(
             sku,
             *final_images)
+
+    def getStock(self, sku, size):
+
+        c = Cellar()
+        cellar = c.GetWebCellar()
+
+        try:
+            quantity = Kardex().FindKardex(sku, cellar['success'], size)["success"]["balance_units"]
+
+            return quantity
+        except:
+            # there is no kardex
+            return 0
 
     def GetCategories(self):
         r = self.client.category.Get()
