@@ -20,9 +20,19 @@ class DafitiSynchronizedHandler(BaseHandler):
 class DafitiEnableProductHandler(BaseHandler):
 
     @tornado.gen.coroutine
-    def get(self, sku):
+    def post(self, sku):
+
+        categories = self.get_argument('categories', '')
+        main_category = self.get_argument('main_category', '')
+        color = self.get_argument('color', '')
+        season = self.get_argument('season', '')
+
+        if categories == '' or main_category == '' \
+            or season == '' or color == '': 
+            return
+
         d = DafitiModel()
-        d.AddProduct(sku)
+        d.AddProduct(sku, main_category, categories, color, season)
 
 
 class DafitiDisableProductHandler(BaseHandler):

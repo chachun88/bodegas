@@ -6,6 +6,7 @@ import dafiti
 from product import Product
 from size import Size
 from basemodel import BaseModel
+from datetime import date
 
 
 class DafitiModel(BaseModel):
@@ -31,7 +32,7 @@ class DafitiModel(BaseModel):
     def RemoveProduct(self, sku):
         self.client.product.Remove(sku)
 
-    def AddProduct(self, sku):
+    def AddProduct(self, sku, main_category, categories, color, season):
         p = Product()
         p.InitBySku(sku)
 
@@ -48,13 +49,35 @@ class DafitiModel(BaseModel):
         # for s in sizes:
 
         # @todo:validate product here
-        response = self.client.product.Create(
-            sku, Name=p.name, Description=p.description, 
-            Brand="Giani Da Firenze", Price=p.sell_price,
-            PrimaryCategory=4, Variation=sizes[0])
+        product_data = {
+            "Gender" : "Femenino",
+            "ColorNameBrand" : p.color,
+            "Color" : p.color,
+            "ColorFamily" : color,
+            "Season" : season,
+            "SeasonYear" : date.today().year - 1
+        }
 
-        if response.type == dafiti.Response.ERROR:
-            return
+        response = dafiti.Response()
+
+        if not self.ProductExist(sku):
+
+            response = self.client.product.Create(
+                sku, Name=p.name, Description=p.description, 
+                Brand="Giani Da Firenze", Price=p.sell_price,
+                PrimaryCategory=main_category, Categories=categories.split(","),
+                Variation=sizes[0], ProductData=product_data,
+                Quantity=1)
+
+            if response.type == dafiti.Response.ERROR:
+                return
+
+        else:
+            response = self.client.product.Update(
+                sku, Name=p.name, Description=p.description, 
+                Brand="Giani Da Firenze", Price=p.sell_price,
+                PrimaryCategory=main_category, Categories=categories.split(","),
+                Variation=sizes[0], ProductData=product_data)
 
         # preparing images for dafiti
         images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
@@ -62,7 +85,7 @@ class DafitiModel(BaseModel):
 
         for img in images:
             if img != '':
-                final_images.append("http://bodegas.gianidafirenze.cl/image/{}?mw=1160".format(img))
+                final_images.append("http://bodegas.gianidafirenze.cl/image/{}?mw=1280".format(img))
 
         # adding images to dafiti
         response = self.client.product.Image(

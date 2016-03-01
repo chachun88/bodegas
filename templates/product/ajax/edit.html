@@ -69,15 +69,12 @@
 
     <script type="text/javascript">
 
-        var placeholder = {"Category": [{"GlobalIdentifier": "", "Name": "Botines", "Children": {"Category": {"GlobalIdentifier": "", "Name": "Booties", "Children": "", "CategoryId": "148"}}, "CategoryId": "145"}, {"GlobalIdentifier": "", "Name": "Botas", "Children": "", "CategoryId": "514"}, {"GlobalIdentifier": "", "Name": "Zapatos de Vestir", "Children": {"Category": {"GlobalIdentifier": "", "Name": "Taco Chino", "Children": "", "CategoryId": "152"}}, "CategoryId": "14"}, {"GlobalIdentifier": "", "Name": "Ballerinas", "Children": "", "CategoryId": "29"}, {"GlobalIdentifier": "", "Name": "Zapatos de Fiesta", "Children": "", "CategoryId": "154"}, {"GlobalIdentifier": "", "Name": "Mocasines", "Children": "", "CategoryId": "153"}, {"GlobalIdentifier": "", "Name": "Zapatillas Urbanas", "Children": "", "CategoryId": "48"}, {"GlobalIdentifier": "", "Name": "Zapatillas Deportivas", "Children": "", "CategoryId": "49"}, {"GlobalIdentifier": "", "Name": "Sandalias Planas", "Children": "", "CategoryId": "160"}, {"GlobalIdentifier": "", "Name": "Sandalias", "Children": "", "CategoryId": "17"}, {"GlobalIdentifier": "", "Name": "Oxford", "Children": "", "CategoryId": "156"}, {"GlobalIdentifier": "", "Name": "Playeras", "Children": "", "CategoryId": "18"}]};
-
         (function($)
         {
 
             var CategorySelector = function()
             {
                 this.model = [];
-                this.sending = false;
 
                 var $category_selector = $('#category-selector-modal');
                 $category_selector.modal({});
@@ -90,12 +87,10 @@
 
             CategorySelector.prototype.launch = function(oncomplete) 
             {
-                oncomplete = oncomplete || $.noop;
+                this.oncomplete = oncomplete || $.noop;
 
                 this.launchModal();
                 this.populateModel();
-
-                oncomplete();
             };
 
             CategorySelector.prototype.appendModalHTML = function() 
@@ -117,8 +112,7 @@
 
                 if (this.model.length === 0) 
                 {
-                    var r = placeholder;
-                    setTimeout(function() 
+                    $.get('/dafiti/getcategories', function(r)
                     {
                         self.formLoaded();
 
@@ -127,12 +121,7 @@
 
                             self.drawCategory(c);
                         }
-
-                    }, 100);
-                    // $.get('/dafiti/getcategories', function(r)
-                    // {
-                    //     console.log(r);
-                    // });
+                    });
                 }
             };
 
@@ -147,21 +136,21 @@
                     value = c.CategoryId;
                 }
 
-                this.getSelect().append('<option value="' + value + '" >'+ name +'</option>');
+                this.getSelectCategory().append('<option value="' + value + '" >'+ name +'</option>');
             };
 
             CategorySelector.prototype.resetForm = function() 
             {
-                this.getLoadingMessage().html('cargando...');
-                this.getSelect().addClass('hidden');
+                this.getLoadingMessage().removeClass('hidden');
+                this.getSelectCategory().addClass('hidden');
                 this.setFormWaiting();
                 this.resetSendButton();
             };
 
             CategorySelector.prototype.formLoaded = function() 
             {
-                this.getLoadingMessage().html('');
-                this.getSelect().removeClass('hidden');
+                this.getLoadingMessage().addClass('hidden');
+                this.getSelectCategory().removeClass('hidden');
             };
 
             CategorySelector.prototype.getModalBody = function() 
@@ -174,15 +163,30 @@
                 return $('.category-selector-loading', this.getModalBody());
             };
 
-            CategorySelector.prototype.getSelect = function() 
+            CategorySelector.prototype.getSelectCategory = function() 
             {
                 return $('select[name="category-selector-select"]', this.getModalBody());
+            };
+
+            CategorySelector.prototype.getSelectColor = function() 
+            {
+                return $('select[name="color-selector-select"]', this.getModalBody());
+            };
+
+            CategorySelector.prototype.getSelectSeason = function() 
+            {
+                return $('select[name="season-selector-select"]', this.getModalBody());
+            };
+
+            CategorySelector.prototype.getSendButton = function() 
+            {
+                return $('.btn-send-to-dafiti');
             };
 
             CategorySelector.prototype.checkFormStatus = function() 
             {
                 // enable if more than 1 is selected
-                if ($('option:selected', this.getSelect()).length > 0)
+                if ($('option:selected', this.getSelectCategory()).length > 0)
                 {
                     this.setFormReady();
                 }
@@ -194,17 +198,17 @@
 
             CategorySelector.prototype.resetSendButton = function() 
             {
-                $('.btn-send-to-dafiti').html('Agregar a dafiti');
+                this.getSendButton().html('Agregar a dafiti');
             };
 
             CategorySelector.prototype.setFormReady = function() 
             {
-                $('.btn-send-to-dafiti').removeClass('hidden');
+                this.getSendButton().removeClass('hidden');
             };
 
             CategorySelector.prototype.setFormWaiting = function() 
             {
-                $('.btn-send-to-dafiti').addClass('hidden');
+                this.getSendButton().addClass('hidden');
             };
 
             CategorySelector.prototype.initOnChange = function() 
@@ -214,10 +218,11 @@
                 // wait select2
                 setTimeout(function()
                 {
-                    self.getSelect().on('change', function()
+                    self.getSelectCategory().on('change', function()
                     {
                         self.checkFormStatus();
                     });
+
                 }, 1000);
             };
 
@@ -229,14 +234,26 @@
                 {
                     e.preventDefault();
 
-                    if (self.sending) 
-                    {
-                        return;
-                    }
-
-                    self.sending = true;
-                    $(this).html('enviando...');
+                    self.oncomplete(
+                        self.getSelectedCategories(),
+                        self.getSelectedColor(),
+                        self.getSelectedSeason());
                 });
+            };
+
+            CategorySelector.prototype.getSelectedCategories = function() 
+            {
+                return this.getSelectCategory().val();
+            };
+
+            CategorySelector.prototype.getSelectedColor = function() 
+            {
+                return this.getSelectColor().val();
+            };
+
+            CategorySelector.prototype.getSelectedSeason = function() 
+            {
+                return this.getSelectSeason().val();
             };
 
             $.lp.categorySelector = function()
@@ -271,26 +288,32 @@
                 });
             };
 
-            var setHotRemoteStatus = function($btn)
+            var setHotRemoteStatus = function($btn, categories, color, season)
             {
                 var sku = $btn.attr('product-sku');
-                $.get("/dafiti/enableproduct/" + sku, function()
-                {
-                    // nothing here...
-                });
+                $.post(
+                    "/dafiti/enableproduct/" + sku, 
+                    {
+                        'main_category' : categories[0],
+                        'categories' : categories.join(','),
+                        'color' : color,
+                        'season' : season
+                    }, function()
+                    {
+                        // nothing here...
+                    });
             };
 
             var changeBtnStatus = function()
             {
-                $category_selector.launch(function()
-                {
-                    return
-                    var $btn = $(this);
+                var $btn = $(this);
 
+                $category_selector.launch(function(categories, color, season)
+                {
                     if (!$btn.hasClass('btn-success'))
                     {
                         setHotStatus($btn);
-                        setHotRemoteStatus($btn);
+                        setHotRemoteStatus($btn, categories, color, season);
                     }
                 });
             };
@@ -378,19 +401,97 @@
             </div>
 
             <div class="modal-body">
-                <div class="category-selector-loading" >Cargando...</div>
 
+                <div class="col-sm-12">
 
-                <select data-placeholder="Categorías"
-                    class="chzn-select select-block-level hidden" tabindex="-1"
-                    multiple="multiple"
-                    name="category-selector-select" 
-                    id="multiple">
-                </select>
+                    <div class="form-group" >
+                        <label class="col-sm-4" >Temporada</label>
+                        <div class="col-sm-8">
+                            <select data-placeholder="Colores"
+                                class="chzn-select select-block-level"
+                                name="season-selector-select">
+                                    <option value="invierno">Invierno</option>
+                                    <option value="verano">Verano</option>
+                            </select>
+                        </div>
+                    </div>
 
+                    <div class="clearfix" style="height: 20px" ></div>
+
+                    <div class="form-group" >
+                        <label class="col-sm-4" >Familia de color (Filtro)</label>
+                        <div class="col-sm-8">
+                            <select data-placeholder="Colores"
+                                class="chzn-select select-block-level"
+                                name="color-selector-select">
+                                    <option value="Negro" selected="selected" >Negro</option>
+                                    <option value="Gris">Gris</option>
+                                    <option value="Blanco">Blanco</option>
+                                    <option value="Marr">Marr&oacute;n</option>
+                                    <option value="Rojo">Rojo</option>
+                                    <option value="Rosa">Rosa</option>
+                                    <option value="Naranjo">Naranjo</option>
+                                    <option value="Dorado">Dorado</option>
+                                    <option value="Plateado">Plateado</option>
+                                    <option value="Beige">Beige</option>
+                                    <option value="Verde">Verde</option>
+                                    <option value="Lila">Lila</option>
+                                    <option value="Azul">Azul</option>
+                                    <option value="Turquesa">Turquesa</option>
+                                    <option value="Celeste">Celeste</option>
+                                    <option value="Multicolor">Multicolor</option>
+                                    <option value="Coral">Coral</option>
+                                    <option value="Bronce">Bronce</option>
+                                    <option value="Taupe">Taupe</option>
+                                    <option value="Khaki">Khaki</option>
+                                    <option value="Camel">Camel</option>
+                                    <option value="Nude">Nude</option>
+                                    <option value="Lima">Lima</option>
+                                    <option value="Burdeo">Burdeo</option>
+                                    <option value="Menta">Menta</option>
+                                    <option value="Fucsia">Fucsia</option>
+                                    <option value="Crudo">Crudo</option>
+                                    <option value="Arena">Arena</option>
+                                    <option value="Morado">Morado</option>
+                                    <option value="Crema">Crema</option>
+                                    <option value="Mostaza">Mostaza</option>
+                                    <option value="Chocolate">Chocolate</option>
+                                    <option value="Vainilla">Vainilla</option>
+                                    <option value="Amarillo">Amarillo</option>
+                                    <option value="Transparente">Transparente</option>
+                                    <option value="Azul">Azul Petr&oacute;leo</option>
+                                    <option value="Verde">Verde Petr&oacute;leo</option>
+                                    <option value="Granate">Granate</option>
+                                    <option value="Uva">Uva</option>
+                                    <option value="Perla">Perla</option>
+                                    <option value="Guinda">Guinda</option>
+                                    <option value="Grafito">Grafito</option>
+                                    <option value="Terracota">Terracota</option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" style="height: 20px" ></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4" >Categorías</label>
+                        <div class="col-sm-8">
+                            <div class="category-selector-loading" >Cargando...</div>
+                            <select data-placeholder="Categorías"
+                                class="chzn-select select-block-level" tabindex="-1"
+                                multiple="multiple"
+                                name="category-selector-select" 
+                                id="multiple">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-send-to-dafiti" >Agregar a dafiti</button>
+                <button type="button" class="btn btn-primary btn-send-to-dafiti" data-dismiss="modal" >Listo</button>
             </div>
 
         </div>
