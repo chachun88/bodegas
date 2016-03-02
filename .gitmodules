@@ -1,6 +1,3 @@
 [submodule "static/js/fileuploader"]
 	path = static/js/fileuploader
 	url = https://github.com/k1ltr0/jquery.ajax.uploader.git
-[submodule "dafiti"]
-	path = dafiti
-	url = http://gogs.ondev.today/loadingplay/dafiti.git
