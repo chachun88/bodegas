@@ -54,8 +54,10 @@ class DafitiModel(BaseModel):
 
             if is_first:
                 is_first = False
+
+                new_sku = sku
             else:
-                sku += "-{}".format(s)
+                new_sku += "-{}".format(s)
 
             # @todo:validate product here
             product_data = {
@@ -70,10 +72,10 @@ class DafitiModel(BaseModel):
             response = dafiti.Response()
             stock = self.getStock(sku, s)
 
-            if not self.ProductExist(sku):
+            if not self.ProductExist(new_sku):
 
                 response = self.client.product.Create(
-                    sku, Name=p.name, Description=p.description, 
+                    new_sku, Name=p.name, Description=p.description, 
                     Brand="Giani Da Firenze", Price=p.sell_price,
                     PrimaryCategory=main_category, Categories=categories.split(","),
                     Variation=s, ProductData=product_data,
@@ -85,7 +87,7 @@ class DafitiModel(BaseModel):
             else:
 
                 response = self.client.product.Update(
-                    sku, Name=p.name, Description=p.description, 
+                    new_sku, Name=p.name, Description=p.description, 
                     Brand="Giani Da Firenze", Price=p.sell_price,
                     PrimaryCategory=main_category, Categories=categories.split(","),
                     Variation=s, ProductData=product_data,
@@ -101,7 +103,7 @@ class DafitiModel(BaseModel):
 
             # adding images to dafiti
             response = self.client.product.Image(
-                sku,
+                new_sku,
                 *final_images)
 
     def getStock(self, sku, size):
