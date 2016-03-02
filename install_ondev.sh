@@ -21,9 +21,5 @@ git pull
 echo "init submodule"
 git submodule update --init --recursive
 
-echo "npm and bower"
-npm install
-bower install
-
 echo "change permissions"
 chmod +x install_ondev.sh
