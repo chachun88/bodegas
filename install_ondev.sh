@@ -13,7 +13,8 @@ cd /var/www/sites.ondev
 unset GIT_DIR
 
 echo "checkout"
-git checkout ondev_master -f
+git checkout origin/master -f
+git checkout master -f
 
 echo "pull"
 git pull
