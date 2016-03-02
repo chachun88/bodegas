@@ -64,9 +64,6 @@ class ImageHandler(BaseHandler):
 
     def __createMaxWidthImage(self, image_name, max_width):
         try:
-            # image doesnt exist so i create it
-            # image_path = dir_img + "{}{}".format(max_width, image_name)
-
             # getting variables
             orig = Image.open( dir_img + image_name)
             width = int(orig.size[0])
@@ -89,6 +86,44 @@ class ImageHandler(BaseHandler):
         except:
             return self.__getDefaultImage(max_width)
 
+    def __createMaxWidthMinHeightImage(self, image_name, max_width, min_height):
+        try:
+            orig = Image.open( dir_img + image_name)
+            width = int(orig.size[0])
+            height = int(orig.size[1])
+
+            if max_width == -1:
+                max_width = width
+
+            # resampling image
+            im = orig.resize((max_width,height * max_width / width), Image.ANTIALIAS)
+
+            new_width = im.size[0]
+            new_height = im.size[1]
+
+            if new_height < min_height:
+                new_height = min_height
+
+            # create white image
+            new_image = Image.new('RGB', (new_width, new_height), "white")
+
+            print "n_size", new_image.size
+            print "i_size", im.size
+
+            new_image.paste(
+                im, 
+                (int((new_image.size[0]*0.5) - (im.size[0] * 0.5)),
+                 int((new_image.size[1]*0.5) - (im.size[1] * 0.5))))
+
+            buf = StringIO.StringIO()
+            new_image.save(buf, format='PNG')
+            new_image.save( dir_img + "{}{}{}".format(max_width, min_height, image_name), format='PNG')
+            return buf.getvalue()
+
+        except Exception, ex:
+            print ex
+            return self.__getDefaultImage(max_width)
+
     def __getMaxWidthImage(self, image_name, max_width):
         # show scaled image
         try:  # detect if image exist
@@ -103,7 +138,14 @@ class ImageHandler(BaseHandler):
             return self.__createMaxWidthImage(image_name, max_width)
 
     def __getMaxWidthMinHeightImage(self, image_name, max_width, min_height):
-        return self.__getMaxWidthImage(image_name, max_width)
+        try:
+            f = open(dir_img + "{}{}{}".format(max_width, min_height, image_name), "rb")
+            buff = f.read()
+            f.close()
+
+            return buff
+        except:
+            return self.__createMaxWidthMinHeightImage(image_name, max_width, min_height)
 
     def getImageBuffer(self, image_name, max_width=-1, min_height=-1):
 
@@ -141,8 +183,8 @@ class ImageDafitiHandler(ImageHandler):
         # xml doesnt allow &
         wh = self.get_argument("mwh", "-1,-1")  # pair of max_width and min_height
 
-        max_width = int(wh.split(","))[0]
-        min_height = int(wh.split(","))[1]
+        max_width = int(wh.split(",")[0])
+        min_height = int(wh.split(",")[1])
 
         self.set_header("Content-Type", "image/png")
         self.write(
