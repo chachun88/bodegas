@@ -25,3 +25,10 @@ watchmedo shell-command \
 ```sh
 coverage erase & coverage run -m test & coverage html -d coverage_html -i
 ```
+
+# Execute on ondev
+
+```sh
+$ sudo su git2
+$ python bodegas.py &
+```
