@@ -131,6 +131,7 @@ class Application(tornado.web.Application):
 
             # images
             (r"/image/([^/]+)", ImageHandler),
+            (r"/image/dafiti/([^/]+)", ImageDafitiHandler),
             (r"/image", ImageHandler2),
             (r"/image/", ImageHandler2),
             (r"/imageremove", ImageDeleteHandler),
