@@ -9,7 +9,7 @@ then
 fi
 
 echo "cd to /var/www/sites.ondev"
-cd /var/www/sites.ondev
+cd /var/www/bgiani.ondev
 unset GIT_DIR
 
 echo "checkout"
