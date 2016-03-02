@@ -41,23 +41,19 @@ class DafitiModel(BaseModel):
 
         sizes = []
         s = Size()
+        is_first = True
 
         for si in p.size_id:
             s.id = si
             s.initById()
-
-            sizes.append(s.name)
-
-        # @todo: resolver las tallas
-        is_first = True
-        for s in sizes:
+            size = s.name
 
             if is_first:
                 is_first = False
 
                 new_sku = sku
             else:
-                new_sku += "-{}".format(s)
+                new_sku += "-{}".format(size)
 
             # @todo:validate product here
             product_data = {
@@ -70,7 +66,7 @@ class DafitiModel(BaseModel):
             }
 
             response = dafiti.Response()
-            stock = self.getStock(sku, s)
+            stock = self.getStock(sku, s.id)
 
             if not self.ProductExist(new_sku):
 
@@ -78,7 +74,7 @@ class DafitiModel(BaseModel):
                     new_sku, Name=p.name, Description=p.description, 
                     Brand="Giani Da Firenze", Price=p.sell_price,
                     PrimaryCategory=main_category, Categories=categories.split(","),
-                    Variation=s, ProductData=product_data,
+                    Variation=size, ProductData=product_data,
                     Quantity=stock)
 
                 if response.type == dafiti.Response.ERROR:
@@ -90,7 +86,7 @@ class DafitiModel(BaseModel):
                     new_sku, Name=p.name, Description=p.description, 
                     Brand="Giani Da Firenze", Price=p.sell_price,
                     PrimaryCategory=main_category, Categories=categories.split(","),
-                    Variation=s, ProductData=product_data,
+                    Variation=size, ProductData=product_data,
                     Quantity=stock)
 
             # preparing images for dafiti
@@ -106,13 +102,13 @@ class DafitiModel(BaseModel):
                 new_sku,
                 *final_images)
 
-    def getStock(self, sku, size):
+    def getStock(self, sku, size_id):
 
         c = Cellar()
         cellar = c.GetWebCellar()
 
         try:
-            quantity = Kardex().FindKardex(sku, cellar['success'], size)["success"]["balance_units"]
+            quantity = Kardex().FindKardex(sku, cellar['success'], size_id)["success"]["balance_units"]
 
             return quantity
         except:
