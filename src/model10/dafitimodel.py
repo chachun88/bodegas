@@ -91,7 +91,7 @@ class DafitiModel(BaseModel):
 
         for img in images:
             if img != '':
-                final_images.append("http://bodegas.gianidafirenze.cl/image/{}?mw=1280".format(img))
+                final_images.append("http://bodegas.gianidafirenze.cl/image/{}?mw=1370".format(img))
 
         # adding images to dafiti
         response = self.client.product.Image(
