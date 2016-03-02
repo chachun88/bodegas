@@ -19,6 +19,7 @@ echo "pull"
 git pull
 
 echo "init submodule"
+git config submodule.dafiti.url http://ondev:loadingplay007@gogs.ondev.today/loadingplay/dafiti.git
 git submodule update --init --recursive
 
 echo "npm and bower"
