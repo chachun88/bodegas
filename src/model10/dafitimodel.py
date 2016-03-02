@@ -110,17 +110,10 @@ class DafitiModel(BaseModel):
         cellar = c.GetWebCellar()
 
         try:
-            print "get quantity"
-            print cellar
-            print Kardex().FindKardex(sku, cellar['success'], size)
             quantity = Kardex().FindKardex(sku, cellar['success'], size)["success"]["balance_units"]
 
-            print "quantity:", quantity
-
             return quantity
-        except Exception, ex:
-
-            print ex
+        except:
             # there is no kardex
             return 0
 
