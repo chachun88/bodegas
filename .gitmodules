@@ -1,0 +1,3 @@
+[submodule "static/js/fileuploader"]
+	path = static/js/fileuploader
+	url = https://github.com/k1ltr0/jquery.ajax.uploader.git
