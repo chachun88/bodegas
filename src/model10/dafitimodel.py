@@ -49,54 +49,60 @@ class DafitiModel(BaseModel):
             sizes.append(s.name)
 
         # @todo: resolver las tallas
-        # for s in sizes:
+        is_first = True
+        for s in sizes:
 
-        # @todo:validate product here
-        product_data = {
-            "Gender" : "Femenino",
-            "ColorNameBrand" : p.color,
-            "Color" : p.color,
-            "ColorFamily" : color,
-            "Season" : season,
-            "SeasonYear" : date.today().year - 1
-        }
+            if is_first:
+                is_first = False
+            else:
+                sku += "-{}".format(s)
 
-        response = dafiti.Response()
-        stock = self.getStock(sku, p.size_id[0])
+            # @todo:validate product here
+            product_data = {
+                "Gender" : "Femenino",
+                "ColorNameBrand" : p.color,
+                "Color" : p.color,
+                "ColorFamily" : color,
+                "Season" : season,
+                "SeasonYear" : date.today().year - 1
+            }
 
-        if not self.ProductExist(sku):
+            response = dafiti.Response()
+            stock = self.getStock(sku, s)
 
-            response = self.client.product.Create(
-                sku, Name=p.name, Description=p.description, 
-                Brand="Giani Da Firenze", Price=p.sell_price,
-                PrimaryCategory=main_category, Categories=categories.split(","),
-                Variation=sizes[0], ProductData=product_data,
-                Quantity=stock)
+            if not self.ProductExist(sku):
 
-            if response.type == dafiti.Response.ERROR:
-                return
+                response = self.client.product.Create(
+                    sku, Name=p.name, Description=p.description, 
+                    Brand="Giani Da Firenze", Price=p.sell_price,
+                    PrimaryCategory=main_category, Categories=categories.split(","),
+                    Variation=s, ProductData=product_data,
+                    Quantity=stock)
 
-        else:
+                if response.type == dafiti.Response.ERROR:
+                    return
 
-            response = self.client.product.Update(
-                sku, Name=p.name, Description=p.description, 
-                Brand="Giani Da Firenze", Price=p.sell_price,
-                PrimaryCategory=main_category, Categories=categories.split(","),
-                Variation=sizes[0], ProductData=product_data,
-                Quantity=stock)
+            else:
 
-        # preparing images for dafiti
-        images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
-        final_images = []
+                response = self.client.product.Update(
+                    sku, Name=p.name, Description=p.description, 
+                    Brand="Giani Da Firenze", Price=p.sell_price,
+                    PrimaryCategory=main_category, Categories=categories.split(","),
+                    Variation=s, ProductData=product_data,
+                    Quantity=stock)
 
-        for img in images:
-            if img != '':
-                final_images.append("http://bgiani.ondev.today/image/dafiti/{}?mwh=1380,1160".format(img))
+            # preparing images for dafiti
+            images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
+            final_images = []
 
-        # adding images to dafiti
-        response = self.client.product.Image(
-            sku,
-            *final_images)
+            for img in images:
+                if img != '':
+                    final_images.append("http://bgiani.ondev.today/image/dafiti/{}?mwh=1380,1160".format(img))
+
+            # adding images to dafiti
+            response = self.client.product.Image(
+                sku,
+                *final_images)
 
     def getStock(self, sku, size):
 
@@ -104,10 +110,17 @@ class DafitiModel(BaseModel):
         cellar = c.GetWebCellar()
 
         try:
+            print "get quantity"
+            print cellar
+            print Kardex().FindKardex(sku, cellar['success'], size)
             quantity = Kardex().FindKardex(sku, cellar['success'], size)["success"]["balance_units"]
 
+            print "quantity:", quantity
+
             return quantity
-        except:
+        except Exception, ex:
+
+            print ex
             # there is no kardex
             return 0
 
