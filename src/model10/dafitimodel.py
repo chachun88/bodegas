@@ -18,8 +18,8 @@ class DafitiModel(BaseModel):
         super(DafitiModel, self).__init__()
 
         self.client = dafiti.API(
-                user_id='julian@loadingplay.com', 
-                api_key='1ce5e6b52a8665b677f7a8530ced6ae2ee82f89c',
+                user_id='ricardo@loadingplay.com', 
+                api_key='48f674c4a13c6af90063d8f70e3b23291f4ead79',
                 response_format='json')
 
     def ProductExist(self, sku):
@@ -38,10 +38,10 @@ class DafitiModel(BaseModel):
     def AddProduct(self, sku, main_category, categories, color, season):
         p = Product()
         p.InitBySku(sku)
-
-        sizes = []
         s = Size()
         is_first = True
+
+        image_skus = []
 
         for si in p.size_id:
             s.id = si
@@ -50,10 +50,11 @@ class DafitiModel(BaseModel):
 
             if is_first:
                 is_first = False
-
                 new_sku = sku
             else:
                 new_sku += "-{}".format(size)
+
+            image_skus.append(new_sku)
 
             # @todo:validate product here
             product_data = {
@@ -75,7 +76,7 @@ class DafitiModel(BaseModel):
                     Brand="Giani Da Firenze", Price=p.sell_price,
                     PrimaryCategory=main_category, Categories=categories.split(","),
                     Variation=size, ProductData=product_data,
-                    Quantity=stock)
+                    Quantity=stock, ParentSku=sku)
 
                 if response.type == dafiti.Response.ERROR:
                     return
@@ -87,20 +88,22 @@ class DafitiModel(BaseModel):
                     Brand="Giani Da Firenze", Price=p.sell_price,
                     PrimaryCategory=main_category, Categories=categories.split(","),
                     Variation=size, ProductData=product_data,
-                    Quantity=stock)
+                    Quantity=stock, ParentSku=sku)
 
-            # preparing images for dafiti
-            images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
-            final_images = []
+        # preparing images for dafiti
+        images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
+        final_images = []
 
-            for img in images:
-                if img != '':
-                    final_images.append("http://bgiani.ondev.today/image/dafiti/{}?mwh=1380,1160".format(img))
+        for img in images:
+            if img != '':
+                final_images.append("http://bgiani.ondev.today/image/dafiti/{}?mwh=1380,1160".format(img))
 
-            # adding images to dafiti
-            response = self.client.product.Image(
-                new_sku,
-                *final_images)
+        # adding images to dafiti
+        response = self.client.product.Image(
+            image_skus,
+            *final_images)
+
+        print response.head
 
     def getStock(self, sku, size_id):
 
