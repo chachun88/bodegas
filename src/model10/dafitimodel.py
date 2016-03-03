@@ -21,14 +21,32 @@ class DafitiModel(BaseModel):
                 api_key='48f674c4a13c6af90063d8f70e3b23291f4ead79',
                 response_format='json')
 
+    def ProductDeleted(self, sku):
+        response = self.client.product.Get(
+            SkuSellerList=[sku],
+            Filter=dafiti.Filter.Deleted)
+
+        if len(response.body["Products"]) > 0:
+            return True
+
+        return False
+
     def ProductExist(self, sku):
+        # check if product is alive
         response = self.client.product.Get(
             SkuSellerList=[sku], 
             Filter=dafiti.Filter.All)
 
         if len(response.body["Products"]) > 0:
+
             return True
+
         else:
+
+            # check if product was deleted
+            if self.ProductDeleted(sku):
+                return True
+
             return False
 
     def RemoveProduct(self, sku):
@@ -54,7 +72,7 @@ class DafitiModel(BaseModel):
                 is_first = False
                 new_sku = sku
             else:
-                new_sku += "-{}".format(size)
+                new_sku = "{}-{}".format(sku, size)
 
             image_skus.append(new_sku)
 
@@ -68,7 +86,7 @@ class DafitiModel(BaseModel):
                 "SeasonYear" : date.today().year - 1
             }
 
-            response = dafiti.Response()
+            # response = dafiti.Response()
             stock = self.getStock(sku, s.id)
 
             if not self.ProductExist(new_sku):
@@ -89,10 +107,12 @@ class DafitiModel(BaseModel):
                         Brand="Giani Da Firenze", Price=p.sell_price,
                         PrimaryCategory=main_category, Categories=categories.split(","),
                         Variation=size, ProductData=product_data,
-                        Quantity=stock, ParentSku=sku))
+                        Quantity=stock, ParentSku=sku, Status=dafiti.Status.Active))
 
-        self.client.product.sendPOST(dafiti.EndPoint.ProductCreate, create_requests)
-        self.client.product.sendPOST(dafiti.EndPoint.ProductUpdate, update_requests)
+        if len(create_requests) > 0:
+            self.client.product.sendPOST(dafiti.EndPoint.ProductCreate, create_requests)
+        if len(update_requests) > 0:
+            self.client.product.sendPOST(dafiti.EndPoint.ProductUpdate, update_requests)
 
         # preparing images for dafiti
         images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
@@ -103,11 +123,9 @@ class DafitiModel(BaseModel):
                 final_images.append("http://bgiani.ondev.today/image/dafiti/{}?mwh=1380,1160".format(img))
 
         # adding images to dafiti
-        response = self.client.product.Image(
+        self.client.product.Image(
             image_skus,
             *final_images)
-
-        print response.head
 
     def getStock(self, sku, size_id):
 
