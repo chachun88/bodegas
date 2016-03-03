@@ -3,7 +3,6 @@
 
 
 import dafiti
-import json
 from product import Product
 from size import Size
 from kardex import Kardex
@@ -82,34 +81,18 @@ class DafitiModel(BaseModel):
                         Variation=size, ProductData=product_data,
                         Quantity=stock, ParentSku=sku))
 
-                # response = self.client.product.Create(
-                #     new_sku, Name=p.name, Description=p.description, 
-                #     Brand="Giani Da Firenze", Price=p.sell_price,
-                #     PrimaryCategory=main_category, Categories=categories.split(","),
-                #     Variation=size, ProductData=product_data,
-                #     Quantity=stock, ParentSku=sku)
-
-                # if response.type == dafiti.Response.ERROR:
-                #     return
-
             else:
 
                 update_requests.append(
-                    SellerSku=new_sku, Name=p.name, Description=p.description, 
-                    Brand="Giani Da Firenze", Price=p.sell_price,
-                    PrimaryCategory=main_category, Categories=categories.split(","),
-                    Variation=size, ProductData=product_data,
-                    Quantity=stock, ParentSku=sku)
+                    dafiti.ProductRequest(
+                        SellerSku=new_sku, Name=p.name, Description=p.description, 
+                        Brand="Giani Da Firenze", Price=p.sell_price,
+                        PrimaryCategory=main_category, Categories=categories.split(","),
+                        Variation=size, ProductData=product_data,
+                        Quantity=stock, ParentSku=sku))
 
-                # response = self.client.product.Update(
-                #     new_sku, Name=p.name, Description=p.description, 
-                #     Brand="Giani Da Firenze", Price=p.sell_price,
-                #     PrimaryCategory=main_category, Categories=categories.split(","),
-                #     Variation=size, ProductData=product_data,
-                #     Quantity=stock, ParentSku=sku)
-
-        self.client.product.sendPOST('ProductCreate', create_requests)
-        self.client.product.sendPOST('ProductUpdate', update_requests)
+        self.client.product.sendPOST(dafiti.EndPoint.ProductCreate, create_requests)
+        self.client.product.sendPOST(dafiti.EndPoint.ProductUpdate, update_requests)
 
         # preparing images for dafiti
         images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
