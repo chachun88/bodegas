@@ -43,6 +43,9 @@ class DafitiModel(BaseModel):
 
         image_skus = []
 
+        create_requests = []
+        update_requests = []
+
         for si in p.size_id:
             s.id = si
             s.initById()
@@ -71,24 +74,42 @@ class DafitiModel(BaseModel):
 
             if not self.ProductExist(new_sku):
 
-                response = self.client.product.Create(
-                    new_sku, Name=p.name, Description=p.description, 
-                    Brand="Giani Da Firenze", Price=p.sell_price,
-                    PrimaryCategory=main_category, Categories=categories.split(","),
-                    Variation=size, ProductData=product_data,
-                    Quantity=stock, ParentSku=sku)
+                create_requests.append(
+                    dafiti.ProductRequest(
+                        SellerSku=new_sku, Name=p.name, Description=p.description, 
+                        Brand="Giani Da Firenze", Price=p.sell_price,
+                        PrimaryCategory=main_category, Categories=categories.split(","),
+                        Variation=size, ProductData=product_data,
+                        Quantity=stock, ParentSku=sku))
 
-                if response.type == dafiti.Response.ERROR:
-                    return
+                # response = self.client.product.Create(
+                #     new_sku, Name=p.name, Description=p.description, 
+                #     Brand="Giani Da Firenze", Price=p.sell_price,
+                #     PrimaryCategory=main_category, Categories=categories.split(","),
+                #     Variation=size, ProductData=product_data,
+                #     Quantity=stock, ParentSku=sku)
+
+                # if response.type == dafiti.Response.ERROR:
+                #     return
 
             else:
 
-                response = self.client.product.Update(
-                    new_sku, Name=p.name, Description=p.description, 
+                update_requests.append(
+                    SellerSku=new_sku, Name=p.name, Description=p.description, 
                     Brand="Giani Da Firenze", Price=p.sell_price,
                     PrimaryCategory=main_category, Categories=categories.split(","),
                     Variation=size, ProductData=product_data,
                     Quantity=stock, ParentSku=sku)
+
+                # response = self.client.product.Update(
+                #     new_sku, Name=p.name, Description=p.description, 
+                #     Brand="Giani Da Firenze", Price=p.sell_price,
+                #     PrimaryCategory=main_category, Categories=categories.split(","),
+                #     Variation=size, ProductData=product_data,
+                #     Quantity=stock, ParentSku=sku)
+
+        self.client.product.sendPOST('ProductCreate', create_requests)
+        self.client.product.sendPOST('ProductUpdate', update_requests)
 
         # preparing images for dafiti
         images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]

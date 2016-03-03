@@ -27,8 +27,8 @@ class DafitiEnableProductHandler(BaseHandler):
         color = self.get_argument('color', '')
         season = self.get_argument('season', '')
 
-        if categories == '' or main_category == '' \
-            or season == '' or color == '': 
+        if (categories == '' or main_category == '' or 
+                season == '' or color == ''): 
             return
 
         d = DafitiModel()
