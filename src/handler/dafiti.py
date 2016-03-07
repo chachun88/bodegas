@@ -48,5 +48,6 @@ class DafitiGetCategoriesHandler(BaseHandler):
     @tornado.gen.coroutine
     def get(self):
         d = DafitiModel()
-        self.write(d.GetCategories()["Categories"]["Category"][0]["Children"] \
+        self.write(
+            d.GetCategories()["Categories"]["Category"][0]["Children"] \
             ["Category"][0]["Children"])
