@@ -175,4 +175,15 @@ class Size(BaseModel):
             cur.close()
             self.connection.close()
 
+    @staticmethod
+    def getSizeID(size):
+        query = """ SELECT id 
+                    FROM "Size"
+                    WHERE name = %(size)s
+                """
 
+        try:
+            return Size().execute_query(query, {"size" : size})[0]["id"]
+        except Exception, e:
+            print e
+            return -1

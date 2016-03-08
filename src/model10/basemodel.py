@@ -156,3 +156,19 @@ class BaseModel(object):
             finally:
                 cur.close()
                 self.connection.close()
+
+    def execute_query(self, query, params):
+        cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        try:
+            cur.execute(query, params)
+            self.connection.commit()
+
+            try:
+                return cur.fetchall()
+            except:
+                pass
+        except:
+            pass
+        finally:
+            cur.close()
+            self.connection.close()

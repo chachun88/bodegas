@@ -1553,4 +1553,10 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
+-- Mon Mar  7 21:03:13 2016 - PROD
 
+CREATE TABLE "Dafiti" (
+    id serial NOT NULL,
+    sku text,
+    sync_stock integer
+);

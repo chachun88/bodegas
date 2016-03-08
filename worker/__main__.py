@@ -17,10 +17,8 @@ if "enviroment" not in options:
 
 
 def job():
-
     dafiti = DafitiModel()
-    print dafiti._connection
-    print "aaa"
+    dafiti.syncronizeStock()
 
 
 if __name__ == "__main__":

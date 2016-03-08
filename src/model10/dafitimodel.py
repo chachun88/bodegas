@@ -109,6 +109,9 @@ class DafitiModel(BaseModel):
                         Variation=size, ProductData=product_data,
                         Quantity=stock, ParentSku=sku, Status=dafiti.Status.Active))
 
+            # save las sync
+            self.insertSync(new_sku, stock)
+
         if len(create_requests) > 0:
             self.client.product.sendPOST(dafiti.EndPoint.ProductCreate, create_requests)
         if len(update_requests) > 0:
@@ -143,3 +146,92 @@ class DafitiModel(BaseModel):
     def GetCategories(self):
         r = self.client.category.Get()
         return r.body
+
+    def getDafitiProducts(self):
+        products = self.client.product.Get(Filter=dafiti.Filter.All)
+
+        return products.body["Products"]["Product"]
+
+    def syncronizeStock(self):
+        """
+        check each product syncrhonized with dafiti and modify stock
+        """
+
+        products = self.getDafitiProducts()
+        update_requests = []
+
+        for p in products:
+            sku_seller = p["SellerSku"]
+            sku = self.getSku(p["SellerSku"], p["Variation"])
+            size = p["Variation"]
+            size_id = Size.getSizeID(size)
+
+            sync_stock = self.getSyncStock(sku_seller)
+            stock = self.getStock(sku, size_id)
+            stock_dafiti = int(p["Quantity"])
+
+            diff_dafiti = 0
+            diff_cellar = 0
+            new_stock = sync_stock
+
+            diff_dafiti = (sync_stock - stock_dafiti)
+            diff_cellar = (sync_stock - stock)
+
+            new_stock -= diff_cellar
+            new_stock -= diff_dafiti
+
+            if diff_cellar != 0 or diff_dafiti != 0:
+                print sync_stock, stock_dafiti, stock
+                print diff_cellar, diff_dafiti
+                print new_stock
+                print "...................."
+
+                update_requests.append(
+                    dafiti.ProductRequest(
+                        SellerSku=sku_seller, 
+                        Quantity=new_stock
+                    )
+                )
+
+                # self.insertSync(sku_seller, new_stock)
+
+        response = self.client.product.sendPOST(dafiti.EndPoint.ProductUpdate, update_requests)
+
+        if response.type == dafiti.Response.SUCCESS:
+            print "success"
+            for r in update_requests:
+                self.insertSync(r.SellerSku, r.Quantity)
+
+    def getSku(self, sku, size):
+        return sku.replace("-{}".format(size), "")
+
+    def getSyncStock(self, sku):
+
+        try:
+            query = """ SELECT sync_stock 
+                        FROM "Dafiti" 
+                        WHERE sku = %(sku)s 
+                        ORDER BY id DESC
+                        LIMIT 1
+                    """
+
+            return self.execute_query(
+                query,
+                {
+                    "sku" : sku
+                })[0]["sync_stock"]
+        except:
+            return 0
+
+    def insertSync(self, sku, stock):
+
+        query = """ INSERT INTO "Dafiti" (sku, sync_stock) 
+                    VALUES (%(sku)s, %(stock)s) 
+                """
+
+        params = {
+            "sku" : sku,
+            "stock" : stock
+        }
+
+        self.execute_query(query, params)
