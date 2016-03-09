@@ -37,13 +37,7 @@ class DafitiModel(BaseModel):
             SkuSellerList=[sku], 
             Filter=dafiti.Filter.All)
 
-        products = []
-        try:
-            products = response.body["Products"]
-        except:
-            products.append(response.body)
-
-        if len(products) > 0:
+        if len(response.body["Products"]) > 0:
             return True
         else:
 
@@ -153,14 +147,12 @@ class DafitiModel(BaseModel):
 
     def getDafitiProducts(self):
         products = self.client.product.Get(Filter=dafiti.Filter.All)
+        plist = products.body["Products"]["Product"]
 
-        # plist = []
-        # try:
-        #     plist = response.body["Products"]
-        # except:
-        #     plist.append(response.body)
+        if type(plist) is list:
+            return plist
 
-        return products.body["Products"]["Product"]
+        return [plist]
 
     def syncronizeStock(self):
         """
