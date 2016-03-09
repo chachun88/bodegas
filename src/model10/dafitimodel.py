@@ -26,7 +26,7 @@ class DafitiModel(BaseModel):
             SkuSellerList=[sku],
             Filter=dafiti.Filter.Deleted)
 
-        if len(response.body["Products"]) > 0:
+        if response.body != "" and len(response.body["Products"]) > 0:
             return True
 
         return False
