@@ -121,16 +121,15 @@ class DafitiModel(BaseModel):
         images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
         final_images = []
 
-        for x in range(0,3):
-            aux = images[0]
-            images.remove(0)
-            images.append(aux)
-
         for img in images:
             if img != '':
                 final_images.append(
                     "http://bodegas.gianidafirenze.cl/image/dafiti/{}?mwh=1380,1160".format(img.replace(" ", "%20"))
                 )
+
+        for x in range(0,3):
+            aux = final_images.pop(0)
+            final_images.append(aux)
 
         # adding images to dafiti
         self.client.product.Image(
