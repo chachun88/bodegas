@@ -1,3 +1,9 @@
+# IMPORTANTE:
+
+```sh
+$ sudo pip install --upgrade -r requirements.txt
+```
+
 Para que funcione la carga masiva, se debe instalar xlrd
 que es una librería para leer excell
 

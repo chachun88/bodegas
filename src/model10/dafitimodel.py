@@ -178,13 +178,37 @@ class DafitiModel(BaseModel):
             diff_cellar = (sync_stock - stock)
 
             new_stock -= diff_cellar
-            new_stock -= diff_dafiti
+
+            if diff_dafiti > 0:
+                new_stock -= diff_dafiti
 
             if diff_cellar != 0 or diff_dafiti != 0:
                 print sync_stock, stock_dafiti, stock
                 print diff_cellar, diff_dafiti
                 print new_stock
                 print "...................."
+
+                if diff_dafiti > 0:
+                    print "adjust bodegas"
+
+                    kardex = Kardex()
+                    c = Cellar()
+                    cellar = c.GetWebCellar()
+
+                    kardex.product_sku = sku
+                    kardex.units = diff_dafiti
+                    kardex.price = p["Price"]
+                    kardex.size_id = size_id
+                    kardex.color = p["ProductData"]["ColorNameBrand"]
+                    kardex.operation_type = Kardex.OPERATION_MOV_OUT
+                    kardex.user = 'dafiti@gianidafirenze.cl'
+                    kardex.cellar_identifier = cellar['success']
+
+                    res_remove = kardex.Insert()
+
+                else:
+                    print "restore"
+                    new_stock = stock
 
                 update_requests.append(
                     dafiti.ProductRequest(
