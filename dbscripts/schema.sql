@@ -1560,3 +1560,5 @@ CREATE TABLE "Dafiti" (
     sku text,
     sync_stock integer
 );
+
+-- Wed Mar  9 13:16:32 2016 - PROD
