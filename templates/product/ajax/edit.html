@@ -133,7 +133,7 @@
                 if (c.Children !== '') 
                 {
                     name += ' / ' + c.Children.Category.Name;
-                    value = c.CategoryId;
+                    value = c.Children.Category.CategoryId;
                 }
 
                 this.getSelectCategory().append('<option value="' + value + '" >'+ name +'</option>');
