@@ -87,11 +87,13 @@ class DafitiModel(BaseModel):
             # response = dafiti.Response()
             stock = self.getStock(sku, s.id)
 
+            product_name = "{}, {}".format(p.name, p.color)
+
             if not self.ProductExist(new_sku):
 
                 create_requests.append(
                     dafiti.ProductRequest(
-                        SellerSku=new_sku, Name=p.name, Description=p.description, 
+                        SellerSku=new_sku, Name=product_name, Description=p.description, 
                         Brand="Giani Da Firenze", Price=p.sell_price,
                         PrimaryCategory=main_category, Categories=categories.split(","),
                         Variation=size, ProductData=product_data,
@@ -101,7 +103,7 @@ class DafitiModel(BaseModel):
 
                 update_requests.append(
                     dafiti.ProductRequest(
-                        SellerSku=new_sku, Name=p.name, Description=p.description, 
+                        SellerSku=new_sku, Name=product_name, Description=p.description, 
                         Brand="Giani Da Firenze", Price=p.sell_price,
                         PrimaryCategory=main_category, Categories=categories.split(","),
                         Variation=size, ProductData=product_data,
@@ -118,6 +120,11 @@ class DafitiModel(BaseModel):
         # preparing images for dafiti
         images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
         final_images = []
+
+        for x in range(0,3):
+            aux = images[0]
+            images.remove(0)
+            images.append(aux)
 
         for img in images:
             if img != '':
