@@ -121,7 +121,9 @@ class DafitiModel(BaseModel):
 
         for img in images:
             if img != '':
-                final_images.append("http://bodegas.gianidafirenze.cl/image/dafiti/{}?mwh=1380,1160".format(img.upper()))
+                final_images.append(
+                    "http://bodegas.gianidafirenze.cl/image/dafiti/{}?mwh=1380,1160".format(img.replace(" ", "%20"))
+                )
 
         # adding images to dafiti
         self.client.product.Image(
