@@ -87,7 +87,9 @@ class DafitiModel(BaseModel):
             # response = dafiti.Response()
             stock = self.getStock(sku, s.id)
 
-            product_name = "{}, {}".format(p.name, p.color)
+            product_name = "{} {} {} Giani Da Firenze".format(
+                p.category, p.name, p.color
+            )
 
             if not self.ProductExist(new_sku):
 
