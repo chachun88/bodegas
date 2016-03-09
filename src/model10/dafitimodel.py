@@ -37,10 +37,14 @@ class DafitiModel(BaseModel):
             SkuSellerList=[sku], 
             Filter=dafiti.Filter.All)
 
-        if len(response.body["Products"]) > 0:
+        products = []
+        try:
+            products = response.body["Products"]
+        except:
+            products.append(response.body)
 
+        if len(products) > 0:
             return True
-
         else:
 
             # check if product was deleted
@@ -149,6 +153,12 @@ class DafitiModel(BaseModel):
 
     def getDafitiProducts(self):
         products = self.client.product.Get(Filter=dafiti.Filter.All)
+
+        # plist = []
+        # try:
+        #     plist = response.body["Products"]
+        # except:
+        #     plist.append(response.body)
 
         return products.body["Products"]["Product"]
 
