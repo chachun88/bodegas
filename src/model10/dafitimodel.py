@@ -17,9 +17,11 @@ class DafitiModel(BaseModel):
         super(DafitiModel, self).__init__()
 
         self.client = dafiti.API(
-                user_id='ricardo@loadingplay.com', 
-                api_key='48f674c4a13c6af90063d8f70e3b23291f4ead79',
-                response_format='json')
+            user_id='julian@loadingplay.com ',
+            api_key='4bc6e4784d5669053a22f33e35b227a67f662e5a',
+            response_format='json',
+            api_url='https://sellercenter-api.dafiti.cl'
+        )
 
     def ProductDeleted(self, sku):
         response = self.client.product.Get(
@@ -51,6 +53,7 @@ class DafitiModel(BaseModel):
         self.client.product.Remove(sku)
 
     def AddProduct(self, sku, main_category, categories, color, season):
+        response = None
         p = Product()
         p.InitBySku(sku)
         s = Size()
@@ -115,9 +118,9 @@ class DafitiModel(BaseModel):
             self.insertSync(new_sku, stock)
 
         if len(create_requests) > 0:
-            self.client.product.sendPOST(dafiti.EndPoint.ProductCreate, create_requests)
+            response = self.client.product.sendPOST(dafiti.EndPoint.ProductCreate, create_requests)
         if len(update_requests) > 0:
-            self.client.product.sendPOST(dafiti.EndPoint.ProductUpdate, update_requests)
+            response = self.client.product.sendPOST(dafiti.EndPoint.ProductUpdate, update_requests)
 
         # preparing images for dafiti
         images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
@@ -137,6 +140,8 @@ class DafitiModel(BaseModel):
         self.client.product.Image(
             image_skus,
             *final_images)
+
+        return response
 
     def getStock(self, sku, size_id):
 
