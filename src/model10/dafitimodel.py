@@ -17,8 +17,8 @@ class DafitiModel(BaseModel):
         super(DafitiModel, self).__init__()
 
         self.client = dafiti.API(
-            user_id='julian@loadingplay.com ',
-            api_key='4bc6e4784d5669053a22f33e35b227a67f662e5a',
+            user_id='contacto@gianidafirenze.cl',
+            api_key='aa8051656b6b1efab5b52615e2e4e2fe913b13d7',
             response_format='json',
             api_url='https://sellercenter-api.dafiti.cl'
         )
