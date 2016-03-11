@@ -65,6 +65,307 @@
 	<!--<script type="text/javascript" src="/{{nocache_static}}/js/cellar/easy_output.js"></script>-->
 	<!--<script type="text/javascript" src="/{{nocache_static}}/js/cellar/easy_input.js"></script>-->
 	<script type="text/javascript" src="/{{nocache_static}}/js/bodegas.js"></script>
+
+
+    <script type="text/javascript">
+
+        (function($)
+        {
+
+            var CategorySelector = function()
+            {
+                this.model = [];
+
+                var $category_selector = $('#category-selector-modal');
+                $category_selector.modal({});
+
+                this.initOnChange();
+                this.initSendButton();
+
+                this.resetForm();
+            };
+
+            CategorySelector.prototype.launch = function(oncomplete) 
+            {
+                this.oncomplete = oncomplete || $.noop;
+
+                this.launchModal();
+                this.populateModel();
+            };
+
+            CategorySelector.prototype.appendModalHTML = function() 
+            {
+                // var HTML = ' \
+                // <div id="category-selector-modal" >Cargando...</div>';
+                // $('body').append($(HTML));
+            };
+
+            CategorySelector.prototype.launchModal = function() 
+            {
+                this.resetForm();
+                $('#category-selector-modal').modal('show');
+            };
+
+            CategorySelector.prototype.populateModel = function() 
+            {
+                var self = this;
+
+                if (this.model.length === 0) 
+                {
+                    $.get('/dafiti/getcategories', function(r)
+                    {
+                        self.formLoaded();
+
+                        for (var i = 0; i < r.Category.length; i++) {
+                            var c = r.Category[i];
+
+                            self.drawCategory(c);
+                        }
+                    });
+                }
+            };
+
+            CategorySelector.prototype.drawCategory = function(c) 
+            {
+                var name = c.Name;
+                var value = c.CategoryId;
+
+                if (c.Children !== '') 
+                {
+                    name += ' / ' + c.Children.Category.Name;
+                    value = c.Children.Category.CategoryId;
+                }
+
+                this.getSelectCategory().append('<option value="' + value + '" >'+ name +'</option>');
+            };
+
+            CategorySelector.prototype.resetForm = function() 
+            {
+                this.getLoadingMessage().removeClass('hidden');
+                this.getSelectCategory().addClass('hidden');
+                this.setFormWaiting();
+                this.resetSendButton();
+            };
+
+            CategorySelector.prototype.formLoaded = function() 
+            {
+                this.getLoadingMessage().addClass('hidden');
+                this.getSelectCategory().removeClass('hidden');
+            };
+
+            CategorySelector.prototype.getModalBody = function() 
+            {
+                return $('#category-selector-modal .modal-body');
+            };
+
+            CategorySelector.prototype.getLoadingMessage = function() 
+            {
+                return $('.category-selector-loading', this.getModalBody());
+            };
+
+            CategorySelector.prototype.getSelectCategory = function() 
+            {
+                return $('select[name="category-selector-select"]', this.getModalBody());
+            };
+
+            CategorySelector.prototype.getSelectColor = function() 
+            {
+                return $('select[name="color-selector-select"]', this.getModalBody());
+            };
+
+            CategorySelector.prototype.getSelectSeason = function() 
+            {
+                return $('select[name="season-selector-select"]', this.getModalBody());
+            };
+
+            CategorySelector.prototype.getSendButton = function() 
+            {
+                return $('.btn-send-to-dafiti');
+            };
+
+            CategorySelector.prototype.checkFormStatus = function() 
+            {
+                // enable if more than 1 is selected
+                if ($('option:selected', this.getSelectCategory()).length > 0)
+                {
+                    this.setFormReady();
+                }
+                else
+                {
+                    this.setFormWaiting();
+                }
+            };
+
+            CategorySelector.prototype.resetSendButton = function() 
+            {
+                this.getSendButton().html('Agregar a dafiti');
+            };
+
+            CategorySelector.prototype.setFormReady = function() 
+            {
+                this.getSendButton().removeClass('hidden');
+            };
+
+            CategorySelector.prototype.setFormWaiting = function() 
+            {
+                this.getSendButton().addClass('hidden');
+            };
+
+            CategorySelector.prototype.initOnChange = function() 
+            {
+                var self = this;
+
+                // wait select2
+                setTimeout(function()
+                {
+                    self.getSelectCategory().on('change', function()
+                    {
+                        self.checkFormStatus();
+                    });
+
+                }, 1000);
+            };
+
+            CategorySelector.prototype.initSendButton = function() 
+            {
+                var self = this;
+                
+                $(document).on('click', '.btn-send-to-dafiti', function(e)
+                {
+                    e.preventDefault();
+
+                    self.oncomplete(
+                        self.getSelectedCategories(),
+                        self.getSelectedColor(),
+                        self.getSelectedSeason());
+                });
+            };
+
+            CategorySelector.prototype.getSelectedCategories = function() 
+            {
+                return this.getSelectCategory().val();
+            };
+
+            CategorySelector.prototype.getSelectedColor = function() 
+            {
+                return this.getSelectColor().val();
+            };
+
+            CategorySelector.prototype.getSelectedSeason = function() 
+            {
+                return this.getSelectSeason().val();
+            };
+
+            $.lp.categorySelector = function()
+            {
+                return new CategorySelector();
+            }
+        })(jQuery);
+
+        (function($)
+        {
+
+            var $category_selector = $.lp.categorySelector();
+
+            var setColdStatus = function($btn)
+            {
+                $btn.removeClass('btn-success');
+                $btn.html('agregar a dafiti');
+            };
+
+            var setHotStatus = function($btn)
+            {
+                $btn.addClass('btn-success');
+                $btn.html('volver a sincronizar con dafiti');
+            };
+
+            var setColdRemoteStatus = function($btn)
+            {
+                var sku = $btn.attr('product-sku');
+                $.get("/dafiti/product/" + sku, function()
+                {
+                    // nothing here...
+                });
+            };
+
+            var setHotRemoteStatus = function($btn, categories, color, season)
+            {
+                var sku = $btn.attr('product-sku');
+                $.post(
+                    "/dafiti/enableproduct/" + sku, 
+                    {
+                        'main_category' : categories[0],
+                        'categories' : categories.join(','),
+                        'color' : color,
+                        'season' : season
+                    }, function()
+                    {
+                        // nothing here...
+                    });
+            };
+
+            var changeBtnStatus = function()
+            {
+                var $btn = $(this);
+
+                $category_selector.launch(function(categories, color, season)
+                {
+                    setHotStatus($btn);
+                    setHotRemoteStatus($btn, categories, color, season);
+                });
+            };
+
+            var btnClick = function(e)
+            {
+                e.preventDefault();
+                changeBtnStatus.call(this);
+            };
+
+            var ajaxIsSynchronized = function($btn, r)
+            {
+                try
+                {
+                    if (r.synchronized)
+                    {
+                        setHotStatus($btn);
+                    }
+                    else
+                    {
+                        setColdStatus($btn);
+                    }
+
+                    $btn.on('click', btnClick);
+                }
+                catch (ex)
+                {
+                    console.log(ex);
+                    // do nothing...
+                }
+            };
+
+            var detectInitialState = function()
+            {
+                var $btn = $(this);
+                var sku = $btn.attr('product-sku');
+                var url = '/dafiti/synchronized/' + sku;
+
+                $.get(url, function(r)
+                {
+                    ajaxIsSynchronized($btn, r)
+                });
+            };
+
+            $.fn.dafiti = function()
+            {
+                $(this).each(detectInitialState);
+            }
+        })(jQuery);
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.dafiti').dafiti();
+        });
+    </script>
 {% end %}
 
 {% block title %}
@@ -88,6 +389,112 @@
 {% end %}
 
 {% block body %}
+
+<div class="modal fade" id="category-selector-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Seleccione las categorias de dafiti</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="col-sm-12">
+
+                    <div class="form-group" >
+                        <label class="col-sm-4" >Temporada</label>
+                        <div class="col-sm-8">
+                            <select data-placeholder="Colores"
+                                class="chzn-select select-block-level"
+                                name="season-selector-select">
+                                    <option value="invierno">Invierno</option>
+                                    <option value="verano">Verano</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" style="height: 20px" ></div>
+
+                    <div class="form-group" >
+                        <label class="col-sm-4" >Familia de color (Filtro)</label>
+                        <div class="col-sm-8">
+                            <select data-placeholder="Colores"
+                                class="chzn-select select-block-level"
+                                name="color-selector-select">
+                                    <option value="Negro" selected="selected" >Negro</option>
+                                    <option value="Gris">Gris</option>
+                                    <option value="Blanco">Blanco</option>
+                                    <option value="Marr">Marr&oacute;n</option>
+                                    <option value="Rojo">Rojo</option>
+                                    <option value="Rosa">Rosa</option>
+                                    <option value="Naranjo">Naranjo</option>
+                                    <option value="Dorado">Dorado</option>
+                                    <option value="Plateado">Plateado</option>
+                                    <option value="Beige">Beige</option>
+                                    <option value="Verde">Verde</option>
+                                    <option value="Lila">Lila</option>
+                                    <option value="Azul">Azul</option>
+                                    <option value="Turquesa">Turquesa</option>
+                                    <option value="Celeste">Celeste</option>
+                                    <option value="Multicolor">Multicolor</option>
+                                    <option value="Coral">Coral</option>
+                                    <option value="Bronce">Bronce</option>
+                                    <option value="Taupe">Taupe</option>
+                                    <option value="Khaki">Khaki</option>
+                                    <option value="Camel">Camel</option>
+                                    <option value="Nude">Nude</option>
+                                    <option value="Lima">Lima</option>
+                                    <option value="Burdeo">Burdeo</option>
+                                    <option value="Menta">Menta</option>
+                                    <option value="Fucsia">Fucsia</option>
+                                    <option value="Crudo">Crudo</option>
+                                    <option value="Arena">Arena</option>
+                                    <option value="Morado">Morado</option>
+                                    <option value="Crema">Crema</option>
+                                    <option value="Mostaza">Mostaza</option>
+                                    <option value="Chocolate">Chocolate</option>
+                                    <option value="Vainilla">Vainilla</option>
+                                    <option value="Amarillo">Amarillo</option>
+                                    <option value="Transparente">Transparente</option>
+                                    <option value="Azul">Azul Petr&oacute;leo</option>
+                                    <option value="Verde">Verde Petr&oacute;leo</option>
+                                    <option value="Granate">Granate</option>
+                                    <option value="Uva">Uva</option>
+                                    <option value="Perla">Perla</option>
+                                    <option value="Guinda">Guinda</option>
+                                    <option value="Grafito">Grafito</option>
+                                    <option value="Terracota">Terracota</option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="clearfix" style="height: 20px" ></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4" >Categorías</label>
+                        <div class="col-sm-8">
+                            <div class="category-selector-loading" >Cargando...</div>
+                            <select data-placeholder="Categorías"
+                                class="chzn-select select-block-level" tabindex="-1"
+                                multiple="multiple"
+                                name="category-selector-select" 
+                                id="multiple">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-send-to-dafiti" data-dismiss="modal" >Listo</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <link href="/{{nocache_static}}/css/application.min.css" rel="stylesheet">
 <link href="/{{nocache_static}}/css/bodega.css" rel="stylesheet">
 	{% if int(2) in current_user["permissions"] %}
@@ -103,7 +510,10 @@
 					<form action="/product/add" id="product-form" class="form-horizontal label-left" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 						<fieldset>
 						{% if tit == "edit" %}
-							<legend class="section">Editar Producto</legend>
+							<legend class="section">
+                                Editar Producto
+                                <button class="btn btn-xs dafiti right" product-sku="{{ product.sku }}" >cargando...</button>
+                            </legend>
 						{% elif tit == "add"  %}
 							<legend class="section">Agregar Producto</legend>
 						{% end %}

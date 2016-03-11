@@ -34,6 +34,7 @@ from src.handler.examples_handler import *
 from src.handler.banner_handler import *
 from src.handler.customer_handler import *
 from src.handler.kardex_handler import *
+from src.handler.dafiti import *
 
 from config import *
 
@@ -130,6 +131,7 @@ class Application(tornado.web.Application):
 
             # images
             (r"/image/([^/]+)", ImageHandler),
+            (r"/image/dafiti/([^/]+)", ImageDafitiHandler),
             (r"/image", ImageHandler2),
             (r"/image/", ImageHandler2),
             (r"/imageremove", ImageDeleteHandler),
@@ -165,6 +167,11 @@ class Application(tornado.web.Application):
             (r"/examples/pjax2",       Pjax2Handler),
 
             (r"/kardex", KardexHandler),
+
+            (r"/dafiti/getcategories", DafitiGetCategoriesHandler),
+            (r"/dafiti/synchronized/([^/]+)", DafitiSynchronizedHandler),
+            (r"/dafiti/enableproduct/([^/]+)", DafitiEnableProductHandler),
+            (r"/dafiti/disableproduct/([^/]+)", DafitiDisableProductHandler),
 
 
             #banner

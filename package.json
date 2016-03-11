@@ -1,0 +1,25 @@
+{
+  "name": "bodegas.git",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-shell": "^1.2.1",
+    "load-grunt-tasks": "^3.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://gogs.ondev.today/loadingplay/bodegas.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

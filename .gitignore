@@ -1,0 +1,4 @@
+*.pyc
+uploads
+node_modules
+bodegas.git.todo

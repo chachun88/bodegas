@@ -22,107 +22,190 @@ from basehandler import BaseHandler
 
 DEFAULT_IMAGE = "static/default_image.jpg"
 
-def getIamgeBuffer(handler, image_name):
 
-    ### case 1 user ask for full image
-    wwidth = int(handler.get_argument("mw", -1))
+class ImageHandler(BaseHandler):
 
-    if wwidth == -1:
-        ### show full image
+    def __getDefaultImage(self, max_width):
+        # here return the image when doesn't find the requested image
+        # set image name to default_image
+        image_name = DEFAULT_IMAGE
+
+        # getting variables
+        orig = Image.open(image_name)
+        width = int(orig.size[0])
+        height = int(orig.size[1])
+
+        if max_width == -1:
+            max_width = width
+
+        # resampling image
+        im = orig.resize((max_width,height * max_width / width), Image.ANTIALIAS)
+
+        # convert pil image to bytes buffer
+        buf = StringIO.StringIO()
+        im.save(buf, format='PNG')
+        jpeg = buf.getvalue()
+
+        # print "retorna default"
+
+        return jpeg
+
+    def __getFullImage(self, image_name):
+        """
+        return full image, if not found returns default image
+        """
         try:
             image_path = dir_img + image_name
             f = open(image_path, "rb")
             buff = f.read()
             f.close()
 
-            # print "retorna original"
-            # print buff
-
             return buff
-        except Exception, e:
-            pass ## continue to default image
-    else:
-        ## show scaled image
-        try: # detect if image exist
-            f = open( dir_img + "{}{}".format(wwidth, image_name), "rb")
+        except:
+            return self.__getDefaultImage(max_width)
+
+    def __createMaxWidthImage(self, image_name, max_width):
+        try:
+            # getting variables
+            orig = Image.open( dir_img + image_name)
+            width = int(orig.size[0])
+            height = int(orig.size[1])
+
+            if max_width == -1:
+                max_width = width
+
+            # resampling image
+            im = orig.resize((max_width,height * max_width / width), Image.ANTIALIAS)
+
+            # convert pil image to bytes buffer
+            buf = StringIO.StringIO()
+            im.save(buf, format='PNG')
+            im.save( dir_img + "{}{}".format(max_width, image_name), format='PNG')
+            jpeg = buf.getvalue()
+
+            return jpeg
+
+        except:
+            return self.__getDefaultImage(max_width)
+
+    def __createMaxWidthMinHeightImage(self, image_name, max_width, min_height):
+        try:
+            orig = Image.open( dir_img + image_name)
+            width = int(orig.size[0])
+            height = int(orig.size[1])
+
+            if max_width == -1:
+                max_width = width
+
+            # resampling image
+            im = orig.resize((max_width,height * max_width / width), Image.ANTIALIAS)
+
+            new_width = im.size[0]
+            new_height = im.size[1]
+
+            if new_height < min_height:
+                new_height = min_height
+
+            # create white image
+            new_image = Image.new('RGB', (new_width, new_height), "white")
+
+            print "n_size", new_image.size
+            print "i_size", im.size
+
+            new_image.paste(
+                im, 
+                (int((new_image.size[0]*0.5) - (im.size[0] * 0.5)),
+                 int((new_image.size[1]*0.5) - (im.size[1] * 0.5))))
+
+            buf = StringIO.StringIO()
+            new_image.save(buf, format='PNG')
+            new_image.save( dir_img + "{}{}{}".format(max_width, min_height, image_name), format='PNG')
+            return buf.getvalue()
+
+        except Exception, ex:
+            print ex
+            return self.__getDefaultImage(max_width)
+
+    def __getMaxWidthImage(self, image_name, max_width):
+        # show scaled image
+        try:  # detect if image exist
+            f = open( dir_img + "{}{}".format(max_width, image_name), "rb")
             buff = f.read()
             f.close()
 
             return buff
-        except Exception, ex:
-            #print str(ex)
-            try:
-                ##image doesnt exist so i create it
-                image_path = dir_img + "{}{}".format(wwidth, image_name)
+        except:
 
-                ## getting variables
-                orig = Image.open( dir_img + image_name)
-                width = int(orig.size[0])
-                height = int(orig.size[1])
-                max_width = int(handler.get_argument("mw", "{}".format(width)))
+            # if the image doent exists, try to create a new one
+            return self.__createMaxWidthImage(image_name, max_width)
 
-                # resampling image
-                im = orig.resize((max_width,height * max_width / width), Image.ANTIALIAS)
+    def __getMaxWidthMinHeightImage(self, image_name, max_width, min_height):
+        try:
+            f = open(dir_img + "{}{}{}".format(max_width, min_height, image_name), "rb")
+            buff = f.read()
+            f.close()
 
-                # convert pil image to bytes buffer
-                buf= StringIO.StringIO()
-                im.save(buf, format= 'PNG')
-                im.save( dir_img + "{}{}".format(wwidth, image_name), format='PNG')
-                jpeg= buf.getvalue()
+            return buff
+        except:
+            return self.__createMaxWidthMinHeightImage(image_name, max_width, min_height)
 
-                #print "creo thumbnail"
+    def getImageBuffer(self, image_name, max_width=-1, min_height=-1):
 
-                return jpeg
+        # case 1: user ask for full image
+        if max_width == -1 and min_height == -1:
 
-            except:
-                pass
+            # show full image or default image
+            return self.__getFullImage(image_name)
 
-    ##### here return the image when doesn't find the requested image
-    # ## set image name to default_image
-    image_name = DEFAULT_IMAGE
+        # case 2: user wish to force width but height
+        elif min_height == -1:
+            return self.__getMaxWidthImage(image_name, max_width)
 
-    # ## getting variables
-    orig = Image.open(image_name)
-    width = int(orig.size[0])
-    height = int(orig.size[1])
-    max_width = int(handler.get_argument("mw", "{}".format(width)))
+        # case 3: user want max_width and min_heihgt
+        else:
 
-    # resampling image
-    im = orig.resize((max_width,height * max_width / width), Image.ANTIALIAS)
+            return self.__getMaxWidthMinHeightImage(image_name, max_width, min_height)
 
-    # convert pil image to bytes buffer
-    buf= StringIO.StringIO()
-    im.save(buf, format= 'PNG')
-    jpeg = buf.getvalue()
-
-    #print "retorna default"
-
-    return jpeg
-
-class ImageHandler(BaseHandler):
+        return self.__getDefaultImage(self, max_width)
 
     def get(self, image_name):
 
-        #setting headers
+        max_width = int(self.get_argument('mw', -1))
+
+        # setting headers
         self.set_header("Content-Type", "image/png")
-
-        millis = int(round(time.time() * 1000))
-        self.write(getIamgeBuffer(self, image_name))
-        omillis = int(round(time.time() * 1000))
-
-        # print "dif : {}".format(omillis - millis)
-
+        self.write(self.getImageBuffer(image_name, max_width=max_width))
         self.finish()
 
-class ImageHandler2(BaseHandler):
+
+class ImageDafitiHandler(ImageHandler):
+
+    def get(self, image_name):
+
+        # xml doesnt allow &
+        wh = self.get_argument("mwh", "-1,-1")  # pair of max_width and min_height
+
+        max_width = int(wh.split(",")[0])
+        min_height = int(wh.split(",")[1])
+
+        self.set_header("Content-Type", "image/png")
+        self.write(
+            self.getImageBuffer(
+                image_name, max_width=max_width, min_height=min_height))
+
+
+class ImageHandler2(ImageHandler):
 
     def get(self):
 
-        #setting headers
+        max_width = int(self.get_argument('mw', -1))
+
+        # setting headers
         self.set_header("Content-Type", "image/png")
 
-        self.write(getIamgeBuffer(self, DEFAULT_IMAGE))
+        self.write(self.getImageBuffer(DEFAULT_IMAGE, max_width=max_width))
         self.finish()
+
 
 class ImageDeleteHandler(BaseHandler):
 

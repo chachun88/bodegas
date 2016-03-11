@@ -1,0 +1,3 @@
+xlrd
+schedule
+git+http://gogs.ondev.today/loadingplay/dafiti.git
