@@ -133,6 +133,7 @@ class Application(tornado.web.Application):
             (r"/image", ImageHandler2),
             (r"/image/", ImageHandler2),
             (r"/imageremove", ImageDeleteHandler),
+            (r"/imagebase64/([^/]+)", Base64ImageHandler),
 
             # customer
             (r"/customer", CustomerHandler),
