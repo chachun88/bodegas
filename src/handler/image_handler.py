@@ -14,6 +14,8 @@ import os
 import glob
 import os.path
 
+import base64
+
 from ..globals import *
 
 from basehandler import BaseHandler
@@ -235,5 +237,20 @@ class ImageDeleteHandler(BaseHandler):
                     print str( e )
 
             self.write("imagen eliminada")
-        else:
+        else: 
             self.write( "imagen no existe " )
+
+
+class Base64ImageHandler(BaseHandler):
+
+    def get(self, image_name):
+
+        # image_name = self.get_argument("image_name", "")
+        width = self.get_argument("mw", "")
+
+        path = dir_img + "{}{}".format(width, image_name)
+
+        with open(path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read())
+
+        self.write(encoded_string)
