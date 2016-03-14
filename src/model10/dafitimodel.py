@@ -20,7 +20,7 @@ class DafitiModel(BaseModel):
             user_id='contacto@gianidafirenze.cl',
             api_key='aa8051656b6b1efab5b52615e2e4e2fe913b13d7',
             response_format='json',
-            api_url='https://sellercenter-api.dafiti.cl'
+            environment=dafiti.Environment.Live
         )
 
     def ProductDeleted(self, sku):
