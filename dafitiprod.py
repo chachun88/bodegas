@@ -179,7 +179,7 @@ def main():
         season = GetSeason(p["category"])
 
         if category:
-            r = d.AddProduct(p["sku"], category[0], category, color, season)
+            r = d.AddProduct(p["sku"], category, category, color, season)
 
             print "adding:", p["sku"]
 
