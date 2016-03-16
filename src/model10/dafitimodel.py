@@ -16,11 +16,18 @@ class DafitiModel(BaseModel):
     def __init__(self):
         super(DafitiModel, self).__init__()
 
+        # self.client = dafiti.API(
+        #     user_id='contacto@gianidafirenze.cl',
+        #     api_key='aa8051656b6b1efab5b52615e2e4e2fe913b13d7',
+        #     response_format='json',
+        #     environment=dafiti.Environment.Live
+        # )
+
         self.client = dafiti.API(
-            user_id='contacto@gianidafirenze.cl',
-            api_key='aa8051656b6b1efab5b52615e2e4e2fe913b13d7',
+            user_id='julian@loadingplay.com',
+            api_key='1ce5e6b52a8665b677f7a8530ced6ae2ee82f89c',
             response_format='json',
-            environment=dafiti.Environment.Live
+            environment=dafiti.Environment.Staging
         )
 
     def ProductDeleted(self, sku):
@@ -200,6 +207,7 @@ class DafitiModel(BaseModel):
                 new_stock -= diff_dafiti
 
             if diff_cellar != 0 or diff_dafiti != 0:
+                print sku
                 print sync_stock, stock_dafiti, stock
                 print diff_cellar, diff_dafiti
                 print new_stock

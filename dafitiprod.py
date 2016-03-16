@@ -179,12 +179,15 @@ def main():
         season = GetSeason(p["category"])
 
         if category:
-            r = d.AddProduct(p["sku"], category, category, color, season)
+            try:
+                r = d.AddProduct(p["sku"], category.split(",")[0], category, color, season)
 
-            print "adding:", p["sku"]
+                print "adding:", p["sku"]
 
-            if r.type == dafiti.Response.ERROR:
-                print "    error:", r.head
+                if r.type == dafiti.Response.ERROR:
+                    print "    error:", r.head
+            except:
+                pass
             time.sleep(120)
 
 
