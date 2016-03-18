@@ -180,14 +180,13 @@ def main():
 
         if category:
             try:
-                r = d.AddProduct(p["sku"], category.split(",")[0], category, color, season)
-
                 print "adding:", p["sku"]
+                r = d.AddProduct(p["sku"], category.split(",")[0], category, color, season)
 
                 if r.type == dafiti.Response.ERROR:
                     print "    error:", r.head
-            except:
-                pass
+            except Exception, e:
+                print "     ex: " + str(e)
             time.sleep(120)
 
 

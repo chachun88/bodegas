@@ -700,8 +700,6 @@ class Cellar(BaseModel):
                 self.connection.close()
                 cur.close()
 
-
-
     def Rename(self, new_name):
 
         cur = self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor)
