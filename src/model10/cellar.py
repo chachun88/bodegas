@@ -552,6 +552,7 @@ class Cellar(BaseModel):
                     inner join "Cellar" c on c.id = k.cellar_id 
                     inner join "Size" s on s.id = k.size_id
                     where date(date) = DATE 'today'"""
+
         if day == "yesterday":
             # now = datetime.datetime.now() - datetime.timedelta(days=1)
             # yesterday = now - datetime.timedelta(days=2)
@@ -569,7 +570,7 @@ class Cellar(BaseModel):
 
             # str_query = '{ "$and" : [{"operation_type":"sell"},{ "_id" : { "$gte" : { "$oid": "%s" }, "$lt" : { "$oid": "%s" } } }]}' % ( str(oid_start), str(oid_stop) )
 
-            query += """ and operation_type = 'sell'"""
+            # query += """ and operation_type = 'sell'"""
             # data = db.kardex.find( json_util.loads(str_query) )
             cur = self.connection.cursor(
                 cursor_factory=psycopg2.extras.DictCursor)

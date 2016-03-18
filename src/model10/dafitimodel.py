@@ -105,7 +105,7 @@ class DafitiModel(BaseModel):
 
                 create_requests.append(
                     dafiti.ProductRequest(
-                        SellerSku=new_sku, Name=product_name, Description=p.description, 
+                        SellerSku=new_sku, Name=self.nameFix(product_name), Description=p.description, 
                         Brand="Giani Da Firenze", Price=p.sell_price,
                         PrimaryCategory=main_category, Categories=categories.split(","),
                         Variation=size, ProductData=product_data,
@@ -115,7 +115,7 @@ class DafitiModel(BaseModel):
 
                 update_requests.append(
                     dafiti.ProductRequest(
-                        SellerSku=new_sku, Name=product_name, Description=p.description, 
+                        SellerSku=new_sku, Name=self.nameFix(product_name), Description=p.description, 
                         Brand="Giani Da Firenze", Price=p.sell_price,
                         PrimaryCategory=main_category, Categories=categories.split(","),
                         Variation=size, ProductData=product_data,
@@ -284,3 +284,18 @@ class DafitiModel(BaseModel):
         }
 
         self.execute_query(query, params)
+
+    def nameFix(self, name):
+        """
+        return a capitalized version of name
+        @name <String> name of product
+        @sample  name="zapato ROJO"
+        @return "Zapato Rojo"
+        """
+        sentence = name.split(" ")
+        new_sentence = []
+
+        for word in sentence:
+            new_sentence.append(word.lower().capitalize())
+
+        return " ".join(new_sentence).encode('UTF-8').strip()
