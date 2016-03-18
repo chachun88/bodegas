@@ -181,6 +181,10 @@ def main():
         if category:
             try:
                 print "adding:", p["sku"]
+                print p["category"], category
+                print p["color"], color
+                print season
+
                 r = d.AddProduct(p["sku"], category.split(",")[0], category, color, season)
 
                 if r.type == dafiti.Response.ERROR:
