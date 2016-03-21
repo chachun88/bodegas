@@ -665,6 +665,7 @@ class Cellar(BaseModel):
                     self.connection.close()
                     cur.close()
         else:
+
             query = '''\
                     select to_char(k.date, 'DD-MM-YYYY HH24:MI:SS') as date, 
                            k."user", 
