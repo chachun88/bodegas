@@ -88,8 +88,8 @@ $(document).on('pjax:end ready',function(){
                     "data": "bussiness",
                     "orderable": true
                 },
-                { "targets": 6, "data": "registration_date", "orderable": true },
-                { "targets": 7, "data": "last_view", "orderable": true },
+                { "targets": 6, "data": "city", "orderable": true },
+                { "targets": 7, "data": "town", "orderable": true },
                 { 
                     "targets": 8,
                     "data": null, 
@@ -97,9 +97,9 @@ $(document).on('pjax:end ready',function(){
                     "width": "120px",
                     "sClass": "buttons",
                     render: function ( data, type, row ) {
-                    var button = '<button class="btn btn-default detail-button" href="/customer/view_contact?_pjax=true&user_id=' + row.id + '"><i class="fa fa-home"></i></a></button>' 
-                               + '<button class="btn btn-default enviar-clave" user_id="' + row.id + '"><i class="fa fa-envelope-o"></i></button>'
-                               + '<button class="btn btn-default detail-button" href="/customer/history?user_id=' + row.id + '"><i class="fa fa-shopping-cart"></i></a></button>';
+                    var button = '<button class="btn btn-default detail-button" title=\"Ver contactos\" href="/customer/view_contact?_pjax=true&user_id=' + row.id + '"><i class="fa fa-home"></i></a></button>' 
+                               + '<button class="btn btn-default enviar-clave" title=\"Enviar contrase&ntilde;a\" user_id="' + row.id + '"><i class="fa fa-envelope-o"></i></button>'
+                               + '<button class="btn btn-default detail-button" title=\"Ver historial\" href="/customer/history?user_id=' + row.id + '"><i class="fa fa-shopping-cart"></i></a></button>';
                         return button;
                     } 
                 }

@@ -403,8 +403,8 @@ class CustomerAjaxListHandler(BaseHandler):
             "email",
             "rut",
             "bussiness",
-            "u.registration_date",
-            "u.last_view"
+            "city",
+            "town"
         ]
 
         column = int(self.get_argument("order[0][column]"))

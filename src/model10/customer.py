@@ -300,9 +300,13 @@ class Customer(BaseModel):
                             to_char(u.last_view, 'DD/MM/YY HH12:MI') as last_view,
                             CASE WHEN u.status=1 THEN 'PENDIENTE'
                                 WHEN u.status=2 THEN 'ACEPTADO'
-                            END as status
+                            END as status,
+                            coalesce(city.name,'') as city,
+                            c.town
                     from "User" u 
                     inner join "User_Types" ut on ut.id = u.type_id 
+                    left join (select distinct on(user_id) city_id, id, town, user_id from "Contact") as c on c.user_id = u.id
+                    left join "City" city on city.id = c.city_id
                     where (u.type_id = 4 or u.type_id = 3) 
                         and u.email <> '' 
                         and u.deleted = 0 
@@ -325,9 +329,13 @@ class Customer(BaseModel):
                             to_char(u.last_view, 'DD/MM/YY HH12:MI') as last_view,
                             CASE WHEN u.status=1 THEN 'PENDIENTE'
                                 WHEN u.status=2 THEN 'ACEPTADO'
-                            END as status
+                            END as status,
+                            coalesce(city.name,'') as city,
+                            c.town
                     from "User" u 
                     inner join "User_Types" ut on ut.id = u.type_id 
+                    left join (select distinct on(user_id) city_id, id, town, user_id from "Contact") as c on c.user_id = u.id
+                    left join "City" city on city.id = c.city_id
                     where (u.type_id = 4 or u.type_id = 3) 
                         and u.email <> '' 
                         and u.deleted = 0 
@@ -359,6 +367,8 @@ class Customer(BaseModel):
         query = '''select ceil(count(*)::float/%(items)s::float) as pages 
                 from "User" u 
                 inner join "User_Types" ut on ut.id = u.type_id 
+                left join (select distinct on(user_id) city_id, id, town, user_id from "Contact") as c on c.user_id = u.id
+                left join "City" city on city.id = c.city_id
                 where (u.type_id = 4 or u.type_id = 3) 
                 and u.email <> '' 
                 and u.deleted = 0'''
@@ -387,6 +397,8 @@ class Customer(BaseModel):
                 select count(*) as items
                 from "User" u 
                 inner join "User_Types" ut on ut.id = u.type_id 
+                left join (select distinct on(user_id) city_id, id, town, user_id from "Contact") as c on c.user_id = u.id
+                left join "City" city on city.id = c.city_id
                 where (u.type_id = 4 or u.type_id = 3) 
                     and u.email <> '' 
                     and u.deleted = 0 
