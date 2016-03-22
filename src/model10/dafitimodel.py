@@ -192,7 +192,13 @@ class DafitiModel(BaseModel):
 
             sync_stock = self.getSyncStock(sku_seller)
             stock = self.getStock(sku, size_id)
-            stock_dafiti = int(p["Quantity"])
+            reserved_stock = 0
+            try:
+                reserved_stock = int(p["ReservedStock"])
+            except:
+                pass
+
+            stock_dafiti = int(p["Quantity"]) - reserved_stock
 
             diff_dafiti = 0
             diff_cellar = 0
