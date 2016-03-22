@@ -246,9 +246,9 @@ class Base64ImageHandler(BaseHandler):
     def get(self, image_name):
 
         # image_name = self.get_argument("image_name", "")
-        width = self.get_argument("mw", "")
+        # width = self.get_argument("mw", "")
 
-        path = dir_img + "{}{}".format(width, image_name)
+        path = "{}{}".format(dir_img, image_name)
 
         with open(path, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read())
