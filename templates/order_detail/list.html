@@ -185,50 +185,56 @@
 				</div>
 				{% end %}
 				{% if int(order.payment_type) == 2 and (int(order.state) != 1 and int(order.state) != 6) %}
-				<div class="row">
-					<div class="col-md-1"></div>
-					<div class="col-md-10">
-						<h3>Datos de la transacci&oacute;n</h3>
-						<table class="table table-bordered">
-							<tr>
-								<th>C&oacute;digo de Autorizaci&oacute;n</th>
-								<td>{{webpay_data["TBK_CODIGO_AUTORIZACION"]}}</td>
-							</tr>
-							<tr>
-								<th>C&oacute;digo de Transacci&oacute;n</th>
-								<td>{{webpay_data["TBK_ID_TRANSACCION"]}}</td>
-							</tr>
-							<tr>
-								<th>Fecha Transacci&oacute;n</th>
-								<td>{{webpay_data["TBK_FECHA_TRANSACCION"]}}</td>
-							</tr>
-							<tr>
-								<th>Hora Transacci&oacute;n</th>
-								<td>{{webpay_data["TBK_HORA_TRANSACCION"]}}</td>
-							</tr>
-							<tr>
-								<th>4 &Uacute;ltimos D&iacute;gitos de la Tarjeta</th>
-								<td>XXXX XXXX XXXX {{webpay_data["TBK_FINAL_NUMERO_TARJETA"]}}</td>
-							</tr>
-							<tr>
-								<th>Tipo Transacci&oacute;n</th>
-								<td>Venta</td>
-							</tr>
-							<tr>
-								<th>Tipo Pago</th>
-								<td>{{webpay_data["TBK_TIPO_PAGO"]}}</td>
-							</tr>
-							<tr>
-								<th>Tipo de Cuotas</th>
-								<td>{{webpay_data["TBK_TIPO_CUOTA"]}}</td>
-							</tr>
-							<tr>
-								<th>N&uacute;mero Cuotas</th>
-								<td>{{webpay_data["TBK_NUMERO_CUOTAS"]}}</td>
-							</tr>
-						</table>
-					</div>
-				</div>
+					{% try %}
+						<div class="row">
+							<div class="col-md-1"></div>
+							<div class="col-md-10">
+								<h3>Datos de la transacci&oacute;n</h3>
+								<table class="table table-bordered">
+									<tr>
+										<th>C&oacute;digo de Autorizaci&oacute;n</th>
+										<td>{{webpay_data["TBK_CODIGO_AUTORIZACION"]}}</td>
+									</tr>
+									<tr>
+										<th>C&oacute;digo de Transacci&oacute;n</th>
+										<td>{{webpay_data["TBK_ID_TRANSACCION"]}}</td>
+									</tr>
+									<tr>
+										<th>Fecha Transacci&oacute;n</th>
+										<td>{{webpay_data["TBK_FECHA_TRANSACCION"]}}</td>
+									</tr>
+									<tr>
+										<th>Hora Transacci&oacute;n</th>
+										<td>{{webpay_data["TBK_HORA_TRANSACCION"]}}</td>
+									</tr>
+									<tr>
+										<th>4 &Uacute;ltimos D&iacute;gitos de la Tarjeta</th>
+										<td>XXXX XXXX XXXX {{webpay_data["TBK_FINAL_NUMERO_TARJETA"]}}</td>
+									</tr>
+									<tr>
+										<th>Tipo Transacci&oacute;n</th>
+										<td>Venta</td>
+									</tr>
+									<tr>
+										<th>Tipo Pago</th>
+										<td>{{webpay_data["TBK_TIPO_PAGO"]}}</td>
+									</tr>
+									<tr>
+										<th>Tipo de Cuotas</th>
+										<td>{{webpay_data["TBK_TIPO_CUOTA"]}}</td>
+									</tr>
+									<tr>
+										<th>N&uacute;mero Cuotas</th>
+										<td>{{webpay_data["TBK_NUMERO_CUOTAS"]}}</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					{% except %}
+						<div class="row">
+							<div class="col-md-offset-1 col-md-10">Requiere verificaci&oacute;n con Transbank</div>
+						</div>
+					{% end %}
 				{% end %}
 			</div>
 		</section>
