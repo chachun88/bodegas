@@ -1008,7 +1008,15 @@ class Product(BaseModel):
             cur.close()
             self.connection.close()
 
-    def GetList(self, page = 1, items = 30, query = "", column = "p.name", direction = "asc", term=''):
+    def GetList(
+        self, 
+        page=1, 
+        items=30, 
+        query="", 
+        column="p.name", 
+        direction="asc", 
+        term=''
+    ):
 
         page = int(page)
         items = int(items)

@@ -17,9 +17,18 @@ class DafitiModel(BaseModel):
         super(DafitiModel, self).__init__()
 
         self.client = dafiti.API(
-                user_id='ricardo@loadingplay.com', 
-                api_key='48f674c4a13c6af90063d8f70e3b23291f4ead79',
-                response_format='json')
+            user_id='contacto@gianidafirenze.cl',
+            api_key='aa8051656b6b1efab5b52615e2e4e2fe913b13d7',
+            response_format='json',
+            environment=dafiti.Environment.Live
+        )
+
+        # self.client = dafiti.API(
+        #     user_id='julian@loadingplay.com',
+        #     api_key='1ce5e6b52a8665b677f7a8530ced6ae2ee82f89c',
+        #     response_format='json',
+        #     environment=dafiti.Environment.Staging
+        # )
 
     def ProductDeleted(self, sku):
         response = self.client.product.Get(
@@ -51,6 +60,7 @@ class DafitiModel(BaseModel):
         self.client.product.Remove(sku)
 
     def AddProduct(self, sku, main_category, categories, color, season):
+        response = None
         p = Product()
         p.InitBySku(sku)
         s = Size()
@@ -95,7 +105,7 @@ class DafitiModel(BaseModel):
 
                 create_requests.append(
                     dafiti.ProductRequest(
-                        SellerSku=new_sku, Name=product_name, Description=p.description, 
+                        SellerSku=new_sku, Name=self.nameFix(product_name), Description=p.description, 
                         Brand="Giani Da Firenze", Price=p.sell_price,
                         PrimaryCategory=main_category, Categories=categories.split(","),
                         Variation=size, ProductData=product_data,
@@ -105,7 +115,7 @@ class DafitiModel(BaseModel):
 
                 update_requests.append(
                     dafiti.ProductRequest(
-                        SellerSku=new_sku, Name=product_name, Description=p.description, 
+                        SellerSku=new_sku, Name=self.nameFix(product_name), Description=p.description, 
                         Brand="Giani Da Firenze", Price=p.sell_price,
                         PrimaryCategory=main_category, Categories=categories.split(","),
                         Variation=size, ProductData=product_data,
@@ -115,9 +125,9 @@ class DafitiModel(BaseModel):
             self.insertSync(new_sku, stock)
 
         if len(create_requests) > 0:
-            self.client.product.sendPOST(dafiti.EndPoint.ProductCreate, create_requests)
+            response = self.client.product.sendPOST(dafiti.EndPoint.ProductCreate, create_requests)
         if len(update_requests) > 0:
-            self.client.product.sendPOST(dafiti.EndPoint.ProductUpdate, update_requests)
+            response = self.client.product.sendPOST(dafiti.EndPoint.ProductUpdate, update_requests)
 
         # preparing images for dafiti
         images = [p.image, p.image_2, p.image_3, p.image_4, p.image_5, p.image_6]
@@ -137,6 +147,8 @@ class DafitiModel(BaseModel):
         self.client.product.Image(
             image_skus,
             *final_images)
+
+        return response
 
     def getStock(self, sku, size_id):
 
@@ -180,6 +192,13 @@ class DafitiModel(BaseModel):
 
             sync_stock = self.getSyncStock(sku_seller)
             stock = self.getStock(sku, size_id)
+            # reserved_stock = 0
+            # try:
+            #     reserved_stock = int(p["ReservedStock"])
+            # except:
+            #     pass
+
+            # stock_dafiti = int(p["Quantity"]) - reserved_stock
             stock_dafiti = int(p["Quantity"])
 
             diff_dafiti = 0
@@ -195,6 +214,7 @@ class DafitiModel(BaseModel):
                 new_stock -= diff_dafiti
 
             if diff_cellar != 0 or diff_dafiti != 0:
+                print sku
                 print sync_stock, stock_dafiti, stock
                 print diff_cellar, diff_dafiti
                 print new_stock
@@ -271,3 +291,18 @@ class DafitiModel(BaseModel):
         }
 
         self.execute_query(query, params)
+
+    def nameFix(self, name):
+        """
+        return a capitalized version of name
+        @name <String> name of product
+        @sample  name="zapato ROJO"
+        @return "Zapato Rojo"
+        """
+        sentence = name.split(" ")
+        new_sentence = []
+
+        for word in sentence:
+            new_sentence.append(word.lower().capitalize())
+
+        return " ".join(new_sentence).encode('UTF-8').strip()

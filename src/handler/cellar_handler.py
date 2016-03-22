@@ -19,6 +19,9 @@ from ..model10.order import Order
 from bson import json_util
 import re
 
+from datetime import datetime
+import pytz
+
 
 class CellarHandler(BaseHandler):
 
@@ -129,7 +132,7 @@ class CellarOutputHandler(BaseHandler):
 class CellarEasyInputHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.set_active(Menu.BODEGAS_LISTAR) #change menu active item
+        self.set_active(Menu.BODEGAS_LISTAR)  # change menu active item
 
         pjax = bool(self.get_argument("_pjax", False))
 
@@ -221,6 +224,7 @@ class CellarEasyInputHandler(BaseHandler):
                     kardex.operation_type = Kardex.OPERATION_BUY
                     kardex.user = self.get_user_email()
                     kardex.cellar_identifier = cellar_id
+                    kardex.date = str(datetime.now(pytz.timezone('Chile/Continental')).isoformat())
 
                     res_add_product = kardex.Insert()
 
